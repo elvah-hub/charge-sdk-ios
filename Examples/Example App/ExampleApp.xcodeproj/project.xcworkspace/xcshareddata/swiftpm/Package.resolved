@@ -1,22 +1,31 @@
 {
-  "originHash" : "e604eeeb837952388d153f661ed00b353b9167e6a610bac2c546f0e1941bf8f8",
+  "originHash" : "78a67d1fa89299e3a40b949b9df233e92887ab33bdf599a1386d9565329a5df2",
   "pins" : [
     {
-      "identity" : "elvah-smart-pricing-sdk-ios",
+      "identity" : "charge-sdk-ios",
       "kind" : "remoteSourceControl",
-      "location" : "https://gitlab.com/kreait/elvah/elvah-smart-pricing-sdk-ios",
+      "location" : "https://github.com/elvah-hub/charge-sdk-ios",
       "state" : {
-        "branch" : "develop",
-        "revision" : "7236fbb1485c82016e914c514141a58b17d27e60"
+        "branch" : "main",
+        "revision" : "7bf7ebb5280a379616a44dd7e6f1f35199698d95"
       }
     },
     {
-      "identity" : "pulse",
+      "identity" : "defaults",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kean/Pulse",
+      "location" : "https://github.com/sindresorhus/Defaults",
       "state" : {
-        "revision" : "07cad099e1a3b09e561873d8e6e343d15c853f16",
-        "version" : "5.1.3"
+        "revision" : "38925e3cfacf3fb89a81a35b1cd44fd5a5b7e0fa",
+        "version" : "8.2.0"
+      }
+    },
+    {
+      "identity" : "get",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kean/Get",
+      "state" : {
+        "revision" : "31249885da1052872e0ac91a2943f62567c0d96d",
+        "version" : "2.2.1"
       }
     },
     {
@@ -24,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/stripe/stripe-ios",
       "state" : {
-        "revision" : "6cfff328f53bc8ed167ff34ad853ff09f5799d81",
-        "version" : "24.9.0"
+        "revision" : "7ba1417474b96e1730d2a70d236d2154aa45f9fe",
+        "version" : "24.11.0"
       }
     }
   ],
