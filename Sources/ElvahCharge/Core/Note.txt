@@ -1,0 +1,1 @@
+This directory is meant to behave like a separate target and will be declared as such in the future, when DocC supports multi-target linking.

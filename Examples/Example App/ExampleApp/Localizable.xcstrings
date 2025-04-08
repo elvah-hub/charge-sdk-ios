@@ -1,0 +1,39 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Campaign Banner" : {
+
+    },
+    "Campaign Banner (Advanced)" : {
+
+    },
+    "Charge Campaign" : {
+
+    },
+    "Charge Session Active" : {
+
+    },
+    "Charging App" : {
+
+    },
+    "See how you can integrate charge campaigns into your app and offer charge deals to your users." : {
+
+    },
+    "See how you can observe the status of a charge session and how to present one." : {
+
+    },
+    "Session Observation" : {
+
+    },
+    "Session Status" : {
+
+    },
+    "Show Charge Session" : {
+
+    },
+    "Show Deals Nearby" : {
+
+    }
+  },
+  "version" : "1.0"
+}

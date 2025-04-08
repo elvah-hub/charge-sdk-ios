@@ -1,0 +1,33 @@
+{
+  "originHash" : "f17d3b2987d03c9c0b5dcec70cbbe7a4a5a93a21a08ad405c55ef7a55ddd3bec",
+  "pins" : [
+    {
+      "identity" : "defaults",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sindresorhus/Defaults",
+      "state" : {
+        "revision" : "38925e3cfacf3fb89a81a35b1cd44fd5a5b7e0fa",
+        "version" : "8.2.0"
+      }
+    },
+    {
+      "identity" : "get",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kean/Get",
+      "state" : {
+        "revision" : "31249885da1052872e0ac91a2943f62567c0d96d",
+        "version" : "2.2.1"
+      }
+    },
+    {
+      "identity" : "stripe-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/stripe/stripe-ios",
+      "state" : {
+        "revision" : "a7e13b559ec85ab969aeccb5d7b7caac53c5f261",
+        "version" : "24.10.0"
+      }
+    }
+  ],
+  "version" : 3
+}
