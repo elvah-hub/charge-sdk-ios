@@ -1,6 +1,6 @@
 # elvah Charge SDK
 
-`ElvahCharge` is a lightweight toolkit that enables apps to discover nearby EV charging deals and initiate charge sessions through a fully native and seamless interface.
+The elvah Charge SDK is a lightweight toolkit that enables apps to discover nearby EV charging deals and initiate charge sessions through a fully native and seamless interface.
 
 With just a few lines of code, you can add a `CampaignBanner` view to your app that intelligently finds and displays nearby charging deals. The SDK handles everything from deal discovery to payment processing and charge session management, allowing your users to charge their cars without ever leaving your app.
 
@@ -172,11 +172,11 @@ The `update` you receive from this stream is an `enum` with three cases:
 
 ## Compatibility
 
-You can integrate the SDK into projects that support iOS 15 and above. However, the CampaignBanner view requires an iOS 16 (or newer) runtime to function.
+You can integrate the SDK into projects that support iOS 15 and above. However, the `CampaignBanner` view requires an iOS 16 (or newer) runtime to function.
 
 On devices running iOS 15, the banner will simply not be displayed. There’s no need to perform runtime checks yourself — the SDK automatically ensures that the banner is only shown when the runtime supports it.
 
-You can safely include CampaignSource and CampaignBanner in your view hierarchy without additional conditionals. The SDK handles platform availability behind the scenes.
+You can safely include `CampaignSource` and `CampaignBanner` in your view hierarchy without additional conditionals. The SDK handles platform availability behind the scenes.
 
 ## Examples
 
