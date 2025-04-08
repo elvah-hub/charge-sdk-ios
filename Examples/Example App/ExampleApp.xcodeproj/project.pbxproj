@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		41F04A102D7865F200D981D6 /* ElvahSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 41F04A0F2D7865F200D981D6 /* ElvahSDK */; };
+		419FCA022DA51C6400F08009 /* ElvahCharge in Frameworks */ = {isa = PBXBuildFile; productRef = 419FCA012DA51C6400F08009 /* ElvahCharge */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,7 +23,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				41F04A102D7865F200D981D6 /* ElvahSDK in Frameworks */,
+				419FCA022DA51C6400F08009 /* ElvahCharge in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -34,6 +34,7 @@
 			isa = PBXGroup;
 			children = (
 				41F04A382D78671600D981D6 /* ExampleApp */,
+				419FCA002DA51C6400F08009 /* Frameworks */,
 				41763F5E2C2D340E00F42070 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -44,6 +45,13 @@
 				41763F5D2C2D340E00F42070 /* ExampleApp.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		419FCA002DA51C6400F08009 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -346,14 +354,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		41F04A0E2D7865F200D981D6 /* XCRemoteSwiftPackageReference "elvah-smart-pricing-sdk-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://gitlab.com/kreait/elvah/elvah-smart-pricing-sdk-ios";
-			requirement = {
-				branch = "new-charge-flow-ui";
-				kind = branch;
-			};
-		};
 		41F04A832D786CF700D981D6 /* XCRemoteSwiftPackageReference "charge-sdk-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/elvah-hub/charge-sdk-ios";
@@ -365,10 +365,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		41F04A0F2D7865F200D981D6 /* ElvahSDK */ = {
+		419FCA012DA51C6400F08009 /* ElvahCharge */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 41F04A0E2D7865F200D981D6 /* XCRemoteSwiftPackageReference "elvah-smart-pricing-sdk-ios" */;
-			productName = ElvahSDK;
+			package = 41F04A832D786CF700D981D6 /* XCRemoteSwiftPackageReference "charge-sdk-ios" */;
+			productName = ElvahCharge;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
