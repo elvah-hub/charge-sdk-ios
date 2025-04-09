@@ -28,6 +28,7 @@ let package = Package(
 			],
 			path: "Sources/ElvahCharge",
 			resources: [
+				.copy("PrivacyInfo.xcprivacy"),
 				.copy("Core/Resources/Colors.xcassets"),
 				.copy("Core/Resources/Inter.ttf"),
 				.copy("Resources/Images.xcassets"),
