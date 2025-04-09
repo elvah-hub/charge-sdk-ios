@@ -9,7 +9,6 @@ With just a few lines of code, you can add a `CampaignBanner` view to your app t
 1. [Installation](#installation)
 	- [Swift Package Manager](#swift-package-manager)
 2. **[Getting Started](#getting-started)**
-	- [Configuration](#configuration)
 	- [Campaign Banner](#campaign-banner)
 3. **[Charge Session Observation](#charge-session-observation)**
 4. [Compatibility](#compatibility)
