@@ -188,6 +188,8 @@ You can find an example project in the `Examples` directory of this repository.
 - **Campaign**: A site with a list of deals attached to it.
 - **Charge Session**: An instance of charging an electric car at a charge point.
 
-## License
 
-To be added.
+## Legal Notice
+
+Please note that the contents of this repository are **not** open source and **must not** be used, modified, or distributed without prior written permission.  
+See [LEGAL_NOTICE.md](./LEGAL_NOTICE.md) for full details.
