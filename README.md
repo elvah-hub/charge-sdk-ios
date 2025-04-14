@@ -14,7 +14,8 @@ With just a few lines of code, you can add a `CampaignBanner` view to your app t
 4. [Compatibility](#compatibility)
 5. [Examples](#examples)
 6. [Glossary](#glossary)
-7. [License](#license)
+7. [Support](#support)
+8. [License](#license)
 
 ## Installation
 
@@ -188,6 +189,9 @@ You can find an example project in the `Examples` directory of this repository.
 - **Campaign**: A site with a list of deals attached to it.
 - **Charge Session**: An instance of charging an electric car at a charge point.
 
+## Support
+
+For technical support and inquiries, please contact us at tech-support@elvah.de.
 
 ## Legal Notice
 
