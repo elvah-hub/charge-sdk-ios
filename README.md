@@ -40,6 +40,9 @@ The package should appear in the list. Select it and click "Add Package" in the 
 
 ## Getting Started
 
+> [!IMPORTANT]
+> You will need to request an api key from elvah in order to start using the SDK.
+
 To set up the SDK, call ``Elvah.initialize(with:)`` as early as possible in your app's lifecycle. A good place could be the `AppDelegate` for UIKit apps or the `App`'s initializer for SwiftUI apps.
 
 The configuration allows you to pass the following values:
@@ -83,7 +86,10 @@ campaignSource = .remote(near: coordinate)
 campaignSource = .remote(in: mapRegion)
 ```
 
-Once you have done that, the source object will attempt to find an active campaign from the given source data and present it inside the `CampaignBanner` view. 
+Once you have done that, the source object will attempt to find an active campaign from the given source data and present it inside the `CampaignBanner` view.
+
+> [!IMPORTANT]
+> Currently, there is only a single demo campaign available at these coordinates: Latitude: 51.03125° N, Longitude: 4.41047° E
 
 #### Display Behavior
 
