@@ -123,7 +123,7 @@ package struct CampaignBannerComponent: View {
 	private func reloadData() {
 		$chargeSessionTaskId.new()
 
-		guard source.kind.isReloadable else {
+		guard source.kind?.isReloadable == true else {
 			return
 		}
 

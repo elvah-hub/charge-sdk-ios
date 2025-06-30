@@ -19,7 +19,7 @@ extension PaymentSummary {
 			sessionStartedAt: sessionStartedAt,
 			sessionEndedAt: sessionEndedAt,
 			totalCost: Currency(
-				response.totalCost.amount,
+				response.totalCost.amount / 100,
 				identifier: response.totalCost.currency
 			)
 		)

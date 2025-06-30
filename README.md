@@ -163,7 +163,7 @@ To detect this, you can observe charge session updates using the `ChargeSession.
 
 ```swift
 for try await update in ChargeSession.updates() {
-  self.showChargeSessionBanner = update.isActive
+  self.showChargeSessionButton = update.isActive
 }
 ```
 

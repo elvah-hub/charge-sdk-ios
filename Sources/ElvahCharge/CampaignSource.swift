@@ -305,7 +305,7 @@ public extension CampaignSource {
 		var campaign: LoadableState<Campaign>
 		@SwiftUI.Binding var chargeSession: LoadableState<ChargeSession>
 		var hasEnded: Bool
-		var kind: Kind
+		var kind: Kind?
 		var triggerReload: () -> Void
 	}
 

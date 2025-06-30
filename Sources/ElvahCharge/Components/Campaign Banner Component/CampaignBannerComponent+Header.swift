@@ -114,7 +114,7 @@ extension CampaignBannerComponent {
 				if isHorizontalStack {
 					Spacer()
 				}
-				if source.kind.isReloadable || source.chargeSession.isError {
+				if source.kind?.isReloadable == true || source.chargeSession.isError {
 					Button("Try again", bundle: .elvahCharge, action: retryAction)
 						.foregroundStyle(.brand)
 				}

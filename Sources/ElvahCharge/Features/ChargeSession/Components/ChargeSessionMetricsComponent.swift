@@ -29,7 +29,9 @@ struct ChargeSessionMetricsComponent: View {
 		if session.hasConsumption, let formattedConsumedKWh = session.formattedConsumedKWh {
 			VStack(spacing: Size.XXS.size) {
 				Text(formattedConsumedKWh)
+					.contentTransition(.numericText(countsDown: false))
 					.typography(.title(size: .xLarge), weight: .bold)
+					.monospacedDigit()
 					.foregroundStyle(.primaryContent)
 				Text("kWh charged", bundle: .elvahCharge)
 					.typography(.copy(size: .medium))
@@ -51,6 +53,7 @@ struct ChargeSessionMetricsComponent: View {
 
 				Text(elapsedSeconds.formatted(.units()))
 					.typography(.title(size: .medium), weight: .bold)
+					.monospacedDigit()
 					.foregroundStyle(.primaryContent)
 			}
 			Text("Charging duration", bundle: .elvahCharge)
