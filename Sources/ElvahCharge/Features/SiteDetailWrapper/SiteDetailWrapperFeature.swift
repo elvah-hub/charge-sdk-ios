@@ -20,7 +20,7 @@ package struct SiteDetailWrapperFeature: View {
 
 	package var body: some View {
 		NavigationStack(path: $router.path) {
-			ChargePointListView(deals: deals, router: router.siteDetailRouter)
+			ChargePointListFeature(deals: deals, router: router.siteDetailRouter)
 				.siteInformation(site)
 		}
 		.navigationRoot(path: $router.path)
@@ -34,7 +34,7 @@ package extension SiteDetailWrapperFeature {
 	final class Router: BaseRouter {
 		@Published var path = NavigationPath()
 
-		let siteDetailRouter = ChargePointListView.Router()
+		let siteDetailRouter = ChargePointListFeature.Router()
 
 		package func reset() {
 			path = NavigationPath()
