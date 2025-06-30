@@ -33,8 +33,11 @@ package struct Currency: Codable, Hashable, Comparable, ExpressibleByFloatLitera
 	///
 	/// - Returns: A string representing the formatted currency amount.
 	@MainActor package func formatted() -> String {
-		let number = NSNumber(floatLiteral: amount)
-		return Self.formatter.string(from: number) ?? ""
+		if amount.truncatingRemainder(dividingBy: 100) == 0 {
+			return amount.formatted(.currency(code: identifier).precision(.fractionLength(0)))
+		} else {
+			return amount.formatted(.currency(code: identifier).precision(.fractionLength(2)))
+		}
 	}
 
 	package static func < (lhs: Currency, rhs: Currency) -> Bool {
@@ -45,17 +48,4 @@ package struct Currency: Codable, Hashable, Comparable, ExpressibleByFloatLitera
 		let product = lhs.amount * rhs
 		return Currency(product, identifier: lhs.identifier)
 	}
-}
-
-private extension Currency {
-	/// A number formatter configured for currency formatting.
-	@MainActor static let formatter: NumberFormatter = {
-		let numberFormatter = NumberFormatter()
-		numberFormatter.locale = .current
-		numberFormatter.numberStyle = .currency
-		numberFormatter.minimumFractionDigits = 2
-		numberFormatter.maximumFractionDigits = 2
-		numberFormatter.currencyCode = "EUR" // SDK only supports Euro for now
-		return numberFormatter
-	}()
 }
