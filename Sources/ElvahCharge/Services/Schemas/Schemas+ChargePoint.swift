@@ -12,19 +12,14 @@ extension ChargePoint {
 		}
 
 		return ChargePoint(
-			details: ChargePointDetails(
-				evseId: response.evseId,
-				physicalReference: nil,
-				maxPowerInKw: response.powerSpecification?.maxPowerInKW ?? 0,
-				availability: .available, // TODO: Missing
-				availabilityUpdatedAt: Date.now, // TODO: Missing
-				connectors: [], // TODO: Missing
-				speed: .unknown, // TODO: Missing
-				powerType: powerType
-			),
-			price: ChargePrice(
-				pricePerKWh: Currency(response.pricePerKWh, identifier: response.currency)
-			)
+			evseId: response.evseId,
+			physicalReference: nil,
+			maxPowerInKw: response.powerSpecification?.maxPowerInKW ?? 0,
+			availability: .available, // TODO: Missing
+			availabilityUpdatedAt: Date.now, // TODO: Missing
+			connectors: [], // TODO: Missing
+			speed: .unknown, // TODO: Missing
+			powerType: powerType
 		)
 	}
 }

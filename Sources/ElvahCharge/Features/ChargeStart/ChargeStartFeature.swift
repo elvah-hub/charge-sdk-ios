@@ -156,7 +156,7 @@ extension ChargeStartFeature {
 
 		struct StartSessionInfo: Identifiable {
 			var id = UUID()
-			var chargePoint: ChargePointDetails
+			var chargePoint: ChargePoint
 		}
 
 		@Published var showGenericError = false

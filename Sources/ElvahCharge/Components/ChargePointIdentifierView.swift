@@ -8,7 +8,7 @@ struct ChargePointIdentifierView: View {
 	let physicalReference: String?
 	let isAvailable: Bool
 
-	init(point: ChargePointDetails) {
+	init(point: ChargePoint) {
 		self.init(
 			evseId: point.evseId,
 			physicalReference: point.physicalReference,

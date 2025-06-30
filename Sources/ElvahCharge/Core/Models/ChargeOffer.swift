@@ -9,7 +9,7 @@ package struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 		chargePoint.evseId
 	}
 
-	package var chargePoint: ChargePointDetails
+	package var chargePoint: ChargePoint
 	package var price: ChargePrice
 	package var campaignEndDate: Date
 	package var expiresAt: Date
@@ -17,7 +17,7 @@ package struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 
 	package init(
 		id: String,
-		chargePoint: ChargePointDetails,
+		chargePoint: ChargePoint,
 		price: ChargePrice,
 		campaignEndDate: Date,
 		expiresAt: Date,

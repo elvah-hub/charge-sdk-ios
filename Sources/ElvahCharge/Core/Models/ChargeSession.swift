@@ -45,7 +45,7 @@ public struct ChargeSession: Codable, Hashable, Sendable {
 package extension ChargeSession {
 	static func mock(
 		status: ChargeSession.Status,
-		evseId: String = ChargePoint.mockAvailable.details.evseId
+		evseId: String = ChargePoint.mockAvailable.evseId
 	) -> ChargeSession {
 		.init(
 			evseId: evseId,

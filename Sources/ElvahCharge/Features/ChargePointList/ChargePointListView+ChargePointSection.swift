@@ -282,7 +282,7 @@ private struct ChargePointGroup: Identifiable, Equatable {
 
 @available(iOS 16.0, *)
 private struct AvailabilityPill: View {
-	var chargePoint: ChargePointDetails
+	var chargePoint: ChargePoint
 
 	var body: some View {
 		Text(chargePoint.localizedAvailability)

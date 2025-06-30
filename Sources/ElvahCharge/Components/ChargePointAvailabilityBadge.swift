@@ -4,7 +4,7 @@ import SwiftUI
 
 @available(iOS 16.0, *)
 struct ChargePointAvailabilityBadge: View {
-	let chargePoints: [ChargePointDetails]
+	let chargePoints: [ChargePoint]
 	let includeOutOfService: Bool
 
 	var body: some View {

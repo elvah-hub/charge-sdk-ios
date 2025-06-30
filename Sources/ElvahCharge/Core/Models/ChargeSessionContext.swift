@@ -50,6 +50,6 @@ package struct ChargeSessionContext: Codable, Hashable, Sendable {
 	}
 
 	package func matches(_ chargePoint: ChargePoint) -> Bool {
-		deal.chargePoint.evseId == chargePoint.details.evseId
+		deal.chargePoint.evseId == chargePoint.evseId
 	}
 }

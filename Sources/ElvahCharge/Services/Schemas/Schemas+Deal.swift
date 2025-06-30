@@ -16,7 +16,7 @@ extension Deal {
 
 		return try Deal(
 			id: response.id,
-			chargePoint: ChargePoint.parse(response).details,
+			chargePoint: ChargePoint.parse(response),
 			pricePerKWh: Currency(response.pricePerKWh, identifier: response.currency),
 			securityDeposit: nil,
 			campaignEndDate: campaignEndDate,
