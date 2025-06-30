@@ -15,27 +15,25 @@ extension SiteDetailFeature {
 		@Default(.chargeSessionContext) private var chargeSessionContext
 		@State private var selectedPowerType: PowerType
 		@Binding private var dealsSectionOrigin: CGPoint
-		private var site: Site
 		private var deals: LoadableState<[Deal]>
 		private var processingDeal: Deal?
 		private var dealAction: Action
 		private var chargeSessionAction: () -> Void
 
 		init(
-			site: Site,
+			initialPowerTypeSelection: PowerType? = nil,
 			deals: LoadableState<[Deal]>,
 			dealsSectionOrigin: Binding<CGPoint>,
 			processingDeal: Deal?,
 			dealAction: @escaping Action,
 			chargeSessionAction: @escaping () -> Void
 		) {
-			self.site = site
 			self.deals = deals
 			_dealsSectionOrigin = dealsSectionOrigin
 			self.processingDeal = processingDeal
 			self.dealAction = dealAction
 			self.chargeSessionAction = chargeSessionAction
-			_selectedPowerType = State(initialValue: site.prevalentPowerType)
+			_selectedPowerType = State(initialValue: initialPowerTypeSelection ?? .ac)
 		}
 
 		var body: some View {
@@ -106,17 +104,14 @@ extension SiteDetailFeature {
 						.compactMap(\.chargePoint.powerType)
 						.unique()
 						.count > 1
-					let sections = site.chargePointsSections(
-						for: deals,
-						powerType: hasMultiplePowerTypes ? selectedPowerType : nil
-					)
+					let groups = chargePointGroups(for: hasMultiplePowerTypes ? selectedPowerType : nil)
 
 					VStack(spacing: 0) {
 						if hasMultiplePowerTypes {
 							PowerTypeSelector(selection: $selectedPowerType)
 						}
-						ForEach(sections) { section in
-							ForEach(section.deals) { deal in
+						ForEach(groups) { group in
+							ForEach(group.deals) { deal in
 								chargePointButton(for: deal)
 									.overlay {
 										loadingOverlay(show: processingDeal?.id == deal.id)
@@ -124,13 +119,13 @@ extension SiteDetailFeature {
 							}
 							.buttonStyle(ChargePointButtonStyle())
 							.foregroundStyle(.primaryContent)
-							if section != sections.last {
+							if group != groups.last {
 								Divider()
 									.padding(.leading, .M)
 							}
 						}
 					}
-					.animation(.default, value: sections)
+					.animation(.default, value: groups)
 					.animation(.bouncy, value: processingDeal)
 				}
 			}
@@ -243,6 +238,45 @@ extension SiteDetailFeature {
 				.padding(.horizontal, 16)
 				.padding(.vertical, 16)
 		}
+
+		// MARK: - Helpers
+
+		private func chargePointGroups(for powerType: PowerType? = nil) -> [ChargePointGroup] {
+			guard let deals = deals.data else {
+				return []
+			}
+
+			return deals.compactMap { deal -> ChargePointGroup? in
+				// Filter by selected power type if needed
+				let chargePointPowerType = deal.chargePoint.powerType ?? .ac
+				if let powerType, chargePointPowerType != powerType {
+					return nil
+				}
+
+				return ChargePointGroup(deals: [deal], pricePerKWh: deal.pricePerKWh)
+			}
+		}
+	}
+}
+
+// MARK: - Helpers
+
+private struct ChargePointGroup: Identifiable, Equatable {
+	package var id: String {
+		"\(pricePerKWh.amount)+\(deals.map(\.evseId))"
+	}
+
+	package let deals: [Deal]
+	package let pricePerKWh: Currency
+	package let joinedEvseIdString: String
+
+	package init(
+		deals: [Deal],
+		pricePerKWh: Currency
+	) {
+		self.deals = deals
+		self.pricePerKWh = pricePerKWh
+		joinedEvseIdString = deals.map { $0.evseId }.sorted().joined()
 	}
 }
 
@@ -286,7 +320,6 @@ private struct ChargePointButtonStyle: ButtonStyle {
 						.padding(.horizontal, 16)
 						.opacity(0.2)
 					SiteDetailFeature.ChargePointSection(
-						site: .mock,
 						deals: .loaded([.mockAvailable, .mockUnavailable, .mockOutOfService]),
 						dealsSectionOrigin: .constant(.zero),
 						processingDeal: .mockAvailable

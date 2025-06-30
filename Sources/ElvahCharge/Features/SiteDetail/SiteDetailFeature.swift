@@ -93,7 +93,7 @@ package struct SiteDetailFeature: View {
 					}
 					routeButton
 					SiteDetailFeature.ChargePointSection(
-						site: site,
+						initialPowerTypeSelection: site.prevalentPowerType,
 						deals: deals,
 						dealsSectionOrigin: $scrollPosition,
 						processingDeal: processingDeal,
