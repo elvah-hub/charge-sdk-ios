@@ -22,9 +22,8 @@ extension ChargePoint {
 				speed: .unknown, // TODO: Missing
 				powerType: powerType
 			),
-			price: ChargePointPrice(
-				evseId: response.evseId,
-				value: Currency(response.pricePerKWh, identifier: response.currency)
+			price: ChargePrice(
+				pricePerKWh: Currency(response.pricePerKWh, identifier: response.currency)
 			)
 		)
 	}

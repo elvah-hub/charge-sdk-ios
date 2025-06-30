@@ -8,9 +8,9 @@ package struct ChargePoint: Identifiable, Hashable, Codable, Sendable {
 	package var id: String { details.id }
 
 	package var details: ChargePointDetails
-	package var price: ChargePointPrice
+	package var price: ChargePrice
 
-	package init(details: ChargePointDetails, price: ChargePointPrice) {
+	package init(details: ChargePointDetails, price: ChargePrice) {
 		self.details = details
 		self.price = price
 	}
@@ -20,10 +20,10 @@ package struct ChargePoint: Identifiable, Hashable, Codable, Sendable {
 
 package extension ChargePoint {
 	static func mockLoading(evseId: String) -> ChargePoint {
-		.init(details: .mockLoading(evseId: evseId), price: .mockLoading(evseId: evseId))
+		.init(details: .mockLoading(evseId: evseId), price: .mock)
 	}
 
-	static let mockAvailable = ChargePoint(details: .mockAvailable, price: .mockAvailable)
-	static let mockUnavailable = ChargePoint(details: .mockUnavailable, price: .mockUnavailable)
-	static let mockOutOfService = ChargePoint(details: .mockOutOfService, price: .mockOutOfService)
+	static let mockAvailable = ChargePoint(details: .mockAvailable, price: .mock)
+	static let mockUnavailable = ChargePoint(details: .mockUnavailable, price: .mock)
+	static let mockOutOfService = ChargePoint(details: .mockOutOfService, price: .mock)
 }
