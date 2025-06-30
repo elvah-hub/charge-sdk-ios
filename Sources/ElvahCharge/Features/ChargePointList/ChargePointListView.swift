@@ -3,11 +3,13 @@
 import SwiftUI
 
 @available(iOS 16.0, *)
-package struct SiteDetailFeature: View {
+package struct ChargePointListView: View {
 	@Environment(\.dismiss) private var dismiss
-	@ObservedObject private var router: SiteDetailFeature.Router
+	@ObservedObject private var router: ChargePointListView.Router
 	@EnvironmentObject private var chargeProvider: ChargeProvider
 	@EnvironmentObject private var chargeSettlementProvider: ChargeSettlementProvider
+
+	private var associatedSite: Site?
 
 	@State private var processingDeal: Deal?
 	@State private var scrollPosition = CGPoint.zero
@@ -17,101 +19,116 @@ package struct SiteDetailFeature: View {
 	@Loadable<Double?> private var routeDistanceToStation
 	@Process private var paymentInitiation
 
-	package init(site: Site, deals: [Deal], router: SiteDetailFeature.Router) {
-		_site = Loadable(wrappedValue: .loaded(site))
+	package init(deals: [Deal], router: ChargePointListView.Router) {
 		_deals = Loadable(wrappedValue: .loaded(deals))
 		self.router = router
 	}
 
 	package var body: some View {
-		Group {
-			switch site {
-			case .absent,
-			     .loading,
-			     .error:
-				activityContent
-			case let .loaded(site):
-				siteContent(for: site)
+		content
+			.animation(.default, value: site)
+			.animation(.default, value: routeDistanceToStation)
+			.foregroundStyle(.primaryContent)
+			.toolbarBackground(.canvas, for: .navigationBar)
+			.task {
+				await reloadContinuously()
 			}
-		}
-		.animation(.default, value: site)
-		.animation(.default, value: routeDistanceToStation)
-		.foregroundStyle(.primaryContent)
-		.toolbarBackground(.canvas, for: .navigationBar)
-		.task(id: reloadTaskId) {
-			await reloadData()
-		}
-		.task {
-			await reloadContinuously()
-		}
-		.toolbar {
-			ToolbarItem(placement: .topBarLeading) {
-				CloseButton {
-					dismiss()
+			.task(id: reloadTaskId) {
+				guard let associatedSite else {
+					$site.reset()
+					return
+				}
+
+				await reloadData(for: associatedSite)
+			}
+			.onChange(of: associatedSite) { associatedSite in
+				$reloadTaskId.new()
+				if let associatedSite {
+					site = .loaded(associatedSite)
 				}
 			}
-		}
-		.background {
-			VStack(spacing: 0) {
-				Color.canvas.ignoresSafeArea().frame(height: max(0, scrollPosition.y))
-				Color.container.ignoresSafeArea()
-			}
-		}
-		.onChange(of: paymentInitiation) { paymentInitiation in
-			if paymentInitiation.hasFailed {
-				router.showGenericError = true
-			}
-		}
-		.genericErrorBottomSheet(isPresented: $router.showGenericError)
-		.fullScreenCover(item: $router.chargeRequest) { chargeRequest in
-			ChargeEntryFeature(chargeRequest: chargeRequest)
-		}
-		.fullScreenCover(isPresented: $router.showChargeEntry) {
-			ChargeEntryFeature()
-		}
-		.confirmationDialog("Open with", isPresented: $router.showRouteOptions) {
-			if let site = site.data {
-				Button("Apple Maps", bundle: .elvahCharge) {
-					site.openDirectionsInAppleMaps()
-				}
-				Button("Google Maps", bundle: .elvahCharge) {
-					site.openDirectionsInGoogleMaps()
-				}
-				Button("Back", role: .cancel, bundle: .elvahCharge) {
-					router.showRouteOptions = false
+			.toolbar {
+				ToolbarItem(placement: .topBarLeading) {
+					CloseButton()
 				}
 			}
-		}
+			.background {
+				VStack(spacing: 0) {
+					Color.canvas.ignoresSafeArea().frame(height: max(0, scrollPosition.y))
+					Color.container.ignoresSafeArea()
+				}
+			}
+			.onChange(of: paymentInitiation) { paymentInitiation in
+				if paymentInitiation.hasFailed {
+					router.showGenericError = true
+				}
+			}
+			.genericErrorBottomSheet(isPresented: $router.showGenericError)
+			.fullScreenCover(item: $router.chargeRequest) { chargeRequest in
+				ChargeEntryFeature(chargeRequest: chargeRequest)
+			}
+			.fullScreenCover(isPresented: $router.showChargeEntry) {
+				ChargeEntryFeature()
+			}
+			.confirmationDialog("Open with", isPresented: $router.showRouteOptions) {
+				if let site = site.data {
+					Button("Apple Maps", bundle: .elvahCharge) {
+						site.openDirectionsInAppleMaps()
+					}
+					Button("Google Maps", bundle: .elvahCharge) {
+						site.openDirectionsInGoogleMaps()
+					}
+					Button("Back", role: .cancel, bundle: .elvahCharge) {
+						router.showRouteOptions = false
+					}
+				}
+			}
 	}
 
-	@ViewBuilder private func siteContent(for site: Site) -> some View {
+	@ViewBuilder private var content: some View {
 		ScrollView {
-			VStack(spacing: 0) {
-				VStack(alignment: .leading, spacing: 24) {
-					if let operatorName = site.operatorName, let address = site.address {
-						header(title: operatorName, address: address)
-					}
-					routeButton
-					SiteDetailFeature.ChargePointSection(
-						initialPowerTypeSelection: site.prevalentPowerType,
-						deals: deals,
-						dealsSectionOrigin: $scrollPosition,
-						processingDeal: processingDeal,
-						dealAction: { deal in
-							handleChargePointTap(for: deal)
-						},
-						chargeSessionAction: {
-							router.showChargeEntry = true
-						}
-					)
-					.disabled(paymentInitiation.isRunning)
-					.animation(.default, value: paymentInitiation)
+			VStack(alignment: .leading, spacing: 24) {
+				if associatedSite != nil {
+					siteContent
 				}
+				dealsContent
 			}
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.padding(.vertical, 16)
 		}
 		.coordinateSpace(name: "ScrollView")
+	}
+
+	@ViewBuilder private var siteContent: some View {
+		switch site {
+		case .absent,
+		     .loading,
+		     .error:
+			activityContent
+		case let .loaded(site):
+			if let operatorName = site.operatorName, let address = site.address {
+				header(title: operatorName, address: address)
+			}
+			routeButton
+		}
+	}
+
+
+	@ViewBuilder private var dealsContent: some View {
+		ChargePointListView.ChargePointSection(
+			initialPowerTypeSelection: site.data?.prevalentPowerType,
+			deals: deals,
+			dealsSectionOrigin: $scrollPosition,
+			processingDeal: processingDeal,
+			dealAction: { deal in
+				handleChargePointTap(for: deal)
+			},
+			chargeSessionAction: {
+				router.showChargeEntry = true
+			}
+		)
+		.disabled(paymentInitiation.isRunning)
+		.animation(.default, value: paymentInitiation)
 	}
 
 	@ViewBuilder private func header(title: String, address: Site.Address) -> some View {
@@ -160,7 +177,7 @@ package struct SiteDetailFeature: View {
 			if site.isError {
 				return "An error occurred"
 			}
-			return "Loading site"
+			return nil
 		}
 
 		var message: LocalizedStringKey? {
@@ -178,12 +195,29 @@ package struct SiteDetailFeature: View {
 		}
 
 		ActivityInfoComponent(state: state, title: title, message: message)
-			.frame(maxWidth: .infinity, maxHeight: .infinity)
+			.frame(maxWidth: .infinity)
 	}
 
 	// MARK: - Actions
 
-	private func reloadData() async {}
+	/// Returns a copy of the view with the given site associated for displaying site-specific
+	/// information.
+	/// - Parameter site: The site.
+	/// - Returns: A ``ChargePointListView`` configured to show information about the site.
+	package func siteInformation(_ site: Site?) -> some View {
+		var copy = self
+		copy.associatedSite = site
+		if let site {
+			copy._site = .init(wrappedValue: .loaded(site))
+		} else {
+			copy._site = .init(wrappedValue: .absent)
+		}
+		return copy
+	}
+
+	private func reloadData(for associatedSite: Site) async {
+		site = .loaded(associatedSite)
+	}
 
 	private func reloadContinuously() async {
 		do {
@@ -210,7 +244,7 @@ package struct SiteDetailFeature: View {
 }
 
 @available(iOS 16.0, *)
-package extension SiteDetailFeature {
+package extension ChargePointListView {
 	@MainActor
 	final class Router: BaseRouter {
 		@Published var showGenericError = false
@@ -233,11 +267,11 @@ package extension SiteDetailFeature {
 @available(iOS 16.0, *)
 #Preview {
 	NavigationStack {
-		SiteDetailFeature(
-			site: .mock,
+		ChargePointListView(
 			deals: [.mockAvailable, .mockUnavailable, .mockOutOfService],
 			router: .init()
 		)
+		.siteInformation(.mock)
 	}
 	.withFontRegistration()
 	.withMockEnvironmentObjects()
