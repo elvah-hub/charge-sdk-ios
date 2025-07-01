@@ -143,7 +143,7 @@ public struct CampaignBanner: View {
 				}
 			}
 			.fullScreenCover(item: $router.campaignDetail) { capaign in
-				SiteDetailWrapperFeature(site: capaign.site, deals: capaign.deals)
+				ChargeOfferListWrapperFeature(site: capaign.site, deals: capaign.deals)
 			}
 			.fullScreenCover(isPresented: $router.showChargeSession) {
 				ChargeEntryFeature()

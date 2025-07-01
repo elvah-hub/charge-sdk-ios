@@ -3,12 +3,12 @@
 import MapKit
 import SwiftUI
 
-/// A wrapper view around ``SiteDetailFeature`` that adds a `NavigationStack` and all required
+/// A wrapper view around ``ChargeOfferList`` that adds a `NavigationStack` and all required
 /// environment objects.
 @available(iOS 16.0, *)
-package struct SiteDetailWrapperFeature: View {
-	@StateObject private var router = SiteDetailWrapperFeature.Router()
-	private var site: Site
+package struct ChargeOfferListWrapperFeature: View {
+	@StateObject private var router = ChargeOfferListWrapperFeature.Router()
+	private var site: Site?
 	private var deals: [Deal]
 
 	package init(site: Site, deals: [Deal] = []) {
@@ -20,7 +20,7 @@ package struct SiteDetailWrapperFeature: View {
 
 	package var body: some View {
 		NavigationStack(path: $router.path) {
-			ChargePointListFeature(deals: deals, router: router.chargePointListRouter)
+			ChargeOfferListFeature(deals: deals, router: router.chargeOfferListRouter)
 				.siteInformation(site)
 		}
 		.navigationRoot(path: $router.path)
@@ -29,16 +29,16 @@ package struct SiteDetailWrapperFeature: View {
 }
 
 @available(iOS 16.0, *)
-package extension SiteDetailWrapperFeature {
+package extension ChargeOfferListWrapperFeature {
 	@MainActor
 	final class Router: BaseRouter {
 		@Published var path = NavigationPath()
 
-		let chargePointListRouter = ChargePointListFeature.Router()
+		let chargeOfferListRouter = ChargeOfferListFeature.Router()
 
 		package func reset() {
 			path = NavigationPath()
-			chargePointListRouter.reset()
+			chargeOfferListRouter.reset()
 		}
 	}
 }

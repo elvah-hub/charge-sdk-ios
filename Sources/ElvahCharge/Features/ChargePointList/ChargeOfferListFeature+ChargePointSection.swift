@@ -7,7 +7,7 @@ import SwiftUI
 #endif
 
 @available(iOS 16.0, *)
-extension ChargePointListFeature {
+extension ChargeOfferListFeature {
 	struct ChargePointSection: View {
 		typealias Action = (_ deal: Deal) -> Void
 
@@ -319,7 +319,7 @@ private struct ChargePointButtonStyle: ButtonStyle {
 						.frame(height: 100)
 						.padding(.horizontal, 16)
 						.opacity(0.2)
-					ChargePointListFeature.ChargePointSection(
+					ChargeOfferListFeature.ChargePointSection(
 						deals: .loaded([.mockAvailable, .mockUnavailable, .mockOutOfService]),
 						dealsSectionOrigin: .constant(.zero),
 						processingDeal: .mockAvailable
