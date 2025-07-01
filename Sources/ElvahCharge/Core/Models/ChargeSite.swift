@@ -1,0 +1,27 @@
+// Copyright © elvah. All rights reserved.
+
+import CoreLocation
+import SwiftUI
+
+/// A place with one or more charge points to charge an electric car at.
+///
+/// This is a wrapper around ``Site`` that adds accessible charge offers for each charge point.
+@dynamicMemberLookup
+public struct ChargeSite: Codable, Hashable, Identifiable, Sendable {
+	public var id: String {
+		site.id
+	}
+
+	private var site: Site
+	package var offers: [ChargeOffer]
+
+	package init(site: Site, offers: [ChargeOffer]) {
+		self.site = site
+		self.offers = offers
+	}
+
+	public subscript<V>(dynamicMember keyPath: WritableKeyPath<Site, V>) -> V {
+		get { site[keyPath: keyPath] }
+		set { site[keyPath: keyPath] = newValue }
+	}
+}
