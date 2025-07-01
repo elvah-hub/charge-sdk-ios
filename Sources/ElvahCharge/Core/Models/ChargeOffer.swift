@@ -36,6 +36,13 @@ package struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 		self.expiresAt = expiresAt
 		self.signedOffer = signedOffer
 	}
+	
+	/// Returns `true` the offer is discounted.
+	///
+	/// This is equivalent to checking if ``ChargeOffer/originalPrice`` is not `nil`.
+	package var isDiscounted: Bool {
+		originalPrice != nil
+	}
 
 	/// Returns `true` if the associated campaign has ended, `false` otherwise.
 	package var hasEnded: Bool {
@@ -53,7 +60,7 @@ package extension ChargeOffer {
 package extension ChargeOffer {
 	static var mockAvailable: ChargeOffer {
 		ChargeOffer(
-			id: "mock deal available",
+			id: "mock offer available",
 			chargePoint: .mockAvailable,
 			price: ChargePrice.mock,
 			originalPrice: nil,
@@ -66,7 +73,7 @@ package extension ChargeOffer {
 
 	static var mockUnavailable: ChargeOffer {
 		ChargeOffer(
-			id: "mock deal unavailable",
+			id: "mock offer unavailable",
 			chargePoint: .mockUnavailable,
 			price: ChargePrice.mock,
 			originalPrice: nil,
@@ -79,7 +86,7 @@ package extension ChargeOffer {
 
 	static var mockOutOfService: ChargeOffer {
 		ChargeOffer(
-			id: "mock deal out of service",
+			id: "mock offer out of service",
 			chargePoint: .mockOutOfService,
 			price: ChargePrice.mock,
 			originalPrice: nil,
