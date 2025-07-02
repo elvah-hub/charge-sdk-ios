@@ -51,23 +51,13 @@ struct SupportBottomSheet: View {
 				}
 			}
 		}
-		.alert(isPresented: $router.showMailAlert) {
-			Alert(
-				title: Text("Feedback", bundle: .elvahCharge),
-				message: Text(
-					"Unfortunately, we did not find your email app.",
-					bundle: .elvahCharge
-				),
-				dismissButton: .cancel(Text("Okay"))
-			)
-		}
 	}
 
 	@ViewBuilder private var content: some View {
 		VStack(spacing: 20) {
 			CPOLogo(url: chargeSessionContext?.organisationDetails.logoUrl)
 			if let companyName = chargeSessionContext?.organisationDetails.companyName {
-				Text("Contact \"\(companyName)\" for help and support")
+				Text("Contact '\(companyName)' for help and support")
 					.typography(.title(size: .small), weight: .bold)
 					.fixedSize(horizontal: false, vertical: true)
 					.multilineTextAlignment(.center)
@@ -156,11 +146,7 @@ struct SupportBottomSheet: View {
 extension SupportBottomSheet {
 	@MainActor
 	final class Router: BaseRouter {
-		@Published var showMailAlert = false
-
-		func reset() {
-			showMailAlert = false
-		}
+		func reset() {}
 	}
 }
 

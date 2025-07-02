@@ -114,7 +114,7 @@ struct ChargeSessionFeature: View {
 			return .activation(progress: .error)
 
 		case .started:
-			return .connection(progress: .initial)
+			return .connection
 
 		case .charging:
 			return .charging(session: session)
@@ -177,7 +177,7 @@ extension ChargeSessionFeature {
 	enum Status: Hashable {
 		case loading
 		case activation(progress: ActivationProgress)
-		case connection(progress: ConnectionProgress)
+		case connection
 		case charging(session: ChargeSession)
 		case stopRequested
 		case stopFailed
@@ -187,14 +187,7 @@ extension ChargeSessionFeature {
 
 		enum ActivationProgress: Hashable {
 			case loading
-			case success
 			case error
-		}
-
-		enum ConnectionProgress: Hashable {
-			case initial
-			case delayInformation
-			case success
 		}
 	}
 }

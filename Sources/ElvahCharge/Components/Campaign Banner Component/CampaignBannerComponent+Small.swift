@@ -47,7 +47,7 @@ extension CampaignBannerComponent {
 					let priceLabel = Text("\(price)/kWh", bundle: .elvahCharge).foregroundColor(.brand)
 					HStack(spacing: 12) {
 						let siteName = campaign.site.operatorName ?? String(localized: "Site")
-						Text("Charge at \(siteName) station from \(priceLabel)", bundle: .elvahCharge)
+						Text("Charge at \(siteName) from \(priceLabel)", bundle: .elvahCharge)
 							.contentTransition(.numericText())
 						Spacer()
 						Image(.chevronRight)

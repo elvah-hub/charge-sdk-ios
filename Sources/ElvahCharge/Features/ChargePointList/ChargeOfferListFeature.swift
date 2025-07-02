@@ -102,9 +102,11 @@ package struct ChargeOfferListFeature: View {
 	@ViewBuilder private var siteContent: some View {
 		switch site {
 		case .absent,
-		     .loading,
-		     .error:
-			activityContent
+				.loading:
+			ActivityInfoComponent(state: .animating, title: nil, message: nil)
+				.frame(maxWidth: .infinity)
+		case .error:
+			EmptyView()
 		case let .loaded(site):
 			if let operatorName = site.operatorName, let address = site.address {
 				header(title: operatorName, address: address)
@@ -154,48 +156,6 @@ package struct ChargeOfferListFeature: View {
 		.invertedButtonLabel()
 		.buttonStyle(.primary)
 		.padding(.horizontal, 16)
-	}
-
-	@ViewBuilder private var openingHours: some View {
-		Button {} label: {
-			HStack(spacing: 2) {
-				VStack(spacing: 4) {
-					Text("Opening hours", bundle: .elvahCharge)
-					Rectangle().frame(height: 1)
-				}
-				.fixedSize(horizontal: true, vertical: false)
-				Image("expandMore", bundle: .elvahCharge)
-			}
-		}
-		.foregroundStyle(.primaryContent)
-		.typography(.copy(size: .medium), weight: .bold)
-		.padding(.horizontal, 16)
-	}
-
-	@ViewBuilder private var activityContent: some View {
-		var title: LocalizedStringKey? {
-			if site.isError {
-				return "An error occurred"
-			}
-			return nil
-		}
-
-		var message: LocalizedStringKey? {
-			if site.isError {
-				return "The site could not be loaded. Please try again later."
-			}
-			return nil
-		}
-
-		var state: ActivityInfoComponent.ActivityState {
-			if site.isError {
-				return .error
-			}
-			return .animating
-		}
-
-		ActivityInfoComponent(state: state, title: title, message: message)
-			.frame(maxWidth: .infinity)
 	}
 
 	// MARK: - Actions

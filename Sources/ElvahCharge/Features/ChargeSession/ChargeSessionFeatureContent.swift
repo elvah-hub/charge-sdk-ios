@@ -99,7 +99,7 @@ extension ChargeSessionFeature {
 								onAction(.resetSessionObservation)
 							}
 							.buttonStyle(.secondary)
-							Button("End Charge Session", bundle: .elvahCharge) {
+							Button("End charge session", bundle: .elvahCharge) {
 								navigationRoot.dismiss()
 								chargeSessionContext = nil
 							}
@@ -179,8 +179,8 @@ extension ChargeSessionFeature {
 					return false
 				}
 				return true
-			case let .connection(progress: progress):
-				return progress != .success
+			case .connection:
+				return true
 			case .charging:
 				return false
 			default:

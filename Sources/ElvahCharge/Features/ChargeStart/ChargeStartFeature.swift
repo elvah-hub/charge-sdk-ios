@@ -73,7 +73,7 @@ struct ChargeStartFeature: View {
 	@ViewBuilder private var successBanner: some View {
 		HStack(spacing: Size.M.size) {
 			Image(.checkmarkCircle)
-			Text("Authorization successful!", bundle: .elvahCharge)
+			Text("Authorization successful", bundle: .elvahCharge)
 				.typography(.copy(size: .small), weight: .bold)
 			Spacer()
 			Button {

@@ -7,16 +7,16 @@ package extension ConnectorType {
 	var localizedTitle: String {
 		switch self {
 		case .chademo:
-			return String(localized: "CHAdeMO", bundle: .elvahCharge)
+			return "CHAdeMO"
 
 		case .combo:
-			return String(localized: "CCS", bundle: .elvahCharge)
+			return "CCS"
 
 		case .other:
-			return String(localized: "Other", bundle: .elvahCharge)
+			return "Other"
 
 		case .type2:
-			return String(localized: "Type 2", bundle: .elvahCharge)
+			return "Type "
 		}
 	}
 }

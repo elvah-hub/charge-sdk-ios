@@ -98,7 +98,7 @@ extension CampaignBannerComponent {
 				if source.chargeSession.isLoading {
 					chargeSessionInProgressLabel
 				} else {
-					Text("Loading data...", bundle: .elvahCharge)
+					Text("Loading data…", bundle: .elvahCharge)
 				}
 				if isHorizontalStack {
 					Spacer()
@@ -142,10 +142,7 @@ extension CampaignBannerComponent {
 		}
 
 		@ViewBuilder private var chargeSessionInProgressLabel: some View {
-			ViewThatFits(in: .horizontal) {
-				Text("Charging in progress...", bundle: .elvahCharge)
-				Text("Charging...", bundle: .elvahCharge)
-			}
+			Text("Charging…", bundle: .elvahCharge)
 		}
 	}
 }

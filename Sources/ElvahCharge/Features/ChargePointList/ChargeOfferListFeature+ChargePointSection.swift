@@ -217,12 +217,12 @@ extension ChargeOfferListFeature {
 				if deals.isError {
 					return "An error occurred"
 				}
-				return "Loading chargepoints"
+				return nil
 			}
 
 			var message: LocalizedStringKey? {
 				if deals.isError {
-					return "The charge points could not be loaded. Please try again later."
+					return "The charge offers could not be loaded. Please try again later."
 				}
 				return nil
 			}

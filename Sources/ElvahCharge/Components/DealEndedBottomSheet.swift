@@ -10,7 +10,7 @@ struct DealEndedBottomSheet: View {
 		BottomSheetComponent(title: title) {
 			Text(
 				"""
-				The current deal has ended. Please check back later for more offers and promotions.
+				This offer has expired, but more deals are coming!
 				""",
 				bundle: .elvahCharge
 			)
@@ -24,7 +24,7 @@ struct DealEndedBottomSheet: View {
 	}
 
 	private var title: LocalizedStringKey {
-		return "Deal Ended"
+		return "Ended"
 	}
 }
 

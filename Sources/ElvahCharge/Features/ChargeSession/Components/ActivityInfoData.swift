@@ -10,7 +10,7 @@ extension ChargeSessionFeature.Status {
 			return ActivityInfoData(
 				state: .animating(iconSystemName: nil),
 				title: "Restoring session",
-				message: "Attempting to restore charge session"
+				message: "Attempting to restore charge session."
 			)
 
 		case .unauthorized:
@@ -23,8 +23,8 @@ extension ChargeSessionFeature.Status {
 		case .unknownError:
 			return ActivityInfoData(
 				state: .error,
-				title: "Server Error",
-				message: "An unexpected error occurred."
+				title: "Server error",
+				message: "An unexpected error has occurred. Please try again or contact our support."
 			)
 
 		case let .activation(progress: progress):
@@ -36,38 +36,20 @@ extension ChargeSessionFeature.Status {
 					message: "Reaching out to the charger.\nPlease bear with us for a moment."
 				)
 
-			case .success:
-				return ActivityInfoData(
-					state: .outlined(iconSystemName: "checkmark"),
-					title: "Preparing",
-					message: "Reaching out to the charger.\nPlease bear with us for a moment."
-				)
-
 			case .error:
 				return ActivityInfoData(
 					state: .error,
 					title: "The charge point reported an error",
-					message: "Unfortunatly, the charging session could not be started at this charge point. Please try again later or use another charge point."
+					message: "Unfortunately, the charging session could not be started at this charge point. Please try again later or use another charge point."
 				)
 			}
 
-		case let .connection(progress: progress):
-			switch progress {
-			case .initial,
-			     .success:
-				return ActivityInfoData(
-					state: .animating(iconSystemName: nil),
-					title: "Starting",
-					message: "Charger is awake!\nStarting session with the charger."
-				)
-
-			case .delayInformation:
-				return ActivityInfoData(
-					state: .animating(iconSystemName: nil),
-					title: "Starting",
-					message: "The charger takes longer than usual to start.\nPlease bear with us for a moment."
-				)
-			}
+		case .connection:
+			return ActivityInfoData(
+				state: .animating(iconSystemName: nil),
+				title: "Starting",
+				message: "Charger is awake!\nStarting session with the charger."
+			)
 
 		case .charging:
 			return ActivityInfoData(
