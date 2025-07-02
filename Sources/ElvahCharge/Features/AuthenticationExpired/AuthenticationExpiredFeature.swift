@@ -46,7 +46,7 @@ struct AuthenticationExpiredFeature: View {
 			}
 		}
 		.sheet(isPresented: $router.showSupport) {
-			SupportBottomSheet(router: router.supportRouter)
+			SupportFeature(router: router.supportRouter)
 		}
 	}
 }
@@ -57,7 +57,7 @@ extension AuthenticationExpiredFeature {
 	final class Router: BaseRouter {
 		@Published var showSupport = false
 
-		let supportRouter: SupportBottomSheet.Router = .init()
+		let supportRouter: SupportFeature.Router = .init()
 
 		func dismissPresentation() {
 			showSupport = false

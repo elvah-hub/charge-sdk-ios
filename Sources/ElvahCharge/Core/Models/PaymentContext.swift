@@ -75,7 +75,7 @@ package extension PaymentContext.OrganisationDetails {
 			logoUrl: URL(string: "https://placehold.co/600x"),
 			privacyUrl: URL(string: "https://www.elvah.de/"),
 			termsOfConditionUrl: URL(string: "https://www.elvah.de/"),
-			supportMethods: [.email("help@elvah.de")]
+			supportMethods: [.email("help@elvah.de"), .phone("+12 2345 6789"), .website(URL(string: "https://www.elvah.de/")!)]
 		)
 	}
 }

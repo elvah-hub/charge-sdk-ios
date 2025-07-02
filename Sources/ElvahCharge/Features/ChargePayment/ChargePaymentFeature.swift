@@ -221,7 +221,7 @@ extension ChargePaymentFeature {
 		@Published var showGenericError = false
 		@Published var showDealEndedSheet = false
 
-		let supportSheetRouter = SupportBottomSheet.Router()
+		let supportSheetRouter = SupportFeature.Router()
 		let chargeStartRouter = ChargeStartFeature.Router()
 
 		func dismissPresentation() {

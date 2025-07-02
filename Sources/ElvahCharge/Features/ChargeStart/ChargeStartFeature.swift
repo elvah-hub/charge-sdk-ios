@@ -163,7 +163,7 @@ extension ChargeStartFeature {
 		@Published var startSessionInfo: StartSessionInfo?
 		@Published var showSupport = false
 
-		let supportSheetRouter = SupportBottomSheet.Router()
+		let supportSheetRouter = SupportFeature.Router()
 		let chargeSessionRouter = ChargeSessionFeature.Router()
 		let authenticationExpiredFeatureRouter = AuthenticationExpiredFeature.Router()
 

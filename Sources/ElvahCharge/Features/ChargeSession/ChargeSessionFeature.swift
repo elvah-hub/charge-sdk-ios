@@ -47,7 +47,7 @@ struct ChargeSessionFeature: View {
 				}
 			}
 			.sheet(isPresented: $router.showSupport) {
-				SupportBottomSheet(router: router.supportRouter)
+				SupportFeature(router: router.supportRouter)
 			}
 			.onChange(of: sessionRefresh) { sessionRefresh in
 				if let error = sessionRefresh.error {
@@ -199,7 +199,7 @@ extension ChargeSessionFeature {
 		@Published var path: NavigationPath = .init()
 		@Published var showSupport = false
 
-		let supportRouter: SupportBottomSheet.Router = .init()
+		let supportRouter: SupportFeature.Router = .init()
 
 		func dismissPresentation() {
 			showSupport = false

@@ -5,65 +5,84 @@ import MessageUI
 import SwiftUI
 
 @available(iOS 16.0, *)
-struct SupportBottomSheet: View {
+struct SupportFeature: View {
 	@Environment(\.dynamicTypeSize) private var dynamicTypeSize
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.openURL) private var openURL
-	@ObservedObject var router: SupportBottomSheet.Router
+	@ObservedObject var router: SupportFeature.Router
 	@Default(.chargeSessionContext) private var chargeSessionContext
 
 	var body: some View {
-		BottomSheetComponent(
-			title: "Help & Support",
-			canBeDismissed: true,
-			isExpandable: false
-		) {
-			content
-		} footer: {
-			if let supportMethods = chargeSessionContext?.organisationDetails.supportMethods {
-				ButtonStack {
-					ForEach(supportMethods.sorted().filter(\.isPhoneOrUrl)) { supportMethod in
-						switch supportMethod {
-						case let .phone(number):
-							phoneButton(for: number)
-						case let .website(url):
-							urlButton(for: url)
-						default:
-							EmptyView()
-						}
+		NavigationStack {
+			VStack(spacing: 0) {
+				ScrollView {
+					VStack(spacing: 20) {
+						content
 					}
-
-					let emailAndWhatsAppMethods = supportMethods.sorted().filter(\.isEmailOrWhatsApp)
-					if emailAndWhatsAppMethods.isEmpty == false {
-						ButtonStack(axis: .horizontal) {
-							ForEach(emailAndWhatsAppMethods) { supportMethod in
+					.padding(.L)
+				}
+				FooterView {
+					if let supportMethods = chargeSessionContext?.organisationDetails.supportMethods {
+						ButtonStack {
+							ForEach(supportMethods.sorted().filter(\.isPhoneOrUrl)) { supportMethod in
 								switch supportMethod {
-								case let .email(email):
-									mailButton(for: email)
-								case let .whatsApp(number):
-									whatsAppButton(for: number)
+								case let .phone(number):
+									phoneButton(for: number)
+								case let .website(url):
+									urlButton(for: url)
 								default:
 									EmptyView()
 								}
 							}
+
+							let emailAndWhatsAppMethods = supportMethods.sorted().filter(\.isEmailOrWhatsApp)
+							if emailAndWhatsAppMethods.isEmpty == false {
+								ButtonStack(axis: .horizontal) {
+									ForEach(emailAndWhatsAppMethods) { supportMethod in
+										switch supportMethod {
+										case let .email(email):
+											mailButton(for: email)
+										case let .whatsApp(number):
+											whatsAppButton(for: number)
+										default:
+											EmptyView()
+										}
+									}
+								}
+							}
 						}
 					}
+					DisclaimerFooter()
+				}
+			}
+			.navigationTitle("Help & Support")
+			.navigationBarTitleDisplayMode(.inline)
+			.toolbar {
+				ToolbarItem(placement: .topBarLeading) {
+					CloseButton()
 				}
 			}
 		}
 	}
 
 	@ViewBuilder private var content: some View {
-		VStack(spacing: 20) {
-			CPOLogo(url: chargeSessionContext?.organisationDetails.logoUrl)
-			if let companyName = chargeSessionContext?.organisationDetails.companyName {
-				Text("Contact '\(companyName)' for help and support")
+		CPOLogo(url: chargeSessionContext?.organisationDetails.logoUrl)
+		Image(.helpSupport)
+		if let companyName = chargeSessionContext?.organisationDetails.companyName {
+			VStack(spacing: Size.XS.size) {
+				Text("Need help or want to give us feedback?")
 					.typography(.title(size: .small), weight: .bold)
+					.foregroundStyle(.primaryContent)
 					.fixedSize(horizontal: false, vertical: true)
-					.multilineTextAlignment(.center)
+				Text(
+					"Get in touch with \(companyName)s team. You can do so immediately via WhatsApp or E-mail."
+				)
+				.typography(.copy(size: .medium), weight: .regular)
+				.foregroundStyle(.secondaryContent)
+				.fixedSize(horizontal: false, vertical: true)
 			}
+			.multilineTextAlignment(.center)
 		}
-		.padding(.horizontal)
 	}
 
 	@ViewBuilder private func phoneButton(for number: String) -> some View {
@@ -143,7 +162,7 @@ struct SupportBottomSheet: View {
 }
 
 @available(iOS 16.0, *)
-extension SupportBottomSheet {
+extension SupportFeature {
 	@MainActor
 	final class Router: BaseRouter {
 		func reset() {}
@@ -152,7 +171,17 @@ extension SupportBottomSheet {
 
 @available(iOS 16.0, *)
 #Preview {
-	SupportBottomSheet(router: .init())
+	SupportFeature(router: .init())
 		.withFontRegistration()
 		.preferredColorScheme(.dark)
+		.onAppear {
+			Defaults[.chargeSessionContext] = .init(
+				site: .mock,
+				deal: .mockAvailable,
+				organisationDetails: .mock,
+				authentication: .mock,
+				paymentId: "",
+				startedAt: .now
+			)
+		}
 }

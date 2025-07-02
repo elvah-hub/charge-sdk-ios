@@ -111,9 +111,6 @@
     "Connect your electric vehicle now and start the charging process." : {
 
     },
-    "Contact '%@' for help and support" : {
-
-    },
     "Contact Web Support Agent" : {
 
     },
@@ -159,6 +156,9 @@
     "Found no deal" : {
 
     },
+    "Get in touch with %@s team. You can do so immediately via WhatsApp or E-mail." : {
+
+    },
     "Google Maps" : {
 
     },
@@ -196,6 +196,9 @@
 
     },
     "Message" : {
+
+    },
+    "Need help or want to give us feedback?" : {
 
     },
     "No Charge Session" : {
