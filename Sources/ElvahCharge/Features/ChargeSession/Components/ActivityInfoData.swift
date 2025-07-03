@@ -6,7 +6,7 @@ import SwiftUI
 extension ChargeSessionFeature.Status {
 	var activityInfoData: ActivityInfoData? {
 		switch self {
-		case .loading:
+		case .sessionLoading:
 			return ActivityInfoData(
 				state: .animating(iconSystemName: nil),
 				title: "Restoring session",
@@ -27,24 +27,21 @@ extension ChargeSessionFeature.Status {
 				message: "An unexpected error has occurred. Please try again or contact our support."
 			)
 
-		case let .activation(progress: progress):
-			switch progress {
-			case .loading:
-				return ActivityInfoData(
-					state: .animating(iconSystemName: nil),
-					title: "Preparing",
-					message: "Reaching out to the charger.\nPlease bear with us for a moment."
-				)
+		case .startRequested:
+			return ActivityInfoData(
+				state: .animating(iconSystemName: nil),
+				title: "Preparing",
+				message: "Reaching out to the charger.\nPlease bear with us for a moment."
+			)
 
-			case .error:
-				return ActivityInfoData(
-					state: .error,
-					title: "The charge point reported an error",
-					message: "Unfortunately, the charging session could not be started at this charge point. Please try again later or use another charge point."
-				)
-			}
+		case .startRejected:
+			return ActivityInfoData(
+				state: .error,
+				title: "The charge point reported an error",
+				message: "Unfortunately, the charging session could not be started at this charge point. Please try again later or use another charge point."
+			)
 
-		case .connection:
+		case .started:
 			return ActivityInfoData(
 				state: .animating(iconSystemName: nil),
 				title: "Starting",
@@ -65,7 +62,7 @@ extension ChargeSessionFeature.Status {
 				message: "We are connecting to the station to end the charging session."
 			)
 
-		case .stopFailed:
+		case .stopRejected:
 			return ActivityInfoData(
 				state: .error,
 				title: "Please end charging manually",

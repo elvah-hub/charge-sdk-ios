@@ -21,11 +21,11 @@ extension ChargeSessionFeature {
 
 		var body: some View {
 			VStack {
-				if case let .stopped(sessionStorage, session) = status, let sessionStorage {
+				if case let .stopped(session) = status, let chargeSessionContext {
 					ChargeSessionStoppedComponent(
 						session: session,
-						site: sessionStorage.site,
-						deal: sessionStorage.deal
+						site: chargeSessionContext.site,
+						deal: chargeSessionContext.deal
 					)
 				} else {
 					VStack(spacing: Size.XL.size) {
@@ -49,23 +49,9 @@ extension ChargeSessionFeature {
 
 			Group {
 				switch status {
-				case .loading:
-					EmptyView()
-				case .unauthorized:
-					EmptyView()
-				case .unknownError:
-					EmptyView()
-				case .activation:
-					EmptyView()
-				case .connection:
-					EmptyView()
 				case let .charging(session: session):
 					ChargeSessionMetricsComponent(status: status, session: session)
-				case .stopRequested:
-					EmptyView()
-				case .stopFailed:
-					EmptyView()
-				case .stopped:
+				default:
 					EmptyView()
 				}
 			}
@@ -81,31 +67,24 @@ extension ChargeSessionFeature {
 
 				ButtonStack {
 					switch status {
-					case .loading:
+					case .sessionLoading:
 						EmptyView()
 					case .unauthorized:
-						Button("Try again", bundle: .elvahCharge) {
-							onAction(.resetSessionObservation)
-						}
-						.buttonStyle(.primary)
+						tryAgainButton
+						endSessionButton
 					case .unknownError:
-						Button("Try again", bundle: .elvahCharge) {
-							onAction(.resetSessionObservation)
+						tryAgainButton
+						Button("End charge session", bundle: .elvahCharge) {
+							navigationRoot.dismiss()
+							chargeSessionContext = nil
 						}
 						.buttonStyle(.primary)
-					case let .activation(progress):
-						if case .error = progress {
-							Button("Try again", bundle: .elvahCharge) {
-								onAction(.resetSessionObservation)
-							}
-							.buttonStyle(.secondary)
-							Button("End charge session", bundle: .elvahCharge) {
-								navigationRoot.dismiss()
-								chargeSessionContext = nil
-							}
-							.buttonStyle(.primary)
-						}
-					case .connection:
+					case .startRequested:
+						EmptyView()
+					case .startRejected:
+						tryAgainButton
+						endSessionButton
+					case .started:
 						EmptyView()
 					case .charging:
 						Button("Stop charging") {
@@ -114,11 +93,9 @@ extension ChargeSessionFeature {
 						.buttonStyle(.primary)
 					case .stopRequested:
 						EmptyView()
-					case .stopFailed:
-						Button("Try again", bundle: .elvahCharge) {
-							onAction(.stop)
-						}
-						.buttonStyle(.primary)
+					case .stopRejected:
+						tryAgainButton
+						endSessionButton
 					case .stopped:
 						Button("Done", bundle: .elvahCharge) {
 							navigationRoot.dismiss()
@@ -142,15 +119,31 @@ extension ChargeSessionFeature {
 			.animation(.default, value: status)
 		}
 
+		@ViewBuilder private var tryAgainButton: some View {
+			Button("Try again", bundle: .elvahCharge) {
+				onAction(.resetSessionObservation)
+			}
+			.buttonStyle(.primary)
+		}
+
+		@ViewBuilder private var endSessionButton: some View {
+			Button("End charge session", bundle: .elvahCharge) {
+				navigationRoot.dismiss()
+				chargeSessionContext = nil
+			}
+			.buttonStyle(.secondary)
+		}
+
 		@ViewBuilder private var activityIndicator: some View {
 			switch status {
-			case .loading,
+			case .sessionLoading,
 			     .unauthorized,
 			     .unknownError,
-			     .activation,
-			     .connection,
+					 .startRequested,
+					 .startRejected,
+			     .started,
 			     .stopRequested,
-			     .stopFailed,
+			     .stopRejected,
 			     .stopped:
 				if let data = status.activityInfoData {
 					ActivityInfoComponent(state: data.state, title: data.title, message: data.message)
@@ -175,12 +168,9 @@ extension ChargeSessionFeature {
 
 		private var showProgressBar: Bool {
 			switch status {
-			case let .activation(progress: progress):
-				if case .error = progress {
-					return false
-				}
+			case .startRequested:
 				return true
-			case .connection:
+			case .started:
 				return true
 			case .charging:
 				return false

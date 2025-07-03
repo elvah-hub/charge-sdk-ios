@@ -17,7 +17,7 @@ struct ChargeSessionFeature: View {
 	@TaskIdentifier private var sessionObservationId
 
 	@State private var session: ChargeSession?
-	@State private var status: Status = .loading
+	@State private var status: Status = .sessionLoading
 	@State private var progress: Double = 0
 	@State private var attempts = 1
 
@@ -102,19 +102,19 @@ struct ChargeSessionFeature: View {
 
 	private func makeStatus(session: ChargeSession?) -> Status {
 		guard let session else {
-			return .loading
+			return .sessionLoading
 		}
 
 		switch session.status {
 		case .startRequested,
 		     .none:
-			return .activation(progress: .loading)
+			return .startRequested
 
 		case .startRejected:
-			return .activation(progress: .error)
+			return .startRejected
 
 		case .started:
-			return .connection
+			return .started
 
 		case .charging:
 			return .charging(session: session)
@@ -123,13 +123,10 @@ struct ChargeSessionFeature: View {
 			return .stopRequested
 
 		case .stopRejected:
-			return .stopFailed
+			return .stopRejected
 
 		case .stopped:
-			return .stopped(
-				chargeSessionContext: Defaults[.chargeSessionContext],
-				session: session
-			)
+			return .stopped(session: session)
 		}
 	}
 
@@ -175,20 +172,16 @@ struct ChargeSessionFeature: View {
 @available(iOS 16.0, *)
 extension ChargeSessionFeature {
 	enum Status: Hashable {
-		case loading
-		case activation(progress: ActivationProgress)
-		case connection
+		case sessionLoading
+		case startRequested
+		case startRejected
+		case started
 		case charging(session: ChargeSession)
 		case stopRequested
-		case stopFailed
-		case stopped(chargeSessionContext: ChargeSessionContext?, session: ChargeSession)
+		case stopRejected
+		case stopped(session: ChargeSession)
 		case unauthorized
 		case unknownError
-
-		enum ActivationProgress: Hashable {
-			case loading
-			case error
-		}
 	}
 }
 
