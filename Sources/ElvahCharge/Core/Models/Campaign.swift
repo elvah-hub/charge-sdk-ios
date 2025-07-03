@@ -46,9 +46,6 @@ package extension Campaign {
 
 package extension Campaign {
 	static var mock: Campaign {
-		Campaign(
-			site: .mock,
-			deals: [.mockAvailable, .mockUnavailable, .mockOutOfService]
-		)
+		Campaign(site: .mock, deals: [.mockAvailable, .mockUnavailable, .mockOutOfService])
 	}
 }
