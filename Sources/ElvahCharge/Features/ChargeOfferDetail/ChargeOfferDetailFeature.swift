@@ -3,9 +3,9 @@
 import SwiftUI
 
 @available(iOS 16.0, *)
-package struct ChargeOfferListFeature: View {
+package struct ChargeOfferDetailFeature: View {
 	@Environment(\.dismiss) private var dismiss
-	@ObservedObject private var router: ChargeOfferListFeature.Router
+	@ObservedObject private var router: ChargeOfferDetailFeature.Router
 	@EnvironmentObject private var chargeProvider: ChargeProvider
 	@EnvironmentObject private var chargeSettlementProvider: ChargeSettlementProvider
 
@@ -19,7 +19,7 @@ package struct ChargeOfferListFeature: View {
 	@Loadable<Double?> private var routeDistanceToStation
 	@Process private var paymentInitiation
 
-	package init(deals: [Deal], router: ChargeOfferListFeature.Router) {
+	package init(deals: [Deal], router: ChargeOfferDetailFeature.Router) {
 		_deals = Loadable(wrappedValue: .loaded(deals))
 		self.router = router
 	}
@@ -117,7 +117,7 @@ package struct ChargeOfferListFeature: View {
 
 
 	@ViewBuilder private var dealsContent: some View {
-		ChargeOfferListFeature.ChargePointSection(
+		ChargeOfferDetailFeature.ChargePointSection(
 			initialPowerTypeSelection: site.data?.prevalentPowerType,
 			deals: deals,
 			dealsSectionOrigin: $scrollPosition,
@@ -163,7 +163,7 @@ package struct ChargeOfferListFeature: View {
 	/// Returns a copy of the view with the given site associated for displaying site-specific
 	/// information.
 	/// - Parameter site: The site.
-	/// - Returns: A ``ChargeOfferListFeature`` configured to show information about the site.
+	/// - Returns: A ``ChargeOfferDetailFeature`` configured to show information about the site.
 	package func siteInformation(_ site: Site?) -> some View {
 		var copy = self
 		copy.associatedSite = site
@@ -204,7 +204,7 @@ package struct ChargeOfferListFeature: View {
 }
 
 @available(iOS 16.0, *)
-package extension ChargeOfferListFeature {
+package extension ChargeOfferDetailFeature {
 	@MainActor
 	final class Router: BaseRouter {
 		@Published var showGenericError = false
@@ -227,7 +227,7 @@ package extension ChargeOfferListFeature {
 @available(iOS 16.0, *)
 #Preview {
 	NavigationStack {
-		ChargeOfferListFeature(
+		ChargeOfferDetailFeature(
 			deals: [.mockAvailable, .mockUnavailable, .mockOutOfService],
 			router: .init()
 		)
