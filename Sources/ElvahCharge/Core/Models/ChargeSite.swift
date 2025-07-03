@@ -25,3 +25,32 @@ public struct ChargeSite: Codable, Hashable, Identifiable, Sendable {
 		set { site[keyPath: keyPath] = newValue }
 	}
 }
+
+// MARK: - Helpers
+
+package extension ChargeSite {
+	/// The cheapest, non-expired deal in the campaign.
+	var cheapestOffer: ChargeOffer? {
+		offers
+			.filter { $0.hasEnded == false }
+			.sorted(using: KeyPathComparator(\.price.pricePerKWh)).first
+	}
+
+	/// The deal that expires the latest among all deals in the campaign.
+	var latestEndingOffer: ChargeOffer? {
+		offers.filter { $0.hasEnded == false }.sorted(using: KeyPathComparator(\.campaignEndDate)).last
+	}
+
+	/// The deal that expires the earliest among all deals in the campaign.
+	var earliestEndingOffer: ChargeOffer? {
+		offers.filter { $0.hasEnded == false }.sorted(using: KeyPathComparator(\.campaignEndDate)).first
+	}
+}
+
+// MARK: - Mock Data
+
+package extension ChargeSite {
+	static var mock: ChargeSite {
+		ChargeSite(site: .mock, offers: [.mockAvailable, .mockUnavailable, .mockOutOfService])
+	}
+}
