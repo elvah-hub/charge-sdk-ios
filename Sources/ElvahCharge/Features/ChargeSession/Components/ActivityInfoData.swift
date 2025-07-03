@@ -4,7 +4,7 @@ import SwiftUI
 
 @available(iOS 16.0, *)
 extension ChargeSessionFeature.Status {
-	var activityInfoData: ActivityInfoData {
+	var activityInfoData: ActivityInfoData? {
 		switch self {
 		case .loading:
 			return ActivityInfoData(
@@ -73,11 +73,7 @@ extension ChargeSessionFeature.Status {
 			)
 
 		case .stopped:
-			return ActivityInfoData(
-				state: .outlined(iconSystemName: "checkmark"),
-				title: "Thanks for charging\nwith E.ON",
-				message: nil
-			)
+			return nil
 		}
 	}
 }

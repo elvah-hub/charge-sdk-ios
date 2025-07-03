@@ -89,7 +89,7 @@ extension CampaignBannerComponent {
 		}
 
 		@ViewBuilder private var absentHeader: some View {
-			Text("No data", bundle: .elvahCharge)
+			Text(verbatim: "No data")
 				.redacted(reason: .placeholder)
 		}
 

@@ -25,8 +25,8 @@ extension CampaignBannerComponent {
 					switch loadedData {
 					case let .campaign(campaign):
 						campaignContent(campaign: campaign)
-					case let .chargeSession(session):
-						chargeSessionContent(session: session)
+					case .chargeSession:
+						chargeSessionContent
 					}
 				}
 			}
@@ -93,10 +93,7 @@ extension CampaignBannerComponent {
 		@ViewBuilder private func errorContent(error: any Error) -> some View {
 			VStack(spacing: 24) {
 				if source.chargeSession.isError {
-					Text("Failed to load charge session details", bundle: .elvahCharge)
-						.multilineTextAlignment(.center)
-						.lineSpacing(5)
-					openChargePresentationButton
+					chargeSessionContent
 				} else {
 					Text("Failed to load deal", bundle: .elvahCharge)
 						.multilineTextAlignment(.center)
@@ -106,21 +103,17 @@ extension CampaignBannerComponent {
 			}
 		}
 
-		@ViewBuilder private func chargeSessionContent(session: ChargeSession) -> some View {
-			VStack(spacing: 24) {
-				Text("You are already charging", bundle: .elvahCharge)
-					.multilineTextAlignment(.center)
-					.lineSpacing(5)
-				openChargePresentationButton
+		@ViewBuilder private var chargeSessionContent: some View {
+			Button(action: primaryAction) {
+				HStack(spacing: 12) {
+					Text("Manage your current charge session", bundle: .elvahCharge)
+						.foregroundStyle(.primaryContent)
+					Spacer()
+					Image(.chevronRight)
+				}
+				.multilineTextAlignment(.leading)
 			}
-		}
-
-		@ViewBuilder private var openChargePresentationButton: some View {
-			ViewThatFits(in: .horizontal) {
-				Button("Manage Charge Session", bundle: .elvahCharge, action: primaryAction)
-				Button("Manage", bundle: .elvahCharge, action: primaryAction)
-			}
-			.buttonStyle(.primary)
+			.typography(.copy(size: .medium), weight: .bold)
 		}
 	}
 }

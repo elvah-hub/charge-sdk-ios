@@ -292,7 +292,7 @@ package extension CampaignBannerComponent {
 @available(iOS 17.0, *)
 #Preview("Static") {
 	let source = CampaignSource.Binding(
-		campaign: .loaded(.mock),
+		campaign: .absent,
 		chargeSession: .constant(.absent),
 		hasEnded: false,
 		kind: .remoteInRegion(.mock),

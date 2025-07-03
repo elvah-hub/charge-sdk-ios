@@ -152,13 +152,14 @@ extension ChargeSessionFeature {
 			     .stopRequested,
 			     .stopFailed,
 			     .stopped:
-				let data = status.activityInfoData
-				ActivityInfoComponent(state: data.state, title: data.title, message: data.message)
-					.padding(.horizontal)
-					.animation(.bouncy(extraBounce: 0.2), value: status)
-					.alignmentGuide(VerticalAlignment.top) { dimension in
-						-50
-					}
+				if let data = status.activityInfoData {
+					ActivityInfoComponent(state: data.state, title: data.title, message: data.message)
+						.padding(.horizontal)
+						.animation(.bouncy(extraBounce: 0.2), value: status)
+						.alignmentGuide(VerticalAlignment.top) { dimension in
+							-50
+						}
+				}
 			case .charging:
 				EmptyView()
 			}
