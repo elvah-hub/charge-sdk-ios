@@ -25,7 +25,7 @@ extension ChargeSessionFeature {
 					ChargeSessionStoppedComponent(
 						session: session,
 						site: chargeSessionContext.site,
-						deal: chargeSessionContext.deal
+						offer: chargeSessionContext.signedOffer.offer
 					)
 				} else {
 					VStack(spacing: Size.XL.size) {

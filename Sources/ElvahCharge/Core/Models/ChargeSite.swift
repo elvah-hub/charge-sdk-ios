@@ -12,7 +12,7 @@ public struct ChargeSite: Codable, Hashable, Identifiable, Sendable {
 		site.id
 	}
 
-	private var site: Site
+	package var site: Site
 	package var offers: [ChargeOffer]
 
 	package init(site: Site, offers: [ChargeOffer]) {
@@ -29,19 +29,19 @@ public struct ChargeSite: Codable, Hashable, Identifiable, Sendable {
 // MARK: - Helpers
 
 package extension ChargeSite {
-	/// The cheapest, non-expired deal in the campaign.
+	/// The cheapest, non-expired offer in the campaign.
 	var cheapestOffer: ChargeOffer? {
 		offers
 			.filter { $0.hasEnded == false }
 			.sorted(using: KeyPathComparator(\.price.pricePerKWh)).first
 	}
 
-	/// The deal that expires the latest among all deals in the campaign.
+	/// The offer that expires the latest among all offers in the campaign.
 	var latestEndingOffer: ChargeOffer? {
 		offers.filter { $0.hasEnded == false }.sorted(using: KeyPathComparator(\.campaignEndDate)).last
 	}
 
-	/// The deal that expires the earliest among all deals in the campaign.
+	/// The offer that expires the earliest among all offers in the campaign.
 	var earliestEndingOffer: ChargeOffer? {
 		offers.filter { $0.hasEnded == false }.sorted(using: KeyPathComparator(\.campaignEndDate)).first
 	}

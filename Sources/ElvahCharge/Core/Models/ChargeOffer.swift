@@ -13,9 +13,8 @@ package struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 	package var price: ChargePrice
 	package var originalPrice: ChargePrice?
 	package var type: ChargeOffer.OfferType
-	package var campaignEndDate: Date?
+	package var campaignEndDate: Date
 	package var expiresAt: Date
-	package var signedOffer: String
 
 	package init(
 		id: String,
@@ -25,16 +24,14 @@ package struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 		type: ChargeOffer.OfferType,
 		campaignEndDate: Date?,
 		expiresAt: Date,
-		signedOffer: String
 	) {
 		self.id = id
 		self.chargePoint = chargePoint
 		self.price = price
 		self.originalPrice = originalPrice
 		self.type = type
-		self.campaignEndDate = campaignEndDate
+		self.campaignEndDate = campaignEndDate ?? .distantPast // TODO: Find better solution
 		self.expiresAt = expiresAt
-		self.signedOffer = signedOffer
 	}
 	
 	/// Returns `true` the offer is discounted.
@@ -46,7 +43,7 @@ package struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 
 	/// Returns `true` if the associated campaign has ended, `false` otherwise.
 	package var hasEnded: Bool {
-		(campaignEndDate ?? .distantPast) < Date()
+		campaignEndDate < Date()
 	}
 }
 
@@ -67,7 +64,6 @@ package extension ChargeOffer {
 			type: .campaign,
 			campaignEndDate: Date().addingTimeInterval(20),
 			expiresAt: Date().addingTimeInterval(120),
-			signedOffer: "mock deal"
 		)
 	}
 
@@ -80,7 +76,6 @@ package extension ChargeOffer {
 			type: .campaign,
 			campaignEndDate: Date().addingTimeInterval(-10),
 			expiresAt: Date().addingTimeInterval(120),
-			signedOffer: "mock deal"
 		)
 	}
 
@@ -93,7 +88,6 @@ package extension ChargeOffer {
 			type: .campaign,
 			campaignEndDate: Date().addingTimeInterval(30),
 			expiresAt: Date().addingTimeInterval(120),
-			signedOffer: "mock deal"
 		)
 	}
 }

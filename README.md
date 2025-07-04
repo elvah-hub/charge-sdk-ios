@@ -191,7 +191,7 @@ You can find an example project in the `Examples` directory of this repository.
 ## Glossary
 - **Site**: A place with one or more charge points to charge an electric car at.
 - **Charge Point**: A plug used to charge an electric car.
-- **Deal**: A charge point with attached pricing information and a signed agreement to charge under those conditions.
+- **ChargeOffer**: A charge point with attached pricing information.
 - **Campaign**: A site with a list of deals attached to it.
 - **Charge Session**: An instance of charging an electric car at a charge point.
 

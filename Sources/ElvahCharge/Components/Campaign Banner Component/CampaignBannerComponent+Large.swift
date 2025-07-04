@@ -39,11 +39,11 @@ extension CampaignBannerComponent {
 
 		@ViewBuilder private func campaignContent(campaign: Campaign) -> some View {
 			TimelineView(.periodic(from: .now, by: 1)) { _ in
-				if let deal = campaign.earliestEndingDeal {
-					let price = deal.pricePerKWh.formatted()
+				if let offer = campaign.chargeSite.earliestEndingOffer {
+					let price = offer.price.pricePerKWh.formatted()
 					let priceLabel = Text("\(price)/kWh", bundle: .elvahCharge).foregroundColor(.brand)
 					VStack(spacing: 24) {
-						let siteName = campaign.site.operatorName ?? String(localized: "Site")
+						let siteName = campaign.chargeSite.operatorName ?? String(localized: "Site")
 						Text("Charge at \(siteName) from \(priceLabel)", bundle: .elvahCharge)
 							.fixedSize(horizontal: false, vertical: true)
 							.contentTransition(.numericText())
@@ -55,7 +55,7 @@ extension CampaignBannerComponent {
 					}
 					.multilineTextAlignment(.center)
 					.lineSpacing(dynamicTypeSize.isAccessibilitySize ? 2 : 5)
-					.animation(.default, value: deal)
+					.animation(.default, value: offer)
 				} else {
 					Text("This offer has expired, but more deals are coming!", bundle: .elvahCharge)
 						.fixedSize(horizontal: false, vertical: true)

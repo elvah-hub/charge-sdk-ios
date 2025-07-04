@@ -25,12 +25,12 @@ struct ChargePaymentFeature: View {
 		ScrollView {
 			VStack(spacing: 8) {
 				CPOLogo(url: request.paymentContext.organisationDetails.logoUrl)
-				Text(request.deal.chargePoint.evseId)
+				Text(request.signedOffer.chargePoint.evseId)
 					.typography(.title(size: .small), weight: .bold)
 					.foregroundStyle(.primaryContent)
 					.multilineTextAlignment(.center)
 
-				Text("\(request.deal.chargePoint.maxPowerInKw.formatted()) kW")
+				Text("\(request.signedOffer.chargePoint.maxPowerInKw.formatted()) kW")
 					.typography(.copy(size: .small))
 					.foregroundStyle(.secondaryContent)
 			}
@@ -47,7 +47,7 @@ struct ChargePaymentFeature: View {
 		.toolbarBackground(.canvas, for: .navigationBar)
 		.toolbar {
 			ToolbarItem(placement: .principal) {
-				StyledNavigationTitle(request.deal.chargePoint.evseId)
+				StyledNavigationTitle(request.signedOffer.chargePoint.evseId)
 			}
 			ToolbarItem(placement: .topBarLeading) {
 				CloseButton {
@@ -87,14 +87,14 @@ struct ChargePaymentFeature: View {
 				router.showLegalLinkOptions = false
 			}
 		}
-		.sheet(isPresented: $router.showDealEndedSheet) {
-			DealEndedBottomSheet()
+		.sheet(isPresented: $router.showOfferEndedSheet) {
+			OfferEndedBottomSheet()
 		}
 	}
 
 	@ViewBuilder private var costInformation: some View {
 		CustomSectionStack {
-			AdhocCostsBoxComponent(deal: request.deal) { action in }
+			AdhocCostsBoxComponent(offer: request.signedOffer.offer) { action in }
 			offerEndLabel
 		}
 		.padding(16)
@@ -103,8 +103,8 @@ struct ChargePaymentFeature: View {
 
 	@ViewBuilder private var offerEndLabel: some View {
 		TimelineView(.periodic(from: .now, by: 1)) { context in
-			DealEndLabel(
-				deal: request.deal,
+			OfferEndLabel(
+				offer: request.signedOffer.offer,
 				referenceDate: context.date,
 				prefix: "Offer ends in ",
 				primaryColor: .primaryContent,
@@ -119,8 +119,8 @@ struct ChargePaymentFeature: View {
 		FooterView {
 			VStack(spacing: Size.L.size) {
 				Button {
-					if request.deal.hasEnded {
-						router.showDealEndedSheet = true
+					if request.signedOffer.hasEnded {
+						router.showOfferEndedSheet = true
 					} else {
 						$payment.run {
 							await pay()
@@ -219,7 +219,7 @@ extension ChargePaymentFeature {
 		@Published var showLegalLinkOptions = false
 		@Published var showPaymentSheet = false
 		@Published var showGenericError = false
-		@Published var showDealEndedSheet = false
+		@Published var showOfferEndedSheet = false
 
 		let supportSheetRouter = SupportFeature.Router()
 		let chargeStartRouter = ChargeStartFeature.Router()
@@ -228,7 +228,7 @@ extension ChargePaymentFeature {
 			showLegalLinkOptions = false
 			showPaymentSheet = false
 			showGenericError = false
-			showDealEndedSheet = false
+			showOfferEndedSheet = false
 		}
 
 		func reset() {

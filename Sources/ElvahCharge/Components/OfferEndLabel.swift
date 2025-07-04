@@ -4,30 +4,30 @@ import SwiftUI
 
 /// A view displaying the time left until a deal ends.
 @available(iOS 16.0, *)
-struct DealEndLabel: View {
-	var deal: Deal
+struct OfferEndLabel: View {
+	var offer: ChargeOffer
 	var referenceDate: Date
 	var prefix: LocalizedStringKey?
 	var primaryColor: Color
 	var highlightColor: Color?
 
-	/// Initializes a `DealEndLabel`.
+	/// Initializes a `OfferEndLabel`.
 	///
 	/// - Parameters:
-	///   - deal: The deal to display the end time for.
+	///   - offer: The charge offer to display the end time for.
 	///   - prefix: An optional prefix to display before the time left.
 	///   - referenceDate: A reference date.
 	///   - primaryColor: The primary label color used for the prefix and "Ended" state.
 	///   - highlightColor: The color that the countdown label should have. If set to `nil`, the
 	/// environment foreground color will be used.
 	init(
-		deal: Deal,
+		offer: ChargeOffer,
 		referenceDate: Date,
 		prefix: LocalizedStringKey? = nil,
 		primaryColor: Color,
 		highlightColor: Color? = nil
 	) {
-		self.deal = deal
+		self.offer = offer
 		self.referenceDate = referenceDate
 		self.prefix = prefix
 		self.primaryColor = primaryColor
@@ -37,7 +37,7 @@ struct DealEndLabel: View {
 	var body: some View {
 		let timeLeft = max(
 			Duration.seconds(0),
-			Duration.seconds(deal.campaignEndDate.timeIntervalSince(referenceDate))
+			Duration.seconds(offer.campaignEndDate.timeIntervalSince(referenceDate))
 		)
 
 		let suffixColor = timeLeft > .zero ? (highlightColor ?? primaryColor) : primaryColor
@@ -74,21 +74,21 @@ struct DealEndLabel: View {
 #Preview {
 	VStack(spacing: 20) {
 		// Preview default style
-		DealEndLabel(deal: .mockAvailable, referenceDate: Date(), primaryColor: .primaryContent)
+		OfferEndLabel(offer: .mockAvailable, referenceDate: Date(), primaryColor: .primaryContent)
 
 		// Preview with custom prefix
-		DealEndLabel(
-			deal: .mockAvailable,
+		OfferEndLabel(
+			offer: .mockAvailable,
 			referenceDate: Date(),
 			prefix: "Offer ends in ",
 			primaryColor: .primaryContent
 		)
 
 		// Preview ended state
-		DealEndLabel(deal: .mockUnavailable, referenceDate: Date(), primaryColor: .primaryContent)
+		OfferEndLabel(offer: .mockUnavailable, referenceDate: Date(), primaryColor: .primaryContent)
 
 		// Preview with custom color
-		DealEndLabel(deal: .mockAvailable, referenceDate: Date(), primaryColor: .primaryContent)
+		OfferEndLabel(offer: .mockAvailable, referenceDate: Date(), primaryColor: .primaryContent)
 	}
 	.padding()
 	.background(.canvas)

@@ -9,18 +9,18 @@ import SwiftUI
 package struct ChargeOfferDetailRootFeature: View {
   @StateObject private var router = ChargeOfferDetailRootFeature.Router()
   private var site: Site?
-  private var deals: [Deal]
+	private var offers: [ChargeOffer]
 
-  package init(site: Site, deals: [Deal] = []) {
+	package init(site: Site, offers: [ChargeOffer] = []) {
     self.site = site
-    self.deals = deals
+    self.offers = offers
   }
 
   @State private var show = false
 
   package var body: some View {
     NavigationStack(path: $router.path) {
-      ChargeOfferDetailFeature(deals: deals, router: router.chargeOfferListRouter)
+      ChargeOfferDetailFeature(offers: offers, router: router.chargeOfferListRouter)
         .siteInformation(site)
     }
     .navigationRoot(path: $router.path)

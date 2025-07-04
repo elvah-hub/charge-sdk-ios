@@ -6,7 +6,8 @@ import SwiftUI
 @MainActor
 final class DiscoveryProvider: ObservableObject {
 	struct Dependencies: Sendable {
-		var deals: @Sendable (_ region: MKMapRect) async throws -> [Campaign]
+		var sitesForEvseIds: @Sendable (_ evseIds: [String]) async throws -> [ChargeSite]
+		var sitesInRegion: @Sendable (_ region: MKMapRect) async throws -> [ChargeSite]
 	}
 
 	private let dependencies: Dependencies
@@ -15,13 +16,28 @@ final class DiscoveryProvider: ObservableObject {
 		self.dependencies = dependencies
 	}
 
+	func sites(forEvseIds evseIds: [String]) async throws -> [ChargeSite] {
+		try await dependencies.sitesForEvseIds(evseIds)
+	}
+
+	func sites(in region: MKMapRect) async throws -> [ChargeSite] {
+		try await dependencies.sitesInRegion(region)
+	}
+
+	func sites(near location: CLLocationCoordinate2D, radius: Double = 5) async throws -> [ChargeSite] {
+		let region = MKMapRect.around(location, radius: radius)
+		return try await dependencies.sitesInRegion(region)
+	}
+
 	func deals(in region: MKMapRect) async throws -> [Campaign] {
-		try await dependencies.deals(region)
+		let chargeSites = try await dependencies.sitesInRegion(region)
+		return chargeSites.map { Campaign(chargeSite: $0) }
 	}
 
 	func deals(near location: CLLocationCoordinate2D, radius: Double = 5) async throws -> [Campaign] {
 		let region = MKMapRect.around(location, radius: radius)
-		return try await dependencies.deals(region)
+		let chargeSites = try await dependencies.sitesInRegion(region)
+		return chargeSites.map { Campaign(chargeSite: $0) }
 	}
 }
 
@@ -33,8 +49,11 @@ extension DiscoveryProvider {
 		)
 		return DiscoveryProvider(
 			dependencies: .init(
-				deals: { region in
-					try await service.deals(in: region)
+				sitesForEvseIds: { evseIds in
+					try await service.siteOffers(forEvseIds: evseIds)
+				},
+				sitesInRegion: { region in
+					try await service.siteOffers(in: region)
 				}
 			)
 		)
@@ -42,9 +61,13 @@ extension DiscoveryProvider {
 
 	@available(iOS 16.0, *) static let mock = DiscoveryProvider(
 		dependencies: .init(
-			deals: { region in
+			sitesForEvseIds: { evseIds in
 				try await Task.sleep(for: .milliseconds(2000))
-				return [Campaign.mock]
+				return [ChargeSite.mock]
+			},
+			sitesInRegion: { region in
+				try await Task.sleep(for: .milliseconds(2000))
+				return [ChargeSite.mock]
 			}
 		)
 	)

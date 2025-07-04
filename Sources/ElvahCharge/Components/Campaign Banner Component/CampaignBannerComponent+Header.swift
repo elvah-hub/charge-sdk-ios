@@ -29,7 +29,7 @@ extension CampaignBannerComponent {
 					}
 					switch loadedData {
 					case let .campaign(campaign):
-						dealHeader(campaign: campaign)
+						offerHeader(campaign: campaign)
 					case let .chargeSession(session):
 						chargeSessionHeader(session: session)
 					}
@@ -42,7 +42,7 @@ extension CampaignBannerComponent {
 			.background(.canvas)
 		}
 
-		@ViewBuilder private func dealHeader(campaign: Campaign) -> some View {
+		@ViewBuilder private func offerHeader(campaign: Campaign) -> some View {
 			AdaptiveHStack { isHorizontalStack in
 				ViewThatFits(in: .horizontal) {
 					Text("Best deal around you", bundle: .elvahCharge)
@@ -54,15 +54,15 @@ extension CampaignBannerComponent {
 				}
 
 				TimelineView(.periodic(from: .now, by: 1)) { context in
-					if let deal = campaign.earliestEndingDeal {
-						DealEndLabel(
-							deal: deal,
+					if let offer = campaign.chargeSite.earliestEndingOffer {
+						OfferEndLabel(
+							offer: offer,
 							referenceDate: context.date,
 							prefix: "Ends in ",
 							primaryColor: .brand
 						)
 						.typography(.copy(size: .small), weight: .bold)
-						.foregroundStyle(deal.hasEnded ? .secondaryContent : .brand)
+						.foregroundStyle(offer.hasEnded ? .secondaryContent : .brand)
 					}
 				}
 			}

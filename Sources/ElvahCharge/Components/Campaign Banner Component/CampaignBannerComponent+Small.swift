@@ -42,17 +42,17 @@ extension CampaignBannerComponent {
 
 		@ViewBuilder private func campaignContent(campaign: Campaign) -> some View {
 			TimelineView(.periodic(from: .now, by: 2)) { _ in
-				if let deal = campaign.earliestEndingDeal {
-					let price = deal.pricePerKWh.formatted()
+				if let offer = campaign.chargeSite.earliestEndingOffer {
+					let price = offer.price.pricePerKWh.formatted()
 					let priceLabel = Text("\(price)/kWh", bundle: .elvahCharge).foregroundColor(.brand)
 					HStack(spacing: 12) {
-						let siteName = campaign.site.operatorName ?? String(localized: "Site")
+						let siteName = campaign.chargeSite.operatorName ?? String(localized: "Site")
 						Text("Charge at \(siteName) from \(priceLabel)", bundle: .elvahCharge)
 							.contentTransition(.numericText())
 						Spacer()
 						Image(.chevronRight)
 					}
-					.animation(.default, value: deal)
+					.animation(.default, value: offer)
 				} else {
 					expiredContent
 				}

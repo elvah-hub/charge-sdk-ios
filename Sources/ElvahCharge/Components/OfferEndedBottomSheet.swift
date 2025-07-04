@@ -3,7 +3,7 @@
 import SwiftUI
 
 @available(iOS 16.0, *)
-struct DealEndedBottomSheet: View {
+struct OfferEndedBottomSheet: View {
 	@Environment(\.dismiss) private var dismiss
 
 	var body: some View {
@@ -32,7 +32,7 @@ struct DealEndedBottomSheet: View {
 #Preview {
 	Color.canvas.ignoresSafeArea()
 		.sheet(isPresented: .constant(true)) {
-			DealEndedBottomSheet()
+			OfferEndedBottomSheet()
 		}
 		.withFontRegistration()
 		.preferredColorScheme(.dark)

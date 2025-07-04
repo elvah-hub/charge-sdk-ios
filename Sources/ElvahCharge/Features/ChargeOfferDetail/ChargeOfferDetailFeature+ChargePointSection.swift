@@ -9,29 +9,30 @@ import SwiftUI
 @available(iOS 16.0, *)
 extension ChargeOfferDetailFeature {
 	struct ChargePointSection: View {
-		typealias Action = (_ deal: Deal) -> Void
+		typealias Action = (_ offers: ChargeOffer) -> Void
 
 		@Environment(\.dynamicTypeSize) private var dynamicTypeSize
 		@Default(.chargeSessionContext) private var chargeSessionContext
 		@State private var selectedPowerType: PowerType
-		@Binding private var dealsSectionOrigin: CGPoint
-		private var deals: LoadableState<[Deal]>
-		private var processingDeal: Deal?
-		private var dealAction: Action
+		@Binding private var offersSectionOrigin: CGPoint
+		private var offers: LoadableState<[ChargeOffer]>
+		private var processingOffer: ChargeOffer?
+		private var offerAction: Action
 		private var chargeSessionAction: () -> Void
 
 		init(
 			initialPowerTypeSelection: PowerType? = nil,
-			deals: LoadableState<[Deal]>,
-			dealsSectionOrigin: Binding<CGPoint>,
-			processingDeal: Deal?,
-			dealAction: @escaping Action,
+			offers: LoadableState<[ChargeOffer]>,
+			offersSectionOrigin: Binding<CGPoint>,
+			processingOffer: ChargeOffer?,
+			offerAction: @escaping Action,
 			chargeSessionAction: @escaping () -> Void
 		) {
-			self.deals = deals
-			_dealsSectionOrigin = dealsSectionOrigin
-			self.processingDeal = processingDeal
-			self.dealAction = dealAction
+			self.offers = offers
+			_offersSectionOrigin = offersSectionOrigin
+			self.processingOffer = processingOffer
+			self.offerAction = offerAction
+			self.offerAction = offerAction
 			self.chargeSessionAction = chargeSessionAction
 			_selectedPowerType = State(initialValue: initialPowerTypeSelection ?? .ac)
 		}
@@ -43,22 +44,22 @@ extension ChargeOfferDetailFeature {
 					.foregroundStyle(.primaryContent)
 					.padding(.horizontal, 16)
 					.dynamicTypeSize(...(.accessibility2))
-				switch deals {
+				switch offers {
 				case .absent,
 				     .loading,
 				     .error:
 					activityContent
-				case let .loaded(deals):
-					dealBanner(for: deals)
-					chargePointList(for: deals)
+				case let .loaded(offers):
+					offerBanner(for: offers)
+					chargePointList(for: offers)
 				}
 			}
 			.animation(.default, value: selectedPowerType)
-			.animation(.default, value: deals)
+			.animation(.default, value: offers)
 			.frame(maxWidth: .infinity, alignment: .leading)
 		}
 
-		@ViewBuilder private func dealBanner(for deals: [Deal]) -> some View {
+		@ViewBuilder private func offerBanner(for offers: [ChargeOffer]) -> some View {
 			if chargeSessionContext != nil {
 				Button {
 					chargeSessionAction()
@@ -97,10 +98,10 @@ extension ChargeOfferDetailFeature {
 			}
 		}
 
-		@ViewBuilder private func chargePointList(for deals: [Deal]) -> some View {
+		@ViewBuilder private func chargePointList(for offers: [ChargeOffer]) -> some View {
 			VStack(alignment: .leading, spacing: 24) {
 				TimelineView(.periodic(from: .now, by: 1)) { _ in
-					let hasMultiplePowerTypes = deals
+					let hasMultiplePowerTypes = offers
 						.compactMap(\.chargePoint.powerType)
 						.unique()
 						.count > 1
@@ -111,10 +112,10 @@ extension ChargeOfferDetailFeature {
 							PowerTypeSelector(selection: $selectedPowerType)
 						}
 						ForEach(groups) { group in
-							ForEach(group.deals) { deal in
-								chargePointButton(for: deal)
+							ForEach(group.offers) { offers in
+								chargePointButton(for: offers)
 									.overlay {
-										loadingOverlay(show: processingDeal?.id == deal.id)
+										loadingOverlay(show: processingOffer?.id == offers.id)
 									}
 							}
 							.buttonStyle(ChargePointButtonStyle())
@@ -126,12 +127,12 @@ extension ChargeOfferDetailFeature {
 						}
 					}
 					.animation(.default, value: groups)
-					.animation(.bouncy, value: processingDeal)
+					.animation(.bouncy, value: processingOffer)
 				}
 			}
 			.overlay(alignment: .top) {
 				Color.clear.frame(height: 0)
-					.scrollPositionReader($dealsSectionOrigin, in: "ScrollView")
+					.scrollPositionReader($offersSectionOrigin, in: "ScrollView")
 			}
 			.frame(maxWidth: .infinity)
 		}
@@ -158,24 +159,24 @@ extension ChargeOfferDetailFeature {
 			}
 		}
 
-		@ViewBuilder private func chargePointButton(for deal: Deal) -> some View {
-			let chargePoint = deal.chargePoint
+		@ViewBuilder private func chargePointButton(for offer: ChargeOffer) -> some View {
+			let chargePoint = offer.chargePoint
 			Button {
-				dealAction(deal)
+				offerAction(offer)
 			} label: {
 				let evseIdLabel = Text(chargePoint.evseId)
 					.typography(.copy(size: .medium), weight: .bold)
 
-				let priceLabel = Text(deal.pricePerKWh.formatted() + " / kWh")
+				let priceLabel = Text(offer.price.pricePerKWh.formatted() + " / kWh")
 					.typography(.copy(size: .medium), weight: .bold)
 					.foregroundStyle(.brand)
 
 				let maxPowerLabel = Text("\(chargePoint.maxPowerInKwFormatted)kW", bundle: .elvahCharge)
 					.typography(.copy(size: .small))
 
-				let dealEndTimer = TimelineView(.periodic(from: .now, by: 1)) { context in
-					DealEndLabel(
-						deal: deal,
+				let offerEndTimer = TimelineView(.periodic(from: .now, by: 1)) { context in
+					OfferEndLabel(
+						offer: offer,
 						referenceDate: context.date,
 						prefix: "Offer ends in ",
 						primaryColor: .secondaryContent
@@ -200,35 +201,35 @@ extension ChargeOfferDetailFeature {
 						if isHorizontalStack {
 							Spacer()
 						}
-						dealEndTimer
+						offerEndTimer
 					}
 					.frame(maxWidth: .infinity, alignment: .leading)
 				}
 				.withChevron()
 				.padding(.M)
 			}
-			.opacity(deal.hasEnded || chargeSessionContext != nil ? 0.5 : 1)
-			.disabled(deal.hasEnded || chargeSessionContext != nil)
-			.animation(.default, value: deal.hasEnded)
+			.opacity(offer.hasEnded || chargeSessionContext != nil ? 0.5 : 1)
+			.disabled(offer.hasEnded || chargeSessionContext != nil)
+			.animation(.default, value: offer.hasEnded)
 		}
 
 		@ViewBuilder private var activityContent: some View {
 			var title: LocalizedStringKey? {
-				if deals.isError {
+				if offers.isError {
 					return "An error occurred"
 				}
 				return nil
 			}
 
 			var message: LocalizedStringKey? {
-				if deals.isError {
+				if offers.isError {
 					return "The charge offers could not be loaded. Please try again later."
 				}
 				return nil
 			}
 
 			var state: ActivityInfoComponent.ActivityState {
-				if deals.isError {
+				if offers.isError {
 					return .error
 				}
 				return .animating
@@ -242,18 +243,18 @@ extension ChargeOfferDetailFeature {
 		// MARK: - Helpers
 
 		private func chargePointGroups(for powerType: PowerType? = nil) -> [ChargePointGroup] {
-			guard let deals = deals.data else {
+			guard let offers = offers.data else {
 				return []
 			}
 
-			return deals.compactMap { deal -> ChargePointGroup? in
+			return offers.compactMap { offer -> ChargePointGroup? in
 				// Filter by selected power type if needed
-				let chargePointPowerType = deal.chargePoint.powerType ?? .ac
+				let chargePointPowerType = offer.chargePoint.powerType ?? .ac
 				if let powerType, chargePointPowerType != powerType {
 					return nil
 				}
 
-				return ChargePointGroup(deals: [deal], pricePerKWh: deal.pricePerKWh)
+				return ChargePointGroup(offers: [offer], pricePerKWh: offer.price.pricePerKWh)
 			}
 		}
 	}
@@ -263,20 +264,20 @@ extension ChargeOfferDetailFeature {
 
 private struct ChargePointGroup: Identifiable, Equatable {
 	package var id: String {
-		"\(pricePerKWh.amount)+\(deals.map(\.evseId))"
+		"\(pricePerKWh.amount)+\(offers.map(\.evseId))"
 	}
 
-	package let deals: [Deal]
+	package let offers: [ChargeOffer]
 	package let pricePerKWh: Currency
 	package let joinedEvseIdString: String
 
 	package init(
-		deals: [Deal],
+		offers: [ChargeOffer],
 		pricePerKWh: Currency
 	) {
-		self.deals = deals
+		self.offers = offers
 		self.pricePerKWh = pricePerKWh
-		joinedEvseIdString = deals.map { $0.evseId }.sorted().joined()
+		joinedEvseIdString = offers.map { $0.evseId }.sorted().joined()
 	}
 }
 
@@ -320,9 +321,9 @@ private struct ChargePointButtonStyle: ButtonStyle {
 						.padding(.horizontal, 16)
 						.opacity(0.2)
 					ChargeOfferDetailFeature.ChargePointSection(
-						deals: .loaded([.mockAvailable, .mockUnavailable, .mockOutOfService]),
-						dealsSectionOrigin: .constant(.zero),
-						processingDeal: .mockAvailable
+						offers: .loaded([.mockAvailable, .mockUnavailable, .mockOutOfService]),
+						offersSectionOrigin: .constant(.zero),
+						processingOffer: .mockAvailable
 					) { _ in } chargeSessionAction: {}
 				}
 			}

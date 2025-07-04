@@ -19,7 +19,13 @@ package struct SignedChargeOffer: Codable, Hashable, Identifiable, Sendable {
 	public subscript<V>(dynamicMember keyPath: WritableKeyPath<ChargeOffer, V>) -> V {
 		get { offer[keyPath: keyPath] }
 		set { offer[keyPath: keyPath] = newValue }
-	}}
+	}
+
+	/// Returns `true` if the associated campaign has ended, `false` otherwise.
+	package var hasEnded: Bool {
+		offer.campaignEndDate < Date()
+	}
+}
 
 package extension SignedChargeOffer {
 	static var mockAvailable: SignedChargeOffer {

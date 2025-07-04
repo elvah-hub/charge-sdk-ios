@@ -11,16 +11,16 @@ package struct ChargeOfferDetailFeature: View {
 
 	private var associatedSite: Site?
 
-	@State private var processingDeal: Deal?
+	@State private var processingOffer: ChargeOffer?
 	@State private var scrollPosition = CGPoint.zero
 	@TaskIdentifier private var reloadTaskId
 	@Loadable<Site> private var site
-	@Loadable<[Deal]> private var deals
+	@Loadable<[ChargeOffer]> private var offers
 	@Loadable<Double?> private var routeDistanceToStation
 	@Process private var paymentInitiation
 
-	package init(deals: [Deal], router: ChargeOfferDetailFeature.Router) {
-		_deals = Loadable(wrappedValue: .loaded(deals))
+	package init(offers: [ChargeOffer], router: ChargeOfferDetailFeature.Router) {
+		_offers = Loadable(wrappedValue: .loaded(offers))
 		self.router = router
 	}
 
@@ -91,7 +91,7 @@ package struct ChargeOfferDetailFeature: View {
 				if associatedSite != nil {
 					siteContent
 				}
-				dealsContent
+				chargePointsContent
 			}
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.padding(.vertical, 16)
@@ -116,14 +116,14 @@ package struct ChargeOfferDetailFeature: View {
 	}
 
 
-	@ViewBuilder private var dealsContent: some View {
+	@ViewBuilder private var chargePointsContent: some View {
 		ChargeOfferDetailFeature.ChargePointSection(
 			initialPowerTypeSelection: site.data?.prevalentPowerType,
-			deals: deals,
-			dealsSectionOrigin: $scrollPosition,
-			processingDeal: processingDeal,
-			dealAction: { deal in
-				handleChargePointTap(for: deal)
+			offers: offers,
+			offersSectionOrigin: $scrollPosition,
+			processingOffer: processingOffer,
+			offerAction: { offer in
+				handleChargePointTap(for: offer)
 			},
 			chargeSessionAction: {
 				router.showChargeEntry = true
@@ -188,17 +188,24 @@ package struct ChargeOfferDetailFeature: View {
 		} catch {}
 	}
 
-	private func handleChargePointTap(for deal: Deal) {
+	private func handleChargePointTap(for offer: ChargeOffer) {
 		guard let site = site.data else {
 			return
 		}
 
 		$paymentInitiation.run {
-			defer { processingDeal = nil }
-			processingDeal = deal
-			let context = try await chargeSettlementProvider.initiate(signedOffer: deal.signedDeal)
+			defer { processingOffer = nil }
+			processingOffer = offer
+
+			// TODO: Get Signed offer
+			let context = try await chargeSettlementProvider.initiate(signedOffer: "")
+			let signedOffer = SignedChargeOffer(offer: offer, signedOffer: "todo")
 			try Task.checkCancellation()
-			router.chargeRequest = ChargeRequest(site: site, deal: deal, paymentContext: context)
+			router.chargeRequest = ChargeRequest(
+				site: site,
+				signedOffer: signedOffer,
+				paymentContext: context
+			)
 		}
 	}
 }
@@ -228,7 +235,7 @@ package extension ChargeOfferDetailFeature {
 #Preview {
 	NavigationStack {
 		ChargeOfferDetailFeature(
-			deals: [.mockAvailable, .mockUnavailable, .mockOutOfService],
+			offers: [.mockAvailable, .mockUnavailable, .mockOutOfService],
 			router: .init()
 		)
 		.siteInformation(.mock)

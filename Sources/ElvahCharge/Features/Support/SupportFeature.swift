@@ -177,7 +177,7 @@ extension SupportFeature {
 		.onAppear {
 			Defaults[.chargeSessionContext] = .init(
 				site: .mock,
-				deal: .mockAvailable,
+				signedOffer: .mockAvailable,
 				organisationDetails: .mock,
 				authentication: .mock,
 				paymentId: "",

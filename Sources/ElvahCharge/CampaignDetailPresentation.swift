@@ -31,7 +31,10 @@ private struct CampaignDetailPresentationViewModifier: ViewModifier {
 	func body(content: Content) -> some View {
 		content
 			.fullScreenCover(item: $campaign) { campaign in
-				ChargeOfferDetailRootFeature(site: campaign.site, deals: campaign.deals)
+				ChargeOfferDetailRootFeature(
+					site: campaign.chargeSite.site,
+					offers: campaign.chargeSite.offers
+				)
 			}
 	}
 }

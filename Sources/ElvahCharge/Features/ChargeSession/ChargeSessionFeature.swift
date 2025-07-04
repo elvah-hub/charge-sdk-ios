@@ -216,7 +216,7 @@ extension ChargeSessionFeature {
 	.onAppear {
 		Defaults[.chargeSessionContext] = ChargeSessionContext(
 			site: .mock,
-			deal: .mockAvailable,
+			signedOffer: .mockAvailable,
 			organisationDetails: .mock,
 			authentication: .mock,
 			paymentId: "",

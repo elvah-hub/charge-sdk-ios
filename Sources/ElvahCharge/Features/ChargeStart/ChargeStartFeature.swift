@@ -111,9 +111,9 @@ struct ChargeStartFeature: View {
 
 	@ViewBuilder private var requestInformation: some View {
 		VStack(spacing: Size.M.size) {
-			ChargePointIdentifierView(point: request.deal.chargePoint)
+			ChargePointIdentifierView(point: request.signedOffer.chargePoint)
 			Button("Is the charge point locked?", bundle: .elvahCharge) {
-				router.startSessionInfo = .init(chargePoint: request.deal.chargePoint)
+				router.startSessionInfo = .init(chargePoint: request.signedOffer.chargePoint)
 			}
 			.buttonStyle(.textPrimary)
 		}

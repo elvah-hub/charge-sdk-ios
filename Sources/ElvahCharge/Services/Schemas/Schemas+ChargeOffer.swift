@@ -26,8 +26,7 @@ extension ChargeOffer {
 			originalPrice: originalPrice,
 			type: offerType,
 			campaignEndDate: Date.from(iso8601: response.campaignEndDate),
-			expiresAt: expiresAt,
-			signedOffer: response.signedOffer
+			expiresAt: expiresAt
 		)
 	}
 }
@@ -37,7 +36,7 @@ struct ChargeOfferSchema: Decodable {
 	var evseId: String
 	var powerSpecification: PowerSpecificationSchema?
 	var type: String
-	var signedOffer: String
+	var signedOffer: String? // TODO: Have another schema with signedOffer
 	var price: ChargePriceSchema
 	var originalPrice: ChargePriceSchema?
 	var campaignEndDate: String?

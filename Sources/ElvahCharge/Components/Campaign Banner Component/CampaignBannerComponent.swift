@@ -269,7 +269,7 @@ package extension CampaignBannerComponent {
 					Button("With Session") {
 						chargeSessionContext = ChargeSessionContext(
 							site: .mock,
-							deal: .mockAvailable,
+							signedOffer: .mockAvailable,
 							organisationDetails: .mock,
 							authentication: .mock,
 							paymentId: "",
