@@ -4,6 +4,10 @@ import Combine
 import Foundation
 import OSLog
 
+#if canImport(Defaults)
+import Defaults
+#endif
+
 /// A configuration object for the elvah Charge SDK.
 public enum Elvah {
 	/// A unique identifier that is used as prefix in shared storage like `UserDefaults`.
@@ -17,6 +21,16 @@ public enum Elvah {
 
 	/// A flag indicating if the SDK is in debug mode.
 	package private(set) nonisolated(unsafe) static var isDebugMode = false
+
+	/// A unique identifier for the SDK. It is generated the first time the SDK is initialized and helps with identifying users anonymously.
+	///
+	/// - Important: This identifier is a randomly generated base62 string and cannot be used to track users outside the use of this SDK.
+	package static var distinctId: ElvahDistinctId {
+		if Defaults[.distinctId] == nil {
+			Defaults[.distinctId] = ElvahDistinctId.generate()
+		}
+		return Defaults[.distinctId]!
+	}
 
 	/// A debug session delegate.
 	package private(set) nonisolated(unsafe)

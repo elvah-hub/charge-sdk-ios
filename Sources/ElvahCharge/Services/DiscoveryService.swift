@@ -27,6 +27,7 @@ final class DiscoveryService: Sendable {
 		do {
 			let request = Request<SiteOffersResponse>(path: "/discovery/sites-offers", method: .get, query: query)
 			let response = try await client.send(request) { [apiKey] request in
+				request.setValue(Elvah.distinctId.rawValue, forHTTPHeaderField: "X-Distinct-Id")
 				request.setAPIKey(apiKey)
 			}
 			return try response.value.data.map { try ChargeSite.parse($0) }
@@ -53,6 +54,7 @@ final class DiscoveryService: Sendable {
 		do {
 			let request = Request<SiteOffersResponse>(path: "/discovery/sites-offers", method: .get, query: query)
 			let response = try await client.send(request) { [apiKey] request in
+				request.setValue(Elvah.distinctId.rawValue, forHTTPHeaderField: "X-Distinct-Id")
 				request.setAPIKey(apiKey)
 			}
 			return try response.value.data.map { try ChargeSite.parse($0) }
