@@ -3,33 +3,33 @@
 import SwiftUI
 
 /// A type describing a charge point.
-package struct ChargePoint: Identifiable, Hashable, Codable, Sendable {
+public struct ChargePoint: Identifiable, Hashable, Codable, Sendable {
 	/// The identifier of the charge point.
-	package var id: String { evseId }
+	public var id: String { evseId }
 
 	/// The identifier of the charge point.
-	package var evseId: String
+	public var evseId: String
 
 	/// The charge point's physical reference, if available.
-	package var physicalReference: String?
+	public var physicalReference: String?
 
 	/// The maximum power of the charge point in kW.
-	package var maxPowerInKw: Double
+	public var maxPowerInKw: Double
 
 	/// The charge point's availability.
-	package var availability: Availability
+	public var availability: Availability
 
 	/// The date at which the charge point's availability was last updated.
-	package var availabilityUpdatedAt: Date
+	public var availabilityUpdatedAt: Date
 
 	/// The charge point's connectors.
-	package var connectors: Set<ConnectorType>
+	public var connectors: Set<ConnectorType>
 
 	/// The charge point's speed.
-	package var speed: Speed
+	public var speed: Speed
 
 	/// The charge point's power type.
-	package var powerType: PowerType?
+	public var powerType: PowerType?
 
 	package init(
 		evseId: String,
@@ -52,7 +52,7 @@ package struct ChargePoint: Identifiable, Hashable, Codable, Sendable {
 	}
 }
 
-package extension ChargePoint {
+public extension ChargePoint {
 	/// The chargepoint's speed.
 	enum Speed: String, Hashable, Codable, Sendable {
 		case unknown = "UNKNOWN"
@@ -103,7 +103,7 @@ package extension ChargePoint {
 
 // MARK: - Helpers
 
-package extension ChargePoint {
+public extension ChargePoint {
 	var isAvailable: Bool {
 		availability == .available
 	}

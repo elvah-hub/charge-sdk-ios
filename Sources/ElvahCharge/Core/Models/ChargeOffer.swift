@@ -2,21 +2,21 @@
 
 import SwiftUI
 
-package struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
-	package var id: String
+public struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
+	public var id: String
 
-	package var evseId: String {
+	public var evseId: String {
 		chargePoint.evseId
 	}
 
-	package var chargePoint: ChargePoint
-	package var price: ChargePrice
-	package var originalPrice: ChargePrice?
-	package var type: ChargeOffer.OfferType
-	package var campaignEndDate: Date
-	package var expiresAt: Date
+	public var chargePoint: ChargePoint
+	public var price: ChargePrice
+	public var originalPrice: ChargePrice?
+	public var type: ChargeOffer.OfferType
+	public var campaignEndDate: Date
+	public var expiresAt: Date
 
-	package init(
+	public init(
 		id: String,
 		chargePoint: ChargePoint,
 		price: ChargePrice,
@@ -47,7 +47,7 @@ package struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 	}
 }
 
-package extension ChargeOffer {
+public extension ChargeOffer {
 	enum OfferType: String, Codable, Hashable, Sendable {
 		case standard = "STANDARD"
 		case campaign = "CAMPAIGN"

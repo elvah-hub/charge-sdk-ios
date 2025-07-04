@@ -1,0 +1,53 @@
+// Copyright © elvah. All rights reserved.
+
+import CoreLocation
+import MapKit
+import SwiftUI
+
+public extension ChargeOffer {
+	/// Returns all charge offers for the given list of evse ids.
+	///
+	/// - Note: Unsupported evse ids will be ignored.
+	/// - Parameter evseIds: The evse ids.
+	@MainActor static func offers(
+		forEvseIds evseIds: [String]
+	) async throws(Elvah.Error) -> [ChargeOffer] {
+		do {
+			let chargeSites = try await DiscoveryProvider.live.sites(forEvseIds: evseIds)
+			return chargeSites.flatMap { $0.offers }
+		} catch NetworkError.unauthorized {
+			throw Elvah.Error.unauthorized
+		} catch let error as NetworkError {
+			throw Elvah.Error.network(error)
+		} catch {
+			throw Elvah.Error.unknown(error)
+		}
+	}
+
+	/// Returns all charge offers for the given list of evse ids.
+	///
+	/// - Note: Unsupported evse ids will be ignored.
+	/// - Parameter evseIds: The evse ids.
+	/// - Parameter completion: A closure that is called with the result of the operation.
+	/// - Returns: An observer object that you can use to cancel the operation.
+	@MainActor @discardableResult static func offers(
+		forEvseIds evseIds: [String],
+		completion: @MainActor @escaping (
+			_ result: Result<[ChargeOffer], Elvah.Error>
+		) -> Void
+	) -> TaskObserver {
+		let task = Task {
+			do {
+				try await completion(.success(offers(forEvseIds: evseIds)))
+			} catch NetworkError.unauthorized {
+				completion(.failure(Elvah.Error.unauthorized))
+			} catch let error as NetworkError {
+				completion(.failure(Elvah.Error.network(error)))
+			} catch {
+				completion(.failure(Elvah.Error.unknown(error)))
+			}
+		}
+
+		return TaskObserver(task: task)
+	}
+}

@@ -2,10 +2,10 @@
 
 import SwiftUI
 
-package struct ChargePrice: Hashable, Sendable, Codable {
-	package var pricePerKWh: Currency
-	package var baseFee: Currency?
-	package var blockingFee: BlockingFee?
+public struct ChargePrice: Hashable, Sendable, Codable {
+	public var pricePerKWh: Currency
+	public var baseFee: Currency?
+	public var blockingFee: BlockingFee?
 
 	package init(
 		pricePerKWh: Currency,
@@ -18,10 +18,10 @@ package struct ChargePrice: Hashable, Sendable, Codable {
 	}
 }
 
-package extension ChargePrice {
+public extension ChargePrice {
 	struct BlockingFee: Hashable, Sendable, Codable {
-		package var pricePerMinute: Currency
-		package var startsAfterMinute: Int?
+		public var pricePerMinute: Currency
+		public var startsAfterMinute: Int?
 
 		package init(of pricePerMinute: Currency, startingAfter startsAfterMinute: Int? = nil) {
 			self.pricePerMinute = pricePerMinute
