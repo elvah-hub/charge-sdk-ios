@@ -46,8 +46,56 @@ final class DiscoveryService: Sendable {
 			throw NetworkError.unknown
 		}
 	}
+
+	func siteOffers(forEvseIds evseIds: [String]) async throws(NetworkError) -> [ChargeSite] {
+		let query = evseIds.map { ("evseIds", $0) }
+
+		do {
+			let request = Request<SiteOffersResponse>(path: "/discovery/sites-offers", method: .get, query: query)
+			let response = try await client.send(request) { [apiKey] request in
+				request.setAPIKey(apiKey)
+			}
+			return try response.value.data.map { try ChargeSite.parse($0) }
+		} catch let error as NetworkError.Client {
+			logCommonNetworkError(error, name: Self.serviceName)
+			throw error.externalError
+		} catch {
+			logCommonNetworkError(error, name: Self.serviceName)
+			throw NetworkError.unknown
+		}
+	}
+
+	func siteOffers(in region: MKMapRect) async throws(NetworkError) -> [ChargeSite] {
+		let topLeft = MKMapPoint(x: region.origin.x, y: region.origin.y).coordinate
+		let bottomRight = MKMapPoint(x: region.maxX, y: region.maxY).coordinate
+
+		let query = [
+			("minLat", "\(bottomRight.latitude)"),
+			("minLng", "\(topLeft.longitude)"),
+			("maxLat", "\(topLeft.latitude)"),
+			("maxLng", "\(bottomRight.longitude)"),
+		]
+
+		do {
+			let request = Request<SiteOffersResponse>(path: "/discovery/sites-offers", method: .get, query: query)
+			let response = try await client.send(request) { [apiKey] request in
+				request.setAPIKey(apiKey)
+			}
+			return try response.value.data.map { try ChargeSite.parse($0) }
+		} catch let error as NetworkError.Client {
+			logCommonNetworkError(error, name: Self.serviceName)
+			throw error.externalError
+		} catch {
+			logCommonNetworkError(error, name: Self.serviceName)
+			throw NetworkError.unknown
+		}
+	}
 }
 
 private struct DealsResponse: Decodable {
 	var data: [CampaignSchema]
+}
+
+private struct SiteOffersResponse: Decodable {
+	var data: [SiteOfferSchema]
 }

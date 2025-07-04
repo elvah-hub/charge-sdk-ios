@@ -4,11 +4,6 @@ import Foundation
 
 extension ChargeOffer {
 	static func parse(_ response: ChargeOfferSchema) throws(NetworkError) -> ChargeOffer {
-		guard let campaignEndDate = Date.from(iso8601: response.campaignEndDate) else {
-			Elvah.logger.parseError(in: response, for: \.campaignEndDate)
-			throw NetworkError.cannotParseServerResponse
-		}
-
 		guard let expiresAt = Date.from(iso8601: response.expiresAt) else {
 			Elvah.logger.parseError(in: response, for: \.expiresAt)
 			throw NetworkError.cannotParseServerResponse
@@ -30,7 +25,7 @@ extension ChargeOffer {
 			price: ChargePrice.parse(response.price),
 			originalPrice: originalPrice,
 			type: offerType,
-			campaignEndDate: campaignEndDate,
+			campaignEndDate: Date.from(iso8601: response.campaignEndDate),
 			expiresAt: expiresAt,
 			signedOffer: response.signedOffer
 		)
@@ -45,7 +40,7 @@ struct ChargeOfferSchema: Decodable {
 	var signedOffer: String
 	var price: ChargePriceSchema
 	var originalPrice: ChargePriceSchema?
-	var campaignEndDate: String
+	var campaignEndDate: String?
 	var expiresAt: String
 
 	struct PowerSpecificationSchema: Decodable {

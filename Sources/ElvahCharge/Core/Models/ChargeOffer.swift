@@ -13,7 +13,7 @@ package struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 	package var price: ChargePrice
 	package var originalPrice: ChargePrice?
 	package var type: ChargeOffer.OfferType
-	package var campaignEndDate: Date
+	package var campaignEndDate: Date?
 	package var expiresAt: Date
 	package var signedOffer: String
 
@@ -23,7 +23,7 @@ package struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 		price: ChargePrice,
 		originalPrice: ChargePrice?,
 		type: ChargeOffer.OfferType,
-		campaignEndDate: Date,
+		campaignEndDate: Date?,
 		expiresAt: Date,
 		signedOffer: String
 	) {
@@ -46,7 +46,7 @@ package struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 
 	/// Returns `true` if the associated campaign has ended, `false` otherwise.
 	package var hasEnded: Bool {
-		campaignEndDate < Date()
+		(campaignEndDate ?? .distantPast) < Date()
 	}
 }
 
