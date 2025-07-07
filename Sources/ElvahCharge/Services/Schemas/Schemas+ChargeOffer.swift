@@ -1,4 +1,4 @@
-// Copyright elvah. All rights reserved.
+// Copyright © elvah. All rights reserved.
 
 import Foundation
 
@@ -40,6 +40,17 @@ extension ChargeOffer {
 			expiresAt: expiresAt
 		)
 	}
+
+	static func parseSigned(_ response: ChargeOfferSchema) throws(NetworkError) -> SignedChargeOffer {
+		let chargeOffer = try ChargeOffer.parse(response)
+
+		guard let signedOffer = response.offer.signedOffer else {
+			Elvah.logger.parseError(in: response, for: \.offer.signedOffer)
+			throw NetworkError.cannotParseServerResponse
+		}
+
+		return SignedChargeOffer(offer: chargeOffer, signedOffer: signedOffer)
+	}
 }
 
 struct ChargeOfferSchema: Decodable {
@@ -53,7 +64,7 @@ struct ChargeOfferSchema: Decodable {
 		var price: ChargePriceSchema
 		var originalPrice: ChargePriceSchema?
 		var expiresAt: String
-		var signedOffer: String? // TODO: Have another schema with signedOffer
+		var signedOffer: String?
 	}
 
 	struct PowerSpecificationSchema: Decodable {

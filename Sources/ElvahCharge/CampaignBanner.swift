@@ -144,7 +144,7 @@ public struct CampaignBanner: View {
 			}
 			.fullScreenCover(item: $router.campaignDetail) { capaign in
 				ChargeOfferDetailRootFeature(
-					site: capaign.chargeSite.site, // TODO: Allow ChargeSite as argument here
+					site: capaign.chargeSite.site,
 					offers: capaign.chargeSite.offers
 				)
 			}
