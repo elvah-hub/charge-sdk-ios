@@ -3,7 +3,9 @@
 import SwiftUI
 
 public struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
-	public var id: String
+	public var id: String {
+		evseId
+	}
 
 	public var evseId: String {
 		chargePoint.evseId
@@ -17,7 +19,6 @@ public struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 	public var expiresAt: Date
 
 	public init(
-		id: String,
 		chargePoint: ChargePoint,
 		price: ChargePrice,
 		originalPrice: ChargePrice?,
@@ -25,7 +26,6 @@ public struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 		campaignEndDate: Date?,
 		expiresAt: Date,
 	) {
-		self.id = id
 		self.chargePoint = chargePoint
 		self.price = price
 		self.originalPrice = originalPrice
@@ -57,7 +57,6 @@ public extension ChargeOffer {
 package extension ChargeOffer {
 	static var mockAvailable: ChargeOffer {
 		ChargeOffer(
-			id: "mock offer available",
 			chargePoint: .mockAvailable,
 			price: ChargePrice.mock,
 			originalPrice: nil,
@@ -69,7 +68,6 @@ package extension ChargeOffer {
 
 	static var mockUnavailable: ChargeOffer {
 		ChargeOffer(
-			id: "mock offer unavailable",
 			chargePoint: .mockUnavailable,
 			price: ChargePrice.mock,
 			originalPrice: nil,
@@ -81,7 +79,6 @@ package extension ChargeOffer {
 
 	static var mockOutOfService: ChargeOffer {
 		ChargeOffer(
-			id: "mock offer out of service",
 			chargePoint: .mockOutOfService,
 			price: ChargePrice.mock,
 			originalPrice: nil,

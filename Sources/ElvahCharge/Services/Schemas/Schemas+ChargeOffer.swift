@@ -4,43 +4,45 @@ import Foundation
 
 extension ChargeOffer {
 	static func parse(_ response: ChargeOfferSchema) throws(NetworkError) -> ChargeOffer {
-		guard let expiresAt = Date.from(iso8601: response.expiresAt) else {
-			Elvah.logger.parseError(in: response, for: \.expiresAt)
+		guard let expiresAt = Date.from(iso8601: response.offer.expiresAt) else {
+			Elvah.logger.parseError(in: response, for: \.offer.expiresAt)
 			throw NetworkError.cannotParseServerResponse
 		}
 
-		guard let offerType = ChargeOffer.OfferType(rawValue: response.type) else {
-			Elvah.logger.parseError(in: response, for: \.type)
+		guard let offerType = ChargeOffer.OfferType(rawValue: response.offer.type) else {
+			Elvah.logger.parseError(in: response, for: \.offer.type)
 			throw NetworkError.cannotParseServerResponse
 		}
 
 		var originalPrice: ChargePrice?
-		if let originalPriceSchema = response.originalPrice {
+		if let originalPriceSchema = response.offer.originalPrice {
 			originalPrice = try ChargePrice.parse(originalPriceSchema)
 		}
 
 		return try ChargeOffer(
-			id: response.id,
 			chargePoint: ChargePoint.parse(response),
-			price: ChargePrice.parse(response.price),
+			price: ChargePrice.parse(response.offer.price),
 			originalPrice: originalPrice,
 			type: offerType,
-			campaignEndDate: Date.from(iso8601: response.campaignEndDate),
+			campaignEndDate: Date.from(iso8601: response.offer.campaignEndsAt),
 			expiresAt: expiresAt
 		)
 	}
 }
 
 struct ChargeOfferSchema: Decodable {
-	var id: String
 	var evseId: String
 	var powerSpecification: PowerSpecificationSchema?
-	var type: String
-	var signedOffer: String? // TODO: Have another schema with signedOffer
-	var price: ChargePriceSchema
-	var originalPrice: ChargePriceSchema?
-	var campaignEndDate: String?
-	var expiresAt: String
+	var offer: OfferSchema
+
+	struct OfferSchema: Decodable {
+		var type: String
+		var campaignEndsAt: String?
+		var price: ChargePriceSchema
+		var originalPrice: ChargePriceSchema?
+		var expiresAt: String
+		var signedOffer: String? // TODO: Have another schema with signedOffer
+	}
 
 	struct PowerSpecificationSchema: Decodable {
 		var type: String
