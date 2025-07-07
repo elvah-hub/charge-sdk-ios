@@ -4,7 +4,10 @@ import Foundation
 
 /// A charge point's connector.
 public enum PowerType: String, Hashable, Codable, Identifiable, Sendable, Comparable {
+	/// The AC power type.
 	case ac = "AC"
+	
+	/// The DC power type.
 	case dc = "DC"
 
 	public var id: String {

@@ -2,13 +2,17 @@
 
 import SwiftUI
 
+/// A charge point with attached and signed pricing information.
 @dynamicMemberLookup
 package struct SignedChargeOffer: Codable, Hashable, Identifiable, Sendable {
 	package var id: String {
 		offer.id
 	}
 
+	/// The underlying charge offer.
 	package var offer: ChargeOffer
+
+	/// The agreement to charge under the pricing conditions of the associated charge offer.
 	package var signedOffer: String
 
 	package init(offer: ChargeOffer, signedOffer: String) {

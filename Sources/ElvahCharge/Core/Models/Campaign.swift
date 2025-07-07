@@ -2,9 +2,10 @@
 
 import SwiftUI
 
+/// A ``ChargeSite`` whose offers are all part of a campaign.
 public struct Campaign: Identifiable, Hashable, Codable, Sendable {
 	public var id: String { chargeSite.id }
-	package var chargeSite: ChargeSite
+	public var chargeSite: ChargeSite
 
 	package init(chargeSite: ChargeSite) {
 		self.chargeSite = chargeSite
@@ -17,12 +18,21 @@ public struct Campaign: Identifiable, Hashable, Codable, Sendable {
 		chargeOffer.campaignInfo?.endDate ?? .distantPast
 	}
 
+	/// A flag indicating whether the last charge offer part of this campaign has ended.
+	///
+	/// - Important: The end date of a charge offer's campaign is distinctly different from its expiry date.
+	/// The latter is only tied to the offered pricing and does not reflect the campaign's duration.
+	/// - Note: Usually, all charge offers within a campaign end at the same time.
+	public var hasEnded: Bool {
+		latestEndingChargeOffer?.hasEnded ?? true
+	}
+
 	/// The charge offer that ends the latest among all offers in the campaign.
 	///
 	/// - Important: The end date of a charge offer's campaign is distinctly different from its expiry date.
 	/// The latter is only tied to the offered pricing and does not reflect the campaign's duration.
 	/// - Note: Usually, all charge offers within a campaign end at the same time.
-	var latestEndingChargeOffer: ChargeOffer? {
+	public var latestEndingChargeOffer: ChargeOffer? {
 		chargeSite.offers
 			.filter { $0.hasEnded == false }
 			.sorted(using: KeyPathComparator(\.campaignInfo?.endDate)).last
@@ -33,19 +43,10 @@ public struct Campaign: Identifiable, Hashable, Codable, Sendable {
 	/// - Important: The end date of a charge offer's campaign is distinctly different from its expiry date.
 	/// The latter is only tied to the offered pricing and does not reflect the campaign's duration.
 	/// - Note: Usually, all charge offers within a campaign end at the same time.
-	var earliestEndingChargeOffer: ChargeOffer? {
+	public var earliestEndingChargeOffer: ChargeOffer? {
 		chargeSite.offers
 			.filter { $0.hasEnded == false }
 			.sorted(using: KeyPathComparator(\.campaignInfo?.endDate)).first
-	}
-	
-	/// A flag indicating whether the last charge offer part of this campaign has ended.
-	///
-	/// - Important: The end date of a charge offer's campaign is distinctly different from its expiry date.
-	/// The latter is only tied to the offered pricing and does not reflect the campaign's duration.
-	/// - Note: Usually, all charge offers within a campaign end at the same time.
-	public var hasEnded: Bool {
-		latestEndingChargeOffer?.hasEnded ?? true
 	}
 }
 

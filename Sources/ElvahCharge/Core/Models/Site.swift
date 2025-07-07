@@ -8,12 +8,12 @@ public struct Site: Codable, Hashable, Identifiable, Sendable {
 	/// A unique identification of a site.
 	public var id: String
 
-	package var location: Location
-	package var address: Address?
-	package var availability: Availability
-	package var prevalentPowerType: PowerType
+	public var operatorName: String?
+	public var location: Location
+	public var address: Address?
+	public var availability: Availability
+	public var prevalentPowerType: PowerType
 	package var openingHours: OpeningHours?
-	package var operatorName: String?
 
 	package init(
 		id: String,
@@ -34,7 +34,7 @@ public struct Site: Codable, Hashable, Identifiable, Sendable {
 	}
 }
 
-package extension Site {
+public extension Site {
 	enum Availability: String, Codable, Hashable, CaseIterable, Sendable {
 		case available = "AVAILABLE"
 		case malfunctioningStation = "MALFUNCTIONING_STATION"
@@ -69,6 +69,7 @@ package extension Site {
 		}
 	}
 
+	// TODO: Find good way of exposing this publically
 	struct OpeningHours: Codable, Hashable, Sendable {
 		package let dataAvailable: Bool
 		package let openPeriods: [OpenPeriod]
