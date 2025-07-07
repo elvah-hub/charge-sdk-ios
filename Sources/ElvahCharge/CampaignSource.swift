@@ -198,7 +198,8 @@ public struct CampaignSource: DynamicProperty {
 
 					// Campaign has ended, we can return early.
 					guard campaign.hasEnded == false,
-									let latestEndingOffer = campaign.chargeSite.latestEndingOffer else {
+					      let latestEndingOffer = campaign.latestEndingChargeOffer,
+					      let offerCampaignInfo = latestEndingOffer.campaignInfo else {
 						stateBinding.wrappedValue.campaign.setAbsent()
 						stateBinding.wrappedValue.hasEnded = campaign.hasEnded
 						return
@@ -210,7 +211,7 @@ public struct CampaignSource: DynamicProperty {
 					stateBinding.wrappedValue.hasPreviouslyLoadedData = true
 
 					// Wait for campaign expiry and the set the campaign source expiry value
-					let sleepTime = Duration.seconds(latestEndingOffer.campaignEndDate.timeIntervalSinceNow)
+					let sleepTime = Duration.seconds(offerCampaignInfo.endDate.timeIntervalSinceNow)
 					try await Task.sleep(for: sleepTime, tolerance: .seconds(1))
 					stateBinding.wrappedValue.hasEnded = true
 				}

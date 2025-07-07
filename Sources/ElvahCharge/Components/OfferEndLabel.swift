@@ -5,6 +5,10 @@ import SwiftUI
 /// A view displaying the time left until a deal ends.
 @available(iOS 16.0, *)
 struct OfferEndLabel: View {
+	private var campaignEndDate: Date {
+		offer.campaignInfo?.endDate ?? .distantPast
+	}
+
 	var offer: ChargeOffer
 	var referenceDate: Date
 	var prefix: LocalizedStringKey?
@@ -37,7 +41,7 @@ struct OfferEndLabel: View {
 	var body: some View {
 		let timeLeft = max(
 			Duration.seconds(0),
-			Duration.seconds(offer.campaignEndDate.timeIntervalSince(referenceDate))
+			Duration.seconds(campaignEndDate.timeIntervalSince(referenceDate))
 		)
 
 		let suffixColor = timeLeft > .zero ? (highlightColor ?? primaryColor) : primaryColor

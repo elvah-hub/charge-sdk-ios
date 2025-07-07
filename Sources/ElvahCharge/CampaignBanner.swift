@@ -203,5 +203,6 @@ package extension CampaignBanner {
 				.padding()
 		}
 	}
+	.withFontRegistration()
 	.preferredColorScheme(.dark)
 }

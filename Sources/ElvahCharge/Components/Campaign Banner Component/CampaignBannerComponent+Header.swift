@@ -54,7 +54,7 @@ extension CampaignBannerComponent {
 				}
 
 				TimelineView(.periodic(from: .now, by: 1)) { context in
-					if let offer = campaign.chargeSite.earliestEndingOffer {
+					if let offer = campaign.earliestEndingChargeOffer {
 						OfferEndLabel(
 							offer: offer,
 							referenceDate: context.date,

@@ -35,16 +35,6 @@ package extension ChargeSite {
 			.filter { $0.hasEnded == false }
 			.sorted(using: KeyPathComparator(\.price.pricePerKWh)).first
 	}
-
-	/// The offer that expires the latest among all offers in the campaign.
-	var latestEndingOffer: ChargeOffer? {
-		offers.filter { $0.hasEnded == false }.sorted(using: KeyPathComparator(\.campaignEndDate)).last
-	}
-
-	/// The offer that expires the earliest among all offers in the campaign.
-	var earliestEndingOffer: ChargeOffer? {
-		offers.filter { $0.hasEnded == false }.sorted(using: KeyPathComparator(\.campaignEndDate)).first
-	}
 }
 
 // MARK: - Mock Data

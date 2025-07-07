@@ -19,12 +19,24 @@ extension ChargeOffer {
 			originalPrice = try ChargePrice.parse(originalPriceSchema)
 		}
 
+		var campaignInfo: CampaignInfo?
+		switch offerType {
+		case .standard:
+			break
+		case .campaign:
+			guard let endDate = Date.from(iso8601: response.offer.campaignEndsAt) else {
+				Elvah.logger.parseError(in: response, for: \.offer.campaignEndsAt)
+				throw NetworkError.cannotParseServerResponse
+			}
+			campaignInfo = CampaignInfo(endDate: endDate)
+		}
+
 		return try ChargeOffer(
 			chargePoint: ChargePoint.parse(response),
 			price: ChargePrice.parse(response.offer.price),
 			originalPrice: originalPrice,
 			type: offerType,
-			campaignEndDate: Date.from(iso8601: response.offer.campaignEndsAt),
+			campaignInfo: campaignInfo,
 			expiresAt: expiresAt
 		)
 	}

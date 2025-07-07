@@ -22,8 +22,10 @@ package struct SignedChargeOffer: Codable, Hashable, Identifiable, Sendable {
 	}
 
 	/// Returns `true` if the associated campaign has ended, `false` otherwise.
+	///
+	/// - Note: This property will always return `true` for charge offers that are not part of a campaign.
 	package var hasEnded: Bool {
-		offer.campaignEndDate < Date()
+		offer.hasEnded
 	}
 }
 
@@ -43,10 +45,6 @@ package extension SignedChargeOffer {
 
 package extension [SignedChargeOffer] {
 	var cheapestOffer: SignedChargeOffer? {
-		sorted(using: KeyPathComparator(\.offer.price.pricePerKWh)).first
-	}
-
-	var earliestEndingOffer: SignedChargeOffer? {
 		sorted(using: KeyPathComparator(\.offer.price.pricePerKWh)).first
 	}
 }
