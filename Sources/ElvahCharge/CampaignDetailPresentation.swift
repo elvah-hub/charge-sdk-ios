@@ -15,7 +15,7 @@ public extension View {
 		for campaign: Binding<Campaign?>
 	) -> some View {
 		if #available(iOS 16.0, *) {
-			modifier(CampaignDetailPresentationViewModifier(campaign: campaign))
+			modifier(PresentationViewModifier(campaign: campaign))
 		} else {
 			self
 		}
@@ -25,7 +25,7 @@ public extension View {
 // MARK: - Modifiers
 
 @available(iOS 16.0, *)
-private struct CampaignDetailPresentationViewModifier: ViewModifier {
+private struct PresentationViewModifier: ViewModifier {
 	@Binding var campaign: Campaign?
 
 	func body(content: Content) -> some View {

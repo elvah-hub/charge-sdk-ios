@@ -11,7 +11,7 @@ package struct ChargeOfferDetailRootFeature: View {
   private var site: Site?
 	private var offers: [ChargeOffer]
 
-	package init(site: Site, offers: [ChargeOffer] = []) {
+	package init(site: Site?, offers: [ChargeOffer] = []) {
     self.site = site
     self.offers = offers
   }

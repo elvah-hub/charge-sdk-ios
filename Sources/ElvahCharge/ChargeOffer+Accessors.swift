@@ -6,15 +6,16 @@ import SwiftUI
 
 public extension ChargeOffer {
 	/// Returns all charge offers for the given list of evse ids.
-	///
+	///  
 	/// - Note: Unsupported evse ids will be ignored.
 	/// - Parameter evseIds: The evse ids.
+	/// - Returns: An instance of ``ChargeOfferList`` that contains all the found charge points.
 	@MainActor static func offers(
 		forEvseIds evseIds: [String]
-	) async throws(Elvah.Error) -> [ChargeOffer] {
+	) async throws(Elvah.Error) -> ChargeOfferList {
 		do {
 			let chargeSites = try await DiscoveryProvider.live.sites(forEvseIds: evseIds)
-			return chargeSites.flatMap { $0.offers }
+			return ChargeOfferList(offers: chargeSites.flatMap { $0.offers })
 		} catch NetworkError.unauthorized {
 			throw Elvah.Error.unauthorized
 		} catch let error as NetworkError {
@@ -33,7 +34,7 @@ public extension ChargeOffer {
 	@MainActor @discardableResult static func offers(
 		forEvseIds evseIds: [String],
 		completion: @MainActor @escaping (
-			_ result: Result<[ChargeOffer], Elvah.Error>
+			_ result: Result<ChargeOfferList, Elvah.Error>
 		) -> Void
 	) -> TaskObserver {
 		let task = Task {
