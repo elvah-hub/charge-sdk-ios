@@ -2,7 +2,7 @@
 
 import SwiftUI
 
-/// A charge point with attached pricing information. 
+/// A charge point with attached pricing information.
 ///
 /// - Important: The prices included are considered “preview prices” until the offer is signed.
 public struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {

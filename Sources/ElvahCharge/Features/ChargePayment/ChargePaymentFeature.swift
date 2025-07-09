@@ -5,7 +5,7 @@ import Stripe
 import StripePaymentSheet
 import SwiftUI
 
-#if canImport(Code)
+#if canImport(Core)
 	import Core
 #endif
 

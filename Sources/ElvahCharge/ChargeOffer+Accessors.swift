@@ -12,10 +12,10 @@ public extension ChargeOffer {
 	/// - Returns: An instance of ``ChargeOfferList`` that contains all the found charge points.
 	@MainActor static func offers(
 		forEvseIds evseIds: [String]
-	) async throws(Elvah.Error) -> ChargeOfferList {
+	) async throws(Elvah.Error) -> [ChargeOffer] {
 		do {
 			let chargeSites = try await DiscoveryProvider.live.sites(forEvseIds: evseIds)
-			return ChargeOfferList(offers: chargeSites.flatMap { $0.offers })
+			return chargeSites.flatMap { $0.offers }
 		} catch NetworkError.unauthorized {
 			throw Elvah.Error.unauthorized
 		} catch let error as NetworkError {
@@ -34,7 +34,7 @@ public extension ChargeOffer {
 	@MainActor @discardableResult static func offers(
 		forEvseIds evseIds: [String],
 		completion: @MainActor @escaping (
-			_ result: Result<ChargeOfferList, Elvah.Error>
+			_ result: Result<[ChargeOffer], Elvah.Error>
 		) -> Void
 	) -> TaskObserver {
 		let task = Task {

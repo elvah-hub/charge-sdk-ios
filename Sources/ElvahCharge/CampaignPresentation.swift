@@ -11,8 +11,8 @@ public extension View {
 	/// - Important: This modifier requires iOS 16.0 or later. On earlier versions, it does nothing to
 	/// the wrapped view.
 	/// - Returns: A view that presents a campaign detail view using the given ``Campaign`` object.
-	@ViewBuilder func campaignDetailPresentation(
-		for campaign: Binding<Campaign?>
+	@ViewBuilder func chargePresentation(
+		campaign: Binding<Campaign?>
 	) -> some View {
 		if #available(iOS 16.0, *) {
 			modifier(PresentationViewModifier(campaign: campaign))
