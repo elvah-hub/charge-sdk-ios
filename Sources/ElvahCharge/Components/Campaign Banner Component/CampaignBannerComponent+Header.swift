@@ -4,12 +4,12 @@ import Defaults
 import SwiftUI
 
 @available(iOS 16.0, *)
-extension CampaignBannerComponent {
+extension ChargeBannerComponent {
 	struct Header: View {
 		@Default(.chargeSessionContext) private var chargeSessionContext
 		@Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
-		var source: CampaignSource.Binding
+		var source: ChargeBannerSource.Binding
 		var viewState: LoadableState<ViewState>
 		var primaryAction: () -> Void
 		var retryAction: () -> Void
@@ -28,8 +28,8 @@ extension CampaignBannerComponent {
 						Image(source.chargeSession.isAbsent ? .place : .bolt)
 					}
 					switch loadedData {
-					case let .campaign(campaign):
-						offerHeader(campaign: campaign)
+					case let .chargeSite(chargeSite):
+						offerHeader(chargeSite: chargeSite)
 					case let .chargeSession(session):
 						chargeSessionHeader(session: session)
 					}
@@ -42,7 +42,7 @@ extension CampaignBannerComponent {
 			.background(.canvas)
 		}
 
-		@ViewBuilder private func offerHeader(campaign: Campaign) -> some View {
+		@ViewBuilder private func offerHeader(chargeSite: ChargeSite) -> some View {
 			AdaptiveHStack { isHorizontalStack in
 				ViewThatFits(in: .horizontal) {
 					Text("Best deal around you", bundle: .elvahCharge)
@@ -54,7 +54,7 @@ extension CampaignBannerComponent {
 				}
 
 				TimelineView(.periodic(from: .now, by: 1)) { context in
-					if let offer = campaign.earliestEndingChargeOffer {
+					if let offer = chargeSite.earliestEndingChargeOffer {
 						OfferEndLabel(
 							offer: offer,
 							referenceDate: context.date,

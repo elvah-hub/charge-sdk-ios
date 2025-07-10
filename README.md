@@ -2,7 +2,7 @@
 
 The elvah Charge SDK is a lightweight toolkit that enables apps to discover nearby EV charging deals and initiate charge sessions through a fully native and seamless interface.
 
-With just a few lines of code, you can add a `CampaignBanner` view to your app that intelligently finds and displays nearby charging deals. The SDK handles everything from deal discovery to payment processing and charge session management, allowing your users to charge their cars without ever leaving your app.
+With just a few lines of code, you can add a `ChargeBanner` view to your app that intelligently finds and displays nearby charging deals. The SDK handles everything from deal discovery to payment processing and charge session management, allowing your users to charge their cars without ever leaving your app.
 
 ## Content
 
@@ -52,55 +52,55 @@ The configuration allows you to pass the following values:
 
 ### Campaign Banner
 
-The SDK's primary entry point is the `CampaignBanner` view. You can add it anywhere you want to offer users a deal to charge their electric car nearby.
+The SDK's primary entry point is the `ChargeBanner` view. You can add it anywhere you want to offer users a deal to charge their electric car nearby.
 
-The minimal setup to integrate a `CampaignBanner` into your view hierarchy is this:
+The minimal setup to integrate a `ChargeBanner` into your view hierarchy is this:
 
 ```swift 
 import ElvahCharge
 
 struct DemoView: View {
-  @CampaignSource private var campaignSource
+  @ChargeBannerSource private var chargeBannerSource
 
   var body: some View {
     VStack {
       // Your other views
             
-      if let $campaignSource {
-        CampaignBanner(source: $campaignSource)
+      if let $chargeBannerSource {
+        ChargeBanner(source: $chargeBannerSource)
       }
     }
   }
 }
 ```
 
-A `CampaignBanner` is controlled by a `CampaignSource` that is responsible for fetching and managing the campaign data as well as deciding when to actually display the attached banner.
+A `ChargeBanner` is controlled by a `ChargeBannerSource` that is responsible for fetching and managing the campaign data as well as deciding when to actually display the attached banner.
 
 The banner will initially remain hidden until a source value is set:
 
 ```swift
 // Load nearest campaign at a location
-campaignSource = .remote(near: coordinate)
+chargeBannerSource = .remote(near: coordinate)
 
 // Or load a campaign in a map region
-campaignSource = .remote(in: mapRegion)
+chargeBannerSource = .remote(in: mapRegion)
 ```
 
-Once you have done that, the source object will attempt to find an active campaign from the given source data and present it inside the `CampaignBanner` view.
+Once you have done that, the source object will attempt to find an active campaign from the given source data and present it inside the `ChargeBanner` view.
 
 > [!IMPORTANT]
 > Currently, there is only a single demo campaign available at these coordinates: Latitude: 51.03125° N, Longitude: 4.41047° E
 
 #### Display Behavior
 
-By default, there will be visible loading and error states inside the `CampaignBanner` view, whenever a source is set. To change this, specify a `DisplayBehavior` on the `CampaignSource` property wrapper:
+By default, there will be visible loading and error states inside the `ChargeBanner` view, whenever a source is set. To change this, specify a `DisplayBehavior` on the `ChargeBannerSource` property wrapper:
 
 ```swift 
 // Default: Show the banner whenever a source is set, including visible loading and error states
-@CampaignSource(display: .whenSourceSet) private var campaignSource
+@ChargeBannerSource(display: .whenSourceSet) private var chargeBannerSource
 
 // Show the banner only whenever there is an active campaign loaded, hiding loading and error states
-@CampaignSource(display: .whenContentAvailable) private var campaignSource
+@ChargeBannerSource(display: .whenContentAvailable) private var chargeBannerSource
 ```
 
 Setting the `DisplayBehavior` to `.whenContentAvailable` can be useful when you do not want to introduce changes to your UI until it is certain there is an active campaign available.
@@ -110,7 +110,7 @@ Setting the `DisplayBehavior` to `.whenContentAvailable` can be useful when you 
 To reset the banner and remove it from the view hierarchy, simply set its source to `nil`:
 
 ```swift
-campaignSource = nil
+chargeBannerSource = nil
 ```
 
 #### External Loading
@@ -122,7 +122,7 @@ let campaigns = try await Campaign.campaigns(in: someRegion)
 // Or: Campaign.campaigns(near: someLocation)
 
 if let campaign = campaigns.first {
-  campaignSource = .direct(campaign)
+  chargeBannerSource = .direct(campaign)
 }
 ```
 
@@ -130,10 +130,10 @@ This will disable the internal loading mechanisms and lets you have full control
 
 #### Banner Variants
 
-The `CampaignBanner` view comes in two variants: `large` and `compact`. You can specify the variant through a view modifier:
+The `ChargeBanner` view comes in two variants: `large` and `compact`. You can specify the variant through a view modifier:
 
 ```swift
-CampaignBanner(source: $campaignSource)
+ChargeBanner(source: $chargeBannerSource)
   .variant(.compact)
 ```
 
@@ -142,7 +142,7 @@ CampaignBanner(source: $campaignSource)
 You can add a view modifier that will call a given closure whenever a loaded campaign has ended and needs to be replaced:
 
 ```swift
-CampaignBanner(source: $campaignSource)
+ChargeBanner(source: $chargeBannerSource)
   .onCampaignEnd { expiredCampaign in 
     // Perform some logic
   }
@@ -152,10 +152,10 @@ CampaignBanner(source: $campaignSource)
 > Typically, you do not need to worry about this, but in case you need the extra control, it is available.
 
 ## Charge Session Observation
-Users should be able to reopen an active charge session that was minimized, whether manually or due to app termination. The `CampaignBanner` view takes care of that out of the box. Whenever there is an active charge session, the banner will show a button to re-open the charge session.
+Users should be able to reopen an active charge session that was minimized, whether manually or due to app termination. The `ChargeBanner` view takes care of that out of the box. Whenever there is an active charge session, the banner will show a button to re-open the charge session.
 
 However, it is usually a good idea to also offer a prominently placed button or banner in your app that the user can tap
-to re-open an active charge session without having to go back to a place where the `CampaignBanner` is being shown.
+to re-open an active charge session without having to go back to a place where the `ChargeBanner` is being shown.
 
 You can do this by adding the `.chargeSessionPresentation(isPresented:)` view modifier anywhere in your app. While you can trigger that presentation at any time, it makes sense to do so only when there is an active charge session.
 
@@ -178,11 +178,11 @@ The `update` you receive from this stream is an `enum` with three cases:
 
 ## Compatibility
 
-You can integrate the SDK into projects that support iOS 15 and above. However, the `CampaignBanner` view requires an iOS 16 (or newer) runtime to function.
+You can integrate the SDK into projects that support iOS 15 and above. However, the `ChargeBanner` view requires an iOS 16 (or newer) runtime to function.
 
 On devices running iOS 15, the banner will simply not be displayed. There’s no need to perform runtime checks yourself — the SDK automatically ensures that the banner is only shown when the runtime supports it.
 
-You can safely include `CampaignSource` and `CampaignBanner` in your view hierarchy without additional conditionals. The SDK handles platform availability behind the scenes.
+You can safely include `ChargeBannerSource` and `ChargeBanner` in your view hierarchy without additional conditionals. The SDK handles platform availability behind the scenes.
 
 ## Examples
 

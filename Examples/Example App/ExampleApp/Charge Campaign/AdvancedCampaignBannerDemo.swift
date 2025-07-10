@@ -4,15 +4,15 @@ import ElvahCharge
 import MapKit
 import SwiftUI
 
-struct AdvancedCampaignBannerDemo: View {
-	@CampaignSource private var campaignSource
+struct AdvancedChargeBannerDemo: View {
+	@ChargeBannerSource private var chargeBannerSource
 	@State private var showChargeSession = false
 	@State private var campaignDetail: Campaign?
 
 	var body: some View {
 		DemoContent {
-			if let $campaignSource {
-				CampaignBanner(source: $campaignSource) { destination in
+			if let $chargeBannerSource {
+				ChargeBanner(source: $chargeBannerSource) { destination in
 					switch destination {
 					case let .campaignDetailPresentation(campaign):
 						campaignDetail = campaign
@@ -29,7 +29,7 @@ struct AdvancedCampaignBannerDemo: View {
 		.campaignDetailPresentation(for: $campaignDetail)
 		.navigationTitle("Campaign Banner (Advanced)")
 		.navigationBarTitleDisplayMode(.inline)
-		.animation(.default, value: campaignSource)
+		.animation(.default, value: chargeBannerSource)
 		.task {
 			await loadCampaign()
 		}
@@ -38,7 +38,7 @@ struct AdvancedCampaignBannerDemo: View {
 	private func loadCampaign() async {
 		do {
 			if let campaign = try await Campaign.campaigns(in: .mock).first {
-				campaignSource = .direct(campaign)
+				chargeBannerSource = .direct(campaign)
 			}
 		} catch {
 			switch error {
@@ -56,6 +56,6 @@ struct AdvancedCampaignBannerDemo: View {
 }
 
 #Preview {
-	AdvancedCampaignBannerDemo()
+	AdvancedChargeBannerDemo()
 		.preferredColorScheme(.dark)
 }

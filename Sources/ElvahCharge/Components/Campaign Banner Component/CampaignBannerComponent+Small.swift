@@ -3,9 +3,9 @@
 import SwiftUI
 
 @available(iOS 16.0, *)
-extension CampaignBannerComponent {
+extension ChargeBannerComponent {
 	struct SmallContent: View {
-		var source: CampaignSource.Binding
+		var source: ChargeBannerSource.Binding
 		var viewState: LoadableState<ViewState>
 		var action: () -> Void
 
@@ -21,8 +21,8 @@ extension CampaignBannerComponent {
 						errorContent(error: error)
 					case let .loaded(loadedData):
 						switch loadedData {
-						case let .campaign(campaign):
-							campaignContent(campaign: campaign)
+						case let .chargeSite(chargeSite):
+							campaignContent(chargeSite: chargeSite)
 						case let .chargeSession(session):
 							chargeSessionContent(session: session)
 						}
@@ -40,13 +40,13 @@ extension CampaignBannerComponent {
 			.buttonStyle(.plain)
 		}
 
-		@ViewBuilder private func campaignContent(campaign: Campaign) -> some View {
+		@ViewBuilder private func campaignContent(chargeSite: ChargeSite) -> some View {
 			TimelineView(.periodic(from: .now, by: 2)) { _ in
-				if let offer = campaign.earliestEndingChargeOffer {
+				if let offer = chargeSite.earliestEndingChargeOffer {
 					let price = offer.price.pricePerKWh.formatted()
 					let priceLabel = Text("\(price)/kWh", bundle: .elvahCharge).foregroundColor(.brand)
 					HStack(spacing: 12) {
-						let siteName = campaign.chargeSite.operatorName ?? String(localized: "Site")
+						let siteName = chargeSite.operatorName ?? String(localized: "Site")
 						Text("Charge at \(siteName) from \(priceLabel)", bundle: .elvahCharge)
 							.contentTransition(.numericText())
 						Spacer()

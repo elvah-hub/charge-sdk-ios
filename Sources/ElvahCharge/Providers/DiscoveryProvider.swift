@@ -29,15 +29,13 @@ final class DiscoveryProvider: ObservableObject {
 		return try await dependencies.sitesInRegion(region)
 	}
 
-	func deals(in region: MKMapRect) async throws -> [Campaign] {
-		let chargeSites = try await dependencies.sitesInRegion(region)
-		return chargeSites.map { Campaign(chargeSite: $0) }
+	func deals(in region: MKMapRect) async throws -> [ChargeSite] {
+		try await dependencies.sitesInRegion(region)
 	}
 
-	func deals(near location: CLLocationCoordinate2D, radius: Double = 5) async throws -> [Campaign] {
+	func deals(near location: CLLocationCoordinate2D, radius: Double = 5) async throws -> [ChargeSite] {
 		let region = MKMapRect.around(location, radius: radius)
-		let chargeSites = try await dependencies.sitesInRegion(region)
-		return chargeSites.map { Campaign(chargeSite: $0) }
+		return try await dependencies.sitesInRegion(region)
 	}
 }
 

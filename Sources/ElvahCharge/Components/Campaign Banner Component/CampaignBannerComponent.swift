@@ -9,15 +9,14 @@ import SwiftUI
 #endif
 
 @available(iOS 16.0, *)
-package struct CampaignBannerComponent: View {
+package struct ChargeBannerComponent: View {
 	@Environment(\.dynamicTypeSize) private var dynamicTypeSize
 	@Default(.chargeSessionContext) private var chargeSessionContext
 	@EnvironmentObject private var chargeProvider: ChargeProvider
 
-	private var source: CampaignSource.Binding
-	private var variant: CampaignBannerVariant
-	private var action: (_ destination: CampaignBannerActionDestination) -> Void
-	private var onCampaignEnd: CampaignBanner.CampaignEndedBlock?
+	private var source: ChargeBannerSource.Binding
+	private var variant: ChargeBannerVariant
+	private var action: (_ destination: ChargeBannerActionDestination) -> Void
 
 	@TaskIdentifier private var chargeSessionTaskId
 	private var chargeSessionRefreshId: ChargeSessionRefreshIdentifier {
@@ -28,21 +27,19 @@ package struct CampaignBannerComponent: View {
 	}
 
 	private var sourceExpiryWrapper: SourceExpiryWrapper? {
-		guard let campaign = source.campaign.data else {
+		guard let chargeSite = source.chargeSite.data else {
 			return nil
 		}
-		return SourceExpiryWrapper(hasEnded: source.hasEnded, campaign: campaign)
+		return SourceExpiryWrapper(hasEnded: source.hasEnded, chargeSite: chargeSite)
 	}
 
 	package init(
-		source: CampaignSource.Binding,
-		variant: CampaignBannerVariant = .large,
-		onCampaignEnd: CampaignBanner.CampaignEndedBlock? = nil,
-		action: @escaping (_ destination: CampaignBannerActionDestination) -> Void
+		source: ChargeBannerSource.Binding,
+		variant: ChargeBannerVariant = .large,
+		action: @escaping (_ destination: ChargeBannerActionDestination) -> Void
 	) {
 		self.source = source
 		self.variant = variant
-		self.onCampaignEnd = onCampaignEnd
 		self.action = action
 	}
 
@@ -64,12 +61,6 @@ package struct CampaignBannerComponent: View {
 			if Defaults[.chargeSessionContext] != nil {
 				source.chargeSession.setLoading()
 			}
-		}
-		.onChange(of: sourceExpiryWrapper) { wrapper in
-			guard let wrapper, wrapper.hasEnded else {
-				return
-			}
-			onCampaignEnd?(wrapper.campaign)
 		}
 		.task(id: chargeSessionRefreshId) {
 			await observeChargeSession(using: chargeSessionContext)
@@ -111,8 +102,8 @@ package struct CampaignBannerComponent: View {
 		}
 
 		switch loadedData {
-		case let .campaign(campaign):
-			action(.campaignDetailPresentation(campaign))
+		case let .chargeSite(chargeSite):
+			action(.chargeSitePresentation(chargeSite))
 		case .chargeSession:
 			action(.chargeSessionPresentation)
 		}
@@ -171,15 +162,15 @@ package struct CampaignBannerComponent: View {
 		}
 
 		// Otherwise check for campaign loadable state
-		if let campaign = source.campaign.data {
-			return .loaded(.campaign(campaign))
+		if let chargeSite = source.chargeSite.data {
+			return .loaded(.chargeSite(chargeSite))
 		}
 
-		if let error = source.campaign.error {
+		if let error = source.chargeSite.error {
 			return .error(error)
 		}
 
-		if source.campaign.isLoading {
+		if source.chargeSite.isLoading {
 			return .loading
 		}
 
@@ -189,10 +180,10 @@ package struct CampaignBannerComponent: View {
 }
 
 @available(iOS 16.0, *)
-package extension CampaignBannerComponent {
+package extension ChargeBannerComponent {
 	struct SourceExpiryWrapper: Equatable {
 		var hasEnded: Bool
-		var campaign: Campaign
+		var chargeSite: ChargeSite
 	}
 
 	struct ChargeSessionRefreshIdentifier: Equatable {
@@ -201,7 +192,7 @@ package extension CampaignBannerComponent {
 	}
 
 	enum ViewState {
-		case campaign(Campaign)
+		case chargeSite(ChargeSite)
 		case chargeSession(ChargeSession)
 
 		var isChargeSession: Bool {
@@ -211,8 +202,8 @@ package extension CampaignBannerComponent {
 			return false
 		}
 
-		var isCampaign: Bool {
-			if case .campaign = self {
+		var isChargeSite: Bool {
+			if case .chargeSite = self {
 				return true
 			}
 			return false
@@ -222,44 +213,44 @@ package extension CampaignBannerComponent {
 
 @available(iOS 17.0, *)
 #Preview("Dynamic") { @MainActor in
-	@Previewable @CampaignSource(
+	@Previewable @ChargeBannerSource(
 		display: .whenSourceSet,
 		provider: .mock
-	) var campaignSource = nil
+	) var chargeBannerSource = nil
 	@Previewable @Default(.chargeSessionContext) var chargeSessionContext
 
 	ScrollView {
 		VStack {
-			if let $campaignSource {
-				CampaignBannerComponent(source: $campaignSource) { _ in }
-				CampaignBannerComponent(source: $campaignSource, variant: .compact) { _ in }
+			if let $chargeBannerSource {
+				ChargeBannerComponent(source: $chargeBannerSource) { _ in }
+				ChargeBannerComponent(source: $chargeBannerSource, variant: .compact) { _ in }
 			}
 		}
 		.padding()
 		.frame(maxWidth: .infinity)
-		.animation(.default, value: campaignSource)
+		.animation(.default, value: chargeBannerSource)
 	}
 	.safeAreaInset(edge: .bottom) {
 		FooterView {
 			ButtonStack {
 				ButtonStack(axis: .horizontal) {
 					Button("Location") {
-						campaignSource = .remote(near: .init())
+						chargeBannerSource = .remote(near: .init())
 					}
-					.disabled(campaignSource.usesLocation)
+					.disabled(chargeBannerSource.usesLocation)
 					Button("Region") {
-						campaignSource = .remote(in: .mock)
+						chargeBannerSource = .remote(in: .mock)
 					}
-					.disabled(campaignSource.usesRegion)
+					.disabled(chargeBannerSource.usesRegion)
 					Button("Campaign") {
-						campaignSource = .direct(.mock)
+						chargeBannerSource = .direct(.mock)
 					}
-					.disabled(campaignSource.usesCampaign)
+					.disabled(chargeBannerSource.usesCampaign)
 				}
 				Button("Reset") {
-					campaignSource = nil
+					chargeBannerSource = nil
 				}
-				.disabled(campaignSource.isEmpty)
+				.disabled(chargeBannerSource.isEmpty)
 				Divider()
 				ButtonStack(axis: .horizontal) {
 					Button("No Session") {
@@ -291,8 +282,8 @@ package extension CampaignBannerComponent {
 
 @available(iOS 17.0, *)
 #Preview("Static") {
-	let source = CampaignSource.Binding(
-		campaign: .absent,
+	let source = ChargeBannerSource.Binding(
+		chargeSite: .absent,
 		chargeSession: .constant(.absent),
 		hasEnded: false,
 		kind: .remoteInRegion(.mock),
@@ -300,8 +291,8 @@ package extension CampaignBannerComponent {
 	)
 
 	VStack {
-		CampaignBannerComponent(source: source) { _ in }
-		CampaignBannerComponent(source: source, variant: .compact) { _ in }
+		ChargeBannerComponent(source: source) { _ in }
+		ChargeBannerComponent(source: source, variant: .compact) { _ in }
 	}
 	.padding()
 	.withFontRegistration()

@@ -4,26 +4,26 @@ import ElvahCharge
 import MapKit
 import SwiftUI
 
-struct SimpleCampaignBannerDemo: View {
-	@CampaignSource private var campaignSource
+struct SimpleChargeBannerDemo: View {
+	@ChargeBannerSource private var chargeBannerSource
 
 	var body: some View {
 		DemoContent {
 			Button("Show Deals Nearby") {
-				campaignSource = .remote(in: .mock)
+				chargeBannerSource = .remote(in: .mock)
 			}
-			if let $campaignSource {
-				CampaignBanner(source: $campaignSource)
+			if let $chargeBannerSource {
+				ChargeBanner(source: $chargeBannerSource)
 					.padding(.horizontal, 15)
 			}
 		}
 		.navigationTitle("Campaign Banner")
 		.navigationBarTitleDisplayMode(.inline)
-		.animation(.default, value: campaignSource)
+		.animation(.default, value: chargeBannerSource)
 	}
 }
 
 #Preview {
-	SimpleCampaignBannerDemo()
+	SimpleChargeBannerDemo()
 		.preferredColorScheme(.dark)
 }
