@@ -190,30 +190,31 @@ public struct ChargeBannerSource: DynamicProperty {
 						chargeSite = directChargeSite
 					}
 
-					// If there's no active campaign, we can return
-					guard let chargeSite else {
+					// If no charge site could be found, we can return
+					guard let chargeSite, let cheapestOffer = chargeSite.cheapestOffer else {
 						stateBinding.wrappedValue.chargeSite.setAbsent()
-						return
-					}
-
-					// Campaign has ended, we can return early.
-					guard chargeSite.hasEnded == false,
-								let cheapestOffer = chargeSite.cheapestOffer,
-					      let offerCampaignInfo = cheapestOffer.campaignInfo else {
-						stateBinding.wrappedValue.chargeSite.setAbsent()
-						stateBinding.wrappedValue.hasEnded = chargeSite.hasEnded
 						return
 					}
 
 					// Set internal state
+					// TODO: cheapest offer should be part of the state, not decided by the view
 					stateBinding.wrappedValue.chargeSite.setValue(chargeSite)
 					stateBinding.wrappedValue.hasEnded = false
 					stateBinding.wrappedValue.hasPreviouslyLoadedData = true
 
-					// Wait for campaign expiry and the set the campaign source expiry value
-					let sleepTime = Duration.seconds(offerCampaignInfo.endDate.timeIntervalSinceNow)
-					try await Task.sleep(for: sleepTime, tolerance: .seconds(1))
-					stateBinding.wrappedValue.hasEnded = true
+					if let campaign = cheapestOffer.campaign {
+						if campaign.hasEnded {
+							// Campaign has ended, we can return early.
+							stateBinding.wrappedValue.chargeSite.setAbsent()
+							stateBinding.wrappedValue.hasEnded = true
+							return
+						}
+
+						// Now wait for campaign expiry and the set the campaign source expiry value
+						let sleepTime = Duration.seconds(campaign.endDate.timeIntervalSinceNow)
+						try await Task.sleep(for: sleepTime, tolerance: .seconds(1))
+						stateBinding.wrappedValue.hasEnded = true
+					}
 				}
 			} catch is CancellationError {} catch {
 				print("\(error.localizedDescription)")
@@ -244,7 +245,8 @@ public extension ChargeBannerSource {
 
 		/// A flag indicating if the loading process is the first one after a new source has been set.
 		///
-		/// A ``ChargeBannerSource`` with a ``ChargeBannerSource/DisplayBehavior/whenContentAvailable`` will
+		/// A ``ChargeBannerSource`` with a ``ChargeBannerSource/DisplayBehavior/whenContentAvailable``
+		/// will
 		/// only hide the banner on the first loading of a newly set source. Subsequent refreshes, to
 		/// replace expired campaigns, will not hide the banner.
 		var hasPreviouslyLoadedData = false
@@ -294,10 +296,7 @@ public extension ChargeBannerSource {
 		/// - Parameter campaign: The campaign object to use.
 		/// - Returns: A state using the given campaign directly.
 		public static func direct(_ chargeSite: ChargeSite) -> ChargeBannerSource.State {
-			ChargeBannerSource.State(
-				chargeSite: .loaded(chargeSite),
-				kind: .direct(chargeSite),
-				hasEnded: chargeSite.hasEnded // TODO: Fix this
+			ChargeBannerSource.State( chargeSite: .loaded(chargeSite), kind: .direct(chargeSite)
 			)
 		}
 	}

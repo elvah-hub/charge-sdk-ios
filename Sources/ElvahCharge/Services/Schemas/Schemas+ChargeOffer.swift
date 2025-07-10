@@ -9,26 +9,24 @@ extension ChargeOffer {
 			throw NetworkError.cannotParseServerResponse
 		}
 
-		guard let offerType = ChargeOffer.OfferType(rawValue: response.offer.type) else {
-			Elvah.logger.parseError(in: response, for: \.offer.type)
-			throw NetworkError.cannotParseServerResponse
-		}
-
 		var originalPrice: ChargePrice?
 		if let originalPriceSchema = response.offer.originalPrice {
 			originalPrice = try ChargePrice.parse(originalPriceSchema)
 		}
 
-		var campaignInfo: CampaignInfo?
-		switch offerType {
-		case .standard:
-			break
-		case .campaign:
+		var offerType: ChargeOffer.OfferType
+		switch response.offer.type {
+		case "STANDARD":
+			offerType = .standard
+		case "CAMPAIGN":
 			guard let endDate = Date.from(iso8601: response.offer.campaignEndsAt) else {
 				Elvah.logger.parseError(in: response, for: \.offer.campaignEndsAt)
 				throw NetworkError.cannotParseServerResponse
 			}
-			campaignInfo = CampaignInfo(endDate: endDate)
+			offerType = .campaign(CampaignInfo(endDate: endDate))
+		default:
+			Elvah.logger.parseError(in: response, for: \.offer.type)
+			throw NetworkError.cannotParseServerResponse
 		}
 
 		return try ChargeOffer(
@@ -36,8 +34,7 @@ extension ChargeOffer {
 			price: ChargePrice.parse(response.offer.price),
 			originalPrice: originalPrice,
 			type: offerType,
-			campaignInfo: campaignInfo,
-			expiresAt: expiresAt
+			validUntil: expiresAt
 		)
 	}
 

@@ -25,11 +25,13 @@ package struct SignedChargeOffer: Codable, Hashable, Identifiable, Sendable {
 		set { offer[keyPath: keyPath] = newValue }
 	}
 
-	/// Returns `true` if the associated campaign has ended, `false` otherwise.
+	/// A flag indicating if the offer is still available.
 	///
-	/// - Note: This property will always return `true` for charge offers that are not part of a campaign.
-	package var hasEnded: Bool {
-		offer.hasEnded
+	/// This flag will always be `true` for offers that are not part of a campaign.
+	/// - Note: This is different from ``ChargeOffer/validUntil``, which notes the date at
+	/// which the conditions of the offer might change.
+	public var isAvailable: Bool {
+		offer.isAvailable
 	}
 }
 

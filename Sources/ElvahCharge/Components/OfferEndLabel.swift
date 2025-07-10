@@ -6,7 +6,7 @@ import SwiftUI
 @available(iOS 16.0, *)
 struct OfferEndLabel: View {
 	private var campaignEndDate: Date {
-		offer.campaignInfo?.endDate ?? .distantPast
+		offer.campaign?.endDate ?? .distantPast
 	}
 
 	var offer: ChargeOffer

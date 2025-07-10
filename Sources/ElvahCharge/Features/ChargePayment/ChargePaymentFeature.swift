@@ -87,7 +87,7 @@ struct ChargePaymentFeature: View {
 				router.showLegalLinkOptions = false
 			}
 		}
-		.sheet(isPresented: $router.showOfferEndedSheet) {
+		.sheet(isPresented: $router.showOfferUnavailableSheet) {
 			OfferEndedBottomSheet()
 		}
 	}
@@ -119,12 +119,12 @@ struct ChargePaymentFeature: View {
 		FooterView {
 			VStack(spacing: Size.L.size) {
 				Button {
-					if request.signedOffer.hasEnded {
-						router.showOfferEndedSheet = true
-					} else {
+					if request.signedOffer.isAvailable {
 						$payment.run {
 							await pay()
 						}
+					} else {
+						router.showOfferUnavailableSheet = true
 					}
 				} label: {
 					ViewThatFits(in: .horizontal) {
@@ -219,7 +219,7 @@ extension ChargePaymentFeature {
 		@Published var showLegalLinkOptions = false
 		@Published var showPaymentSheet = false
 		@Published var showGenericError = false
-		@Published var showOfferEndedSheet = false
+		@Published var showOfferUnavailableSheet = false
 
 		let supportSheetRouter = SupportFeature.Router()
 		let chargeStartRouter = ChargeStartFeature.Router()
@@ -228,7 +228,7 @@ extension ChargePaymentFeature {
 			showLegalLinkOptions = false
 			showPaymentSheet = false
 			showGenericError = false
-			showOfferEndedSheet = false
+			showOfferUnavailableSheet = false
 		}
 
 		func reset() {

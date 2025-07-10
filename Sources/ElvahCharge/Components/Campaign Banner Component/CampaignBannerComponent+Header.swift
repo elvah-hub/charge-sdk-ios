@@ -62,7 +62,9 @@ extension ChargeBannerComponent {
 							primaryColor: .brand
 						)
 						.typography(.copy(size: .small), weight: .bold)
-						.foregroundStyle(offer.hasEnded ? .secondaryContent : .brand)
+						// TODO: Fix
+//						.foregroundStyle(offer.hasEnded ? .secondaryContent : .brand)
+						.foregroundStyle(offer.isAvailable ? .brand : .secondaryContent)
 					}
 				}
 			}

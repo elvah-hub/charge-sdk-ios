@@ -208,9 +208,9 @@ extension ChargeOfferDetailFeature {
 				.withChevron()
 				.padding(.M)
 			}
-			.opacity(offer.hasEnded || chargeSessionContext != nil ? 0.5 : 1)
-			.disabled(offer.hasEnded || chargeSessionContext != nil)
-			.animation(.default, value: offer.hasEnded)
+			.opacity(offer.isAvailable && chargeSessionContext == nil ? 1 : 0.5)
+			.disabled(offer.isAvailable && chargeSessionContext == nil)
+			.animation(.default, value: offer.isAvailable)
 		}
 
 		@ViewBuilder private var activityContent: some View {

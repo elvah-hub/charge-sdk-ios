@@ -28,32 +28,47 @@ public struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 	/// The type of offer, e.g. `standard` or `campaign`.
 	///
 	/// A `campaign` type will usually have a discounted price.
-	package var type: ChargeOffer.OfferType
+	public var type: ChargeOffer.OfferType
 
-	/// The information about the associated campaign, if there is one.
-	///
-	/// - Note: You should not use this property directly. Instead use accessors in the ``Campaign``
-	/// object, like ``Campaign/endDate(for:)``.
-	/// - Note: This property will only hold a value when the charge offer is part of a ``Campaign``.
-	package var campaignInfo: CampaignInfo?
-
-	/// The date at which the offer expires, i.e. when the price might change.
-	public var expiresAt: Date
+	/// The date at which the conditions of the offer might change.
+	public var validUntil: Date
 
 	public init(
 		chargePoint: ChargePoint,
 		price: ChargePrice,
 		originalPrice: ChargePrice?,
 		type: OfferType,
-		campaignInfo: CampaignInfo?,
-		expiresAt: Date,
+		validUntil: Date,
 	) {
 		self.chargePoint = chargePoint
 		self.price = price
 		self.originalPrice = originalPrice
 		self.type = type
-		self.campaignInfo = campaignInfo
-		self.expiresAt = expiresAt
+		self.validUntil = validUntil
+	}
+
+	/// Information about a campaign that is associated with this offer, if there is one.
+	///
+	/// - Note: This property will only hold a value when the charge offer is part of a ``Campaign``.
+	public var campaign: CampaignInfo? {
+		guard case let .campaign(campaignInfo) = type else {
+			return nil
+		}
+
+		return campaignInfo
+	}
+
+	/// A flag indicating if the offer is still available.
+	///
+	/// This flag will always be `true` for offers that are not part of a campaign.
+	/// - Note: This is different from ``ChargeOffer/validUntil``, which notes the date at
+	/// which the conditions of the offer might change.
+	public var isAvailable: Bool {
+		if let campaign {
+			return campaign.hasEnded == false
+		}
+
+		return true
 	}
 
 	/// Returns `true` the offer is discounted.
@@ -62,29 +77,22 @@ public struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 	package var isDiscounted: Bool {
 		originalPrice != nil
 	}
-
-	/// Returns `true` if the associated campaign has ended, `false` otherwise.
-	///
-	/// - Note: This property will always return `true` for charge offers that are not part of a
-	/// campaign.
-	package var hasEnded: Bool {
-		guard let campaignInfo else {
-			return true
-		}
-
-		return campaignInfo.endDate < Date()
-	}
 }
 
 public extension ChargeOffer {
-	enum OfferType: String, Codable, Hashable, Sendable {
-		case standard = "STANDARD"
-		case campaign = "CAMPAIGN"
+	enum OfferType: Codable, Hashable, Sendable {
+		case standard
+		case campaign(CampaignInfo)
 	}
 
 	struct CampaignInfo: Codable, Hashable, Sendable {
 		/// The date at which the associated campaign will end for this charge offer.
-		let endDate: Date
+		public let endDate: Date
+
+		/// Returns `true` if the campaign has ended, `false` otherwise.
+		public var hasEnded: Bool {
+			endDate < Date()
+		}
 	}
 }
 
@@ -94,9 +102,8 @@ package extension ChargeOffer {
 			chargePoint: .mockAvailable,
 			price: ChargePrice.mock,
 			originalPrice: nil,
-			type: .campaign,
-			campaignInfo: CampaignInfo(endDate: Date().addingTimeInterval(20)),
-			expiresAt: Date().addingTimeInterval(120),
+			type: .campaign(CampaignInfo(endDate: Date().addingTimeInterval(20))),
+			validUntil: Date().addingTimeInterval(120),
 		)
 	}
 
@@ -105,9 +112,8 @@ package extension ChargeOffer {
 			chargePoint: .mockUnavailable,
 			price: ChargePrice.mock,
 			originalPrice: nil,
-			type: .campaign,
-			campaignInfo: CampaignInfo(endDate: Date().addingTimeInterval(-10)),
-			expiresAt: Date().addingTimeInterval(120),
+			type: .campaign(CampaignInfo(endDate: Date().addingTimeInterval(-10))),
+			validUntil: Date().addingTimeInterval(120),
 		)
 	}
 
@@ -116,9 +122,8 @@ package extension ChargeOffer {
 			chargePoint: .mockOutOfService,
 			price: ChargePrice.mock2,
 			originalPrice: nil,
-			type: .campaign,
-			campaignInfo: CampaignInfo(endDate: Date().addingTimeInterval(30)),
-			expiresAt: Date().addingTimeInterval(120),
+			type: .campaign(CampaignInfo(endDate: Date().addingTimeInterval(30))),
+			validUntil: Date().addingTimeInterval(120),
 		)
 	}
 }
