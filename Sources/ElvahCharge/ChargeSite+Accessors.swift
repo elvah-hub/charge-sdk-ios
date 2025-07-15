@@ -146,7 +146,7 @@ public extension ChargeSite {
 	/// - Parameter region: The region to search campaigns in.
 	@MainActor static func campaigns(in region: MKMapRect) async throws(Elvah.Error) -> [ChargeSite] {
 		do {
-			return try await DiscoveryProvider.live.deals(in: region)
+			return try await DiscoveryProvider.live.campaigns(in: region)
 		} catch NetworkError.unauthorized {
 			throw Elvah.Error.unauthorized
 		} catch let error as NetworkError {
@@ -189,7 +189,7 @@ public extension ChargeSite {
 		near location: CLLocationCoordinate2D
 	) async throws(Elvah.Error) -> [ChargeSite] {
 		do {
-			return try await DiscoveryProvider.live.deals(near: location)
+			return try await DiscoveryProvider.live.campaigns(near: location)
 		} catch NetworkError.unauthorized {
 			throw Elvah.Error.unauthorized
 		} catch let error as NetworkError {

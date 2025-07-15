@@ -6,12 +6,15 @@ import SwiftUI
 @MainActor
 final class DiscoveryProvider: ObservableObject {
 	struct Dependencies: Sendable {
-		var sitesForEvseIds: @Sendable (_ evseIds: [String]) async throws -> [ChargeSite]
-		var sitesInRegion: @Sendable (_ region: MKMapRect) async throws -> [ChargeSite]
+		var siteOffers: @Sendable (
+			_ region: MKMapRect?,
+			_ evseIds: [String]?,
+			_ onlyCampaigns: Bool
+		) async throws -> [ChargeSite]
 		var signOffer: @Sendable (
 			_ siteId: String,
 			_ evseId: String
-		) async throws-> SignedChargeOffer
+		) async throws -> SignedChargeOffer
 	}
 
 	private let dependencies: Dependencies
@@ -21,35 +24,35 @@ final class DiscoveryProvider: ObservableObject {
 	}
 
 	func sites(forEvseIds evseIds: [String]) async throws -> [ChargeSite] {
-		try await dependencies.sitesForEvseIds(evseIds)
+		try await dependencies.siteOffers(nil, evseIds, false)
 	}
 
 	func sites(in region: MKMapRect) async throws -> [ChargeSite] {
-		try await dependencies.sitesInRegion(region)
+		try await dependencies.siteOffers(region, nil, false)
 	}
 
 	func sites(
 		near location: CLLocationCoordinate2D,
-		radius: Double = 5
+		radius: Double = 20000
 	) async throws -> [ChargeSite] {
 		let region = MKMapRect.around(location, radius: radius)
-		return try await dependencies.sitesInRegion(region)
+		return try await dependencies.siteOffers(region, nil, false)
 	}
 
-	func deals(forEvseIds evseIds: [String]) async throws -> [ChargeSite] {
-		try await dependencies.sitesForEvseIds(evseIds)
+	func campaigns(forEvseIds evseIds: [String]) async throws -> [ChargeSite] {
+		try await dependencies.siteOffers(nil, evseIds, true)
 	}
 
-	func deals(in region: MKMapRect) async throws -> [ChargeSite] {
-		try await dependencies.sitesInRegion(region)
+	func campaigns(in region: MKMapRect) async throws -> [ChargeSite] {
+		try await dependencies.siteOffers(region, nil, true)
 	}
 
-	func deals(
+	func campaigns(
 		near location: CLLocationCoordinate2D,
-		radius: Double = 5
+		radius: Double = 20000
 	) async throws -> [ChargeSite] {
 		let region = MKMapRect.around(location, radius: radius)
-		return try await dependencies.sitesInRegion(region)
+		return try await dependencies.siteOffers(region, nil, true)
 	}
 
 	func signOffer(
@@ -68,11 +71,12 @@ extension DiscoveryProvider {
 		)
 		return DiscoveryProvider(
 			dependencies: .init(
-				sitesForEvseIds: { evseIds in
-					try await service.siteOffers(forEvseIds: evseIds)
-				},
-				sitesInRegion: { region in
-					try await service.siteOffers(in: region)
+				siteOffers: { region, evseIds, onlyCampaigns in
+					try await service.siteOffers(
+						region: region,
+						evseIds: evseIds,
+						onlyCampaigns: onlyCampaigns
+					)
 				},
 				signOffer: { siteId, evseId in
 					try await service.signOffer(siteId: siteId, evseId: evseId)
@@ -83,16 +87,12 @@ extension DiscoveryProvider {
 
 	@available(iOS 16.0, *) static let mock = DiscoveryProvider(
 		dependencies: .init(
-			sitesForEvseIds: { evseIds in
-				try await Task.sleep(for: .milliseconds(2000))
-				return [ChargeSite.mock]
-			},
-			sitesInRegion: { region in
+			siteOffers: { _, _, _ in
 				try await Task.sleep(for: .milliseconds(2000))
 				return [ChargeSite.mock]
 			},
 			signOffer: { _, _ in
-				return .mockAvailable
+				.mockAvailable
 			}
 		)
 	)

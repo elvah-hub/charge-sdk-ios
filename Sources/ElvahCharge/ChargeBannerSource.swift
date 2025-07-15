@@ -8,13 +8,14 @@ import SwiftUI
 	import Defaults
 #endif
 
-/// A property wrapper that manages campaign data loading and state for a ``ChargeBanner`` view.
+/// A property wrapper that manages charge offer data loading and state for a ``ChargeBanner`` view.
 ///
-/// The source determines how campaign data is loaded, controlling the presentation and state of the
+/// The source determines how charge offer data is loaded, controlling the presentation and state of the
 /// banner. Available loading methods include:
-/// - Loading campaigns near a location
-/// - Loading campaigns within a map region
-/// - Using a provided campaign directly
+/// - Loading offers near a location
+/// - Loading offers within a map region
+/// - Loading offers for a specific set of evse ids
+/// - Using a charge site directly
 ///
 /// You can configure how the ``ChargeBanner`` responds to campaign availability using the
 /// ``ChargeBannerSource/DisplayBehavior`` parameter:
@@ -23,21 +24,21 @@ import SwiftUI
 /// // Always show banner when a source is set (default)
 /// @ChargeBannerSource private var chargeBannerSource
 ///
-/// // Only show banner when a campaign is available
+/// // Only show banner when a charge offer is available
 /// @ChargeBannerSource(display: .whenContentAvailable) private var chargeBannerSource
 /// ```
 ///
 /// ## Loading Campaigns
 ///
 /// ```swift
-/// // Load nearest campaign at a location
+/// // Load nearest charge offer at a location
 /// chargeBannerSource = .remote(near: myLocation)
 ///
-/// // Load campaign in a map region
+/// // Load a charge offer in a map region
 /// chargeBannerSource = .remote(in: mapRegion)
 ///
-/// // Use campaign directly
-/// chargeBannerSource = .direct(campaign)
+/// // Use charge site directly
+/// chargeBannerSource = .direct(chargeSite)
 /// ```
 ///
 /// ## Reset Source
@@ -190,7 +191,7 @@ public struct ChargeBannerSource: DynamicProperty {
 						case .allOffers:
 							chargeSite = try await discoveryProvider.sites(near: location).first
 						case .campaigns:
-							chargeSite = try await discoveryProvider.deals(near: location).first
+							chargeSite = try await discoveryProvider.campaigns(near: location).first
 						}
 
 					case let .remoteInRegion(region):
@@ -199,7 +200,7 @@ public struct ChargeBannerSource: DynamicProperty {
 						case .allOffers:
 							chargeSite = try await discoveryProvider.sites(in: region).first
 						case .campaigns:
-							chargeSite = try await discoveryProvider.deals(in: region).first
+							chargeSite = try await discoveryProvider.campaigns(in: region).first
 						}
 
 					case let .remoteForEvseIds(evseIds):
@@ -208,7 +209,7 @@ public struct ChargeBannerSource: DynamicProperty {
 						case .allOffers:
 							chargeSite = try await discoveryProvider.sites(forEvseIds: evseIds).first
 						case .campaigns:
-							chargeSite = try await discoveryProvider.deals(forEvseIds: evseIds).first
+							chargeSite = try await discoveryProvider.campaigns(forEvseIds: evseIds).first
 						}
 
 					case let .direct(directChargeSite):
@@ -234,10 +235,7 @@ public struct ChargeBannerSource: DynamicProperty {
 					stateBinding.wrappedValue.hasEnded = false
 					stateBinding.wrappedValue.hasPreviouslyLoadedData = true
 
-					print("This is printed, so offer state is set")
-
 					if let campaign = cheapestOffer.campaign {
-						print("This is not printed, so offer is not reset (which is correct)")
 						if campaign.hasEnded {
 							// Campaign has ended, we can return early.
 							stateBinding.wrappedValue.offer.setAbsent()
@@ -249,11 +247,12 @@ public struct ChargeBannerSource: DynamicProperty {
 						let sleepTime = Duration.seconds(campaign.endDate.timeIntervalSinceNow)
 						try await Task.sleep(for: sleepTime, tolerance: .seconds(1))
 						stateBinding.wrappedValue.hasEnded = true
+					} else {
+						// End loop here because the offer does not end
+						break
 					}
 				}
 			} catch is CancellationError {} catch {
-				print("\(error.localizedDescription)")
-				print("ABHFSJDFHJ")
 				Elvah.internalLogger.error("Failed to load campaign: \(error.localizedDescription)")
 				stateBinding.wrappedValue.chargeSite.setError(error)
 				stateBinding.wrappedValue.offer.setError(error)

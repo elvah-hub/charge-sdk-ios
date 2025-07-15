@@ -39,41 +39,34 @@ final class DiscoveryService: Sendable {
 		}
 	}
 
-	func siteOffers(forEvseIds evseIds: [String]) async throws(NetworkError) -> [ChargeSite] {
-		let query = evseIds.map { ("evseIds", $0) }
+	func siteOffers(
+		region: MKMapRect?,
+		evseIds: [String]?,
+		onlyCampaigns: Bool
+	) async throws(NetworkError) -> [ChargeSite] {
+		precondition(region != nil || evseIds != nil, "Either region or evseIds must be provided")
 
-		do {
-			let request = Request<SiteOffersResponse>(
-				path: "/discovery/sites-offers",
-				method: .get,
-				query: query
-			)
+		var query: [(String, String)] = []
+
+		if let region {
+			let topLeft = MKMapPoint(x: region.origin.x, y: region.origin.y).coordinate
+			let bottomRight = MKMapPoint(x: region.maxX, y: region.maxY).coordinate
 			
-			let response = try await client.send(request) { [apiKey] request in
-				request.setDistinctId(Elvah.distinctId.rawValue)
-				request.setAPIKey(apiKey)
-			}
-
-			var sites: [ChargeSite] = []
-			for siteData in response.value.data {
-				try sites.append(ChargeSite.parse(siteData))
-			}
-			return sites
-		} catch {
-			throw error.externalError
+			query += [
+				("minLat", "\(bottomRight.latitude)"),
+				("minLng", "\(topLeft.longitude)"),
+				("maxLat", "\(topLeft.latitude)"),
+				("maxLng", "\(bottomRight.longitude)"),
+			]
 		}
-	}
 
-	func siteOffers(in region: MKMapRect) async throws(NetworkError) -> [ChargeSite] {
-		let topLeft = MKMapPoint(x: region.origin.x, y: region.origin.y).coordinate
-		let bottomRight = MKMapPoint(x: region.maxX, y: region.maxY).coordinate
+		if let evseIds {
+			query += evseIds.map { ("evseIds", $0) }
+		}
 
-		let query = [
-			("minLat", "\(bottomRight.latitude)"),
-			("minLng", "\(topLeft.longitude)"),
-			("maxLat", "\(topLeft.latitude)"),
-			("maxLng", "\(bottomRight.longitude)"),
-		]
+		if onlyCampaigns {
+			query += [("offerType", "CAMPAIGN")]
+		}
 
 		do {
 			let request = Request<SiteOffersResponse>(

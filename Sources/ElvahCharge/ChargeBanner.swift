@@ -5,7 +5,7 @@ import SwiftUI
 /// A view that shows promotional charging deals near a given location or inside a map region.
 ///
 /// To show a ``ChargeBanner`` view, you need an instance of a ``ChargeBannerSource``, which is a
-/// property wrapper that you can add to any SwiftUI view. A campaign source is responsible for
+/// property wrapper that you can add to any SwiftUI view. A source is responsible for
 /// controlling how and when the data for a ``ChargeBanner`` view is loaded. Its projected value
 /// (`$`-prefixed property) gives you an optional binding that you can conditionally unwrap and
 /// initialize the ``ChargeBanner`` with. The binding will provide the banner with all required
@@ -26,9 +26,9 @@ import SwiftUI
 /// }
 /// ```
 ///
-/// ## Load a Campaign
+/// ## Load Charge Offers
 ///
-/// When you want to load a campaign, you set your campaign source to a location or map
+/// When you want to load charge offers, you set your source to a location or map
 /// region:
 ///
 /// ```swift
@@ -37,15 +37,30 @@ import SwiftUI
 /// chargeBannerSource = .remote(in: someRegion) // MKMapRect
 /// ```
 ///
+/// Alternatively, you can also pass in a specific set of evse ids:
+///
+/// ```swift
+/// chargeBannerSource = .remote(evseIds: someEvseIds) // [String]
+/// ```
+///
 /// This will cause the ``ChargeBanner`` to automatically fetch and show an appropriate
-/// campaign. Once that campaign expires, the component will attempt to load another campaign from
-/// the source and show it. If that fails, the ``ChargeBanner`` will either show a "no deals
+/// charge offer. If that offer ends, the component will attempt to load another offer from
+/// the source and show it. If that fails, the ``ChargeBanner`` will either show a "no offers
 /// found" message or remove itself from the view hierarchy, depending on the specified display
 /// behavior in the source object.
 ///
 /// ```swift
-/// // Hide banner when no campaign is available
+/// // Hide banner when no offer is available
 /// @ChargeBannerSource(display: .whenContentAvailable) private var chargeBannerSource
+/// ```
+///
+/// ## Load Campaigns
+///
+/// When you want to display charge offers that are part of a campaign, with discounted pricing, you can configure your source to only fetch those:
+///
+/// ```swift
+/// // Hide banner when no offer is available
+/// @ChargeBannerSource(fetching: .campaigns) private var chargeBannerSource
 /// ```
 ///
 /// ## Reset Banner
@@ -59,7 +74,7 @@ import SwiftUI
 /// ## Animation
 ///
 /// To animate the presentation and internal state changes of a ``ChargeBanner`` view, you can
-/// pass the campaign source to an `.animation` view modifier like this:
+/// pass the source to an `.animation` view modifier like this:
 ///
 /// ```swift
 /// .animation(.default, value: chargeBannerSource)
@@ -83,7 +98,7 @@ import SwiftUI
 /// 	var body: some View {
 /// 		ScrollView {
 /// 			VStack {
-/// 				Button("Deals Nearby") {
+/// 				Button("Offers Nearby") {
 /// 					let myLocation = /* ... */
 /// 					chargeBannerSource = .remote(near: myLocation)
 /// 				}
@@ -105,14 +120,14 @@ public struct ChargeBanner: View {
 	private var action: ChargeBannerActionResolution
 
 	/// Initializes the ``ChargeBanner`` view.
-	/// - Parameter source: The source that drive the campaign loading for the view.
+	/// - Parameter source: The source that drives the charge offer loading for the view.
 	public init(source: ChargeBannerSource.Binding) {
 		self.source = source
 		action = .automatic
 	}
 
 	/// Initializes the ``ChargeBanner`` view.
-	/// - Parameter source: The source that drive the campaign loading for the view.
+	/// - Parameter source: The source that drives the charge offer loading for the view.
 	/// - Parameter action: A closure that is called when the primary action of the view is tapped.
 	/// You can use this to perform your own logic before triggering a presentation.
 	public init(
