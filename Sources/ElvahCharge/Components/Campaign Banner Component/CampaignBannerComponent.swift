@@ -27,10 +27,10 @@ package struct ChargeBannerComponent: View {
 	}
 
 	private var sourceExpiryWrapper: SourceExpiryWrapper? {
-		guard let chargeSite = source.chargeSite.data else {
+		guard let offer = source.offer.data else {
 			return nil
 		}
-		return SourceExpiryWrapper(hasEnded: source.hasEnded, chargeSite: chargeSite)
+		return SourceExpiryWrapper(hasEnded: source.hasEnded, offer: offer)
 	}
 
 	package init(
@@ -102,7 +102,7 @@ package struct ChargeBannerComponent: View {
 		}
 
 		switch loadedData {
-		case let .chargeSite(chargeSite):
+		case let .chargeOffer(_, in: chargeSite):
 			action(.chargeSitePresentation(chargeSite))
 		case .chargeSession:
 			action(.chargeSessionPresentation)
@@ -161,16 +161,24 @@ package struct ChargeBannerComponent: View {
 			return .loading
 		}
 
-		// Otherwise check for campaign loadable state
-		if let chargeSite = source.chargeSite.data {
-			return .loaded(.chargeSite(chargeSite))
+		// Otherwise check for the charge offer loadable state
+		if let offer = source.offer.data, let chargeSite = source.chargeSite.data {
+			return .loaded(.chargeOffer(offer, in: chargeSite))
 		}
 
 		if let error = source.chargeSite.error {
 			return .error(error)
 		}
 
+		if let error = source.offer.error {
+			return .error(error)
+		}
+
 		if source.chargeSite.isLoading {
+			return .loading
+		}
+
+		if source.offer.isLoading {
 			return .loading
 		}
 
@@ -183,7 +191,7 @@ package struct ChargeBannerComponent: View {
 package extension ChargeBannerComponent {
 	struct SourceExpiryWrapper: Equatable {
 		var hasEnded: Bool
-		var chargeSite: ChargeSite
+		var offer: ChargeOffer
 	}
 
 	struct ChargeSessionRefreshIdentifier: Equatable {
@@ -192,7 +200,7 @@ package extension ChargeBannerComponent {
 	}
 
 	enum ViewState {
-		case chargeSite(ChargeSite)
+		case chargeOffer(ChargeOffer, in: ChargeSite)
 		case chargeSession(ChargeSession)
 
 		var isChargeSession: Bool {
@@ -202,8 +210,8 @@ package extension ChargeBannerComponent {
 			return false
 		}
 
-		var isChargeSite: Bool {
-			if case .chargeSite = self {
+		var isChargeOffer: Bool {
+			if case .chargeOffer = self {
 				return true
 			}
 			return false
@@ -283,7 +291,8 @@ package extension ChargeBannerComponent {
 @available(iOS 17.0, *)
 #Preview("Static") {
 	let source = ChargeBannerSource.Binding(
-		chargeSite: .absent,
+		chargeSite: .loaded(.mock),
+		offer: .absent,
 		chargeSession: .constant(.absent),
 		hasEnded: false,
 		kind: .remoteInRegion(.mock),

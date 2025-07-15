@@ -3,7 +3,7 @@
 extension StripeConfiguration {
 	static func parse(
 		_ response: StripeConfigurationSchema
-	) throws(NetworkError) -> StripeConfiguration {
+	) throws(NetworkError.Client) -> StripeConfiguration {
 		StripeConfiguration(publishableKey: response.publishableKey)
 	}
 }

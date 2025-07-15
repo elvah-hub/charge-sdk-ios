@@ -5,7 +5,7 @@ import Foundation
 extension ChargeAuthentication {
 	static func parse(
 		_ response: ChargeAuthenticationSchema
-	) throws(NetworkError) -> ChargeAuthentication {
+	) throws(NetworkError.Client) -> ChargeAuthentication {
 		ChargeAuthentication(
 			token: response.data.chargeIdentityToken,
 			expiryDate: nil

@@ -55,18 +55,23 @@ public struct ChargeBannerSource: DynamicProperty {
 	private let discoveryProvider: DiscoveryProvider
 	@SwiftUI.State private var internalState: ChargeBannerSource.State
 	@SwiftUI.State private var displayBehavior: DisplayBehavior
+	@SwiftUI.State private var fetchKind: FetchKind
 	@SwiftUI.State private var loadingTask: Task<Void, Never>?
 
 	/// Initializes the ``ChargeBannerSource``.
 	/// - Parameter wrappedValue: The initial campaign source. Defaults to `nil`.
+	/// - Parameter fetchKind: The fetch configuration for the charge offers. Defaults to
+	/// ``ChargeBannerSource/FetchKind/allOffers``.
 	/// - Parameter displayBehavior: The display behavior controlling the presentation of the attached
 	/// ``ChargeBanner`` view depending on the availability of a campaign. Defaults to
 	/// ``ChargeBannerSource/DisplayBehavior/whenSourceSet``.
 	public init(
 		wrappedValue: ChargeBannerSource.State? = nil,
+		fetching fetchKind: FetchKind = .allOffers,
 		display displayBehavior: DisplayBehavior = .whenSourceSet
 	) {
 		_internalState = SwiftUI.State(initialValue: wrappedValue ?? .none)
+		_fetchKind = SwiftUI.State(initialValue: fetchKind)
 		_displayBehavior = SwiftUI.State(initialValue: displayBehavior)
 		discoveryProvider = DiscoveryProvider.live
 	}
@@ -126,6 +131,7 @@ public struct ChargeBannerSource: DynamicProperty {
 
 		return ChargeBannerSource.Binding(
 			chargeSite: internalState.chargeSite,
+			offer: internalState.offer,
 			chargeSession: $internalState.chargeSession,
 			hasEnded: internalState.hasEnded,
 			kind: kind,
@@ -150,7 +156,7 @@ public struct ChargeBannerSource: DynamicProperty {
 		}
 
 		// Show if we have content OR this is a refresh (not initial load)
-		return internalState.chargeSite.isLoaded || internalState.hasPreviouslyLoadedData
+		return internalState.offer.isLoaded || internalState.hasPreviouslyLoadedData
 	}
 
 	// MARK: - Campaign Loading
@@ -179,33 +185,62 @@ public struct ChargeBannerSource: DynamicProperty {
 					// Attempt to load an active campaign
 					switch kind {
 					case let .remoteNearLocation(location):
-						stateBinding.wrappedValue.chargeSite.setLoading()
-						chargeSite = try await discoveryProvider.sites(near: location).first
+						stateBinding.wrappedValue.offer.setLoading()
+						switch fetchKind {
+						case .allOffers:
+							chargeSite = try await discoveryProvider.sites(near: location).first
+						case .campaigns:
+							chargeSite = try await discoveryProvider.deals(near: location).first
+						}
 
 					case let .remoteInRegion(region):
-						stateBinding.wrappedValue.chargeSite.setLoading()
-						chargeSite = try await discoveryProvider.sites(in: region).first
+						stateBinding.wrappedValue.offer.setLoading()
+						switch fetchKind {
+						case .allOffers:
+							chargeSite = try await discoveryProvider.sites(in: region).first
+						case .campaigns:
+							chargeSite = try await discoveryProvider.deals(in: region).first
+						}
+
+					case let .remoteForEvseIds(evseIds):
+						stateBinding.wrappedValue.offer.setLoading()
+						switch fetchKind {
+						case .allOffers:
+							chargeSite = try await discoveryProvider.sites(forEvseIds: evseIds).first
+						case .campaigns:
+							chargeSite = try await discoveryProvider.deals(forEvseIds: evseIds).first
+						}
 
 					case let .direct(directChargeSite):
 						chargeSite = directChargeSite
 					}
 
 					// If no charge site could be found, we can return
-					guard let chargeSite, let cheapestOffer = chargeSite.cheapestOffer else {
+					guard let chargeSite else {
 						stateBinding.wrappedValue.chargeSite.setAbsent()
+						stateBinding.wrappedValue.offer.setAbsent()
+						return
+					}
+
+					// If no offer could be found, we can return
+					guard let cheapestOffer = chargeSite.cheapestOffer else {
+						stateBinding.wrappedValue.offer.setAbsent()
 						return
 					}
 
 					// Set internal state
-					// TODO: cheapest offer should be part of the state, not decided by the view
 					stateBinding.wrappedValue.chargeSite.setValue(chargeSite)
+					stateBinding.wrappedValue.offer.setValue(cheapestOffer)
 					stateBinding.wrappedValue.hasEnded = false
 					stateBinding.wrappedValue.hasPreviouslyLoadedData = true
 
+					print("This is printed, so offer state is set")
+
 					if let campaign = cheapestOffer.campaign {
+						print("This is not printed, so offer is not reset (which is correct)")
 						if campaign.hasEnded {
 							// Campaign has ended, we can return early.
-							stateBinding.wrappedValue.chargeSite.setAbsent()
+							stateBinding.wrappedValue.offer.setAbsent()
 							stateBinding.wrappedValue.hasEnded = true
 							return
 						}
@@ -218,8 +253,10 @@ public struct ChargeBannerSource: DynamicProperty {
 				}
 			} catch is CancellationError {} catch {
 				print("\(error.localizedDescription)")
+				print("ABHFSJDFHJ")
 				Elvah.internalLogger.error("Failed to load campaign: \(error.localizedDescription)")
 				stateBinding.wrappedValue.chargeSite.setError(error)
+				stateBinding.wrappedValue.offer.setError(error)
 			}
 		}
 	}
@@ -233,6 +270,9 @@ public extension ChargeBannerSource {
 
 		/// The loading state of the charge site data.
 		var chargeSite: LoadableState<ChargeSite>
+
+		/// The loading state of the charge offer that is presented by the banner
+		var offer: LoadableState<ChargeOffer>
 
 		/// Indicates if the campaign has ended.
 		var hasEnded: Bool
@@ -254,6 +294,7 @@ public extension ChargeBannerSource {
 		package init(
 			id: UUID = UUID(),
 			chargeSite: LoadableState<ChargeSite>,
+			offer: LoadableState<ChargeOffer>,
 			kind: Kind?,
 			hasEnded: Bool = false,
 			chargeSession: LoadableState<ChargeSession> = .absent,
@@ -261,6 +302,7 @@ public extension ChargeBannerSource {
 		) {
 			self.id = id
 			self.chargeSite = chargeSite
+			self.offer = offer
 			self.kind = kind
 			self.hasEnded = hasEnded
 			self.chargeSession = chargeSession
@@ -271,32 +313,70 @@ public extension ChargeBannerSource {
 		///
 		/// This state will cause ``ChargeBannerSource/projectedValue`` to be `nil`.
 		package static var none: ChargeBannerSource.State {
-			ChargeBannerSource.State(chargeSite: .absent, kind: nil)
+			ChargeBannerSource.State(
+				chargeSite: .loading,
+				offer: .loading,
+				kind: nil
+			)
 		}
 
-		/// Creates a state to load the nearest campaign for a given location.
+		/// Creates a state to load charge offers nearest a given location.
+		///
+		/// - Note: There is no guarantee that a charge offer can be found or is available.
 		/// - Parameter location: The coordinate to fetch the campaign nearest to it.
 		/// - Returns: A state configured to fetch by location.
 		public static func remote(near location: CLLocationCoordinate2D) -> ChargeBannerSource.State {
-			ChargeBannerSource.State(chargeSite: .loading, kind: .remoteNearLocation(location))
+			ChargeBannerSource.State(
+				chargeSite: .loading,
+				offer: .loading,
+				kind: .remoteNearLocation(location)
+			)
 		}
 
-		/// Creates a state to load a campaign within a given region.
+		/// Creates a state to load charge offers within a given region.
+		///
+		/// - Note: There is no guarantee that a charge offer can be found or is available.
 		/// - Parameter region: The map region to fetch the campaign in.
 		/// - Returns: A state configured to fetch by region.
 		public static func remote(in region: MKMapRect) -> ChargeBannerSource.State {
-			ChargeBannerSource.State(chargeSite: .loading, kind: .remoteInRegion(region))
+			ChargeBannerSource.State(
+				chargeSite: .loading,
+				offer: .loading,
+				kind: .remoteInRegion(region)
+			)
+		}
+
+		/// Creates a state to load charge offers from a list of evse ids.
+		///
+		/// - Note: There is no guarantee that a charge offer can be found or is available.
+		/// - Parameter evseIds: The evse ids to fetch charge offers from.
+		/// - Returns: A state configured to fetch by region.
+		public static func remote(evseIds: [String]) -> ChargeBannerSource.State {
+			ChargeBannerSource.State(
+				chargeSite: .loading,
+				offer: .loading,
+				kind: .remoteForEvseIds(evseIds)
+			)
 		}
 
 		/// Creates a state with a provided campaign.
 		///
 		/// You can use this if you want to handle the loading of a campaign yourself. You can fetch
-		/// a campaing by calling ``Campaign/campaigns(in:)`` or one of its overloads.
+		/// a campaing by calling ``ChargeSite/campaigns(in:)`` or one of its overloads.
 		///
 		/// - Parameter campaign: The campaign object to use.
 		/// - Returns: A state using the given campaign directly.
 		public static func direct(_ chargeSite: ChargeSite) -> ChargeBannerSource.State {
-			ChargeBannerSource.State( chargeSite: .loaded(chargeSite), kind: .direct(chargeSite)
+			var offer = LoadableState<ChargeOffer>.loading
+
+			if let cheapestOffer = chargeSite.cheapestOffer {
+				offer = .loaded(cheapestOffer)
+			}
+
+			return ChargeBannerSource.State(
+				chargeSite: .loaded(chargeSite),
+				offer: offer,
+				kind: .direct(chargeSite)
 			)
 		}
 	}
@@ -304,10 +384,20 @@ public extension ChargeBannerSource {
 	/// A binding to the internal campaign state that can be passed to a ``ChargeBanner`` view.
 	struct Binding {
 		var chargeSite: LoadableState<ChargeSite>
+		var offer: LoadableState<ChargeOffer>
 		@SwiftUI.Binding var chargeSession: LoadableState<ChargeSession>
 		var hasEnded: Bool
 		var kind: Kind?
 		var triggerReload: () -> Void
+	}
+
+	enum FetchKind {
+		/// A configuration that fetches all charge offer from the given source.
+		case allOffers
+
+		/// A configuration that fetches only charges offer from an active campaign using the given
+		/// source.
+		case campaigns
 	}
 
 	enum DisplayBehavior {
@@ -328,11 +418,14 @@ public extension ChargeBannerSource {
 
 	/// The method that should be used to fetch the charge site data for the ``ChargeBanner`` view.
 	package enum Kind: Equatable {
-		/// Fetch the nearest charge site at the given coordinates.
+		/// Fetch the nearest charge offer at the given coordinates.
 		case remoteNearLocation(CLLocationCoordinate2D)
 
-		/// Fetch a charge site within the specified map region.
+		/// Fetch charge offers within the specified map region.
 		case remoteInRegion(MKMapRect)
+
+		/// Fetch charge offers with the given evse ids.
+		case remoteForEvseIds([String])
 
 		/// Use a provided charge site object directly.
 		case direct(ChargeSite)
@@ -355,6 +448,8 @@ public extension ChargeBannerSource {
 					&& left.origin.y == right.origin.y
 					&& left.size.width == right.size.width
 					&& left.size.height == right.size.height
+			case let (.remoteForEvseIds(left), .remoteForEvseIds(right)):
+				return left == right
 			case (.direct, .direct):
 				return true
 			default:
@@ -417,10 +512,12 @@ public extension ChargeBannerSource.State? {
 extension ChargeBannerSource {
 	init(
 		wrappedValue: ChargeBannerSource.State? = nil,
+		fetching fetchKind: FetchKind = .allOffers,
 		display displayBehavior: DisplayBehavior = .whenSourceSet,
 		provider: DiscoveryProvider
 	) {
 		_internalState = SwiftUI.State(initialValue: wrappedValue ?? .none)
+		_fetchKind = SwiftUI.State(initialValue: fetchKind)
 		_displayBehavior = SwiftUI.State(initialValue: displayBehavior)
 		discoveryProvider = provider
 	}

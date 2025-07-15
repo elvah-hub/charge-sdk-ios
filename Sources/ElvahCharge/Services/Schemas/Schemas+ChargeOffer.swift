@@ -3,10 +3,9 @@
 import Foundation
 
 extension ChargeOffer {
-	static func parse(_ response: ChargeOfferSchema) throws(NetworkError) -> ChargeOffer {
+	static func parse(_ response: ChargeOfferSchema) throws(NetworkError.Client) -> ChargeOffer {
 		guard let expiresAt = Date.from(iso8601: response.offer.expiresAt) else {
-			Elvah.logger.parseError(in: response, for: \.offer.expiresAt)
-			throw NetworkError.cannotParseServerResponse
+			throw .parsing(.keyPath(in: response, keyPath: \.offer.expiresAt))
 		}
 
 		var originalPrice: ChargePrice?
@@ -20,13 +19,11 @@ extension ChargeOffer {
 			offerType = .standard
 		case "CAMPAIGN":
 			guard let endDate = Date.from(iso8601: response.offer.campaignEndsAt) else {
-				Elvah.logger.parseError(in: response, for: \.offer.campaignEndsAt)
-				throw NetworkError.cannotParseServerResponse
+				throw .parsing(.keyPath(in: response, keyPath: \.offer.campaignEndsAt))
 			}
 			offerType = .campaign(CampaignInfo(endDate: endDate))
 		default:
-			Elvah.logger.parseError(in: response, for: \.offer.type)
-			throw NetworkError.cannotParseServerResponse
+			throw .parsing(.keyPath(in: response, keyPath: \.offer.type))
 		}
 
 		return try ChargeOffer(
@@ -36,17 +33,6 @@ extension ChargeOffer {
 			type: offerType,
 			validUntil: expiresAt
 		)
-	}
-
-	static func parseSigned(_ response: ChargeOfferSchema) throws(NetworkError) -> SignedChargeOffer {
-		let chargeOffer = try ChargeOffer.parse(response)
-
-		guard let signedOffer = response.offer.signedOffer else {
-			Elvah.logger.parseError(in: response, for: \.offer.signedOffer)
-			throw NetworkError.cannotParseServerResponse
-		}
-
-		return SignedChargeOffer(offer: chargeOffer, signedOffer: signedOffer)
 	}
 }
 

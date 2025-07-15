@@ -3,15 +3,15 @@
 import Foundation
 
 extension PaymentSummary {
-	static func parse(_ response: PaymentSummarySchema) throws(NetworkError) -> PaymentSummary {
+	static func parse(
+		_ response: PaymentSummarySchema
+	) throws(NetworkError.Client) -> PaymentSummary {
 		guard let sessionStartedAt = Date.from(iso8601: response.sessionStartedAt) else {
-			Elvah.logger.parseError(in: response, for: \.sessionStartedAt)
-			throw NetworkError.cannotParseServerResponse
+			throw .parsing(.keyPath(in: response, keyPath: \.sessionStartedAt))
 		}
 
 		guard let sessionEndedAt = Date.from(iso8601: response.sessionEndedAt) else {
-			Elvah.logger.parseError(in: response, for: \.sessionEndedAt)
-			throw NetworkError.cannotParseServerResponse
+			throw .parsing(.keyPath(in: response, keyPath: \.sessionEndedAt))
 		}
 
 		return PaymentSummary(

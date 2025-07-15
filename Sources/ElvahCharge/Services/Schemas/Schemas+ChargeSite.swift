@@ -1,7 +1,7 @@
 // Copyright © elvah. All rights reserved.
 
 extension ChargeSite {
-	static func parse(_ response: SiteOfferSchema) throws(NetworkError) -> ChargeSite {
+	static func parse(_ response: SiteOfferSchema) throws(NetworkError.Client) -> ChargeSite {
 		do {
 			let offers = try response.evses.map { try ChargeOffer.parse($0) }
 			let site = Site(
@@ -22,7 +22,7 @@ extension ChargeSite {
 			)
 			return ChargeSite(site: site, offers: offers)
 		} catch {
-			throw NetworkError.cannotParseServerResponse
+			throw .parsing(.field("site"))
 		}
 	}
 }

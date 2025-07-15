@@ -21,8 +21,8 @@ extension ChargeBannerComponent {
 						errorContent(error: error)
 					case let .loaded(loadedData):
 						switch loadedData {
-						case let .chargeSite(chargeSite):
-							campaignContent(chargeSite: chargeSite)
+						case let .chargeOffer(offer, chargeSite):
+							campaignContent(offer: offer, chargeSite: chargeSite)
 						case let .chargeSession(session):
 							chargeSessionContent(session: session)
 						}
@@ -40,22 +40,21 @@ extension ChargeBannerComponent {
 			.buttonStyle(.plain)
 		}
 
-		@ViewBuilder private func campaignContent(chargeSite: ChargeSite) -> some View {
+		@ViewBuilder private func campaignContent(
+			offer: ChargeOffer,
+			chargeSite: ChargeSite
+		) -> some View {
 			TimelineView(.periodic(from: .now, by: 2)) { _ in
-				if let offer = chargeSite.earliestEndingChargeOffer {
-					let price = offer.price.pricePerKWh.formatted()
-					let priceLabel = Text("\(price)/kWh", bundle: .elvahCharge).foregroundColor(.brand)
-					HStack(spacing: 12) {
-						let siteName = chargeSite.operatorName ?? String(localized: "Site")
-						Text("Charge at \(siteName) from \(priceLabel)", bundle: .elvahCharge)
-							.contentTransition(.numericText())
-						Spacer()
-						Image(.chevronRight)
-					}
-					.animation(.default, value: offer)
-				} else {
-					expiredContent
+				let price = offer.price.pricePerKWh.formatted()
+				let priceLabel = Text("\(price)/kWh", bundle: .elvahCharge).foregroundColor(.brand)
+				HStack(spacing: 12) {
+					let siteName = chargeSite.operatorName ?? String(localized: "Site")
+					Text("Charge at \(siteName) from \(priceLabel)", bundle: .elvahCharge)
+						.contentTransition(.numericText())
+					Spacer()
+					Image(.chevronRight)
 				}
+				.animation(.default, value: offer)
 			}
 		}
 

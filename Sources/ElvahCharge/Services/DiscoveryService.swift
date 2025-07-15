@@ -8,7 +8,6 @@ import SwiftUI
 #endif
 
 final class DiscoveryService: Sendable {
-	private static let serviceName = "Discovery"
 	private let client: NetworkClient
 	private let apiKey: String
 	private let environment: BackendEnvironment
@@ -18,25 +17,50 @@ final class DiscoveryService: Sendable {
 		self.environment = environment
 
 		let baseURL = environment.urlForService()
-		client = .init(baseURL: baseURL, environment: environment)
+		client = .init(name: "Discovery", baseURL: baseURL, environment: environment)
+	}
+
+	func signOffer(siteId: String, evseId: String) async throws(NetworkError) -> SignedChargeOffer {
+		do {
+			let request = Request<SignedSiteOffersResponse>(
+				path: "/discovery/sites-offers/\(siteId)",
+				method: .post,
+				body: SignedSiteOffersRequestBody(evseIds: [evseId])
+			)
+
+			let response = try await client.send(request) { [apiKey] request in
+				request.setDistinctId(Elvah.distinctId.rawValue)
+				request.setAPIKey(apiKey)
+			}
+
+			return try SignedChargeOffer.parseFromSiteOffer(response.value.data, evseId: evseId)
+		} catch {
+			throw error.externalError
+		}
 	}
 
 	func siteOffers(forEvseIds evseIds: [String]) async throws(NetworkError) -> [ChargeSite] {
 		let query = evseIds.map { ("evseIds", $0) }
 
 		do {
-			let request = Request<SiteOffersResponse>(path: "/discovery/sites-offers", method: .get, query: query)
+			let request = Request<SiteOffersResponse>(
+				path: "/discovery/sites-offers",
+				method: .get,
+				query: query
+			)
+			
 			let response = try await client.send(request) { [apiKey] request in
-				request.setValue(Elvah.distinctId.rawValue, forHTTPHeaderField: "X-Distinct-Id")
+				request.setDistinctId(Elvah.distinctId.rawValue)
 				request.setAPIKey(apiKey)
 			}
-			return try response.value.data.map { try ChargeSite.parse($0) }
-		} catch let error as NetworkError.Client {
-			logCommonNetworkError(error, name: Self.serviceName)
-			throw error.externalError
+
+			var sites: [ChargeSite] = []
+			for siteData in response.value.data {
+				try sites.append(ChargeSite.parse(siteData))
+			}
+			return sites
 		} catch {
-			logCommonNetworkError(error, name: Self.serviceName)
-			throw NetworkError.unknown
+			throw error.externalError
 		}
 	}
 
@@ -52,20 +76,34 @@ final class DiscoveryService: Sendable {
 		]
 
 		do {
-			let request = Request<SiteOffersResponse>(path: "/discovery/sites-offers", method: .get, query: query)
+			let request = Request<SiteOffersResponse>(
+				path: "/discovery/sites-offers",
+				method: .get,
+				query: query
+			)
+
 			let response = try await client.send(request) { [apiKey] request in
-				request.setValue(Elvah.distinctId.rawValue, forHTTPHeaderField: "X-Distinct-Id")
+				request.setDistinctId(Elvah.distinctId.rawValue)
 				request.setAPIKey(apiKey)
 			}
-			return try response.value.data.map { try ChargeSite.parse($0) }
-		} catch let error as NetworkError.Client {
-			logCommonNetworkError(error, name: Self.serviceName)
-			throw error.externalError
+
+			var sites: [ChargeSite] = []
+			for siteData in response.value.data {
+				try sites.append(ChargeSite.parse(siteData))
+			}
+			return sites
 		} catch {
-			logCommonNetworkError(error, name: Self.serviceName)
-			throw NetworkError.unknown
+			throw error.externalError
 		}
 	}
+}
+
+private struct SignedSiteOffersRequestBody: Encodable {
+	var evseIds: [String]
+}
+
+private struct SignedSiteOffersResponse: Decodable {
+	var data: SiteOfferSchema
 }
 
 private struct SiteOffersResponse: Decodable {

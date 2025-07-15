@@ -7,15 +7,15 @@ import SwiftUI
 struct AdvancedChargeBannerDemo: View {
 	@ChargeBannerSource private var chargeBannerSource
 	@State private var showChargeSession = false
-	@State private var campaignDetail: Campaign?
+	@State private var chargeSiteDetail: Campaign?
 
 	var body: some View {
 		DemoContent {
 			if let $chargeBannerSource {
 				ChargeBanner(source: $chargeBannerSource) { destination in
 					switch destination {
-					case let .campaignDetailPresentation(campaign):
-						campaignDetail = campaign
+					case let .chargeSiteDetailPresentation(campaign):
+						chargeSiteDetail = campaign
 					case .chargeSessionPresentation:
 						showChargeSession = true
 					}
@@ -26,7 +26,7 @@ struct AdvancedChargeBannerDemo: View {
 			}
 		}
 		.chargeSessionPresentation(isPresented: $showChargeSession)
-		.campaignDetailPresentation(for: $campaignDetail)
+		.chargeSiteDetailPresentation(for: $chargeSiteDetail)
 		.navigationTitle("Campaign Banner (Advanced)")
 		.navigationBarTitleDisplayMode(.inline)
 		.animation(.default, value: chargeBannerSource)

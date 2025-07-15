@@ -102,7 +102,7 @@ package extension ChargeOffer {
 			chargePoint: .mockAvailable,
 			price: ChargePrice.mock,
 			originalPrice: nil,
-			type: .campaign(CampaignInfo(endDate: Date().addingTimeInterval(20))),
+			type: .standard, //.campaign(CampaignInfo(endDate: Date().addingTimeInterval(20))),
 			validUntil: Date().addingTimeInterval(120),
 		)
 	}
@@ -110,7 +110,7 @@ package extension ChargeOffer {
 	static var mockUnavailable: ChargeOffer {
 		ChargeOffer(
 			chargePoint: .mockUnavailable,
-			price: ChargePrice.mock,
+			price: ChargePrice.mock2,
 			originalPrice: nil,
 			type: .campaign(CampaignInfo(endDate: Date().addingTimeInterval(-10))),
 			validUntil: Date().addingTimeInterval(120),
@@ -120,7 +120,7 @@ package extension ChargeOffer {
 	static var mockOutOfService: ChargeOffer {
 		ChargeOffer(
 			chargePoint: .mockOutOfService,
-			price: ChargePrice.mock2,
+			price: ChargePrice.mock3,
 			originalPrice: nil,
 			type: .campaign(CampaignInfo(endDate: Date().addingTimeInterval(30))),
 			validUntil: Date().addingTimeInterval(120),

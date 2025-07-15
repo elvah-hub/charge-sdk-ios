@@ -9,10 +9,12 @@ import Foundation
 /// A small wrapper around Get's `APIClient` that adds custom error handling and some other
 /// configuration options.
 package final class NetworkClient: Sendable {
+	private let name: String
 	private let client: APIClient
 	private let delegate: Delegate
 
-	package init(baseURL: URL?, environment: BackendEnvironment) {
+	package init(name: String, baseURL: URL?, environment: BackendEnvironment) {
+		self.name = name
 		delegate = Delegate()
 		client = APIClient(baseURL: baseURL) { [delegate] configuration in
 			configuration.delegate = delegate
@@ -26,8 +28,13 @@ package final class NetworkClient: Sendable {
 		_ request: Request<T>,
 		configure: (@Sendable (inout URLRequest) throws -> Void)? = nil
 	) async throws(NetworkError.Client) -> Response<T> where T: Decodable, T: Sendable {
-		try await withErrorHandling {
-			try await client.send(request, configure: configure)
+		do {
+			return try await withErrorHandling {
+				try await client.send(request, configure: configure)
+			}
+		} catch {
+			logCommonNetworkError(error, name: name)
+			throw error
 		}
 	}
 
@@ -35,8 +42,13 @@ package final class NetworkClient: Sendable {
 		_ request: Request<Void>,
 		configure: (@Sendable (inout URLRequest) throws -> Void)? = nil
 	) async throws(NetworkError.Client) -> Response<Void> {
-		try await withErrorHandling {
-			try await client.send(request, configure: configure)
+		do {
+			return try await withErrorHandling {
+				try await client.send(request, configure: configure)
+			}
+		} catch {
+			logCommonNetworkError(error, name: name)
+			throw error
 		}
 	}
 
@@ -151,6 +163,9 @@ package extension URLRequest {
 
 	mutating func setAPIKey(_ key: String) {
 		addValue("\(key)", forHTTPHeaderField: "x-api-key")
+	}
+	mutating func setDistinctId(_ id: String) {
+		addValue("\(id)", forHTTPHeaderField: "X-Distinct-Id")
 	}
 }
 

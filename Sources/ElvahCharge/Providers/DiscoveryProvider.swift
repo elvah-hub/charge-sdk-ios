@@ -8,6 +8,10 @@ final class DiscoveryProvider: ObservableObject {
 	struct Dependencies: Sendable {
 		var sitesForEvseIds: @Sendable (_ evseIds: [String]) async throws -> [ChargeSite]
 		var sitesInRegion: @Sendable (_ region: MKMapRect) async throws -> [ChargeSite]
+		var signOffer: @Sendable (
+			_ siteId: String,
+			_ evseId: String
+		) async throws-> SignedChargeOffer
 	}
 
 	private let dependencies: Dependencies
@@ -24,18 +28,35 @@ final class DiscoveryProvider: ObservableObject {
 		try await dependencies.sitesInRegion(region)
 	}
 
-	func sites(near location: CLLocationCoordinate2D, radius: Double = 5) async throws -> [ChargeSite] {
+	func sites(
+		near location: CLLocationCoordinate2D,
+		radius: Double = 5
+	) async throws -> [ChargeSite] {
 		let region = MKMapRect.around(location, radius: radius)
 		return try await dependencies.sitesInRegion(region)
+	}
+
+	func deals(forEvseIds evseIds: [String]) async throws -> [ChargeSite] {
+		try await dependencies.sitesForEvseIds(evseIds)
 	}
 
 	func deals(in region: MKMapRect) async throws -> [ChargeSite] {
 		try await dependencies.sitesInRegion(region)
 	}
 
-	func deals(near location: CLLocationCoordinate2D, radius: Double = 5) async throws -> [ChargeSite] {
+	func deals(
+		near location: CLLocationCoordinate2D,
+		radius: Double = 5
+	) async throws -> [ChargeSite] {
 		let region = MKMapRect.around(location, radius: radius)
 		return try await dependencies.sitesInRegion(region)
+	}
+
+	func signOffer(
+		_ offer: ChargeOffer,
+		in site: Site
+	) async throws -> SignedChargeOffer {
+		try await dependencies.signOffer(site.id, offer.evseId)
 	}
 }
 
@@ -52,6 +73,9 @@ extension DiscoveryProvider {
 				},
 				sitesInRegion: { region in
 					try await service.siteOffers(in: region)
+				},
+				signOffer: { siteId, evseId in
+					try await service.signOffer(siteId: siteId, evseId: evseId)
 				}
 			)
 		)
@@ -66,6 +90,9 @@ extension DiscoveryProvider {
 			sitesInRegion: { region in
 				try await Task.sleep(for: .milliseconds(2000))
 				return [ChargeSite.mock]
+			},
+			signOffer: { _, _ in
+				return .mockAvailable
 			}
 		)
 	)

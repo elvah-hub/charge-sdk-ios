@@ -28,30 +28,8 @@ public struct ChargeSite: Codable, Hashable, Identifiable, Sendable {
 		set { site[keyPath: keyPath] = newValue }
 	}
 
-	/// The charge offer that ends the earliest among all offers in the campaign.
-	///
-	/// - Important: The end date of a charge offer's campaign is distinctly different from its expiry date.
-	/// The latter is only tied to the offered pricing and does not reflect the campaign's duration.
-	/// - Note: Usually, all charge offers within a campaign end at the same time.
-	public var earliestEndingChargeOffer: ChargeOffer? {
-		offers
-			.filter(\.isAvailable)
-			.sorted(using: KeyPathComparator(\.campaign?.endDate)).first
-	}
-
-	/// The charge offer that ends the latest among all offers in the campaign.
-	///
-	/// - Important: The end date of a charge offer's campaign is distinctly different from its expiry date.
-	/// The latter is only tied to the offered pricing and does not reflect the campaign's duration.
-	/// - Note: Usually, all charge offers within a campaign end at the same time.
-	public var latestEndingChargeOffer: ChargeOffer? {
-		offers
-			.filter(\.isAvailable)
-			.sorted(using: KeyPathComparator(\.campaign?.endDate)).last
-	}
-
-	/// The cheapest, non-expired offer in the campaign.
-	var cheapestOffer: ChargeOffer? {
+	/// The cheapest available offer in the campaign.
+	public var cheapestOffer: ChargeOffer? {
 		offers
 			.filter(\.isAvailable)
 			.sorted(using: KeyPathComparator(\.price.pricePerKWh)).first

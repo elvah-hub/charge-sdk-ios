@@ -209,7 +209,7 @@ extension ChargeOfferDetailFeature {
 				.padding(.M)
 			}
 			.opacity(offer.isAvailable && chargeSessionContext == nil ? 1 : 0.5)
-			.disabled(offer.isAvailable && chargeSessionContext == nil)
+			.disabled(offer.isAvailable == false || chargeSessionContext != nil)
 			.animation(.default, value: offer.isAvailable)
 		}
 

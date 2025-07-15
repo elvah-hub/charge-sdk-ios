@@ -28,8 +28,8 @@ extension ChargeBannerComponent {
 						Image(source.chargeSession.isAbsent ? .place : .bolt)
 					}
 					switch loadedData {
-					case let .chargeSite(chargeSite):
-						offerHeader(chargeSite: chargeSite)
+					case let .chargeOffer(offer, chargeSite):
+						offerHeader(offer: offer, chargeSite: chargeSite)
 					case let .chargeSession(session):
 						chargeSessionHeader(session: session)
 					}
@@ -42,7 +42,7 @@ extension ChargeBannerComponent {
 			.background(.canvas)
 		}
 
-		@ViewBuilder private func offerHeader(chargeSite: ChargeSite) -> some View {
+		@ViewBuilder private func offerHeader(offer: ChargeOffer, chargeSite: ChargeSite) -> some View {
 			AdaptiveHStack { isHorizontalStack in
 				ViewThatFits(in: .horizontal) {
 					Text("Best deal around you", bundle: .elvahCharge)
@@ -54,18 +54,16 @@ extension ChargeBannerComponent {
 				}
 
 				TimelineView(.periodic(from: .now, by: 1)) { context in
-					if let offer = chargeSite.earliestEndingChargeOffer {
-						OfferEndLabel(
-							offer: offer,
-							referenceDate: context.date,
-							prefix: "Ends in ",
-							primaryColor: .brand
-						)
-						.typography(.copy(size: .small), weight: .bold)
-						// TODO: Fix
+					OfferEndLabel(
+						offer: offer,
+						referenceDate: context.date,
+						prefix: "Ends in ",
+						primaryColor: .brand
+					)
+					.typography(.copy(size: .small), weight: .bold)
+					// TODO: Fix
 //						.foregroundStyle(offer.hasEnded ? .secondaryContent : .brand)
-						.foregroundStyle(offer.isAvailable ? .brand : .secondaryContent)
-					}
+					.foregroundStyle(offer.isAvailable ? .brand : .secondaryContent)
 				}
 			}
 		}

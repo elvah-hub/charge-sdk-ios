@@ -56,4 +56,12 @@ package extension ChargePrice {
 			blockingFee: ChargePrice.BlockingFee(of: Currency(0.62), startingAfter: 0)
 		)
 	}
+
+	static var mock3: ChargePrice {
+		ChargePrice(
+			pricePerKWh: Currency(0.71),
+			baseFee: Currency(1.62),
+			blockingFee: ChargePrice.BlockingFee(of: Currency(0.12), startingAfter: 20)
+		)
+	}
 }

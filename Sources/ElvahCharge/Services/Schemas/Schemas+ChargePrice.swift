@@ -3,7 +3,7 @@
 import Foundation
 
 extension ChargePrice {
-	static func parse(_ response: ChargePriceSchema) throws(NetworkError) -> ChargePrice {
+	static func parse(_ response: ChargePriceSchema) throws(NetworkError.Client) -> ChargePrice {
 		var blockingFee: ChargePrice.BlockingFee? {
 			guard let pricePerMinute = response.blockingFee?.pricePerMinute else {
 				return nil

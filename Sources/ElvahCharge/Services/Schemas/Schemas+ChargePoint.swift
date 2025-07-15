@@ -3,7 +3,7 @@
 import Foundation
 
 extension ChargePoint {
-	static func parse(_ response: ChargeOfferSchema) throws(NetworkError) -> ChargePoint {
+	static func parse(_ response: ChargeOfferSchema) throws(NetworkError.Client) -> ChargePoint {
 		var powerType: PowerType? {
 			if let powerSpecification = response.powerSpecification {
 				return PowerType(rawValue: powerSpecification.type)

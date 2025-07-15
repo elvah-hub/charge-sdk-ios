@@ -6,6 +6,7 @@ import SwiftUI
 package struct ChargeOfferDetailFeature: View {
 	@Environment(\.dismiss) private var dismiss
 	@ObservedObject private var router: ChargeOfferDetailFeature.Router
+	@EnvironmentObject private var discoveryProvider: DiscoveryProvider
 	@EnvironmentObject private var chargeProvider: ChargeProvider
 	@EnvironmentObject private var chargeSettlementProvider: ChargeSettlementProvider
 
@@ -197,9 +198,10 @@ package struct ChargeOfferDetailFeature: View {
 			defer { processingOffer = nil }
 			processingOffer = offer
 
-			// TODO: Get Signed offer
-			let signedOffer = SignedChargeOffer(offer: offer, signedOffer: "todo")
-			let context = try await chargeSettlementProvider.initiate(signedOffer: "")
+			let signedOffer = try await discoveryProvider.signOffer(offer, in: site)
+			let context = try await chargeSettlementProvider.initiate(
+				signedOffer: signedOffer.signedOffer
+			)
 			try Task.checkCancellation()
 			router.chargeRequest = ChargeRequest(
 				site: site,
