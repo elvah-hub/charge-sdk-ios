@@ -21,10 +21,9 @@ struct ChargeOfferResolutionFeature: View {
 			switch chargeRequest {
 			case .absent,
 			     .loading:
-				ActivityInfoComponent(state: .animating, title: nil, message: nil)
-			case .error:
-				// TODO: Generic error bottom sheet as fullscreen component
-				Text("Error")
+				loadingContent
+			case let .error(error):
+				errorContent(error: error)
 			case let .loaded(chargeRequest):
 				ChargeEntryFeature(chargeRequest: chargeRequest)
 			}
@@ -33,6 +32,30 @@ struct ChargeOfferResolutionFeature: View {
 			await signOffer()
 		}
 	}
+
+	@ViewBuilder private var loadingContent: some View {
+		NavigationStack {
+			ActivityInfoComponent(state: .animating, title: nil, message: nil)
+				.toolbar {
+					ToolbarItem(placement: .topBarLeading) {
+						CloseButton()
+					}
+				}
+		}
+	}
+
+	@ViewBuilder private func errorContent(error: any Error) -> some View {
+		NavigationStack {
+			ErrorView()
+				.toolbar {
+					ToolbarItem(placement: .topBarLeading) {
+						CloseButton()
+					}
+				}
+		}
+	}
+
+	// MARK: - Actions
 
 	private func signOffer() async {
 		await $chargeRequest.load {

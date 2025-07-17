@@ -11,14 +11,11 @@ public extension View {
 	/// site detail screen that this SDK comes with.
 	///
 	/// - Parameters:
-	///   - chargeSite: The charge site.
 	///   - chargeOffer: The charge offer that should be resolved. This must be part of the provided
 	/// charge site.
 	/// - Returns: A view that presents a modal that handles payment and charging for a specific
 	/// charge point.
-	@ViewBuilder func chargePresentation(
-		offer chargeOffer: Binding<ChargeOffer?>
-	) -> some View {
+	@ViewBuilder func chargePresentation(chargeOffer: Binding<ChargeOffer?>) -> some View {
 		if #available(iOS 16.0, *) {
 			modifier(PresentationViewModifier(chargeOffer: chargeOffer))
 		} else {

@@ -1,8 +1,8 @@
 # elvah Charge SDK
 
-The elvah Charge SDK is a lightweight toolkit that enables apps to discover nearby EV charging deals and initiate charge sessions through a fully native and seamless interface.
+The elvah Charge SDK is a lightweight toolkit that enables apps to discover nearby EV charge offers and initiate charging sessions through a fully native and seamless interface.
 
-With just a few lines of code, you can add a `ChargeBanner` view to your app that intelligently finds and displays nearby charging deals. The SDK handles everything from deal discovery to payment processing and charge session management, allowing your users to charge their cars without ever leaving your app.
+With just a few lines of code, you can add a `ChargeBanner` view to your app that intelligently finds and displays nearby charge offers. The SDK handles everything from deal discovery to payment processing and charge session management, allowing your users to charge their cars without ever leaving your app.
 
 ## Content
 
@@ -10,12 +10,13 @@ With just a few lines of code, you can add a `ChargeBanner` view to your app tha
 	- [Swift Package Manager](#swift-package-manager)
 2. **[Getting Started](#getting-started)**
 	- [Charge Banner](#charge-banner)
-3. **[Charge Session Observation](#charge-session-observation)**
-4. [Compatibility](#compatibility)
-5. [Examples](#examples)
-6. [Glossary](#glossary)
-7. [Support](#support)
-8. [License](#license)
+3. **[Custom UI Components](#custom-ui-components)**
+4. [Charge Session Observation](#charge-session-observation)
+5. [Compatibility](#compatibility)
+6. [Examples](#examples)
+7. [Glossary](#glossary)
+8. [Support](#support)
+9. [License](#license)
 
 ## Installation
 
@@ -31,7 +32,7 @@ You need Swift 6 to compile the SDK.
 Add the following line to the dependencies in your `Package.swift` file:
 
 ```swift
-.package(url: "https://github.com/elvah-hub/charge-sdk-ios", from: "0.1.0")
+.package(url: "https://github.com/elvah-hub/charge-sdk-ios", from: "0.2.0")
 ```
 
 Alternatively, if you want to add the package to your Xcode project, go to `File` > `Add Packages...` 
@@ -94,6 +95,18 @@ Once you have done that, the source object will attempt to find a charge offer f
 > [!IMPORTANT]
 > Currently, there is only a single demo charge offer available at these coordinates: Latitude: 51.03125° N, Longitude: 4.41047° E
 
+#### Fetch Mode
+
+By default, the `ChargeBanner` will try to fetch all available charge offers from the given source. You can limit that to only fetch offers that are part of an active *campaign*. A campaign is a time period in which charge offers are available with special  conditions, i.e. potentially lower prices.
+
+```swift 
+// Default: Fetches all available charge offers
+@ChargeBannerSource(fetching: .allOffers) private var chargeBannerSource
+
+// Fetches only charge offers that are part of an active campaign
+@ChargeBannerSource(fetching: .campaigns) private var chargeBannerSource
+```
+
 #### Display Behavior
 
 By default, there will be visible loading and error states inside the `ChargeBanner` view, whenever a source is set. To change this, specify a `DisplayBehavior` on the `ChargeBannerSource` property wrapper:
@@ -141,21 +154,12 @@ ChargeBanner(source: $chargeBannerSource)
   .variant(.compact)
 ```
 
-#### Campaign Ended Notification
+## Custom UI Components
 
-You can add a view modifier that will call a given closure whenever a loaded campaign has ended and needs to be replaced:
-
-```swift
-ChargeBanner(source: $chargeBannerSource)
-  .onCampaignEnd { expiredCampaign in 
-    // Perform some logic
-  }
-```
-
-> [!NOTE] 
-> Typically, you do not need to worry about this, but in case you need the extra control, it is available.
+The SDK exposes a set of functions that allow you to build your own custom UI elements that interact with the SDK's underlying data structures and APIs.
 
 ## Charge Session Observation
+
 Users should be able to reopen an active charge session that was minimized, whether manually or due to app termination. The `ChargeBanner` view takes care of that out of the box. Whenever there is an active charge session, the banner will show a button to re-open the charge session.
 
 However, it is usually a good idea to also offer a prominently placed button or banner in your app that the user can tap
