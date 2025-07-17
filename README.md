@@ -10,13 +10,13 @@ With just a few lines of code, you can add a `ChargeBanner` view to your app tha
 	- [Swift Package Manager](#swift-package-manager)
 2. **[Getting Started](#getting-started)**
 	- [Charge Banner](#charge-banner)
+	- [Charge Session Observation](#charge-session-observation)
 3. **[Custom UI Components](#custom-ui-components)**
-4. [Charge Session Observation](#charge-session-observation)
-5. [Compatibility](#compatibility)
-6. [Examples](#examples)
-7. [Glossary](#glossary)
-8. [Support](#support)
-9. [License](#license)
+4. [Compatibility](#compatibility)
+5. [Examples](#examples)
+6. [Glossary](#glossary)
+7. [Support](#support)
+8. [License](#license)
 
 ## Installation
 
@@ -154,18 +154,14 @@ ChargeBanner(source: $chargeBannerSource)
   .variant(.compact)
 ```
 
-## Custom UI Components
-
-The SDK exposes a set of functions that allow you to build your own custom UI elements that interact with the SDK's underlying data structures and APIs.
-
-## Charge Session Observation
+### Charge Session Observation
 
 Users should be able to reopen an active charge session that was minimized, whether manually or due to app termination. The `ChargeBanner` view takes care of that out of the box. Whenever there is an active charge session, the banner will show a button to re-open the charge session.
 
 However, it is usually a good idea to also offer a prominently placed button or banner in your app that the user can tap
 to re-open an active charge session without having to go back to a place where the `ChargeBanner` is being shown.
 
-You can do this by adding the `.chargeSessionPresentation(isPresented:)` view modifier anywhere in your app. While you can trigger that presentation at any time, it makes sense to do so only when there is an active charge session.
+You can do this by adding the `.chargePresentation(isPresented:)` view modifier anywhere in your app. While you can trigger that presentation at any time, it makes sense to do so only when there is an active charge session.
 
 To detect this, you can observe charge session updates using the `ChargeSession.updates()` method. This method returns an `AsyncStream` that yields whenever there are changes to the charge session status. 
 
@@ -184,6 +180,64 @@ The `update` you receive from this stream is an `enum` with three cases:
 > [!NOTE] 
 > As with all asynchronous APIs in the SDK, there is also a callback-style overload available: `ChargeSession.updates(handler:)`
 
+## Custom UI Components
+
+The SDK provides a set of functions that allow you to build your own UI elements that interact with the SDK's underlying data structures and APIs.
+
+### Charge Offers
+
+The primary interaction between your own components and the SDK happens through the `ChargeOffer` object. A charge offer is made up of information about the specific charge point it belongs to as well as details about the pricing that it includes.
+
+```swift
+ChargeOffer.offers(forEvseIds:)
+```
+
+> [!NOTE] 
+> Any pricing details provided in a `ChargeOffer` object are considered to be a *preview*. Once an offer is passed to the SDK for resolution and charging, it is properly signed and the pricing becomes fixed for a few minutes.
+
+### Start Charging
+
+When you want to resolve a charge offer and start the payment and charging flow, you can pass the `ChargeOffer` object to the `chargePresentation(chargeOffer:)` view modifier. The presented modal view will automatically sign the offer and guide the user through the next steps.
+
+```swift 
+import ElvahCharge
+
+struct DemoView: View {
+  @State private var selectedChargeOffer: ChargeOffer?
+
+  var body: some View {
+    NavigationStack {
+      // Your other views
+    }
+    .chargePresentation(chargeOffer: $selectedChargeOffer)
+  }
+}
+```
+
+### Charge Site
+
+When you need more context about a site's charge points and their associated offers, or want to access offers at a broader level, use the `ChargeSite` object. It contains both the site information and its related `ChargeOffer` objects.
+
+```swift
+// Fetch all charge offers from sites
+ChargeSite.sites(in:)  
+ChargeSite.sites(near:)  
+ChargeSite.sites(forEvseIds:)
+
+// Only fetch charge offers that are part of an active campaign
+ChargeSite.campaigns(in:)  
+ChargeSite.campaigns(near:)  
+ChargeSite.campaigns(forEvseIds:)
+```
+
+You can use the `ChargeSite` and `ChargeOffer` objects to build custom UI components that make the charging experience feel truly native to your app.
+
+> [!NOTE] 
+> When calling `ChargeSite.sites(forEvseIds:)` or `ChargeSite.campaigns(forEvseIds:)`, the functions will potentially  return multiple `ChargeSite` objects because the provided list of evse ids might not all belong to the same site.
+
+> [!NOTE] 
+> The sites returned by a call to `ChargeSite.sites(forEvseIds:)` or `ChargeSite.campaigns(forEvseIds:)` will only contain charge offers for the provided evse ids. If the site has additional charge points, they will be ignored and will not be part of the returned `ChargeSite` object.
+
 ## Compatibility
 
 You can integrate the SDK into projects that support iOS 15 and above. However, the `ChargeBanner` view requires an iOS 16 (or newer) runtime to function.
@@ -197,10 +251,11 @@ You can safely include `ChargeBannerSource` and `ChargeBanner` in your view hier
 You can find an example project in the `Examples` directory of this repository.
 
 ## Glossary
-- **Site**: A place with one or more charge points to charge an electric car at.
+
+- **Charge Site**: A place with one or more charge points to charge an electric car at.
 - **Charge Point**: A plug used to charge an electric car.
-- **ChargeOffer**: A charge point with attached pricing information.
-- **Campaign**: A site with a list of deals attached to it.
+- **Charge Offer**: A charge point with attached pricing information.
+- **Campaign**: A period of time with special pricing conditions for a charge point.
 - **Charge Session**: An instance of charging an electric car at a charge point.
 
 ## Support
