@@ -10,10 +10,10 @@ import SwiftUI
 struct ChargeOfferResolutionFeature: View {
 	@Environment(\.dismiss) private var dismiss
 	@EnvironmentObject private var chargeSettlementProvider: ChargeSettlementProvider
+	@EnvironmentObject private var discoveryProvider: DiscoveryProvider
 	@TaskIdentifier private var signingId
 	@Loadable<ChargeRequest> private var chargeRequest
 
-	var chargeSite: ChargeSite
 	var chargeOffer: ChargeOffer
 
 	var body: some View {
@@ -36,12 +36,12 @@ struct ChargeOfferResolutionFeature: View {
 
 	private func signOffer() async {
 		await $chargeRequest.load {
-			let signedOffer = SignedChargeOffer(offer: chargeOffer, signedOffer: "")
-			let context = try await chargeSettlementProvider.initiate(
-				signedOffer: signedOffer.signedOffer
-			)
+			let signedOffer = try await discoveryProvider.signOffer(chargeOffer)
+			let context = try await chargeSettlementProvider.initiate(with: signedOffer.signedOffer)
+			try Task.checkCancellation()
+
 			return ChargeRequest(
-				site: chargeSite.site,
+				site: chargeOffer.site,
 				signedOffer: signedOffer,
 				paymentContext: context
 			)
@@ -51,7 +51,7 @@ struct ChargeOfferResolutionFeature: View {
 
 @available(iOS 17.0, *)
 #Preview {
-	ChargeOfferResolutionFeature(chargeSite: .mock, chargeOffer: .mockAvailable)
+	ChargeOfferResolutionFeature(chargeOffer: .mockAvailable)
 		.withFontRegistration()
 		.withMockEnvironmentObjects()
 		.preferredColorScheme(.dark)

@@ -3,7 +3,10 @@
 import Foundation
 
 extension ChargeOffer {
-	static func parse(_ response: ChargeOfferSchema) throws(NetworkError.Client) -> ChargeOffer {
+	static func parse(
+		_ response: ChargeOfferSchema,
+		in site: Site
+	) throws(NetworkError.Client) -> ChargeOffer {
 		guard let expiresAt = Date.from(iso8601: response.offer.expiresAt) else {
 			throw .parsing(.keyPath(in: response, keyPath: \.offer.expiresAt))
 		}
@@ -31,7 +34,8 @@ extension ChargeOffer {
 			price: ChargePrice.parse(response.offer.price),
 			originalPrice: originalPrice,
 			type: offerType,
-			validUntil: expiresAt
+			validUntil: expiresAt,
+			site: site
 		)
 	}
 }

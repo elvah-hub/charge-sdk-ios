@@ -7,7 +7,7 @@ public enum ChargeBannerActionDestination {
 	/// The charge site detail page destination.
 	///
 	/// You can pass the given ``ChargeSite`` object to a `.presentation(site:)` view modifier to
-	/// present the campaign detail page in your view hierarchy.
+	/// present the charge site detail page in your view hierarchy.
 	case chargeSitePresentation(ChargeSite)
 
 	/// The charge session destination.

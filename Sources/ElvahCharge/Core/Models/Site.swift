@@ -94,6 +94,31 @@ public extension Site {
 }
 
 package extension Site {
+	static var simulation: Site {
+		Site(
+			id: "Mock ID",
+			location: Location(latitude: 51.03125, longitude: 4.41047),
+			address: Site.Address(
+				locality: "Berlin",
+				postalCode: "12683",
+				streetAddress: ["Köpenicker Straße 145"]
+			),
+			availability: .available,
+			prevalentPowerType: .dc,
+			openingHours: OpeningHours(
+				dataAvailable: true,
+				openPeriods: [
+					Site.OpeningHours.OpenPeriod(
+						dayOfWeek: "MONDAY",
+						opensAt: Time(hour: 08, minute: 00),
+						closesAt: Time(hour: 22, minute: 0)
+					),
+				]
+			),
+			operatorName: "Lidl Köpenicker Straße"
+		)
+	}
+
 	static var mock: Site {
 		Site(
 			id: "Mock ID",

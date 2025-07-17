@@ -17,11 +17,10 @@ public extension View {
 	/// - Returns: A view that presents a modal that handles payment and charging for a specific
 	/// charge point.
 	@ViewBuilder func chargePresentation(
-		site chargeSite: ChargeSite,
 		offer chargeOffer: Binding<ChargeOffer?>
 	) -> some View {
 		if #available(iOS 16.0, *) {
-			modifier(PresentationViewModifier(chargeSite: chargeSite, chargeOffer: chargeOffer))
+			modifier(PresentationViewModifier(chargeOffer: chargeOffer))
 		} else {
 			self
 		}
@@ -32,13 +31,12 @@ public extension View {
 
 @available(iOS 16.0, *)
 private struct PresentationViewModifier: ViewModifier {
-	var chargeSite: ChargeSite
 	@Binding var chargeOffer: ChargeOffer?
 
 	func body(content: Content) -> some View {
 		content
 			.fullScreenCover(item: $chargeOffer) { chargeOffer in
-				ChargeOfferResolutionFeature(chargeSite: chargeSite, chargeOffer: chargeOffer)
+				ChargeOfferResolutionFeature(chargeOffer: chargeOffer)
 					.withEnvironmentObjects()
 			}
 	}

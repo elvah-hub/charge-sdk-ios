@@ -5,7 +5,7 @@ import Foundation
 import OSLog
 
 #if canImport(Defaults)
-import Defaults
+	import Defaults
 #endif
 
 /// A configuration object for the elvah Charge SDK.
@@ -22,9 +22,11 @@ public enum Elvah {
 	/// A flag indicating if the SDK is in debug mode.
 	package private(set) nonisolated(unsafe) static var isDebugMode = false
 
-	/// A unique identifier for the SDK. It is generated the first time the SDK is initialized and helps with identifying users anonymously.
+	/// A unique identifier for the SDK. It is generated the first time the SDK is initialized and
+	/// helps with identifying users anonymously.
 	///
-	/// - Important: This identifier is a randomly generated base62 string and cannot be used to track users outside the use of this SDK.
+	/// - Important: This identifier is a randomly generated base62 string and cannot be used to track
+	/// users outside the use of this SDK.
 	package static var distinctId: ElvahDistinctId {
 		if Defaults[.distinctId] == nil {
 			Defaults[.distinctId] = ElvahDistinctId.generate()
@@ -72,7 +74,7 @@ public enum Elvah {
 	}
 
 	/// Destroys the internal Elvah initialization setup.
-	@MainActor package static func destroy() {
+	@MainActor @_spi(Debug) public static func destroy() {
 		_configuration = nil
 	}
 
@@ -86,6 +88,13 @@ public enum Elvah {
 		isDebugMode = true
 		Self.debugSessionDelegate = debugSessionDelegate
 		internalLogger = Logger(subsystem: "de.elvah.sdk", category: "Internal")
+	}
+}
+
+package extension Elvah {
+	enum Constant {
+		/// The default radius in meters.
+		static let defaultRadius: Double = 20000
 	}
 }
 
@@ -168,6 +177,25 @@ public extension Elvah {
 			self.theme = theme
 			self.store = store
 			self.isUninitialized = isUninitialized
+		}
+
+		/// Creates a simulation configuration for testing purposes.
+		///
+		/// - Parameters:
+		///   - theme: The theme to apply to the SDK's native components.
+		///   - store: The `UserDefaults` store. Defaults to `UserDefaults.standard`.
+		/// - Returns: A Configuration instance configured for simulation mode.
+		public static func simulation(
+			theme: Theme = .default,
+			store: UserDefaults = .standard
+		) -> Configuration {
+			return Configuration(
+				apiKey: "",
+				environment: .simulation,
+				theme: theme,
+				store: store,
+				isUninitialized: true
+			)
 		}
 
 		/// An empty configuration that is used when the client has not (yet) initialized the

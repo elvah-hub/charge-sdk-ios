@@ -9,7 +9,7 @@ With just a few lines of code, you can add a `ChargeBanner` view to your app tha
 1. [Installation](#installation)
 	- [Swift Package Manager](#swift-package-manager)
 2. **[Getting Started](#getting-started)**
-	- [Campaign Banner](#campaign-banner)
+	- [Charge Banner](#charge-banner)
 3. **[Charge Session Observation](#charge-session-observation)**
 4. [Compatibility](#compatibility)
 5. [Examples](#examples)
@@ -50,7 +50,7 @@ The configuration allows you to pass the following values:
 - `store`: The `UserDefaults` store that the SDK should use to store local data. Defaults to `UserDefaults.standard`.
 - `theme`: The theme that should be used in the visual components of the SDK. Defaults to `.neutral`.
 
-### Campaign Banner
+### Charge Banner
 
 The SDK's primary entry point is the `ChargeBanner` view. You can add it anywhere you want to offer users a deal to charge their electric car nearby.
 
@@ -74,22 +74,25 @@ struct DemoView: View {
 }
 ```
 
-A `ChargeBanner` is controlled by a `ChargeBannerSource` that is responsible for fetching and managing the campaign data as well as deciding when to actually display the attached banner.
+A `ChargeBanner` is controlled by a `ChargeBannerSource` that is responsible for fetching and managing charge offer data as well as deciding when to actually display the attached banner.
 
 The banner will initially remain hidden until a source value is set:
 
 ```swift
-// Load nearest campaign at a location
+// Load nearest charge offer at a location
 chargeBannerSource = .remote(near: coordinate)
 
-// Or load a campaign in a map region
+// Or load a charge offer in a map region
 chargeBannerSource = .remote(in: mapRegion)
+
+// Or load a charge offer from a list of specific evse ids
+chargeBannerSource = .remote(evseIds: someEvseIds)
 ```
 
-Once you have done that, the source object will attempt to find an active campaign from the given source data and present it inside the `ChargeBanner` view.
+Once you have done that, the source object will attempt to find a charge offer from the given source data and present it inside the `ChargeBanner` view.
 
 > [!IMPORTANT]
-> Currently, there is only a single demo campaign available at these coordinates: Latitude: 51.03125° N, Longitude: 4.41047° E
+> Currently, there is only a single demo charge offer available at these coordinates: Latitude: 51.03125° N, Longitude: 4.41047° E
 
 #### Display Behavior
 
@@ -99,11 +102,11 @@ By default, there will be visible loading and error states inside the `ChargeBan
 // Default: Show the banner whenever a source is set, including visible loading and error states
 @ChargeBannerSource(display: .whenSourceSet) private var chargeBannerSource
 
-// Show the banner only whenever there is an active campaign loaded, hiding loading and error states
+// Show the banner only whenever there is a charge offer loaded, hiding loading and error states
 @ChargeBannerSource(display: .whenContentAvailable) private var chargeBannerSource
 ```
 
-Setting the `DisplayBehavior` to `.whenContentAvailable` can be useful when you do not want to introduce changes to your UI until it is certain there is an active campaign available.
+Setting the `DisplayBehavior` to `.whenContentAvailable` can be useful when you do not want to introduce changes to your UI until it is certain there is a charge offer available.
 
 #### Reset Source
 
@@ -115,18 +118,19 @@ chargeBannerSource = nil
 
 #### External Loading
 
-It is possible to inject a campaign directly into a banner's source. You can fetch campaigns from the `Campaign` object:
+It is possible to inject a charge site with its offers directly into a banner's source. You can fetch those from the `ChargeSite` object:
 
 ```swift
-let campaigns = try await Campaign.campaigns(in: someRegion) 
-// Or: Campaign.campaigns(near: someLocation)
+let sites = try await ChargeSite.sites(in: someRegion) 
+// Or: ChargeSite.sites(near: someLocation)
+// Or: ChargeSite.sites(evseIds: evseIds)
 
-if let campaign = campaigns.first {
-  chargeBannerSource = .direct(campaign)
+if let site = sites.first {
+  chargeBannerSource = .direct(site)
 }
 ```
 
-This will disable the internal loading mechanisms and lets you have full control over the presented campaign.
+This will disable the internal loading mechanisms and lets you have full control over the presented charge offers.
 
 #### Banner Variants
 

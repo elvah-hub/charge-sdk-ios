@@ -18,7 +18,6 @@ extension ChargeBannerComponent {
 				case .absent:
 					absentContent
 				case .loading:
-					Text("\(source.chargeSite.isLoaded) \(source.offer.isLoaded)")
 					loadingContent
 				case let .error(error):
 					errorContent(error: error)

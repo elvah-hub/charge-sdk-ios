@@ -22,6 +22,10 @@ package struct ChargeAuthentication: Codable, Hashable, Sendable {
 }
 
 package extension ChargeAuthentication {
+	static var simulation: ChargeAuthentication {
+		.init(token: "simulated authentication", expiryDate: .distantFuture)
+	}
+
 	static var mock: ChargeAuthentication {
 		.init(token: "mock authentication", expiryDate: .distantFuture)
 	}

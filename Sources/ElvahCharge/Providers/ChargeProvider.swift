@@ -175,6 +175,23 @@ extension ChargeProvider {
 		)
 	}()
 
+	@available(iOS 16.0, *) static var simulation: ChargeProvider {
+		ChargeProvider(
+			dependencies: .init(
+				subscriptionManager: ChargeProvider.SubscriptionManager(),
+				session: { authentication in
+					try await Simulator.shared.session(authentication: authentication)
+				},
+				start: { authentication in
+					try await Simulator.shared.start(authentication: authentication)
+				},
+				stop: { authentication in
+					try await Simulator.shared.stop(authentication: authentication)
+				}
+			)
+		)
+	}
+
 	@available(iOS 16.0, *) static let mock = mock(sessionStatus: .charging)
 
 	@available(iOS 16.0, *) static func mock(sessionStatus: ChargeSession.Status) -> ChargeProvider {

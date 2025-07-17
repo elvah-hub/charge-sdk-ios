@@ -159,15 +159,21 @@ struct ChargePaymentFeature: View {
 	private func pay() async {
 		do {
 			let paymentContext = request.paymentContext
+			let stripePaymentResult: PaymentSheetResult
 
-			// Set the Stripe connected account to the correct value from the initiated payment response
-			STPAPIClient.shared.stripeAccount = paymentContext.accountId
+			switch Elvah.configuration.environment {
+			case .simulation:
+				stripePaymentResult = .completed
+			default:
+				// Set the Stripe connected account to the correct value from the initiated payment response
+				STPAPIClient.shared.stripeAccount = paymentContext.accountId
 
-			// Show Stripe's payment sheet and wait for the result
-			paymentSheet = PaymentSheet.from(clientSecret: paymentContext.clientSecret)
-			let stripePaymentResult = await withCheckedContinuation { continuation in
-				self.paymentSheetContinuation = continuation
-				router.showPaymentSheet = true
+				// Show Stripe's payment sheet and wait for the result
+				paymentSheet = PaymentSheet.from(clientSecret: paymentContext.clientSecret)
+				stripePaymentResult = await withCheckedContinuation { continuation in
+					self.paymentSheetContinuation = continuation
+					router.showPaymentSheet = true
+				}
 			}
 
 			switch stripePaymentResult {

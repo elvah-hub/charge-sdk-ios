@@ -103,7 +103,7 @@ package struct ChargeOfferDetailFeature: View {
 	@ViewBuilder private var siteContent: some View {
 		switch site {
 		case .absent,
-				.loading:
+		     .loading:
 			ActivityInfoComponent(state: .animating, title: nil, message: nil)
 				.frame(maxWidth: .infinity)
 		case .error:
@@ -115,7 +115,6 @@ package struct ChargeOfferDetailFeature: View {
 			routeButton
 		}
 	}
-
 
 	@ViewBuilder private var chargePointsContent: some View {
 		ChargeOfferDetailFeature.ChargePointSection(
@@ -198,11 +197,10 @@ package struct ChargeOfferDetailFeature: View {
 			defer { processingOffer = nil }
 			processingOffer = offer
 
-			let signedOffer = try await discoveryProvider.signOffer(offer, in: site)
-			let context = try await chargeSettlementProvider.initiate(
-				signedOffer: signedOffer.signedOffer
-			)
+			let signedOffer = try await discoveryProvider.signOffer(offer)
+			let context = try await chargeSettlementProvider.initiate(with: signedOffer.signedOffer)
 			try Task.checkCancellation()
+			
 			router.chargeRequest = ChargeRequest(
 				site: site,
 				signedOffer: signedOffer,

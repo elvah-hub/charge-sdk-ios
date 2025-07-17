@@ -10,19 +10,23 @@ import SwiftUI
 
 /// A property wrapper that manages charge offer data loading and state for a ``ChargeBanner`` view.
 ///
-/// The source determines how charge offer data is loaded, controlling the presentation and state of the
+/// The source determines how charge offer data is loaded, controlling the presentation and state of
+/// the
 /// banner. Available loading methods include:
 /// - Loading offers near a location
 /// - Loading offers within a map region
 /// - Loading offers for a specific set of evse ids
 /// - Using a charge site directly
 ///
-/// You can configure how the ``ChargeBanner`` responds to campaign availability using the
+/// You can configure how the ``ChargeBanner`` responds to charge offer availability using the
 /// ``ChargeBannerSource/DisplayBehavior`` parameter:
 ///
 /// ```swift
 /// // Always show banner when a source is set (default)
 /// @ChargeBannerSource private var chargeBannerSource
+///
+/// // Only show deals that are par of a campaign
+/// @ChargeBannerSource(fetching: .campaigns) private var chargeBannerSource
 ///
 /// // Only show banner when a charge offer is available
 /// @ChargeBannerSource(display: .whenContentAvailable) private var chargeBannerSource
@@ -37,19 +41,22 @@ import SwiftUI
 /// // Load a charge offer in a map region
 /// chargeBannerSource = .remote(in: mapRegion)
 ///
+/// // Use a charge offer from a list of specific evse ids
+/// chargeBannerSource = .remote(evseIds: someEvseIds)
+///
 /// // Use charge site directly
 /// chargeBannerSource = .direct(chargeSite)
 /// ```
 ///
 /// ## Reset Source
-/// To reset the campaign source, set it to `nil`:
+/// To reset the source, set it to `nil`:
 ///
 /// ```swift
 /// chargeBannerSource = nil
 /// ```
 ///
 /// See ``ChargeBanner`` for detailed implementation examples and a complete overview of the
-/// campaign presentation mechanism.
+/// charge offer presentation mechanism.
 @MainActor @propertyWrapper
 public struct ChargeBannerSource: DynamicProperty {
 	@Default(.chargeSessionContext) private var chargeSessionContext
@@ -60,11 +67,11 @@ public struct ChargeBannerSource: DynamicProperty {
 	@SwiftUI.State private var loadingTask: Task<Void, Never>?
 
 	/// Initializes the ``ChargeBannerSource``.
-	/// - Parameter wrappedValue: The initial campaign source. Defaults to `nil`.
+	/// - Parameter wrappedValue: The initial source. Defaults to `nil`.
 	/// - Parameter fetchKind: The fetch configuration for the charge offers. Defaults to
 	/// ``ChargeBannerSource/FetchKind/allOffers``.
 	/// - Parameter displayBehavior: The display behavior controlling the presentation of the attached
-	/// ``ChargeBanner`` view depending on the availability of a campaign. Defaults to
+	/// ``ChargeBanner`` view depending on the availability of a charge offer. Defaults to
 	/// ``ChargeBannerSource/DisplayBehavior/whenSourceSet``.
 	public init(
 		wrappedValue: ChargeBannerSource.State? = nil,
@@ -74,10 +81,11 @@ public struct ChargeBannerSource: DynamicProperty {
 		_internalState = SwiftUI.State(initialValue: wrappedValue ?? .none)
 		_fetchKind = SwiftUI.State(initialValue: fetchKind)
 		_displayBehavior = SwiftUI.State(initialValue: displayBehavior)
+		// TODO: Add Support for simulation
 		discoveryProvider = DiscoveryProvider.live
 	}
 
-	/// The current state of the campaign source.
+	/// The current state of the source.
 	///
 	/// - Tip: This object conforms to the `Equatable`. You can pass it to an `.animation(_:value:)`
 	/// view modifier to control the animation of internal state changes of the ``ChargeBanner``
@@ -95,7 +103,7 @@ public struct ChargeBannerSource: DynamicProperty {
 			let newStateId = internalState.id
 
 			if newStateId != oldStateId {
-				reloadCampaign()
+				reloadChargeOffer()
 			}
 		}
 	}
@@ -125,9 +133,9 @@ public struct ChargeBannerSource: DynamicProperty {
 			return nil
 		}
 
-		// Provide a mechanism to trigger a reload of the campaign data.
+		// Provide a mechanism to trigger a reload of the charge offer data.
 		let triggerReloadAction = {
-			reloadCampaign()
+			reloadChargeOffer()
 		}
 
 		return ChargeBannerSource.Binding(
@@ -151,7 +159,7 @@ public struct ChargeBannerSource: DynamicProperty {
 			return true
 		}
 
-		// Don't show if campaign has ended
+		// Don't show if charge offer (if it's a campaign) has ended
 		if internalState.hasEnded {
 			return false
 		}
@@ -160,11 +168,11 @@ public struct ChargeBannerSource: DynamicProperty {
 		return internalState.offer.isLoaded || internalState.hasPreviouslyLoadedData
 	}
 
-	// MARK: - Campaign Loading
+	// MARK: - Charge Offer Loading
 
-	private func reloadCampaign() {
+	private func reloadChargeOffer() {
 		guard #available(iOS 16.0, *) else {
-			Elvah.logger.info("Loading a campaign is not support for iOS 15. This is a no-nop.")
+			Elvah.logger.info("Loading an offer is not support for iOS 15. This is a no-nop.")
 			return
 		}
 
@@ -183,7 +191,7 @@ public struct ChargeBannerSource: DynamicProperty {
 				while Task.isCancelled == false {
 					var chargeSite: ChargeSite?
 
-					// Attempt to load an active campaign
+					// Attempt to load an active charge offer
 					switch kind {
 					case let .remoteNearLocation(location):
 						stateBinding.wrappedValue.offer.setLoading()
@@ -262,7 +270,7 @@ public struct ChargeBannerSource: DynamicProperty {
 }
 
 public extension ChargeBannerSource {
-	/// The current state of the campaign source.
+	/// The current state of the source.
 	struct State: Equatable, Sendable {
 		/// A unique identifier for the source.
 		var id: UUID
@@ -273,21 +281,16 @@ public extension ChargeBannerSource {
 		/// The loading state of the charge offer that is presented by the banner
 		var offer: LoadableState<ChargeOffer>
 
-		/// Indicates if the campaign has ended.
+		/// Indicates if the offer has ended, which will only happen if it's part of a campaign.
 		var hasEnded: Bool
 
 		/// The loading state of the charge session.
 		var chargeSession: LoadableState<ChargeSession>
 
-		/// The method used to fetch the campaign.
+		/// The method used to fetch the charge offer.
 		var kind: Kind?
 
 		/// A flag indicating if the loading process is the first one after a new source has been set.
-		///
-		/// A ``ChargeBannerSource`` with a ``ChargeBannerSource/DisplayBehavior/whenContentAvailable``
-		/// will
-		/// only hide the banner on the first loading of a newly set source. Subsequent refreshes, to
-		/// replace expired campaigns, will not hide the banner.
 		var hasPreviouslyLoadedData = false
 
 		package init(
@@ -308,7 +311,7 @@ public extension ChargeBannerSource {
 			self.hasPreviouslyLoadedData = hasPreviouslyLoadedData
 		}
 
-		/// A default empty state with no campaign loaded.
+		/// A default empty state with no charge offer loaded.
 		///
 		/// This state will cause ``ChargeBannerSource/projectedValue`` to be `nil`.
 		package static var none: ChargeBannerSource.State {
@@ -322,7 +325,7 @@ public extension ChargeBannerSource {
 		/// Creates a state to load charge offers nearest a given location.
 		///
 		/// - Note: There is no guarantee that a charge offer can be found or is available.
-		/// - Parameter location: The coordinate to fetch the campaign nearest to it.
+		/// - Parameter location: The coordinate to fetch the charge offer nearest to it.
 		/// - Returns: A state configured to fetch by location.
 		public static func remote(near location: CLLocationCoordinate2D) -> ChargeBannerSource.State {
 			ChargeBannerSource.State(
@@ -335,7 +338,7 @@ public extension ChargeBannerSource {
 		/// Creates a state to load charge offers within a given region.
 		///
 		/// - Note: There is no guarantee that a charge offer can be found or is available.
-		/// - Parameter region: The map region to fetch the campaign in.
+		/// - Parameter region: The map region to fetch the charge offer in.
 		/// - Returns: A state configured to fetch by region.
 		public static func remote(in region: MKMapRect) -> ChargeBannerSource.State {
 			ChargeBannerSource.State(
@@ -358,13 +361,15 @@ public extension ChargeBannerSource {
 			)
 		}
 
-		/// Creates a state with a provided campaign.
+		/// Creates a state with a provided charge site obect.
 		///
-		/// You can use this if you want to handle the loading of a campaign yourself. You can fetch
-		/// a campaing by calling ``ChargeSite/campaigns(in:)`` or one of its overloads.
+		/// You can use this if you want to handle the loading of a charge site and its offers yourself.
+		/// You can fetch
+		/// a site by calling ``ChargeSite/sites(in:)``, ``ChargeSite/campaigns(in:)`` or one of their
+		/// respective overloads.
 		///
-		/// - Parameter campaign: The campaign object to use.
-		/// - Returns: A state using the given campaign directly.
+		/// - Parameter chargeSite: The charge site object to use.
+		/// - Returns: A state using the given charge site directly.
 		public static func direct(_ chargeSite: ChargeSite) -> ChargeBannerSource.State {
 			var offer = LoadableState<ChargeOffer>.loading
 
@@ -380,7 +385,7 @@ public extension ChargeBannerSource {
 		}
 	}
 
-	/// A binding to the internal campaign state that can be passed to a ``ChargeBanner`` view.
+	/// A binding to the internal state that can be passed to a ``ChargeBanner`` view.
 	struct Binding {
 		var chargeSite: LoadableState<ChargeSite>
 		var offer: LoadableState<ChargeOffer>
@@ -403,15 +408,15 @@ public extension ChargeBannerSource {
 		/// Always shows the attached ``ChargeBanner`` view as long as a source is set.
 		///
 		/// This will cause visible loading and error states in the ``ChargeBanner`` view. If no
-		/// campaigns can be found, the banner will show a "no deals found" message.
+		/// charge offer can be found, the banner will show a "no deals found" message.
 		case whenSourceSet
 
-		/// Only show the attached ``ChargeBanner`` view when a campaign is loaded and ready to be
+		/// Only show the attached ``ChargeBanner`` view when a charge offer is loaded and ready to be
 		/// shown.
 		///
 		/// This will entirely hide loading and error states, also preventing a "no deals found" message
 		/// that could clutter up your view hierarchy. Instead, the banner will only ever appear when a
-		/// campaign is available.
+		/// charge offer is available.
 		case whenContentAvailable
 	}
 
@@ -429,7 +434,7 @@ public extension ChargeBannerSource {
 		/// Use a provided charge site object directly.
 		case direct(ChargeSite)
 
-		/// A boolean indicating if the campaign data can be reloaded in case on an error.
+		/// A boolean indicating if the charge offer data can be reloaded in case on an error.
 		package var isReloadable: Bool {
 			if case .direct = self {
 				return false
@@ -461,7 +466,7 @@ public extension ChargeBannerSource {
 // MARK: - Campaign State Helpers
 
 public extension ChargeBannerSource.State? {
-	/// Returns `true` if the campaign state is currently `nil`.
+	/// Returns `true` if the state is currently `nil`.
 	var isEmpty: Bool {
 		if self != nil {
 			return false
@@ -469,7 +474,7 @@ public extension ChargeBannerSource.State? {
 		return true
 	}
 
-	/// Returns `true` if the campaign state is set to fetch using a location.
+	/// Returns `true` if the state is set to fetch using a location.
 	var usesLocation: Bool {
 		guard let self else {
 			return false
@@ -481,7 +486,7 @@ public extension ChargeBannerSource.State? {
 		return false
 	}
 
-	/// Returns `true` if the campaign state is set to fetch using a map region.
+	/// Returns `true` if the state is set to fetch using a map region.
 	var usesRegion: Bool {
 		guard let self else {
 			return false
@@ -493,8 +498,20 @@ public extension ChargeBannerSource.State? {
 		return false
 	}
 
-	/// Returns `true` if the campaign state is using a provided campaign directly.
-	var usesCampaign: Bool {
+	/// Returns `true` if the state is set to fetch using a list of evse ids.
+	var usesEvseIds: Bool {
+		guard let self else {
+			return false
+		}
+
+		if case .remoteForEvseIds = self.kind {
+			return true
+		}
+		return false
+	}
+
+	/// Returns `true` if the state is using a provided charge site directly.
+	var usesChargeSite: Bool {
 		guard let self else {
 			return false
 		}

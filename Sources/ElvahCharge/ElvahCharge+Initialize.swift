@@ -21,7 +21,7 @@ public extension Elvah {
 
 		initializeCore(with: configuration)
 		if #available(iOS 16.0, *) {
-			fetchStripeConfiguration()
+			fetchStripeConfiguration(configuration: configuration)
 		} else {
 			Elvah.logger.info("Cannot set up Stripe connection as iOS 15 is not supported.")
 		}
@@ -30,7 +30,11 @@ public extension Elvah {
 	// MARK: - Stripe Configuration
 
 	@available(iOS 16.0, *)
-	@MainActor private static func fetchStripeConfiguration() {
+	@MainActor private static func fetchStripeConfiguration(configuration: Configuration) {
+		if configuration.environment == .simulation {
+			// No Stripe configuration needed for simulation mode
+			return
+		}
 		stripeConfigurationFetchTask?.cancel()
 		stripeConfigurationFetchTask = Task {
 			do {

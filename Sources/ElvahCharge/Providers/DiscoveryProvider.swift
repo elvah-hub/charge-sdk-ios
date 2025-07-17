@@ -33,7 +33,7 @@ final class DiscoveryProvider: ObservableObject {
 
 	func sites(
 		near location: CLLocationCoordinate2D,
-		radius: Double = 20000
+		radius: Double = Elvah.Constant.defaultRadius
 	) async throws -> [ChargeSite] {
 		let region = MKMapRect.around(location, radius: radius)
 		return try await dependencies.siteOffers(region, nil, false)
@@ -49,17 +49,14 @@ final class DiscoveryProvider: ObservableObject {
 
 	func campaigns(
 		near location: CLLocationCoordinate2D,
-		radius: Double = 20000
+		radius: Double = Elvah.Constant.defaultRadius
 	) async throws -> [ChargeSite] {
 		let region = MKMapRect.around(location, radius: radius)
 		return try await dependencies.siteOffers(region, nil, true)
 	}
 
-	func signOffer(
-		_ offer: ChargeOffer,
-		in site: Site
-	) async throws -> SignedChargeOffer {
-		try await dependencies.signOffer(site.id, offer.evseId)
+	func signOffer(_ offer: ChargeOffer) async throws -> SignedChargeOffer {
+		try await dependencies.signOffer(offer.site.id, offer.evseId)
 	}
 }
 
@@ -84,6 +81,17 @@ extension DiscoveryProvider {
 			)
 		)
 	}()
+
+	static let simulation = DiscoveryProvider(
+		dependencies: .init(
+			siteOffers: { _, _, _ in
+				try await Simulator.shared.siteOffers()
+			},
+			signOffer: { _, _ in
+				try await Simulator.shared.signOffer()
+			}
+		)
+	)
 
 	@available(iOS 16.0, *) static let mock = DiscoveryProvider(
 		dependencies: .init(

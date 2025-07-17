@@ -33,18 +33,23 @@ public struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 	/// The date at which the conditions of the offer might change.
 	public var validUntil: Date
 
-	public init(
+	/// The site that this charge offer is part of.
+	package var site: Site
+
+	package init(
 		chargePoint: ChargePoint,
 		price: ChargePrice,
 		originalPrice: ChargePrice?,
 		type: OfferType,
 		validUntil: Date,
+		site: Site
 	) {
 		self.chargePoint = chargePoint
 		self.price = price
 		self.originalPrice = originalPrice
 		self.type = type
 		self.validUntil = validUntil
+		self.site = site
 	}
 
 	/// Information about a campaign that is associated with this offer, if there is one.
@@ -97,6 +102,17 @@ public extension ChargeOffer {
 }
 
 package extension ChargeOffer {
+	static var simulation: ChargeOffer {
+		ChargeOffer(
+			chargePoint: .mockAvailable,
+			price: ChargePrice.mock,
+			originalPrice: nil,
+			type: .standard,
+			validUntil: Date().addingTimeInterval(120),
+			site: .mock,
+		)
+	}
+
 	static var mockAvailable: ChargeOffer {
 		ChargeOffer(
 			chargePoint: .mockAvailable,
@@ -104,6 +120,7 @@ package extension ChargeOffer {
 			originalPrice: nil,
 			type: .standard, //.campaign(CampaignInfo(endDate: Date().addingTimeInterval(20))),
 			validUntil: Date().addingTimeInterval(120),
+			site: .mock,
 		)
 	}
 
@@ -114,6 +131,7 @@ package extension ChargeOffer {
 			originalPrice: nil,
 			type: .campaign(CampaignInfo(endDate: Date().addingTimeInterval(-10))),
 			validUntil: Date().addingTimeInterval(120),
+			site: .mock,
 		)
 	}
 
@@ -124,6 +142,7 @@ package extension ChargeOffer {
 			originalPrice: nil,
 			type: .campaign(CampaignInfo(endDate: Date().addingTimeInterval(30))),
 			validUntil: Date().addingTimeInterval(120),
+			site: .mock,
 		)
 	}
 }

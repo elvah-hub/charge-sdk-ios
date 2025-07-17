@@ -2,7 +2,7 @@
 
 import Foundation
 
-package struct PaymentContext: Hashable, Sendable {
+package struct PaymentContext: Hashable, Sendable, Codable {
 	package var clientSecret: String
 	package var paymentId: String
 	package var paymentIntentId: String
@@ -56,6 +56,17 @@ package extension PaymentContext {
 }
 
 package extension PaymentContext {
+	static var simulation: PaymentContext {
+		PaymentContext(
+			clientSecret: "simulated client secret",
+			paymentId: "simulated payment id",
+			paymentIntentId: "simulated payment intent id",
+			accountId: "simulated account id",
+			authorizationAmount: 0.42,
+			organisationDetails: .simulation
+		)
+	}
+
 	static var mock: PaymentContext {
 		PaymentContext(
 			clientSecret: "",
@@ -69,13 +80,23 @@ package extension PaymentContext {
 }
 
 package extension PaymentContext.OrganisationDetails {
+	static var simulation: PaymentContext.OrganisationDetails {
+		PaymentContext.OrganisationDetails(
+			companyName: "Beispiel GmbH",
+			logoUrl: URL(string: "https://placehold.co/600x.png"),
+			privacyUrl: URL(string: "hhttps://policies.google.com/privacy?hl=en-DE&fg=1"),
+			termsOfConditionUrl: URL(string: "https://policies.google.com/terms?hl=en-DE&fg=1"),
+			supportMethods: [.email("tech-support@elvah.de")]
+		)
+	}
+
 	static var mock: PaymentContext.OrganisationDetails {
 		PaymentContext.OrganisationDetails(
 			companyName: "Mock company",
-			logoUrl: URL(string: "https://placehold.co/600x"),
+			logoUrl: URL(string: "https://placehold.co/600x.png"),
 			privacyUrl: URL(string: "https://www.elvah.de/"),
 			termsOfConditionUrl: URL(string: "https://www.elvah.de/"),
-			supportMethods: [.email("help@elvah.de"), .phone("+12 2345 6789"), .website(URL(string: "https://www.elvah.de/")!)]
+			supportMethods: [.email("tech-support@elvah.de")]
 		)
 	}
 }

@@ -160,28 +160,6 @@ public extension ChargePoint {
 	}
 }
 
-// MARK: - Assets
-
-package extension ConnectorType {
-	/// The asset belonging to the connector.
-	var assetName: String {
-		switch self {
-		case .chademo:
-			"connector.chademo.filled"
-		case .combo:
-			"connector.combo.filled"
-		case .other:
-			"connector.other.filled"
-		case .type2:
-			"connector.type2.filled"
-		}
-	}
-
-	var asset: Image {
-		Image(assetName, bundle: .core)
-	}
-}
-
 // MARK: - Mock Data
 
 package extension ChargePoint {

@@ -250,10 +250,10 @@ package extension ChargeBannerComponent {
 						chargeBannerSource = .remote(in: .mock)
 					}
 					.disabled(chargeBannerSource.usesRegion)
-					Button("Campaign") {
+					Button("Site") {
 						chargeBannerSource = .direct(.mock)
 					}
-					.disabled(chargeBannerSource.usesCampaign)
+					.disabled(chargeBannerSource.usesChargeSite)
 				}
 				Button("Reset") {
 					chargeBannerSource = nil

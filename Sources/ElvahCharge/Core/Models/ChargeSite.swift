@@ -28,7 +28,7 @@ public struct ChargeSite: Codable, Hashable, Identifiable, Sendable {
 		set { site[keyPath: keyPath] = newValue }
 	}
 
-	/// The cheapest available offer in the campaign.
+	/// The cheapest available charge offer.
 	public var cheapestOffer: ChargeOffer? {
 		offers
 			.filter(\.isAvailable)
