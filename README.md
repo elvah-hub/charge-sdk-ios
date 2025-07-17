@@ -136,7 +136,7 @@ It is possible to inject a charge site with its offers directly into a banner's 
 ```swift
 let sites = try await ChargeSite.sites(in: someRegion) 
 // Or: ChargeSite.sites(near: someLocation)
-// Or: ChargeSite.sites(evseIds: evseIds)
+// Or: ChargeSite.sites(forEvseIds: evseIds)
 
 if let site = sites.first {
   chargeBannerSource = .direct(site)
@@ -156,7 +156,7 @@ ChargeBanner(source: $chargeBannerSource)
 
 ### Charge Session Observation
 
-Users should be able to reopen an active charge session that was minimized, whether manually or due to app termination. The `ChargeBanner` view takes care of that out of the box. Whenever there is an active charge session, the banner will show a button to re-open the charge session.
+Users should be able to reopen an active charge session that was minimized, whether manually or due to app termination. The `ChargeBanner` view takes care of that out of the box. Whenever there is an active charge session, it will show a button to re-open the charge session.
 
 However, it is usually a good idea to also offer a prominently placed button or banner in your app that the user can tap
 to re-open an active charge session without having to go back to a place where the `ChargeBanner` is being shown.
@@ -182,7 +182,7 @@ The `update` you receive from this stream is an `enum` with three cases:
 
 ## Custom UI Components
 
-The SDK provides a set of functions that allow you to build your own UI elements that interact with the SDK's underlying data structures and APIs.
+The SDK provides a set of functions to help you build custom UI elements that interact with the SDK's underlying data structures and APIs. You can use these to make the charging experience feel truly native to your app.
 
 ### Charge Offers
 
@@ -197,7 +197,7 @@ ChargeOffer.offers(forEvseIds:)
 
 ### Start Charging
 
-When you want to resolve a charge offer and start the payment and charging flow, you can pass the `ChargeOffer` object to the `chargePresentation(chargeOffer:)` view modifier. The presented modal view will automatically sign the offer and guide the user through the next steps.
+When you want to resolve a charge offer and start the payment and charge flow, you can pass the `ChargeOffer` object to the `chargePresentation(chargeOffer:)` view modifier. The presented modal view will automatically sign the offer and guide the user through the next steps.
 
 ```swift 
 import ElvahCharge
@@ -229,8 +229,6 @@ ChargeSite.campaigns(in:)
 ChargeSite.campaigns(near:)  
 ChargeSite.campaigns(forEvseIds:)
 ```
-
-You can use the `ChargeSite` and `ChargeOffer` objects to build custom UI components that make the charging experience feel truly native to your app.
 
 > [!NOTE] 
 > When calling `ChargeSite.sites(forEvseIds:)` or `ChargeSite.campaigns(forEvseIds:)`, the functions will potentially  return multiple `ChargeSite` objects because the provided list of evse ids might not all belong to the same site.
