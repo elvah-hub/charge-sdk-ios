@@ -141,9 +141,6 @@
     "Energy" : {
 
     },
-    "Error" : {
-
-    },
     "EVSE ID:" : {
 
     },
@@ -235,6 +232,9 @@
 
     },
     "Please stop charging manually by removing the charging cable first from your car and then from the charging station.\n\nWe will analyze the problem and try to solve it together with the operator of the charging station." : {
+
+    },
+    "Please try again." : {
 
     },
     "Plug in your charging cable" : {
