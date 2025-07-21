@@ -203,6 +203,15 @@ package extension ChargeBannerComponent {
 		case chargeOffer(ChargeOffer, in: ChargeSite)
 		case chargeSession(ChargeSession)
 
+		var needsHeader: Bool {
+			switch self {
+			case .chargeOffer(let chargeOffer, _):
+				return chargeOffer.hasCampaign
+			case .chargeSession:
+				return true
+			}
+		}
+
 		var isChargeSession: Bool {
 			if case .chargeSession = self {
 				return true
@@ -292,7 +301,7 @@ package extension ChargeBannerComponent {
 #Preview("Static") {
 	let source = ChargeBannerSource.Binding(
 		chargeSite: .loaded(.mock),
-		offer: .absent,
+		offer: .loaded(.mockAvailable),
 		chargeSession: .constant(.absent),
 		hasEnded: false,
 		kind: .remoteInRegion(.mock),

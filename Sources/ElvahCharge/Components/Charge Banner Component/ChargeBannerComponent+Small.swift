@@ -28,7 +28,6 @@ extension ChargeBannerComponent {
 						}
 					}
 				}
-				.typography(.copy(size: .medium), weight: .bold)
 				.multilineTextAlignment(.leading)
 				.lineSpacing(2)
 				.padding(12)
@@ -45,12 +44,8 @@ extension ChargeBannerComponent {
 			chargeSite: ChargeSite
 		) -> some View {
 			TimelineView(.periodic(from: .now, by: 2)) { _ in
-				let price = offer.price.pricePerKWh.formatted()
-				let priceLabel = Text("\(price)/kWh", bundle: .elvahCharge).foregroundColor(.brand)
-				HStack(spacing: 12) {
-					let siteName = chargeSite.operatorName ?? String(localized: "Site")
-					Text("Charge at \(siteName) from \(priceLabel)", bundle: .elvahCharge)
-						.contentTransition(.numericText())
+				HStack(spacing: 0) {
+					ChargeOfferPricingView(offer: offer)
 					Spacer()
 					Image(.chevronRight)
 				}
@@ -61,19 +56,21 @@ extension ChargeBannerComponent {
 		@ViewBuilder private var absentContent: some View {
 			HStack(spacing: 12) {
 				if source.hasEnded {
-					expiredContent
+					endedContent
 				} else {
-					Text("Found no deal", bundle: .elvahCharge)
+					Text("No offer found", bundle: .elvahCharge)
 						.fixedSize(horizontal: false, vertical: true)
+						.typography(.title(size: .small), weight: .bold)
 				}
 				Spacer()
 			}
 			.foregroundStyle(.primaryContent)
 		}
 
-		@ViewBuilder private var expiredContent: some View {
-			Text("This offer has expired, but more deals are coming!", bundle: .elvahCharge)
+		@ViewBuilder private var endedContent: some View {
+			Text("This offer has ended, but more are coming!", bundle: .elvahCharge)
 				.fixedSize(horizontal: false, vertical: true)
+				.typography(.copy(size: .medium), weight: .bold)
 		}
 
 		@ViewBuilder private var loadingContent: some View {
@@ -89,11 +86,12 @@ extension ChargeBannerComponent {
 					Spacer()
 					Image(.chevronRight)
 				} else {
-					Text("Failed to load deal", bundle: .elvahCharge)
+					Text("Failed to load offer", bundle: .elvahCharge)
 					Spacer()
 				}
 			}
 			.foregroundStyle(.primaryContent)
+			.typography(.copy(size: .medium), weight: .bold)
 		}
 
 		@ViewBuilder private func chargeSessionContent(session: ChargeSession) -> some View {
@@ -103,6 +101,7 @@ extension ChargeBannerComponent {
 				Spacer()
 				Image(.chevronRight)
 			}
+			.typography(.copy(size: .medium), weight: .bold)
 		}
 	}
 }

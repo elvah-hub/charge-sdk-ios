@@ -15,18 +15,8 @@ extension ChargeBannerComponent {
 		var retryAction: () -> Void
 
 		var body: some View {
-			HStack {
-				switch viewState {
-				case .absent:
-					absentHeader
-				case .loading:
-					loadingHeader
-				case let .error(error):
-					errorHeader(error: error)
-				case let .loaded(loadedData):
-					if dynamicTypeSize.isAccessibilitySize == false {
-						Image(source.chargeSession.isAbsent ? .place : .bolt)
-					}
+			if case let .loaded(loadedData) = viewState, loadedData.needsHeader {
+				HStack {
 					switch loadedData {
 					case let .chargeOffer(offer, chargeSite):
 						offerHeader(offer: offer, chargeSite: chargeSite)
@@ -34,38 +24,28 @@ extension ChargeBannerComponent {
 						chargeSessionHeader(session: session)
 					}
 				}
+				.padding(8)
+				.frame(maxWidth: .infinity, alignment: .leading)
+				.typography(.copy(size: .small), weight: .bold)
+				.foregroundStyle(.primaryContent)
+				.background(.canvas)
+			} else if case let .error(error) = viewState {
+				errorHeader(error: error)
 			}
-			.padding(8)
-			.frame(maxWidth: .infinity, alignment: .leading)
-			.typography(.copy(size: .small), weight: .bold)
-			.foregroundStyle(.primaryContent)
-			.background(.canvas)
 		}
 
 		@ViewBuilder private func offerHeader(offer: ChargeOffer, chargeSite: ChargeSite) -> some View {
-			AdaptiveHStack { isHorizontalStack in
-				ViewThatFits(in: .horizontal) {
-					Text("Best deal around you", bundle: .elvahCharge)
-					Text("Best deal", bundle: .elvahCharge)
-				}
-
-				if isHorizontalStack {
-					Spacer()
-				}
-
-				TimelineView(.periodic(from: .now, by: 1)) { context in
-					OfferEndLabel(
-						offer: offer,
-						referenceDate: context.date,
-						prefix: "Ends in ",
-						primaryColor: .brand
-					)
-					.typography(.copy(size: .small), weight: .bold)
-					// TODO: Fix
-//						.foregroundStyle(offer.hasEnded ? .secondaryContent : .brand)
-					.foregroundStyle(offer.isAvailable ? .brand : .secondaryContent)
-				}
+			TimelineView(.periodic(from: .now, by: 1)) { context in
+				OfferEndLabel(
+					offer: offer,
+					referenceDate: context.date,
+					prefix: "Offer ends in ",
+					primaryColor: .brand
+				)
+				.typography(.copy(size: .small), weight: .bold)
+				.foregroundStyle(offer.isAvailable ? .brand : .secondaryContent)
 			}
+			.frame(maxWidth: .infinity)
 		}
 
 		private func formatTimeLeft(_ duration: Duration) -> String {
@@ -86,24 +66,6 @@ extension ChargeBannerComponent {
 					maximumUnitCount: 2
 				)
 			)
-		}
-
-		@ViewBuilder private var absentHeader: some View {
-			Text(verbatim: "No data")
-				.redacted(reason: .placeholder)
-		}
-
-		@ViewBuilder private var loadingHeader: some View {
-			AdaptiveHStack { isHorizontalStack in
-				if source.chargeSession.isLoading {
-					chargeSessionInProgressLabel
-				} else {
-					Text("Loading data…", bundle: .elvahCharge)
-				}
-				if isHorizontalStack {
-					Spacer()
-				}
-			}
 		}
 
 		@ViewBuilder private func errorHeader(error: any Error) -> some View {

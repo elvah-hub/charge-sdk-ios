@@ -76,6 +76,11 @@ public struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 		return true
 	}
 
+	/// Returns `true` if the offer is part of a campaign.
+	public var hasCampaign: Bool {
+		campaign != nil
+	}
+
 	/// Returns `true` the offer is discounted.
 	///
 	/// This is equivalent to checking if ``ChargeOffer/originalPrice`` is not `nil`.
@@ -88,6 +93,22 @@ public extension ChargeOffer {
 	enum OfferType: Codable, Hashable, Sendable {
 		case standard
 		case campaign(CampaignInfo)
+
+		/// Returns `true` if the offer is a standard offer.
+		public var isStandard: Bool {
+			if case .standard = self {
+				return true
+			}
+			return false
+		}
+
+		/// Returns `true` if the offer is a campaign offer.
+		public var isCampaign: Bool {
+			if case .campaign = self {
+				return true
+			}
+			return false
+		}
 	}
 
 	struct CampaignInfo: Codable, Hashable, Sendable {
@@ -117,8 +138,8 @@ package extension ChargeOffer {
 		ChargeOffer(
 			chargePoint: .mockAvailable,
 			price: ChargePrice.mock,
-			originalPrice: nil,
-			type: .standard, //.campaign(CampaignInfo(endDate: Date().addingTimeInterval(20))),
+			originalPrice: ChargePrice.mock2,
+			type: .campaign(CampaignInfo(endDate: Date().addingTimeInterval(20))),
 			validUntil: Date().addingTimeInterval(120),
 			site: .mock,
 		)

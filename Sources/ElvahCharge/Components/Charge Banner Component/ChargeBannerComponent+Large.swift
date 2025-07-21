@@ -31,7 +31,6 @@ extension ChargeBannerComponent {
 				}
 			}
 			.padding(16)
-			.typography(.title(size: .small), weight: .bold)
 			.foregroundStyle(.primaryContent)
 			.background(.container)
 			.transformEffect(.identity)
@@ -42,21 +41,11 @@ extension ChargeBannerComponent {
 			chargeSite: ChargeSite
 		) -> some View {
 			TimelineView(.periodic(from: .now, by: 1)) { _ in
-				let price = offer.price.pricePerKWh.formatted()
-				let priceLabel = Text("\(price)/kWh", bundle: .elvahCharge).foregroundColor(.brand)
-				VStack(spacing: 24) {
-					let siteName = chargeSite.operatorName ?? String(localized: "Site")
-					Text("Charge at \(siteName) from \(priceLabel)", bundle: .elvahCharge)
-						.fixedSize(horizontal: false, vertical: true)
-						.contentTransition(.numericText())
-					ViewThatFits(in: .horizontal) {
-						Button("Discover the Offer", bundle: .elvahCharge, action: primaryAction)
-						Button("Discover", bundle: .elvahCharge, action: primaryAction)
-					}
-					.buttonStyle(.primary)
+				VStack(spacing: 16) {
+					ChargeOfferPricingView(offer: offer)
+					Button("Charge Now", icon: .bolt, bundle: .elvahCharge, action: primaryAction)
+						.buttonStyle(.primary)
 				}
-				.multilineTextAlignment(.center)
-				.lineSpacing(dynamicTypeSize.isAccessibilitySize ? 2 : 5)
 				.animation(.default, value: offer)
 			}
 			.frame(maxWidth: .infinity)
@@ -71,10 +60,11 @@ extension ChargeBannerComponent {
 		@ViewBuilder private var absentContent: some View {
 			Group {
 				if source.hasEnded {
-					expiredContent
+					endedContent
 				} else {
-					Text("Found no deal", bundle: .elvahCharge)
+					Text("No offer found", bundle: .elvahCharge)
 						.fixedSize(horizontal: false, vertical: true)
+						.typography(.title(size: .small), weight: .bold)
 				}
 			}
 			.multilineTextAlignment(.center)
@@ -82,8 +72,9 @@ extension ChargeBannerComponent {
 			.frame(maxWidth: .infinity)
 		}
 
-		@ViewBuilder private var expiredContent: some View {
-			Text("This offer has expired, but more deals are coming!", bundle: .elvahCharge)
+		@ViewBuilder private var endedContent: some View {
+			Text("This offer has expired, but more are coming!", bundle: .elvahCharge)
+				.typography(.title(size: .small), weight: .bold)
 				.fixedSize(horizontal: false, vertical: true)
 		}
 
@@ -92,12 +83,13 @@ extension ChargeBannerComponent {
 				if source.chargeSession.isError {
 					chargeSessionContent
 				} else {
-					Text("Failed to load deal", bundle: .elvahCharge)
+					Text("Failed to load offer", bundle: .elvahCharge)
 						.multilineTextAlignment(.center)
 						.lineSpacing(5)
 						.frame(maxWidth: .infinity)
 				}
 			}
+			.typography(.title(size: .small), weight: .bold)
 		}
 
 		@ViewBuilder private var chargeSessionContent: some View {
