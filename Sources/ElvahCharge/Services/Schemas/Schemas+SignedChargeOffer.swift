@@ -9,11 +9,19 @@ extension SignedChargeOffer {
 	) throws(NetworkError.Client) -> SignedChargeOffer {
 		let chargeOffer = try ChargeOffer.parse(response, in: site)
 
-		guard let signedOffer = response.offer.signedOffer else {
+		guard let token = response.offer.signedOffer else {
 			throw .parsing(.keyPath(in: response, keyPath: \.offer.signedOffer))
 		}
 
-		return SignedChargeOffer(offer: chargeOffer, signedOffer: signedOffer)
+		guard let expiresAt = Date.from(iso8601: response.offer.expiresAt) else {
+			throw .parsing(.keyPath(in: response, keyPath: \.offer.expiresAt))
+		}
+
+		return SignedChargeOffer(
+			offer: chargeOffer,
+			token: token,
+			validUntil: expiresAt
+		)
 	}
 
 	static func parseFromSiteOffer(

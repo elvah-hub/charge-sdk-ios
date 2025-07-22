@@ -60,7 +60,7 @@ struct ChargeOfferResolutionFeature: View {
 	private func signOffer() async {
 		await $chargeRequest.load {
 			let signedOffer = try await discoveryProvider.signOffer(chargeOffer)
-			let context = try await chargeSettlementProvider.initiate(with: signedOffer.signedOffer)
+			let context = try await chargeSettlementProvider.initiate(with: signedOffer.token)
 			try Task.checkCancellation()
 
 			return ChargeRequest(

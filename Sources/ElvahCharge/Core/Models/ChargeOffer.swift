@@ -30,9 +30,6 @@ public struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 	/// A `campaign` type will usually have a discounted price.
 	public var type: ChargeOffer.OfferType
 
-	/// The date at which the conditions of the offer might change.
-	public var validUntil: Date
-
 	/// The site that this charge offer is part of.
 	package var site: Site
 
@@ -41,14 +38,12 @@ public struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 		price: ChargePrice,
 		originalPrice: ChargePrice?,
 		type: OfferType,
-		validUntil: Date,
 		site: Site
 	) {
 		self.chargePoint = chargePoint
 		self.price = price
 		self.originalPrice = originalPrice
 		self.type = type
-		self.validUntil = validUntil
 		self.site = site
 	}
 
@@ -129,7 +124,6 @@ package extension ChargeOffer {
 			price: ChargePrice.mock,
 			originalPrice: nil,
 			type: .standard,
-			validUntil: Date().addingTimeInterval(120),
 			site: .mock,
 		)
 	}
@@ -140,7 +134,6 @@ package extension ChargeOffer {
 			price: ChargePrice.mock,
 			originalPrice: ChargePrice.mock2,
 			type: .campaign(CampaignInfo(endDate: Date().addingTimeInterval(20))),
-			validUntil: Date().addingTimeInterval(120),
 			site: .mock,
 		)
 	}
@@ -151,7 +144,6 @@ package extension ChargeOffer {
 			price: ChargePrice.mock2,
 			originalPrice: nil,
 			type: .campaign(CampaignInfo(endDate: Date().addingTimeInterval(-10))),
-			validUntil: Date().addingTimeInterval(120),
 			site: .mock,
 		)
 	}
@@ -162,7 +154,6 @@ package extension ChargeOffer {
 			price: ChargePrice.mock3,
 			originalPrice: nil,
 			type: .campaign(CampaignInfo(endDate: Date().addingTimeInterval(30))),
-			validUntil: Date().addingTimeInterval(120),
 			site: .mock,
 		)
 	}

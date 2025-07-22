@@ -14,11 +14,6 @@ public extension Elvah {
 	/// The app's `init()` is a good place to do this, but you can also use an `AppDelegate`.
 	/// - Parameter configuration: The configuration to use.
 	@MainActor static func initialize(with configuration: Configuration) {
-		guard  Elvah.configuration.isUninitialized else {
-			Elvah.logger.info("SDK already initialized. Ignoring duplicate initialization.")
-			return
-		}
-
 		initializeCore(with: configuration)
 		if #available(iOS 16.0, *) {
 			fetchStripeConfiguration(configuration: configuration)

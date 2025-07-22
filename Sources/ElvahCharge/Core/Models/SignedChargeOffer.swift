@@ -13,11 +13,19 @@ package struct SignedChargeOffer: Codable, Hashable, Identifiable, Sendable {
 	package var offer: ChargeOffer
 
 	/// The agreement to charge under the pricing conditions of the associated charge offer.
-	package var signedOffer: String
+	package var token: String
 
-	package init(offer: ChargeOffer, signedOffer: String) {
+	/// The date at which the conditions of the offer might change.
+	public var validUntil: Date
+
+	package init(
+		offer: ChargeOffer,
+		token: String,
+		validUntil: Date
+	) {
 		self.offer = offer
-		self.signedOffer = signedOffer
+		self.token = token
+		self.validUntil = validUntil
 	}
 
 	public subscript<V>(dynamicMember keyPath: WritableKeyPath<ChargeOffer, V>) -> V {
@@ -37,15 +45,27 @@ package struct SignedChargeOffer: Codable, Hashable, Identifiable, Sendable {
 
 package extension SignedChargeOffer {
 	static var mockAvailable: SignedChargeOffer {
-		SignedChargeOffer(offer: .mockAvailable, signedOffer: "")
+		SignedChargeOffer(
+			offer: .mockAvailable,
+			token: "",
+			validUntil: Date().addingTimeInterval(120),
+		)
 	}
 
 	static var mockUnavailable: SignedChargeOffer {
-		SignedChargeOffer(offer: .mockUnavailable, signedOffer: "")
+		SignedChargeOffer(
+			offer: .mockUnavailable,
+			token: "",
+			validUntil: Date().addingTimeInterval(120),
+		)
 	}
 
 	static var mockOutOfService: SignedChargeOffer {
-		SignedChargeOffer(offer: .mockOutOfService, signedOffer: "")
+		SignedChargeOffer(
+			offer: .mockOutOfService,
+			token: "",
+			validUntil: Date().addingTimeInterval(120),
+		)
 	}
 }
 

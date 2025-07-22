@@ -180,13 +180,13 @@ extension ChargeProvider {
 			dependencies: .init(
 				subscriptionManager: ChargeProvider.SubscriptionManager(),
 				session: { authentication in
-					try await Simulator.shared.session(authentication: authentication)
+					try await ChargeSimulator.shared.session(authentication: authentication)
 				},
 				start: { authentication in
-					try await Simulator.shared.start(authentication: authentication)
+					try await ChargeSimulator.shared.start(authentication: authentication)
 				},
 				stop: { authentication in
-					try await Simulator.shared.stop(authentication: authentication)
+					try await ChargeSimulator.shared.stop(authentication: authentication)
 				}
 			)
 		)

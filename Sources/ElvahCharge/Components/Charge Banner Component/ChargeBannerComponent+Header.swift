@@ -30,7 +30,12 @@ extension ChargeBannerComponent {
 				.foregroundStyle(.primaryContent)
 				.background(.canvas)
 			} else if case let .error(error) = viewState {
-				errorHeader(error: error)
+				HStack {
+					errorHeader(error: error)
+				}
+				.padding(8)
+				.foregroundStyle(.primaryContent)
+				.background(.canvas)
 			}
 		}
 
@@ -81,6 +86,7 @@ extension ChargeBannerComponent {
 						.foregroundStyle(.brand)
 				}
 			}
+			.typography(.copy(size: .small), weight: .bold)
 		}
 
 		@ViewBuilder private func chargeSessionHeader(session: ChargeSession) -> some View {
@@ -101,10 +107,12 @@ extension ChargeBannerComponent {
 						.foregroundStyle(.brand)
 				}
 			}
+			.typography(.copy(size: .small), weight: .bold)
 		}
 
 		@ViewBuilder private var chargeSessionInProgressLabel: some View {
 			Text("Charging…", bundle: .elvahCharge)
+				.typography(.copy(size: .small), weight: .bold)
 		}
 	}
 }

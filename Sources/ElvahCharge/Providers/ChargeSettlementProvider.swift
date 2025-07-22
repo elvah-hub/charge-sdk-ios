@@ -63,16 +63,16 @@ extension ChargeSettlementProvider {
 	static let simulation = ChargeSettlementProvider(
 		dependencies: .init(
 			stripeConfiguration: {
-				try await Simulator.shared.stripeConfiguration()
+				try await ChargeSimulator.shared.stripeConfiguration()
 			},
 			initiate: { signedOffer in
-				try await Simulator.shared.initiate(signedOffer: signedOffer)
+				try await ChargeSimulator.shared.initiate(signedOffer: signedOffer)
 			},
 			authorize: { paymentIntentId in
-				try await Simulator.shared.authorize(paymentIntentId: paymentIntentId)
+				try await ChargeSimulator.shared.authorize(paymentIntentId: paymentIntentId)
 			},
 			summary: { paymentId in
-				try await Simulator.shared.summary(paymentId: paymentId)
+				try await ChargeSimulator.shared.summary(paymentId: paymentId)
 			}
 		)
 	)

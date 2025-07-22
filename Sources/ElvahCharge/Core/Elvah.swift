@@ -197,6 +197,11 @@ public extension Elvah {
 				isUninitialized: true
 			)
 		}
+		
+		/// Creates a simulation configuration for testing purposes.
+		public static var simulation: Configuration {
+			simulation()
+		}
 
 		/// An empty configuration that is used when the client has not (yet) initialized the
 		/// configuration.

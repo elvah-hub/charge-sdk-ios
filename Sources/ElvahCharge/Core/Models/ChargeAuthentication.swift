@@ -5,11 +5,11 @@ import Foundation
 /// An object holding information about charge authentication.
 package struct ChargeAuthentication: Codable, Hashable, Sendable {
 	/// The authentication token used to charge.
-	package let token: String
+	package var token: String
 
 	/// The date at which the authentication token expires, or `nil` if
 	/// it doesn't expire.
-	package let expiryDate: Date?
+	package var expiryDate: Date?
 
 	/// Main initializer.
 	/// - Parameters:

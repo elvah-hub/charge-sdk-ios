@@ -59,8 +59,8 @@ package extension PaymentContext {
 	static var simulation: PaymentContext {
 		PaymentContext(
 			clientSecret: "simulated client secret",
-			paymentId: "simulated payment id",
-			paymentIntentId: "simulated payment intent id",
+			paymentId: UUID().uuidString,
+			paymentIntentId: UUID().uuidString,
 			accountId: "simulated account id",
 			authorizationAmount: 0.42,
 			organisationDetails: .simulation

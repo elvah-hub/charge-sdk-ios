@@ -7,10 +7,6 @@ extension ChargeOffer {
 		_ response: ChargeOfferSchema,
 		in site: Site
 	) throws(NetworkError.Client) -> ChargeOffer {
-		guard let expiresAt = Date.from(iso8601: response.offer.expiresAt) else {
-			throw .parsing(.keyPath(in: response, keyPath: \.offer.expiresAt))
-		}
-
 		var originalPrice: ChargePrice?
 		if let originalPriceSchema = response.offer.originalPrice {
 			originalPrice = try ChargePrice.parse(originalPriceSchema)
@@ -34,7 +30,6 @@ extension ChargeOffer {
 			price: ChargePrice.parse(response.offer.price),
 			originalPrice: originalPrice,
 			type: offerType,
-			validUntil: expiresAt,
 			site: site
 		)
 	}

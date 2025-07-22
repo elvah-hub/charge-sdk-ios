@@ -198,7 +198,7 @@ package struct ChargeOfferDetailFeature: View {
 			processingOffer = offer
 
 			let signedOffer = try await discoveryProvider.signOffer(offer)
-			let context = try await chargeSettlementProvider.initiate(with: signedOffer.signedOffer)
+			let context = try await chargeSettlementProvider.initiate(with: signedOffer.token)
 			try Task.checkCancellation()
 			
 			router.chargeRequest = ChargeRequest(

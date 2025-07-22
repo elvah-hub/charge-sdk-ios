@@ -32,6 +32,9 @@
     "AC" : {
 
     },
+    "Ad-hoc" : {
+
+    },
     "An error occurred" : {
 
     },
@@ -53,12 +56,6 @@
     "Back" : {
 
     },
-    "Best deal" : {
-
-    },
-    "Best deal around you" : {
-
-    },
     "Call" : {
 
     },
@@ -77,17 +74,13 @@
     "Charge" : {
 
     },
-    "Charge at %@ from %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Charge at %1$@ from %2$@"
-          }
-        }
-      }
+    "Charge Now" : {
+
     },
     "Charge Session" : {
+
+    },
+    "Charge without registration" : {
 
     },
     "Charger is awake!\nStarting session with the charger." : {
@@ -117,12 +110,6 @@
     "DC" : {
 
     },
-    "Discover" : {
-
-    },
-    "Discover the Offer" : {
-
-    },
     "Done" : {
 
     },
@@ -135,9 +122,6 @@
     "Ended" : {
 
     },
-    "Ends in " : {
-
-    },
     "Energy" : {
 
     },
@@ -147,10 +131,10 @@
     "Failed to load charge session details" : {
 
     },
-    "Failed to load deal" : {
+    "Failed to load offer" : {
 
     },
-    "Found no deal" : {
+    "from %@" : {
 
     },
     "Get in touch with %@s team. You can do so immediately via WhatsApp or E-mail." : {
@@ -177,9 +161,6 @@
     "Loading charge point details" : {
 
     },
-    "Loading data…" : {
-
-    },
     "Location" : {
 
     },
@@ -193,6 +174,9 @@
 
     },
     "No Charge Session" : {
+
+    },
+    "No offer found" : {
 
     },
     "No Session" : {
@@ -316,6 +300,12 @@
 
     },
     "The charge point reported an error" : {
+
+    },
+    "This offer has ended, but more are coming!" : {
+
+    },
+    "This offer has expired, but more are coming!" : {
 
     },
     "This offer has expired, but more deals are coming!" : {
