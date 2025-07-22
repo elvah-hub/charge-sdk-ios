@@ -168,7 +168,6 @@ public actor ChargeSimulator {
 		}
 
 		let newStatus = try await requests.onSessionPolling(context)
-		print("New Status: \(newStatus)")
 		context = try updateContext { context in
 			if let newStatus {
 				context.session.status = newStatus
