@@ -81,8 +81,12 @@ public struct ChargeBannerSource: DynamicProperty {
 		_internalState = SwiftUI.State(initialValue: wrappedValue ?? .none)
 		_fetchKind = SwiftUI.State(initialValue: fetchKind)
 		_displayBehavior = SwiftUI.State(initialValue: displayBehavior)
-		// TODO: Add Support for simulation
-		discoveryProvider = DiscoveryProvider.live
+
+		if Elvah.configuration.environment.isSimulation {
+			discoveryProvider = DiscoveryProvider.simulation
+		} else {
+			discoveryProvider = DiscoveryProvider.live
+		}
 	}
 
 	/// The current state of the source.

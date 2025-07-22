@@ -68,8 +68,8 @@ extension ChargeSettlementProvider {
 			initiate: { signedOffer in
 				try await ChargeSimulator.shared.initiate(signedOffer: signedOffer)
 			},
-			authorize: { paymentIntentId in
-				try await ChargeSimulator.shared.authorize(paymentIntentId: paymentIntentId)
+			authorize: { paymentId in
+				try await ChargeSimulator.shared.authorize(paymentId: paymentId)
 			},
 			summary: { paymentId in
 				try await ChargeSimulator.shared.summary(paymentId: paymentId)

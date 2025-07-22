@@ -111,19 +111,19 @@ public actor ChargeSimulator {
 
 		var paymentContext = configuration.paymentContext
 
-		// Set the payment intent id to be the signed offer for easy retrieval
-		paymentContext.paymentIntentId = signedOffer
+		// Set the payment id to be the signed offer for easy retrieval
+		paymentContext.paymentId = signedOffer
 
 		return paymentContext
 	}
 
-	package func authorize(paymentIntentId: String) async throws -> ChargeAuthentication {
+	package func authorize(paymentId: String) async throws -> ChargeAuthentication {
 		try await delay()
 
 		var chargeAuthentication = configuration.chargeAuthentication
 
-		// Set the token to be the payment intent id (which is the signed offer) for easy retrieval
-		chargeAuthentication.token = paymentIntentId
+		// Set the token to be the payment id (which is the signed offer) for easy retrieval
+		chargeAuthentication.token = paymentId
 
 		return chargeAuthentication
 	}
@@ -168,9 +168,11 @@ public actor ChargeSimulator {
 		}
 
 		let newStatus = try await requests.onSessionPolling(context)
-
+		print("New Status: \(newStatus)")
 		context = try updateContext { context in
-			context.session.status = newStatus
+			if let newStatus {
+				context.session.status = newStatus
+			}
 			context.lastPolledAt = Date()
 
 			// Reset request
@@ -197,7 +199,7 @@ public extension ChargeSimulator {
 			set { session.status = newValue }
 		}
 
-		public package(set) var currentRequest: Request?
+		public package(set) var currentRequest: Request? = .startRequested
 		public package(set) var startedAt: Date = .init()
 		public package(set) var stoppedAt: Date?
 		public package(set) var elapsedSeconds: TimeInterval = 0
@@ -253,7 +255,6 @@ public extension ChargeSimulator {
 		/// Defaults to 300ms.
 		public var responseDelay: UInt64 = 300
 
-		// TODO: Add new charge offer type to configuration
 		package var stripeConfiguration = StripeConfiguration.simulation
 		package var chargeAuthentication = ChargeAuthentication.simulation
 		package var paymentContext = PaymentContext.simulation
@@ -305,16 +306,15 @@ public extension ChargeSimulator {
 				onStartRequest: {},
 				onStopRequest: { _ in },
 				onSessionPolling: { context in
-					print(context)
 					switch context.currentStatus {
 					case .startRequested:
-						if context.secondsSinceLastPolling > 3 {
+						if context.elapsedSeconds > 3 {
 							return .started
 						}
 					case .startRejected:
 						break
 					case .started:
-						if context.secondsSinceLastPolling > 3 {
+						if context.elapsedSeconds > 5 {
 							return .charging
 						}
 					case .charging:
@@ -322,7 +322,7 @@ public extension ChargeSimulator {
 							return .stopRequested
 						}
 					case .stopRequested:
-						if context.secondsSinceLastPolling > 3 {
+						if context.elapsedSeconds > 7 {
 							return .stopped
 						}
 					case .stopRejected:
