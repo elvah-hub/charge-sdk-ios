@@ -81,10 +81,21 @@ public actor ChargeSimulator {
 
 	// MARK: Discovery Service
 
-	package func siteOffers() async throws -> [ChargeSite] {
+	package func sites(
+		region: MKMapRect?,
+		evseIds: [String]?,
+		onlyCampaigns: Bool
+	) async throws -> [ChargeSite] {
+		precondition(region != nil || evseIds != nil, "Either region or evseIds must be provided")
 		try await delay()
 
-		return try await requests.onSiteRequest()
+		if let region {
+			return try await requests.siteProvider.sites(in: region, onlyCampaigns: onlyCampaigns)
+		} else if let evseIds {
+			return try await requests.siteProvider.sites(forEvseIds: evseIds, onlyCampaigns: onlyCampaigns)
+		}
+
+		throw NetworkError.unexpectedServerResponse
 	}
 
 	package func signOffer() async throws -> SignedChargeOffer {
@@ -170,7 +181,6 @@ public actor ChargeSimulator {
 
 		let newStatus = try await requests.onSessionPolling(context)
 		context = try updateContext { context in
-
 			// Update session status if needed
 			if let newStatus {
 				context.session.status = newStatus
@@ -208,7 +218,8 @@ public extension ChargeSimulator {
 
 		/// Current request being processed in the session.
 		///
-		/// You should use this to respond to a user interaction, like them trying to start or stop the session.
+		/// You should use this to respond to a user interaction, like them trying to start or stop the
+		/// session.
 		public package(set) var currentRequest: Request? = .startRequested
 
 		/// Date at which the session started.
@@ -303,35 +314,92 @@ private extension Defaults.Keys {
 @_spi(Debug)
 public extension ChargeSimulator {
 	struct RequestHandlers: Sendable {
-		public typealias SiteRequest = @Sendable () async throws -> [ChargeSite]
 		public typealias StartRequest = @Sendable () async throws -> Void
 		public typealias StopRequest = @Sendable (_ session: Context) async throws -> Void
 		public typealias SessionRequest = @Sendable (
 			_ session: Context
 		) async throws -> ChargeSession.Status?
 
-		public package(set) var onSiteRequest: SiteRequest
+		public package(set) var siteProvider: SiteProvider
 		public package(set) var onStartRequest: StartRequest
 		public package(set) var onStopRequest: StopRequest
 		public package(set) var onSessionPolling: SessionRequest
 
 		public init(
-			onSiteRequest: @escaping SiteRequest,
+			siteProvider: SiteProvider,
 			onStartRequest: @escaping StartRequest,
 			onStopRequest: @escaping StopRequest,
 			onSessionPolling: @escaping SessionRequest
 		) {
-			self.onSiteRequest = onSiteRequest
+			self.siteProvider = siteProvider
 			self.onStartRequest = onStartRequest
 			self.onStopRequest = onStopRequest
 			self.onSessionPolling = onSessionPolling
 		}
 
-		public static var `default`: RequestHandlers {
-			RequestHandlers(
-				onSiteRequest: {
+		public enum SiteProvider: Sendable {
+			/// A site provider that calls the live API to fetch charge sites.
+			///
+			/// - Important: A valid api key is needed for live site requests to work. You can configure
+			/// the simulation mode with an api key by passing it to
+			/// ``Elvah/Configuration/simulation(apiKey:theme:store:)``.
+			case live
+
+			/// A site provider that accepts a closure that returns the charge sites.
+			///
+			/// You can use this to pass your own charge sites for the simulation to use.
+			case custom(
+				@Sendable (
+					_ region: MKMapRect?,
+					_ evseIds: [String]?,
+					_ onlyCampaigns: Bool
+				) async throws -> [ChargeSite]
+			)
+
+			public static var demo: Self {
+				.custom { _, _, _ in
 					[ChargeSite(site: .simulation, offers: [.simulation])]
-				},
+				}
+			}
+
+			package func sites(
+				forEvseIds evseIds: [String],
+				onlyCampaigns: Bool
+			) async throws -> [ChargeSite] {
+				switch self {
+				case .live:
+					if onlyCampaigns {
+						return try await DiscoveryProvider.live.campaigns(forEvseIds: evseIds)
+					}
+					return try await DiscoveryProvider.live.sites(forEvseIds: evseIds)
+				case let .custom(closure):
+					return try await closure(nil, evseIds, onlyCampaigns)
+				}
+			}
+
+			package func sites(
+				in region: MKMapRect,
+				onlyCampaigns: Bool
+			) async throws -> [ChargeSite] {
+				switch self {
+				case .live:
+					if onlyCampaigns {
+						return try await DiscoveryProvider.live.campaigns(in: region)
+					}
+					return try await DiscoveryProvider.live.sites(in: region)
+				case let .custom(closure):
+					return try await closure(region, nil, onlyCampaigns)
+				}
+			}
+		}
+
+		public static var `default`: RequestHandlers {
+			`default`(siteProvider: .demo)
+		}
+
+		public static func `default`(siteProvider: SiteProvider) -> RequestHandlers {
+			RequestHandlers(
+				siteProvider: siteProvider,
 				onStartRequest: {},
 				onStopRequest: { _ in },
 				onSessionPolling: { context in
@@ -370,16 +438,36 @@ public extension ChargeSimulator {
 		}
 
 		public static var startFails: RequestHandlers {
+			startFails(siteProvider: .demo)
+		}
+
+		public static func startFails(siteProvider: SiteProvider) -> RequestHandlers {
 			RequestHandlers(
-				onSiteRequest: {
-					[ChargeSite(site: .simulation, offers: [.simulation])]
-				},
+				siteProvider: siteProvider,
 				onStartRequest: {
 					throw NetworkError.unexpectedServerResponse
 				},
 				onStopRequest: { _ in },
 				onSessionPolling: { _ in
-					return nil
+					nil
+				}
+			)
+		}
+
+		public static var stopFails: RequestHandlers {
+			stopFails(siteProvider: .demo)
+		}
+
+		public static func stopFails(siteProvider: SiteProvider) -> RequestHandlers {
+			RequestHandlers(
+				siteProvider: siteProvider,
+				onStartRequest: {},
+				onStopRequest: { _ in
+					throw NetworkError.unexpectedServerResponse
+
+				},
+				onSessionPolling: { _ in
+					nil
 				}
 			)
 		}

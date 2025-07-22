@@ -84,8 +84,12 @@ extension DiscoveryProvider {
 
 	static let simulation = DiscoveryProvider(
 		dependencies: .init(
-			siteOffers: { _, _, _ in
-				try await ChargeSimulator.shared.siteOffers()
+			siteOffers: { region, evseIds, onlyCampaigns in
+				try await ChargeSimulator.shared.sites(
+					region: region,
+					evseIds: evseIds,
+					onlyCampaigns: onlyCampaigns
+				)
 			},
 			signOffer: { _, _ in
 				try await ChargeSimulator.shared.signOffer()

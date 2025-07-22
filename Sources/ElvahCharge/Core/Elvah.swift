@@ -180,17 +180,19 @@ public extension Elvah {
 		}
 
 		/// Creates a simulation configuration for testing purposes.
-		///
+		/// 
 		/// - Parameters:
+		///   - apiKey: An optional api key if you want to fetch real world charge sites.
 		///   - theme: The theme to apply to the SDK's native components.
 		///   - store: The `UserDefaults` store. Defaults to `UserDefaults.standard`.
 		/// - Returns: A Configuration instance configured for simulation mode.
 		public static func simulation(
+			apiKey: String? = nil,
 			theme: Theme = .default,
 			store: UserDefaults = .standard
 		) -> Configuration {
 			return Configuration(
-				apiKey: "",
+				apiKey: apiKey ?? "",
 				environment: .simulation,
 				theme: theme,
 				store: store,
