@@ -1,13 +1,16 @@
-// Copyright © elvah. All rights reserved.
+// Copyright elvah. All rights reserved.
 
 import Foundation
 
 @_spi(Debug)
 public extension ChargeSimulator.RequestHandlers {
+  /// A charge flow that fails when attempting to stop the charge session.
   static var stopFails: Self {
     stopFails(siteProvider: .demo)
   }
 
+  /// A charge flow that fails when attempting to stop the charge session.
+  /// - Parameter siteProvider: The site provider to use for charge sites (live, demo, or custom).
   static func stopFails(siteProvider: SiteProvider) -> Self {
 		Self(
       siteProvider: siteProvider,

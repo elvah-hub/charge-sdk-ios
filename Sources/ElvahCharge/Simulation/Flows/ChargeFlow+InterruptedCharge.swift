@@ -1,13 +1,16 @@
-// Copyright © elvah. All rights reserved.
+// Copyright elvah. All rights reserved.
 
 import Foundation
 
 @_spi(Debug)
 public extension ChargeSimulator.RequestHandlers {
+  /// A charge flow that gets unexpectedly interrupted during the charging phase.
   static var interruptedCharge: Self {
     interruptedCharge(siteProvider: .demo)
   }
 
+  /// A charge flow that gets unexpectedly interrupted during the charging phase.
+  /// - Parameter siteProvider: The site provider to use for charge sites (live, demo, or custom).
   static func interruptedCharge(siteProvider: SiteProvider) -> Self {
     Self(
       siteProvider: siteProvider,

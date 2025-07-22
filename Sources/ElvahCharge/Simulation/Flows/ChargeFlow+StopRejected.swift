@@ -1,13 +1,16 @@
-// Copyright © elvah. All rights reserved.
+// Copyright elvah. All rights reserved.
 
 import Foundation
 
 @_spi(Debug)
 public extension ChargeSimulator.RequestHandlers {
+  /// A charge flow that rejects stop requests and continues charging.
   static var stopRejected: Self {
     stopRejected(siteProvider: .demo)
   }
 
+  /// A charge flow that rejects stop requests and continues charging.
+  /// - Parameter siteProvider: The site provider to use for charge sites (live, demo, or custom).
   static func stopRejected(siteProvider: SiteProvider) -> Self {
     Self(
       siteProvider: siteProvider,

@@ -1,13 +1,15 @@
-// Copyright © elvah. All rights reserved.
-
+// Copyright elvah. All rights reserved
 import Foundation
 
 @_spi(Debug)
 public extension ChargeSimulator.RequestHandlers {
+  /// A charge flow that rejects the start request and remains in rejected state.
   static var startRejected: Self {
     startRejected(siteProvider: .demo)
   }
 
+  /// A charge flow that rejects the start request and remains in rejected state.
+  /// - Parameter siteProvider: The site provider to use for charge sites (live, demo, or custom).
   static func startRejected(siteProvider: SiteProvider) -> Self {
     Self(
       siteProvider: siteProvider,

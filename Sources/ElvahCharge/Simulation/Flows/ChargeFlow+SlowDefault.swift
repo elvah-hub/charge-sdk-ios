@@ -1,13 +1,16 @@
-// Copyright © elvah. All rights reserved.
+// Copyright elvah. All rights reserved.
 
 import Foundation
 
 @_spi(Debug)
 public extension ChargeSimulator.RequestHandlers {
-	static var slowDefault: Self {
-		slowDefault(siteProvider: .demo)
+  /// A default charge flow with slower timing for testing delayed responses.
+  static var slowDefault: Self {
+    slowDefault(siteProvider: .demo)
   }
 
+  /// A default charge flow with slower timing for testing delayed responses.
+  /// - Parameter siteProvider: The site provider to use for charge sites (live, demo, or custom).
   static func slowDefault(siteProvider: SiteProvider) -> Self {
     Self(
       siteProvider: siteProvider,

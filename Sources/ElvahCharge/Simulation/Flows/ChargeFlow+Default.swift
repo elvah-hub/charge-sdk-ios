@@ -1,13 +1,16 @@
-// Copyright © elvah. All rights reserved.
+// Copyright elvah. All rights reserved.
 
 import Foundation
 
 @_spi(Debug)
 public extension ChargeSimulator.RequestHandlers {
+  /// A standard charge flow that completes successfully with typical timing.
   static var `default`: Self {
     `default`(siteProvider: .demo)
   }
 
+  /// A standard charge flow that completes successfully with typical timing.
+  /// - Parameter siteProvider: The site provider to use for charge sites (live, demo, or custom).
   static func `default`(siteProvider: SiteProvider) -> Self {
 		Self(
       siteProvider: siteProvider,
