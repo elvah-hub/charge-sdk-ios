@@ -164,7 +164,10 @@ public actor ChargeSimulator {
 		if let region {
 			return try await requests.siteProvider.sites(in: region, onlyCampaigns: onlyCampaigns)
 		} else if let evseIds {
-			return try await requests.siteProvider.sites(forEvseIds: evseIds, onlyCampaigns: onlyCampaigns)
+			return try await requests.siteProvider.sites(
+				forEvseIds: evseIds,
+				onlyCampaigns: onlyCampaigns
+			)
 		}
 
 		throw NetworkError.unexpectedServerResponse
@@ -440,6 +443,15 @@ public extension ChargeSimulator {
 			) async throws -> [ChargeSite] {
 				switch self {
 				case .live:
+					if Elvah.configuration.apiKey != "" {
+						Elvah.logger.warning(
+							"""
+							You are using a live site provider but no API key was configured. \
+							This will prevent any live site requests from working.
+							"""
+						)
+					}
+
 					if onlyCampaigns {
 						return try await DiscoveryProvider.live.campaigns(forEvseIds: evseIds)
 					}
@@ -455,6 +467,15 @@ public extension ChargeSimulator {
 			) async throws -> [ChargeSite] {
 				switch self {
 				case .live:
+					if Elvah.configuration.apiKey != "" {
+						Elvah.logger.warning(
+							"""
+							You are using a live site provider but no API key was configured. \
+							This will prevent any live site requests from working.
+							"""
+						)
+					}
+
 					if onlyCampaigns {
 						return try await DiscoveryProvider.live.campaigns(in: region)
 					}
