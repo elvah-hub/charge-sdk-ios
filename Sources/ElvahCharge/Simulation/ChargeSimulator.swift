@@ -12,7 +12,43 @@ public actor ChargeSimulator {
 	private var _context: Context?
 
 	private var configuration: Configuration = .init()
-	private var requests: RequestHandlers = .default
+	private var requests: RequestHandlers = .init(
+		siteProvider: .demo,
+		onStartRequest: {},
+		onStopRequest: { _ in },
+		onSessionPolling: { context in
+			switch context.currentStatus {
+			case .startRequested:
+				if context.elapsedSeconds > 3 {
+					return .started
+				}
+			case .startRejected:
+				break
+			case .started:
+				if context.elapsedSeconds > 5 {
+					return .charging
+				}
+			case .charging:
+				if context.currentRequest == .stopRequested {
+					return .stopRequested
+				}
+			case .stopRequested:
+				if context.elapsedSeconds > 7 {
+					return .stopped
+				}
+			case .stopRejected:
+				break
+			case .stopped:
+				break
+			case nil:
+				if context.currentRequest == .startRequested {
+					return .startRequested
+				}
+			}
+
+			return nil
+		}
+	)
 
 	var signedOffers: [String: ChargeOffer] = [:]
 
@@ -21,7 +57,43 @@ public actor ChargeSimulator {
 	}
 
 	public static func configure(
-		flow requestHandlers: RequestHandlers = .default,
+		flow requestHandlers: RequestHandlers = RequestHandlers(
+			siteProvider: .demo,
+			onStartRequest: {},
+			onStopRequest: { _ in },
+			onSessionPolling: { context in
+				switch context.currentStatus {
+				case .startRequested:
+					if context.elapsedSeconds > 3 {
+						return .started
+					}
+				case .startRejected:
+					break
+				case .started:
+					if context.elapsedSeconds > 5 {
+						return .charging
+					}
+				case .charging:
+					if context.currentRequest == .stopRequested {
+						return .stopRequested
+					}
+				case .stopRequested:
+					if context.elapsedSeconds > 7 {
+						return .stopped
+					}
+				case .stopRejected:
+					break
+				case .stopped:
+					break
+				case nil:
+					if context.currentRequest == .startRequested {
+						return .startRequested
+					}
+				}
+
+				return nil
+			}
+		),
 		block: @Sendable @escaping (_ configuration: inout Configuration) -> Void = { _ in }
 	) {
 		Task {
@@ -391,85 +463,6 @@ public extension ChargeSimulator {
 					return try await closure(region, nil, onlyCampaigns)
 				}
 			}
-		}
-
-		public static var `default`: RequestHandlers {
-			`default`(siteProvider: .demo)
-		}
-
-		public static func `default`(siteProvider: SiteProvider) -> RequestHandlers {
-			RequestHandlers(
-				siteProvider: siteProvider,
-				onStartRequest: {},
-				onStopRequest: { _ in },
-				onSessionPolling: { context in
-					switch context.currentStatus {
-					case .startRequested:
-						if context.elapsedSeconds > 3 {
-							return .started
-						}
-					case .startRejected:
-						break
-					case .started:
-						if context.elapsedSeconds > 5 {
-							return .charging
-						}
-					case .charging:
-						if context.currentRequest == .stopRequested {
-							return .stopRequested
-						}
-					case .stopRequested:
-						if context.elapsedSeconds > 7 {
-							return .stopped
-						}
-					case .stopRejected:
-						break
-					case .stopped:
-						break
-					case nil:
-						if context.currentRequest == .startRequested {
-							return .startRequested
-						}
-					}
-
-					return nil
-				}
-			)
-		}
-
-		public static var startFails: RequestHandlers {
-			startFails(siteProvider: .demo)
-		}
-
-		public static func startFails(siteProvider: SiteProvider) -> RequestHandlers {
-			RequestHandlers(
-				siteProvider: siteProvider,
-				onStartRequest: {
-					throw NetworkError.unexpectedServerResponse
-				},
-				onStopRequest: { _ in },
-				onSessionPolling: { _ in
-					nil
-				}
-			)
-		}
-
-		public static var stopFails: RequestHandlers {
-			stopFails(siteProvider: .demo)
-		}
-
-		public static func stopFails(siteProvider: SiteProvider) -> RequestHandlers {
-			RequestHandlers(
-				siteProvider: siteProvider,
-				onStartRequest: {},
-				onStopRequest: { _ in
-					throw NetworkError.unexpectedServerResponse
-
-				},
-				onSessionPolling: { _ in
-					nil
-				}
-			)
 		}
 	}
 }
