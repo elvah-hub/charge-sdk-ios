@@ -171,7 +171,7 @@ extension ChargeOfferDetailFeature {
 					.typography(.copy(size: .medium), weight: .bold)
 					.foregroundStyle(.brand)
 
-				let maxPowerLabel = Text("\(chargePoint.maxPowerInKwFormatted)kW", bundle: .elvahCharge)
+				let maxPowerLabel = Text(chargePoint.maxPowerInKWFormatted)
 					.typography(.copy(size: .small))
 
 				let offerEndTimer = TimelineView(.periodic(from: .now, by: 1)) { context in
@@ -185,25 +185,44 @@ extension ChargeOfferDetailFeature {
 					.multilineTextAlignment(dynamicTypeSize.isAccessibilitySize ? .leading : .trailing)
 				}
 
-				VStack(alignment: .leading, spacing: Size.XXS.size) {
-					HStack(alignment: .firstTextBaseline) {
-						if dynamicTypeSize.isAccessibilitySize == false {
+				let PriceLayout = dynamicTypeSize.isAccessibilitySize || offer.evseId.count > 15
+				? AnyLayout(VStackLayout(alignment: .trailing))
+				: AnyLayout(HStackLayout())
+
+				HStack {
+					VStack(alignment: .leading, spacing: Size.XXS.size) {
+						HStack(alignment: .firstTextBaseline) {
+							if dynamicTypeSize.isAccessibilitySize == false {
+								evseIdLabel
+								Spacer()
+							}
+							if offer.isDiscounted {
+								PriceLayout {
+									priceLabel
+									if let originalPrice = offer.originalPrice?.pricePerKWh {
+										Text(originalPrice.formatted() + " / kWh")
+											.typography(.copy(size: .medium), weight: .bold)
+											.foregroundStyle(.secondaryContent)
+											.strikethrough()
+									}
+								}
+							}
+						}
+						if dynamicTypeSize.isAccessibilitySize {
 							evseIdLabel
 						}
-						Spacer()
+						AdaptiveHStack(horizontalAlignment: .leading) { isHorizontalStack in
+							maxPowerLabel
+							if isHorizontalStack, offer.isDiscounted {
+								Spacer()
+								offerEndTimer
+							}
+						}
+						.frame(maxWidth: .infinity, alignment: .leading)
+					}
+					if offer.isDiscounted == false {
 						priceLabel
 					}
-					if dynamicTypeSize.isAccessibilitySize {
-						evseIdLabel
-					}
-					AdaptiveHStack(horizontalAlignment: .leading) { isHorizontalStack in
-						maxPowerLabel
-						if isHorizontalStack {
-							Spacer()
-						}
-						offerEndTimer
-					}
-					.frame(maxWidth: .infinity, alignment: .leading)
 				}
 				.withChevron()
 				.padding(.M)

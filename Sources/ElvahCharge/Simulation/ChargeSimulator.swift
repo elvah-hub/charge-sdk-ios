@@ -4,6 +4,7 @@ import Defaults
 import Foundation
 import MapKit
 
+@_spi(Debug)
 public actor ChargeSimulator {
 	package static let shared = ChargeSimulator()
 
@@ -20,7 +21,7 @@ public actor ChargeSimulator {
 	}
 
 	public static func configure(
-		requestHandlers: RequestHandlers = .default,
+		flow requestHandlers: RequestHandlers = .default,
 		block: @Sendable @escaping (_ configuration: inout Configuration) -> Void = { _ in }
 	) {
 		Task {
@@ -160,8 +161,8 @@ public actor ChargeSimulator {
 		authentication: ChargeAuthentication
 	) async throws -> ChargeSession {
 		try await delay()
-
 		var context = try updateContext { context in
+			// Update the context data
 			context.progressSession()
 			context.elapsedSeconds = Date().timeIntervalSince(context.startedAt)
 			context.secondsSinceLastPolling = Date().timeIntervalSince(context.lastPolledAt)
@@ -169,9 +170,13 @@ public actor ChargeSimulator {
 
 		let newStatus = try await requests.onSessionPolling(context)
 		context = try updateContext { context in
+
+			// Update session status if needed
 			if let newStatus {
 				context.session.status = newStatus
 			}
+
+			// Update context data
 			context.lastPolledAt = Date()
 
 			// Reset request
@@ -187,28 +192,48 @@ public actor ChargeSimulator {
 	}
 }
 
+@_spi(Debug)
 public extension ChargeSimulator {
+	/// Context information about a current simulated charge session.
 	struct Context: Codable, Sendable, Defaults.Serializable {
 		var configuration: Configuration
 		var chargeOffer: ChargeOffer
 		var session: ChargeSession
 
+		/// Current status of the charge session.
 		public package(set) var currentStatus: ChargeSession.Status? {
 			get { session.status }
 			set { session.status = newValue }
 		}
 
+		/// Current request being processed in the session.
+		///
+		/// You should use this to respond to a user interaction, like them trying to start or stop the session.
 		public package(set) var currentRequest: Request? = .startRequested
+
+		/// Date at which the session started.
 		public package(set) var startedAt: Date = .init()
+
+		/// Date at which the session stopped.
+		///
+		/// This will be `nil` if the session has not stopped yet.
 		public package(set) var stoppedAt: Date?
+
+		/// Seconds elapsed since the session started.
 		public package(set) var elapsedSeconds: TimeInterval = 0
+
+		/// Last time the session was polled.
 		public package(set) var lastPolledAt: Date = .distantPast
+
+		/// Seconds since the last polling.
 		public package(set) var secondsSinceLastPolling: TimeInterval = 0
 
+		/// Returns `true` if a request is ongoing.
 		public var hasRequest: Bool {
 			currentRequest != nil
 		}
 
+		/// Returns `true` if the session has stopped.
 		public var hasStopped: Bool {
 			currentStatus == .stopped
 		}
@@ -242,8 +267,12 @@ public extension ChargeSimulator {
 			)
 		}
 
+		/// A user request.
 		public enum Request: Codable, Sendable {
+			/// A request to start the charge session.
 			case startRequested
+
+			/// A request to stop the charge session.
 			case stopRequested
 		}
 	}
@@ -271,6 +300,7 @@ private extension Defaults.Keys {
 
 // MARK: - Request Handlers
 
+@_spi(Debug)
 public extension ChargeSimulator {
 	struct RequestHandlers: Sendable {
 		public typealias SiteRequest = @Sendable () async throws -> [ChargeSite]
@@ -334,6 +364,21 @@ public extension ChargeSimulator {
 						}
 					}
 
+					return nil
+				}
+			)
+		}
+
+		public static var startFails: RequestHandlers {
+			RequestHandlers(
+				onSiteRequest: {
+					[ChargeSite(site: .simulation, offers: [.simulation])]
+				},
+				onStartRequest: {
+					throw NetworkError.unexpectedServerResponse
+				},
+				onStopRequest: { _ in },
+				onSessionPolling: { _ in
 					return nil
 				}
 			)
