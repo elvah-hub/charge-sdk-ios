@@ -5,6 +5,15 @@ import MapKit
 import SwiftUI
 
 public extension ChargeSite {
+
+	@MainActor fileprivate static var discoveryProvider: DiscoveryProvider {
+		if Elvah.configuration.environment.isSimulation {
+			return  DiscoveryProvider.simulation
+		} else {
+			return DiscoveryProvider.live
+		}
+	}
+
 	// MARK: - By Evse Ids
 
 	/// Returns all charge sites for the given list of evse ids.
@@ -15,7 +24,7 @@ public extension ChargeSite {
 		.Error
 	) -> [ChargeSite] {
 		do {
-			return try await DiscoveryProvider.live.sites(forEvseIds: evseIds)
+			return try await discoveryProvider.sites(forEvseIds: evseIds)
 		} catch NetworkError.unauthorized {
 			throw Elvah.Error.unauthorized
 		} catch let error as NetworkError {
@@ -58,7 +67,7 @@ public extension ChargeSite {
 	/// - Parameter region: The region to search charge sites in.
 	@MainActor static func sites(in region: MKMapRect) async throws(Elvah.Error) -> [ChargeSite] {
 		do {
-			return try await DiscoveryProvider.live.sites(in: region)
+			return try await discoveryProvider.sites(in: region)
 		} catch NetworkError.unauthorized {
 			throw Elvah.Error.unauthorized
 		} catch let error as NetworkError {
@@ -101,7 +110,7 @@ public extension ChargeSite {
 		near location: CLLocationCoordinate2D
 	) async throws(Elvah.Error) -> [ChargeSite] {
 		do {
-			return try await DiscoveryProvider.live.sites(near: location)
+			return try await discoveryProvider.sites(near: location)
 		} catch NetworkError.unauthorized {
 			throw Elvah.Error.unauthorized
 		} catch let error as NetworkError {
@@ -146,7 +155,7 @@ public extension ChargeSite {
 	/// - Parameter region: The region to search campaigns in.
 	@MainActor static func campaigns(in region: MKMapRect) async throws(Elvah.Error) -> [ChargeSite] {
 		do {
-			return try await DiscoveryProvider.live.campaigns(in: region)
+			return try await discoveryProvider.campaigns(in: region)
 		} catch NetworkError.unauthorized {
 			throw Elvah.Error.unauthorized
 		} catch let error as NetworkError {
@@ -189,7 +198,7 @@ public extension ChargeSite {
 		near location: CLLocationCoordinate2D
 	) async throws(Elvah.Error) -> [ChargeSite] {
 		do {
-			return try await DiscoveryProvider.live.campaigns(near: location)
+			return try await discoveryProvider.campaigns(near: location)
 		} catch NetworkError.unauthorized {
 			throw Elvah.Error.unauthorized
 		} catch let error as NetworkError {

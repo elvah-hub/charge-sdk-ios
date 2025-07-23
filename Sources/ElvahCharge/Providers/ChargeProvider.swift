@@ -175,7 +175,7 @@ extension ChargeProvider {
 		)
 	}()
 
-	@available(iOS 16.0, *) static var simulation: ChargeProvider {
+	static var simulation: ChargeProvider {
 		ChargeProvider(
 			dependencies: .init(
 				subscriptionManager: ChargeProvider.SubscriptionManager(),

@@ -5,6 +5,15 @@ import MapKit
 import SwiftUI
 
 public extension ChargeOffer {
+
+	@MainActor fileprivate static var discoveryProvider: DiscoveryProvider {
+		if Elvah.configuration.environment.isSimulation {
+			return  DiscoveryProvider.simulation
+		} else {
+			return DiscoveryProvider.live
+		}
+	}
+
 	/// Returns all charge offers for the given list of evse ids.
 	///  
 	/// - Note: Unsupported evse ids will be ignored.
@@ -14,7 +23,7 @@ public extension ChargeOffer {
 		forEvseIds evseIds: [String]
 	) async throws(Elvah.Error) -> [ChargeOffer] {
 		do {
-			let chargeSites = try await DiscoveryProvider.live.sites(forEvseIds: evseIds)
+			let chargeSites = try await discoveryProvider.sites(forEvseIds: evseIds)
 			return chargeSites.flatMap { $0.offers }
 		} catch NetworkError.unauthorized {
 			throw Elvah.Error.unauthorized

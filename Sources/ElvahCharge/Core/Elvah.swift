@@ -186,7 +186,7 @@ public extension Elvah {
 		///   - theme: The theme to apply to the SDK's native components.
 		///   - store: The `UserDefaults` store. Defaults to `UserDefaults.standard`.
 		/// - Returns: A Configuration instance configured for simulation mode.
-		public static func simulation(
+		public static func simulator(
 			apiKey: String? = nil,
 			theme: Theme = .default,
 			store: UserDefaults = .standard
@@ -201,8 +201,8 @@ public extension Elvah {
 		}
 		
 		/// Creates a simulation configuration for testing purposes.
-		public static var simulation: Configuration {
-			simulation()
+		public static var simulator: Configuration {
+			simulator()
 		}
 
 		/// An empty configuration that is used when the client has not (yet) initialized the
