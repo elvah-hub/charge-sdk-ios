@@ -22,7 +22,7 @@ struct ChargeSessionObservationTests {
 
 		let mockSessionContext = ChargeSessionContext(
 			site: .mock,
-			deal: .mockAvailable,
+			signedOffer: .mockAvailable,
 			organisationDetails: PaymentContext
 				.OrganisationDetails(
 					companyName: "company",
@@ -76,7 +76,7 @@ struct ChargeSessionObservationTests {
 
 		// Finally, make sure the stream yields .active WITH session data
 		let sessionData = try await #require(iterator.next()?.sessionData)
-		#expect(sessionData.consumption == 42)
+		#expect(sessionData.consumption.value == 42.0)
 	}
 }
 

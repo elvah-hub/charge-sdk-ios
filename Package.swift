@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
 	name: "charge-sdk-ios",
 	defaultLocalization: "en",
-	platforms: [.iOS(.v15)],
+	platforms: [.iOS(.v15), .macOS(.v11)],
 	products: [
 		.library(
 			name: "ElvahCharge",
