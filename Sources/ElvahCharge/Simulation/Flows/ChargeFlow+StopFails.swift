@@ -6,7 +6,7 @@ import Foundation
 public extension ChargeSimulator.RequestHandlers {
   /// A charge flow that fails when attempting to stop the charge session.
   static var stopFails: Self {
-    stopFails(siteProvider: .demo)
+    stopFails(siteProvider: .demoSite)
   }
 
   /// A charge flow that fails when attempting to stop the charge session.
@@ -21,13 +21,13 @@ public extension ChargeSimulator.RequestHandlers {
       onSessionPolling: { context in
 				switch context.currentStatus {
 				case .startRequested:
-					if context.elapsedSeconds > 3 {
+					if context.secondsSinceLasStatusChange > 3 {
 						return .started
 					}
 				case .startRejected:
 					break
 				case .started:
-					if context.elapsedSeconds > 5 {
+					if context.secondsSinceLasStatusChange > 2 {
 						return .charging
 					}
 				case .charging:
@@ -35,7 +35,7 @@ public extension ChargeSimulator.RequestHandlers {
 						return .stopRequested
 					}
 				case .stopRequested:
-					if context.elapsedSeconds > 7 {
+					if context.secondsSinceLasStatusChange > 5 {
 						return .stopped
 					}
 				case .stopRejected:

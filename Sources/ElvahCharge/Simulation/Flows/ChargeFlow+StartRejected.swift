@@ -5,7 +5,7 @@ import Foundation
 public extension ChargeSimulator.RequestHandlers {
   /// A charge flow that rejects the start request and remains in rejected state.
   static var startRejected: Self {
-    startRejected(siteProvider: .demo)
+    startRejected(siteProvider: .demoSite)
   }
 
   /// A charge flow that rejects the start request and remains in rejected state.
@@ -18,7 +18,7 @@ public extension ChargeSimulator.RequestHandlers {
       onSessionPolling: { context in
         switch context.currentStatus {
         case .startRequested:
-          if context.elapsedSeconds > 2 {
+          if context.secondsSinceLasStatusChange > 6 {
             return .startRejected
           }
         case .startRejected:

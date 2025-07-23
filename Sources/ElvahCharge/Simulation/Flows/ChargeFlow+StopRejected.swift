@@ -6,7 +6,7 @@ import Foundation
 public extension ChargeSimulator.RequestHandlers {
   /// A charge flow that rejects stop requests and continues charging.
   static var stopRejected: Self {
-    stopRejected(siteProvider: .demo)
+    stopRejected(siteProvider: .demoSite)
   }
 
   /// A charge flow that rejects stop requests and continues charging.
@@ -19,13 +19,13 @@ public extension ChargeSimulator.RequestHandlers {
       onSessionPolling: { context in
         switch context.currentStatus {
         case .startRequested:
-          if context.elapsedSeconds > 3 {
+          if context.secondsSinceLasStatusChange > 3 {
             return .started
           }
         case .startRejected:
           break
         case .started:
-          if context.elapsedSeconds > 5 {
+          if context.secondsSinceLasStatusChange > 2 {
             return .charging
           }
         case .charging:
@@ -33,15 +33,12 @@ public extension ChargeSimulator.RequestHandlers {
             return .stopRequested
           }
         case .stopRequested:
-          if context.elapsedSeconds > 4 {
+          if context.secondsSinceLasStatusChange > 5 {
             return .stopRejected
           }
         case .stopRejected:
-          // After stop rejection, continue charging
-          if context.elapsedSeconds > 8 {
-            return .charging
-          }
-        case .stopped:
+					break
+				case .stopped:
           break
         case nil:
           if context.currentRequest == .startRequested {

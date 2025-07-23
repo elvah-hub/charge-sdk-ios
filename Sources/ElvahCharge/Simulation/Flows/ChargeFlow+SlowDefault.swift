@@ -6,7 +6,7 @@ import Foundation
 public extension ChargeSimulator.RequestHandlers {
   /// A default charge flow with slower timing for testing delayed responses.
   static var slowDefault: Self {
-    slowDefault(siteProvider: .demo)
+    slowDefault(siteProvider: .demoSite)
   }
 
   /// A default charge flow with slower timing for testing delayed responses.
@@ -19,13 +19,13 @@ public extension ChargeSimulator.RequestHandlers {
       onSessionPolling: { context in
         switch context.currentStatus {
         case .startRequested:
-          if context.elapsedSeconds > 8 {
+					if context.secondsSinceLasStatusChange > 8 {
             return .started
           }
         case .startRejected:
           break
         case .started:
-          if context.elapsedSeconds > 15 {
+          if context.secondsSinceLasStatusChange > 6 {
             return .charging
           }
         case .charging:
@@ -33,7 +33,7 @@ public extension ChargeSimulator.RequestHandlers {
             return .stopRequested
           }
         case .stopRequested:
-          if context.elapsedSeconds > 12 {
+          if context.secondsSinceLasStatusChange > 7 {
             return .stopped
           }
         case .stopRejected:

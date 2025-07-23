@@ -6,7 +6,7 @@ import Foundation
 public extension ChargeSimulator.RequestHandlers {
   /// A standard charge flow that completes successfully with typical timing.
   static var `default`: Self {
-    `default`(siteProvider: .demo)
+    `default`(siteProvider: .demoSite)
   }
 
   /// A standard charge flow that completes successfully with typical timing.
@@ -19,13 +19,13 @@ public extension ChargeSimulator.RequestHandlers {
       onSessionPolling: { context in
         switch context.currentStatus {
         case .startRequested:
-          if context.elapsedSeconds > 3 {
+          if context.secondsSinceLasStatusChange > 3 {
             return .started
           }
         case .startRejected:
           break
         case .started:
-          if context.elapsedSeconds > 5 {
+          if context.secondsSinceLasStatusChange > 2 {
             return .charging
           }
         case .charging:
@@ -33,7 +33,7 @@ public extension ChargeSimulator.RequestHandlers {
             return .stopRequested
           }
         case .stopRequested:
-          if context.elapsedSeconds > 7 {
+          if context.secondsSinceLasStatusChange > 3 {
             return .stopped
           }
         case .stopRejected:

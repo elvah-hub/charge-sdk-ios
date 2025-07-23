@@ -6,7 +6,7 @@ import Foundation
 public extension ChargeSimulator.RequestHandlers {
   /// A charge flow that gets unexpectedly interrupted during the charging phase.
   static var interruptedCharge: Self {
-    interruptedCharge(siteProvider: .demo)
+    interruptedCharge(siteProvider: .demoSite)
   }
 
   /// A charge flow that gets unexpectedly interrupted during the charging phase.
@@ -19,25 +19,26 @@ public extension ChargeSimulator.RequestHandlers {
       onSessionPolling: { context in
         switch context.currentStatus {
         case .startRequested:
-          if context.elapsedSeconds > 3 {
+          if context.secondsSinceLasStatusChange > 3 {
             return .started
           }
         case .startRejected:
           break
         case .started:
-          if context.elapsedSeconds > 5 {
+          if context.secondsSinceLasStatusChange > 2 {
             return .charging
           }
         case .charging:
-          // Simulate unexpected interruption after 10 seconds of charging
-          if context.elapsedSeconds > 10 && context.currentRequest != .stopRequested {
+          // Simulate unexpected interruption after 8 seconds of charging
+          if context.secondsSinceLasStatusChange > 8
+							&& context.currentRequest != .stopRequested {
             return .stopped
           }
           if context.currentRequest == .stopRequested {
             return .stopRequested
           }
         case .stopRequested:
-          if context.elapsedSeconds > 7 {
+          if context.secondsSinceLasStatusChange > 3 {
             return .stopped
           }
         case .stopRejected:

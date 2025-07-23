@@ -5,7 +5,7 @@ import Foundation
 public extension ChargeSimulator.RequestHandlers {
   /// A charge flow that fails when attempting to start the charge session.
   static var startFails: Self {
-    startFails(siteProvider: .demo)
+    startFails(siteProvider: .demoSite)
   }
 
   /// A charge flow that fails when attempting to start the charge session.

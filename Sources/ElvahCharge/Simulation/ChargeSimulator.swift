@@ -13,7 +13,7 @@ public actor ChargeSimulator {
 
 	private var configuration: Configuration = .init()
 	private var requests: RequestHandlers = .init(
-		siteProvider: .demo,
+		siteProvider: .demoSite,
 		onStartRequest: {},
 		onStopRequest: { _ in },
 		onSessionPolling: { context in
@@ -58,7 +58,7 @@ public actor ChargeSimulator {
 
 	public static func configure(
 		flow requestHandlers: RequestHandlers = RequestHandlers(
-			siteProvider: .demo,
+			siteProvider: .demoSite,
 			onStartRequest: {},
 			onStopRequest: { _ in },
 			onSessionPolling: { context in
@@ -252,6 +252,7 @@ public actor ChargeSimulator {
 			context.progressSession()
 			context.elapsedSeconds = Date().timeIntervalSince(context.startedAt)
 			context.secondsSinceLastPolling = Date().timeIntervalSince(context.lastPolledAt)
+			context.secondsSinceLasStatusChange = Date().timeIntervalSince(context.statusLastChangedAt)
 		}
 
 		let newStatus = try await requests.onSessionPolling(context)
@@ -259,6 +260,7 @@ public actor ChargeSimulator {
 			// Update session status if needed
 			if let newStatus {
 				context.session.status = newStatus
+				context.statusLastChangedAt = Date()
 			}
 
 			// Update context data
@@ -313,6 +315,12 @@ public extension ChargeSimulator {
 
 		/// Seconds since the last polling.
 		public package(set) var secondsSinceLastPolling: TimeInterval = 0
+
+		/// Date at which the session's status last has changed.
+		public package(set) var statusLastChangedAt: Date = .distantPast
+
+		/// Seconds since the last time the session's status has changed.
+		public package(set) var secondsSinceLasStatusChange: TimeInterval = 0
 
 		/// Returns `true` if a request is ongoing.
 		public var hasRequest: Bool {
@@ -431,7 +439,7 @@ public extension ChargeSimulator {
 				) async throws -> [ChargeSite]
 			)
 
-			public static var demo: Self {
+			public static var demoSite: Self {
 				.custom { _, _, _ in
 					[ChargeSite(site: .simulation, offers: [.simulation])]
 				}
