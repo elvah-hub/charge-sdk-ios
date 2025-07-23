@@ -22,7 +22,7 @@ With just a few lines of code, you can add a `ChargeBanner` view to your app tha
 
 The SDK supports integration into projects targeting iOS 15 and above.
 
-You need Swift 6 to compile the SDK.
+The SDK requires Swift 6 to compile.
 
 > [!NOTE]
 > While you can add the SDK to iOS 15 projects, the provided UI components require iOS 16 or above to work. See [Compatibility](#compatibility) for more details.
@@ -158,7 +158,7 @@ ChargeBanner(source: $chargeBannerSource)
 
 Users should be able to reopen an active charge session that was minimized, whether manually or due to app termination. The `ChargeBanner` view takes care of that out of the box. Whenever there is an active charge session, it will show a button to re-open the charge session.
 
-However, it is usually a good idea to also offer a prominently placed button or banner in your app that the user can tap
+However, it is usually a good idea to also offer a prominently placed button or banner in your app that users can tap
 to re-open an active charge session without having to go back to a place where the `ChargeBanner` is being shown.
 
 You can do this by adding the `.chargePresentation(isPresented:)` view modifier anywhere in your app. While you can trigger that presentation at any time, it makes sense to do so only when there is an active charge session.
@@ -195,25 +195,6 @@ ChargeOffer.offers(forEvseIds:)
 > [!NOTE] 
 > Any pricing details provided in a `ChargeOffer` object are considered to be a *preview*. Once an offer is passed to the SDK for resolution and charging, it is properly signed and the pricing becomes fixed for a few minutes.
 
-### Start Charging
-
-When you want to resolve a charge offer and start the payment and charge flow, you can pass the `ChargeOffer` object to the `chargePresentation(chargeOffer:)` view modifier. The presented modal view will automatically sign the offer and guide the user through the next steps.
-
-```swift 
-import ElvahCharge
-
-struct DemoView: View {
-  @State private var selectedChargeOffer: ChargeOffer?
-
-  var body: some View {
-    NavigationStack {
-      // Your other views
-    }
-    .chargePresentation(chargeOffer: $selectedChargeOffer)
-  }
-}
-```
-
 ### Charge Site
 
 When you need more context about a site's charge points and their associated offers, or want to access offers at a broader level, use the `ChargeSite` object. It contains both the site information and its related `ChargeOffer` objects.
@@ -231,10 +212,74 @@ ChargeSite.campaigns(forEvseIds:)
 ```
 
 > [!NOTE] 
-> When calling `ChargeSite.sites(forEvseIds:)` or `ChargeSite.campaigns(forEvseIds:)`, the functions will potentially  return multiple `ChargeSite` objects because the provided list of evse ids might not all belong to the same site.
+> When calling `ChargeSite.sites(forEvseIds:)` or `ChargeSite.campaigns(forEvseIds:)`, the functions will may return multiple `ChargeSite` objects because the provided list of evse ids might not all belong to the same site.
 
 > [!NOTE] 
 > The sites returned by a call to `ChargeSite.sites(forEvseIds:)` or `ChargeSite.campaigns(forEvseIds:)` will only contain charge offers for the provided evse ids. If the site has additional charge points, they will be ignored and will not be part of the returned `ChargeSite` object.
+
+### Charge Presentation
+
+The SDK provides several view modifiers to present charging interfaces.
+
+#### Single Offer
+
+When you want to resolve a charge offer and start the payment and charge flow, you can pass the `ChargeOffer` object to the `chargePresentation(offer:)` view modifier. The presented modal view will automatically sign the offer and guide the user through the next steps.
+
+```swift 
+import ElvahCharge
+
+struct DemoView: View {
+  @State private var selectedChargeOffer: ChargeOffer?
+
+  var body: some View {
+    NavigationStack {
+      // Your other views
+    }
+    .chargePresentation(offer: $selectedChargeOffer)
+  }
+}
+```
+
+#### Multiple Offers
+
+To present a selection of charge offers from potentially different sites, use the `chargePresentation(offers:)` modifier with a `ChargeOfferList`. This opens a detail page where users can browse and select from the provided offers.
+
+```swift
+import ElvahCharge
+
+struct DemoView: View {
+  @State private var chargeOfferList: ChargeOfferList?
+
+  var body: some View {
+    NavigationStack {
+      // Your other views
+    }
+    .chargePresentation(offers: $chargeOfferList)
+  }
+}
+```
+
+#### Site Details
+
+To present all charge offers for a specific site with full site context, use the `chargePresentation(site:)` modifier. This provides users with comprehensive site information along with all available charge offers.
+
+```swift
+import ElvahCharge
+
+struct DemoView: View {
+  @State private var selectedSite: ChargeSite?
+
+  var body: some View {
+    NavigationStack {
+      // Your other views
+    }
+    .chargePresentation(site: $selectedSite)
+  }
+}
+```
+
+> [!NOTE]
+> All presentation modifiers require iOS 16 or later and will do nothing on earlier versions.
 
 ## Compatibility
 

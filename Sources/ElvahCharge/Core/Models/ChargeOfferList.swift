@@ -3,7 +3,7 @@
 import Foundation
 
 /// A collection of charge offers with a unique identifier for presentation purposes.
-public struct ChargeOfferList: Identifiable, Sendable {
+public struct ChargeOfferList: Identifiable, Sendable, Collection {
 	/// A unique identifier for this list of charge offers.
 	public var id = UUID()
 
@@ -14,6 +14,27 @@ public struct ChargeOfferList: Identifiable, Sendable {
 	/// - Parameter offers: The charge offers to include in the list.
 	public init(offers: [ChargeOffer]) {
 		self.offers = offers
+	}
+
+	// MARK: - Collection conformance
+
+	public typealias Element = ChargeOffer
+	public typealias Index = Array<ChargeOffer>.Index
+
+	public var startIndex: Index {
+		offers.startIndex
+	}
+
+	public var endIndex: Index {
+		offers.endIndex
+	}
+
+	public subscript(position: Index) -> Element {
+		offers[position]
+	}
+
+	public func index(after i: Index) -> Index {
+		offers.index(after: i)
 	}
 }
 
