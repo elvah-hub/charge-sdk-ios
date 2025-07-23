@@ -71,19 +71,15 @@ extension ChargeSessionFeature {
 						EmptyView()
 					case .unauthorized:
 						tryAgainButton
-						endSessionButton
+						EmptyView()
 					case .unknownError:
 						tryAgainButton
-						Button("End charge session", bundle: .elvahCharge) {
-							navigationRoot.dismiss()
-							chargeSessionContext = nil
-						}
-						.buttonStyle(.primary)
+						EmptyView()
 					case .startRequested:
 						EmptyView()
 					case .startRejected:
 						tryAgainButton
-						endSessionButton
+						EmptyView()
 					case .started:
 						EmptyView()
 					case .charging:
@@ -95,7 +91,7 @@ extension ChargeSessionFeature {
 						EmptyView()
 					case .stopRejected:
 						tryAgainButton
-						endSessionButton
+						EmptyView()
 					case .stopped:
 						Button("Done", bundle: .elvahCharge) {
 							navigationRoot.dismiss()
@@ -105,12 +101,7 @@ extension ChargeSessionFeature {
 					}
 
 					if case .stopped = status {} else {
-						Button("Support", bundle: .elvahCharge) {
-							router.showSupport = true
-						}
-						.buttonStyle(.textPrimary)
-						.matchedGeometryEffect(id: 0, in: namespace)
-						.transition(.scale(scale: 1)) // Prevents fade animation
+						supportButton
 					}
 				}
 				DisclaimerFooter()
@@ -126,12 +117,13 @@ extension ChargeSessionFeature {
 			.buttonStyle(.primary)
 		}
 
-		@ViewBuilder private var endSessionButton: some View {
-			Button("End charge session", bundle: .elvahCharge) {
-				navigationRoot.dismiss()
-				chargeSessionContext = nil
+		@ViewBuilder private var supportButton: some View {
+			Button("Support", bundle: .elvahCharge) {
+				router.showSupport = true
 			}
-			.buttonStyle(.secondary)
+			.buttonStyle(.textPrimary)
+			.matchedGeometryEffect(id: 0, in: namespace)
+			.transition(.scale(scale: 1)) // Prevents fade animation
 		}
 
 		@ViewBuilder private var activityIndicator: some View {

@@ -55,6 +55,7 @@ struct SupportFeature: View {
 					DisclaimerFooter()
 				}
 			}
+			.background(.canvas)
 			.navigationTitle("Help & Support")
 			.navigationBarTitleDisplayMode(.inline)
 			.toolbar {

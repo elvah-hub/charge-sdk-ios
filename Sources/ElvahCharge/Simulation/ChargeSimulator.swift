@@ -12,43 +12,7 @@ public actor ChargeSimulator {
 	private var _context: Context?
 
 	private var configuration: Configuration = .init()
-	private var requests: RequestHandlers = .init(
-		siteProvider: .demoSite,
-		onStartRequest: {},
-		onStopRequest: { _ in },
-		onSessionPolling: { context in
-			switch context.currentStatus {
-			case .startRequested:
-				if context.elapsedSeconds > 3 {
-					return .started
-				}
-			case .startRejected:
-				break
-			case .started:
-				if context.elapsedSeconds > 5 {
-					return .charging
-				}
-			case .charging:
-				if context.currentRequest == .stopRequested {
-					return .stopRequested
-				}
-			case .stopRequested:
-				if context.elapsedSeconds > 7 {
-					return .stopped
-				}
-			case .stopRejected:
-				break
-			case .stopped:
-				break
-			case nil:
-				if context.currentRequest == .startRequested {
-					return .startRequested
-				}
-			}
-
-			return nil
-		}
-	)
+	private var requests: RequestHandlers = .default
 
 	var signedOffers: [String: ChargeOffer] = [:]
 
@@ -57,43 +21,7 @@ public actor ChargeSimulator {
 	}
 
 	public static func configure(
-		flow requestHandlers: RequestHandlers = RequestHandlers(
-			siteProvider: .demoSite,
-			onStartRequest: {},
-			onStopRequest: { _ in },
-			onSessionPolling: { context in
-				switch context.currentStatus {
-				case .startRequested:
-					if context.elapsedSeconds > 3 {
-						return .started
-					}
-				case .startRejected:
-					break
-				case .started:
-					if context.elapsedSeconds > 5 {
-						return .charging
-					}
-				case .charging:
-					if context.currentRequest == .stopRequested {
-						return .stopRequested
-					}
-				case .stopRequested:
-					if context.elapsedSeconds > 7 {
-						return .stopped
-					}
-				case .stopRejected:
-					break
-				case .stopped:
-					break
-				case nil:
-					if context.currentRequest == .startRequested {
-						return .startRequested
-					}
-				}
-
-				return nil
-			}
-		),
+		flow requestHandlers: RequestHandlers = .default,
 		block: @Sendable @escaping (_ configuration: inout Configuration) -> Void = { _ in }
 	) {
 		Task {
@@ -124,7 +52,7 @@ public actor ChargeSimulator {
 		let context = Context(
 			configuration: configuration,
 			chargeOffer: chargeOffer,
-			session: ChargeSession(evseId: chargeOffer.evseId, status: .startRequested)
+			session: ChargeSession(evseId: chargeOffer.evseId)
 		)
 
 		Defaults[.simulationContext] = context

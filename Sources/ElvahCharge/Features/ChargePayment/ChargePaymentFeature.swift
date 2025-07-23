@@ -95,7 +95,9 @@ struct ChargePaymentFeature: View {
 	@ViewBuilder private var costInformation: some View {
 		CustomSectionStack {
 			AdhocCostsBoxComponent(offer: request.signedOffer.offer) { action in }
-			offerEndLabel
+			if request.signedOffer.offer.isDiscounted {
+				offerEndLabel
+			}
 		}
 		.padding(16)
 		.frame(maxWidth: .infinity, alignment: .leading)

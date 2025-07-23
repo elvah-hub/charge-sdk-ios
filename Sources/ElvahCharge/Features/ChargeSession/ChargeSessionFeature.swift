@@ -32,22 +32,41 @@ struct ChargeSessionFeature: View {
 			.toolbarBackground(.canvas, for: .navigationBar)
 			.toolbar {
 				ToolbarItem(placement: .topBarLeading) {
-					if session?.status == .stopped {
-						CloseButton {
-							navigationRoot.dismiss()
-						}
-					} else {
-						MinimizeButton {
-							navigationRoot.dismiss()
-						}
+					MinimizeButton {
+						navigationRoot.dismiss()
 					}
 				}
 				ToolbarItem(placement: .principal) {
 					StyledNavigationTitle("Charge Session", bundle: .elvahCharge)
 				}
+				ToolbarItem(placement: .topBarTrailing) {
+					Button {
+						router.showEndSessionConfirmation = true
+					} label: {
+						Image(.close)
+					}
+					.confirmationDialog(
+						"End charge session",
+						isPresented: $router.showEndSessionConfirmation
+					) {
+						Button("End charge session") {
+							navigationRoot.dismiss()
+							chargeSessionContext = nil
+						}
+						Button("Cancel", role: .destructive) {
+							router.showEndSessionConfirmation = false
+						}
+					}
+				}
 			}
 			.sheet(isPresented: $router.showSupport) {
 				SupportFeature(router: router.supportRouter)
+			}
+			.genericErrorBottomSheet(isPresented: $router.showGenericError)
+			.onChange(of: process) { process in
+				if process.hasFailed {
+					router.showGenericError = true
+				}
 			}
 			.onChange(of: sessionRefresh) { sessionRefresh in
 				if let error = sessionRefresh.error {
@@ -191,11 +210,15 @@ extension ChargeSessionFeature {
 	final class Router: BaseRouter {
 		@Published var path: NavigationPath = .init()
 		@Published var showSupport = false
+		@Published var showEndSessionConfirmation = false
+		@Published var showGenericError = false
 
 		let supportRouter: SupportFeature.Router = .init()
 
 		func dismissPresentation() {
 			showSupport = false
+			showEndSessionConfirmation = false
+			showGenericError = false
 		}
 
 		func reset() {
