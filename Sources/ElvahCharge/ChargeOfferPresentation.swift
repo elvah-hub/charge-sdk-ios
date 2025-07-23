@@ -9,7 +9,7 @@ public extension View {
 	///
 	/// You can use modifier if you are building custom UI components and want to skip the pre-built
 	/// site detail screen that this SDK comes with.
-	/// 
+	///
 	/// - Important: This modifier requires iOS 16.0 or later. On earlier versions, it does nothing to
 	/// the wrapped view.
 	/// - Parameters:
@@ -17,7 +17,7 @@ public extension View {
 	/// charge site.
 	/// - Returns: A view that presents a modal that handles payment and charging for a specific
 	/// charge point.
-	@ViewBuilder func chargePresentation(chargeOffer: Binding<ChargeOffer?>) -> some View {
+	@ViewBuilder func chargePresentation(offer chargeOffer: Binding<ChargeOffer?>) -> some View {
 		if #available(iOS 16.0, *) {
 			modifier(PresentationViewModifier(chargeOffer: chargeOffer))
 		} else {
@@ -38,7 +38,7 @@ public extension View {
 	/// - Returns: A view that presents a charge offer detail view using the given
 	/// ``ChargeOfferList``.
 	@ViewBuilder func chargePresentation(
-		chargeOffers chargeOfferList: Binding<ChargeOfferList?>
+		offers chargeOfferList: Binding<ChargeOfferList?>
 	) -> some View {
 		if #available(iOS 16.0, *) {
 			modifier(OffersPresentationViewModifier(chargeOfferList: chargeOfferList))

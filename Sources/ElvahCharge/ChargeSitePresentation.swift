@@ -12,7 +12,8 @@ public extension View {
 	/// - Important: This modifier requires iOS 16.0 or later. On earlier versions, it does nothing to
 	/// the wrapped view.
 	/// - Parameter chargeSite: The binding to a ``ChargeSite`` object.
-	/// - Returns: A view that presents a charge site detail view using the given ``ChargeSite`` object.
+	/// - Returns: A view that presents a charge site detail view using the given ``ChargeSite``
+	/// object.
 	@ViewBuilder func chargePresentation(
 		site chargeSite: Binding<ChargeSite?>,
 	) -> some View {
