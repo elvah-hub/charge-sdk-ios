@@ -7,7 +7,7 @@
       "location" : "https://github.com/elvah-hub/charge-sdk-ios",
       "state" : {
         "branch" : "main",
-        "revision" : "7bf7ebb5280a379616a44dd7e6f1f35199698d95"
+        "revision" : "0ac2e1da1c565df804bdab3389fb91a4f25d585b"
       }
     },
     {
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/stripe/stripe-ios",
       "state" : {
-        "revision" : "7ba1417474b96e1730d2a70d236d2154aa45f9fe",
-        "version" : "24.11.0"
+        "revision" : "69501b642a525ae9308842ac490ce1127f501901",
+        "version" : "24.17.0"
       }
     }
   ],

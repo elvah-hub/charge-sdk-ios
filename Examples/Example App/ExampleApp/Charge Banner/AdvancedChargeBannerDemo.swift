@@ -1,4 +1,4 @@
-// Copyright © elvah. All rights reserved.
+// Copyright elvah. All rights reserved.
 
 import ElvahCharge
 import MapKit
@@ -7,15 +7,15 @@ import SwiftUI
 struct AdvancedChargeBannerDemo: View {
 	@ChargeBannerSource private var chargeBannerSource
 	@State private var showChargeSession = false
-	@State private var chargeSiteDetail: Campaign?
+	@State private var chargeSiteDetail: ChargeSite?
 
 	var body: some View {
 		DemoContent {
 			if let $chargeBannerSource {
 				ChargeBanner(source: $chargeBannerSource) { destination in
 					switch destination {
-					case let .chargeSiteDetailPresentation(campaign):
-						chargeSiteDetail = campaign
+					case let .chargeSitePresentation(chargeSite):
+						chargeSiteDetail = chargeSite
 					case .chargeSessionPresentation:
 						showChargeSession = true
 					}
@@ -26,7 +26,7 @@ struct AdvancedChargeBannerDemo: View {
 			}
 		}
 		.chargeSessionPresentation(isPresented: $showChargeSession)
-		.chargeSiteDetailPresentation(for: $chargeSiteDetail)
+		.chargePresentation(site: $chargeSiteDetail)
 		.navigationTitle("Campaign Banner (Advanced)")
 		.navigationBarTitleDisplayMode(.inline)
 		.animation(.default, value: chargeBannerSource)
@@ -37,8 +37,8 @@ struct AdvancedChargeBannerDemo: View {
 
 	private func loadCampaign() async {
 		do {
-			if let campaign = try await Campaign.campaigns(in: .mock).first {
-				chargeBannerSource = .direct(campaign)
+			if let chargeSite = try await ChargeSite.campaigns(in: .mock).first {
+				chargeBannerSource = .direct(chargeSite)
 			}
 		} catch {
 			switch error {
@@ -48,8 +48,8 @@ struct AdvancedChargeBannerDemo: View {
 				print("Error: Unauthorized")
 			case .cancelled:
 				break
-			case let .unknown(error):
-				print("Error: \(error.localizedDescription)")
+			case let .unknown(unknownError):
+				print("Error: \(unknownError.localizedDescription)")
 			}
 		}
 	}
