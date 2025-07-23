@@ -11,7 +11,13 @@ struct AdhocCostsBoxComponent: View {
 		Group {
 			CustomSection {
 				LabeledContent {
-					HStack {
+					AdaptiveHStack(spacing: 4) {
+						if let originalPrice = offer.originalPrice?.pricePerKWh {
+							Text(originalPrice.formatted())
+								.typography(.copy(size: .large), weight: .regular)
+								.foregroundStyle(.secondaryContent)
+								.strikethrough()
+						}
 						HStack(spacing: 0) {
 							Text(verbatim: "\(offer.price.pricePerKWh.formatted())")
 								.typography(.bold)

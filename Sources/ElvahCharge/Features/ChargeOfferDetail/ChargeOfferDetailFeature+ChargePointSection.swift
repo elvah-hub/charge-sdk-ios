@@ -198,13 +198,13 @@ extension ChargeOfferDetailFeature {
 							}
 							if offer.isDiscounted {
 								PriceLayout {
-									priceLabel
 									if let originalPrice = offer.originalPrice?.pricePerKWh {
 										Text(originalPrice.formatted() + " / kWh")
-											.typography(.copy(size: .medium), weight: .bold)
+											.typography(.copy(size: .small), weight: .regular)
 											.foregroundStyle(.secondaryContent)
 											.strikethrough()
 									}
+									priceLabel
 								}
 							}
 						}
