@@ -41,15 +41,21 @@ The package should appear in the list. Select it and click "Add Package" in the 
 
 ## Getting Started
 
-> [!IMPORTANT]
-> You will need to request an api key from elvah in order to start using the SDK.
-
 To set up the SDK, call ``Elvah.initialize(with:)`` as early as possible in your app's lifecycle. A good place could be the `AppDelegate` for UIKit apps or the `App`'s initializer for SwiftUI apps.
 
 The configuration allows you to pass the following values:
 - `apiKey`: The API key that allows the SDK to connect with elvah's backend.
 - `store`: The `UserDefaults` store that the SDK should use to store local data. Defaults to `UserDefaults.standard`.
 - `theme`: The theme that should be used in the visual components of the SDK. Defaults to `.neutral`.
+
+> [!NOTE]
+> If you do not have an api key yet or just want to quickly test capabilities, you can initialize the SDK in simulation mode:
+>
+> ```swift
+> Elvah.initialize(with: .simulator)
+> ```
+>
+> It is also possible to configure the behavior of the simulator. See the documentation of `ChargeSimulator` for more information and examples.
 
 ### Charge Banner
 
