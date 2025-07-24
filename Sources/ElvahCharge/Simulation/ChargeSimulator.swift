@@ -133,6 +133,9 @@ public actor ChargeSimulator {
 	/// Maps signed-offer tokens to their ChargeOffer.
 	var offersByToken: [String: ChargeOffer] = [:]
 
+	/// Maps evse ids to their charge offer.
+	var offersByEvseId: [String: ChargeOffer] = [:]
+
 	package init() {
 		_context = Defaults[.simulationContext]
 	}
@@ -216,23 +219,36 @@ public actor ChargeSimulator {
 		precondition(region != nil || evseIds != nil, "Either region or evseIds must be provided")
 		try await delay()
 
+		let sites: [ChargeSite]
+
 		if let region {
-			return try await requests.siteProvider.sites(in: region, onlyCampaigns: onlyCampaigns)
+			sites = try await requests.siteProvider.sites(in: region, onlyCampaigns: onlyCampaigns)
 		} else if let evseIds {
-			return try await requests.siteProvider.sites(
+			sites = try await requests.siteProvider.sites(
 				forEvseIds: evseIds,
 				onlyCampaigns: onlyCampaigns
 			)
+		} else {
+			throw NetworkError.unexpectedServerResponse
 		}
 
-		throw NetworkError.unexpectedServerResponse
+		// Save offers for signing them later
+		for offer in sites.flatMap(\.offers) {
+			offersByEvseId[offer.evseId] = offer
+		}
+
+		return sites
 	}
 
-	package func signOffer() async throws -> SignedChargeOffer {
+	package func signOffer(siteId: String, evseId: String) async throws -> SignedChargeOffer {
 		try await delay()
 
+		guard let offer = offersByEvseId[evseId] else {
+			throw NetworkError.unexpectedServerResponse
+		}
+
 		let signedOffer = SignedChargeOffer(
-			offer: ChargeOffer.simulation,
+			offer: offer,
 			token: UUID().uuidString,
 			validUntil: Date().addingTimeInterval(60 * 5)
 		)

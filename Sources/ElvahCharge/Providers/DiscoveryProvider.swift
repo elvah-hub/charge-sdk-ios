@@ -91,8 +91,8 @@ extension DiscoveryProvider {
 					onlyCampaigns: onlyCampaigns
 				)
 			},
-			signOffer: { _, _ in
-				try await ChargeSimulator.shared.signOffer()
+			signOffer: { siteId, evseId in
+				try await ChargeSimulator.shared.signOffer(siteId: siteId, evseId: evseId)
 			}
 		)
 	)
