@@ -131,6 +131,9 @@
     "Failed to load offer" : {
 
     },
+    "Friday" : {
+
+    },
     "from %@" : {
 
     },
@@ -165,6 +168,9 @@
 
     },
     "Message" : {
+
+    },
+    "Monday" : {
 
     },
     "Need help or want to give us feedback?" : {
@@ -245,6 +251,9 @@
     "Route" : {
 
     },
+    "Saturday" : {
+
+    },
     "Select charge point" : {
 
     },
@@ -281,6 +290,9 @@
     "Stopping" : {
 
     },
+    "Sunday" : {
+
+    },
     "Support" : {
 
     },
@@ -308,6 +320,9 @@
     "This offer has expired, but more deals are coming!" : {
 
     },
+    "Thursday" : {
+
+    },
     "Title" : {
 
     },
@@ -315,6 +330,9 @@
 
     },
     "Try again" : {
+
+    },
+    "Tuesday" : {
 
     },
     "Understood" : {
@@ -330,6 +348,9 @@
 
     },
     "Web Support" : {
+
+    },
+    "Wednesday" : {
 
     },
     "WhatsApp" : {

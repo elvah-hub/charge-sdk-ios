@@ -1,10 +1,13 @@
 // Copyright © elvah. All rights reserved.
 
+import Foundation
+import CoreLocation
+
 extension Site {
 	static func parse(_ response: SiteOfferSchema) throws(NetworkError.Client) -> Site {
 		Site(
 			id: response.id,
-			location: Site.Location(
+			location: CLLocationCoordinate2D(
 				latitude: response.location[1],
 				longitude: response.location[0]
 			),

@@ -2,11 +2,11 @@
 
 import Foundation
 
-package struct Time: Hashable, Codable, Sendable {
-	package let timeZone: TimeZone
-	package let hour: Int
-	package let minute: Int
-	package let second: Int?
+public struct Time: Hashable, Codable, Sendable {
+	public let timeZone: TimeZone
+	public let hour: Int
+	public let minute: Int
+	public let second: Int?
 
 	private var calendar: Calendar {
 		var calendar = Calendar.current
@@ -14,19 +14,29 @@ package struct Time: Hashable, Codable, Sendable {
 		return calendar
 	}
 
-	package var date: Date? {
+	public var date: Date? {
 		calendar.date(from: DateComponents(hour: hour, minute: minute, second: second))
 	}
 
-	package var secondsOfDay: Int {
+	public var secondsOfDay: Int {
 		hour * 3600 + minute * 60
 	}
 
-	package func differenceInMinutes(to time: Time) -> Int {
+	public func differenceInMinutes(to time: Time) -> Int {
 		(time.secondsOfDay - secondsOfDay) / 60
 	}
 
-	package init?(timeString: String, timeZone: TimeZone = .current) {
+	public var localizedTimeString: String {
+		let formatter = DateFormatter()
+		formatter.timeStyle = .short
+		formatter.timeZone = timeZone
+		if let date = date {
+			return formatter.string(from: date)
+		}
+		return String(format: "%02d:%02d", hour, minute)
+	}
+
+	public init?(timeString: String, timeZone: TimeZone = .current) {
 		let timeComponents = timeString
 			.components(separatedBy: ":")
 			.compactMap { Int($0) }
@@ -42,7 +52,7 @@ package struct Time: Hashable, Codable, Sendable {
 		second = timeComponents[nilFallback: 2]
 	}
 
-	package init?(date: Date, timeZone: TimeZone = .current) {
+	public init?(date: Date, timeZone: TimeZone = .current) {
 		var calendar = Calendar.current
 		calendar.timeZone = timeZone
 
@@ -58,7 +68,7 @@ package struct Time: Hashable, Codable, Sendable {
 		second = components.second
 	}
 
-	package init(hour: Int, minute: Int, second: Int? = nil, timeZone: TimeZone = .current) {
+	public init(hour: Int, minute: Int, second: Int? = nil, timeZone: TimeZone = .current) {
 		self.timeZone = timeZone
 		self.hour = hour
 		self.minute = minute
@@ -67,25 +77,25 @@ package struct Time: Hashable, Codable, Sendable {
 }
 
 extension Time: Equatable {
-	package static func == (lhs: Time, rhs: Time) -> Bool {
+	public static func == (lhs: Time, rhs: Time) -> Bool {
 		return lhs.secondsOfDay == rhs.secondsOfDay
 	}
 }
 
 extension Time: Comparable {
-	package static func < (lhs: Time, rhs: Time) -> Bool {
+	public static func < (lhs: Time, rhs: Time) -> Bool {
 		return lhs.secondsOfDay < rhs.secondsOfDay
 	}
 
-	package static func <= (lhs: Time, rhs: Time) -> Bool {
+	public static func <= (lhs: Time, rhs: Time) -> Bool {
 		return lhs.secondsOfDay <= rhs.secondsOfDay
 	}
 
-	package static func >= (lhs: Time, rhs: Time) -> Bool {
+	public static func >= (lhs: Time, rhs: Time) -> Bool {
 		return lhs.secondsOfDay >= rhs.secondsOfDay
 	}
 
-	package static func > (lhs: Time, rhs: Time) -> Bool {
+	public static func > (lhs: Time, rhs: Time) -> Bool {
 		return lhs.secondsOfDay > rhs.secondsOfDay
 	}
 }

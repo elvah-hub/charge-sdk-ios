@@ -4,6 +4,122 @@ import Defaults
 import Foundation
 import MapKit
 
+/// A simulation engine for testing EV charge session flows without requiring real hardware or
+/// network connections.
+///
+/// `ChargeSimulator` provides a complete simulation environment for charge sessions by intercepting
+/// network requests
+/// and replacing them with configurable behaviors. This allows developers to test various charge
+/// scenarios including
+/// successful flows, failures, and edge cases.
+///
+/// ## Core Concepts
+///
+/// ### Request Handler Flows
+/// The simulator's behavior is defined by **request handler flows** - sets of closures that
+/// intercept and respond to
+/// different types of network requests. Each flow defines:
+///
+/// - **Site Provider**: How charge sites are discovered (live API, demo data, or custom)
+/// - **Start Handler**: Behavior when a charge session start is requested
+/// - **Stop Handler**: Behavior when a charge session stop is requested
+/// - **Session Polling Handler**: How the session status evolves over time during polling
+///
+/// ### Built-in Flows
+/// The simulator includes several pre-built flows in the `Flows/` directory:
+///
+/// - `.default` - Standard successful charge flow with typical timing
+/// - `.startFails` - Simulates start request failures
+/// - `.startRejected` - Start request is rejected by the charge point
+/// - `.stopFails` - Simulates stop request failures
+/// - `.stopRejected` - Stop request is rejected by the charge point
+/// - `.interruptedCharge` - Charge session gets unexpectedly interrupted
+/// - `.slowDefault` - Similar to default but with slower transitions
+/// - `.statusMissing` - Session status is never set
+///
+/// ## Basic Usage
+///
+/// To use the charge simulator, simply initialize the SDK in simulation mode:
+///
+/// ```swift
+/// // Enable simulation mode – no additional setup required
+/// Elvah.initialize(with: .simulator)
+/// ```
+///
+/// By default, the simulator uses a standard successful flow. No further configuration is necessary
+/// for most
+/// testing scenarios.
+///
+/// If you want to simulate specific behaviors or customize the flow, call
+/// `ChargeSimulator.configure`.
+/// Not that this requires importing `ElvahCharge` with `@_spi(Debug)` access:
+///
+/// ```swift
+/// // Import debug API for advanced simulator flows
+/// @_spi(Debug) import ElvahCharge
+///
+/// // Use a specific flow
+/// ChargeSimulator.configure(flow: .startFails)
+///
+/// // Or customize configuration
+/// ChargeSimulator.configure(flow: .default) { config in
+///   config.responseDelay = 500 // 500ms delay
+/// }
+/// ```
+///
+/// ## Creating Custom Flows
+///
+/// You can create custom request handler flows to test specific scenarios:
+///
+/// ```swift
+/// let customFlow = ChargeSimulator.RequestHandlers(
+///     siteProvider: .demoSite,
+///     onStartRequest: {
+///         // Custom start logic - could throw errors, add delays, etc.
+///     },
+///     onStopRequest: { context in
+///         // Custom stop logic with access to session context
+///     },
+///     onSessionPolling: { context in
+///         // Custom status transition logic
+///         switch context.currentStatus {
+///         case .startRequested:
+///             return .started // Immediate transition
+///         case .started:
+///             return context.secondsSinceLasStatusChange > 5 ? .charging : nil
+///         // ... more status transitions
+///         }
+///     }
+/// )
+///
+/// ChargeSimulator.configure(flow: customFlow)
+/// ```
+///
+/// ## Context and State Management
+///
+/// The simulator maintains session context including:
+/// - Current session status and timing information
+/// - User requests (start/stop)
+/// - Charge consumption and duration calculations
+/// - Historical data like when statuses last changed
+///
+/// This context is passed to request handlers so they can make intelligent decisions about status
+/// transitions
+/// and responses based on the current session state.
+///
+/// ## Integration
+///
+/// The simulator is only enabled when the SDK is initialized with a `.simulator` configuration
+/// using`Elvah.initialize(with: .simulator)`. When active, it automatically intercepts all SDK
+/// network requests.
+///
+/// The simulator must be configured at every app launch, after initializing the SDK with the
+/// simulator configuration.
+/// No changes to your app code are required beyond the initial setup - simply configure the
+/// simulator and use the
+/// SDK normally.
+///
+/// - Note: The simulator is only available in debug builds via the `@_spi(Debug)` attribute.
 @_spi(Debug)
 public actor ChargeSimulator {
 	package static let shared = ChargeSimulator()
@@ -11,15 +127,27 @@ public actor ChargeSimulator {
 	/// Internal storage of the simulated charge session data.
 	private var _context: Context?
 
+	/// Configuration of the charge simulator.
 	private var configuration: Configuration = .init()
+
+	/// The request handlers defining the behavior of the charge simulator.
 	private var requests: RequestHandlers = .default
 
-	var signedOffers: [String: ChargeOffer] = [:]
+	/// Maps signed-offer tokens to their ChargeOffer.
+	var offersByToken: [String: ChargeOffer] = [:]
 
 	package init() {
 		_context = Defaults[.simulationContext]
 	}
 
+	/// Configures the charge simulator with a specific request handler flow and optional settings.
+	///
+	/// The simulator intercepts network requests and replaces them with configurable behaviors,
+	/// allowing you to test various charge scenarios including successful flows, failures, and edge cases.
+	///
+	/// - Parameters:
+	///   - requestHandlers: The request handler flow defining simulator behavior. Defaults to `.default`.
+	///   - block: Optional configuration block for customizing response delays and other settings.
 	public static func configure(
 		flow requestHandlers: RequestHandlers = .default,
 		block: @Sendable @escaping (_ configuration: inout Configuration) -> Void = { _ in }
@@ -110,7 +238,7 @@ public actor ChargeSimulator {
 			validUntil: Date().addingTimeInterval(60 * 5)
 		)
 
-		signedOffers[signedOffer.token] = signedOffer.offer
+		offersByToken[signedOffer.token] = signedOffer.offer
 		return signedOffer
 	}
 
@@ -148,7 +276,7 @@ public actor ChargeSimulator {
 	func start(authentication: ChargeAuthentication) async throws {
 		try await delay()
 
-		guard let chargeOffer = signedOffers[authentication.token] else {
+		guard let chargeOffer = offersByToken[authentication.token] else {
 			throw NetworkError.unexpectedServerResponse
 		}
 
@@ -331,10 +459,10 @@ public extension ChargeSimulator {
 			_ session: Context
 		) async throws -> ChargeSession.Status?
 
-		public package(set) var siteProvider: SiteProvider
-		public package(set) var onStartRequest: StartRequest
-		public package(set) var onStopRequest: StopRequest
-		public package(set) var onSessionPolling: SessionRequest
+		package var siteProvider: SiteProvider
+		package var onStartRequest: StartRequest
+		package var onStopRequest: StopRequest
+		package var onSessionPolling: SessionRequest
 
 		public init(
 			siteProvider: SiteProvider,
