@@ -27,6 +27,7 @@ let package = Package(
 				.product(name: "StripePaymentSheet", package: "stripe-ios"),
 			],
 			path: "Sources/ElvahCharge",
+			exclude: ["Core/Note.txt"],
 			resources: [
 				.copy("PrivacyInfo.xcprivacy"),
 				.copy("Core/Resources/Colors.xcassets"),
