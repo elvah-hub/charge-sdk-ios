@@ -18,7 +18,7 @@ public extension ChargeSimulator.RequestHandlers {
       onSessionPolling: { context in
         switch context.currentStatus {
         case .startRequested:
-          if context.secondsSinceLasStatusChange > 6 {
+          if context.secondsSinceLastStatusChange > 6 {
             return .startRejected
           }
         case .startRejected:

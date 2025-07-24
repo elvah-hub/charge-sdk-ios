@@ -84,7 +84,7 @@ import MapKit
 ///         case .startRequested:
 ///             return .started // Immediate transition
 ///         case .started:
-///             return context.secondsSinceLasStatusChange > 5 ? .charging : nil
+///             return context.secondsSinceLastStatusChange > 5 ? .charging : nil
 ///         // ... more status transitions
 ///         }
 ///     }
@@ -323,7 +323,7 @@ public actor ChargeSimulator {
 			context.progressSession()
 			context.elapsedSeconds = Date().timeIntervalSince(context.startedAt)
 			context.secondsSinceLastPolling = Date().timeIntervalSince(context.lastPolledAt)
-			context.secondsSinceLasStatusChange = Date().timeIntervalSince(context.statusLastChangedAt)
+			context.secondsSinceLastStatusChange = Date().timeIntervalSince(context.statusLastChangedAt)
 		}
 
 		let newStatus = try await requests.onSessionPolling(context)
@@ -391,7 +391,7 @@ public extension ChargeSimulator {
 		public package(set) var statusLastChangedAt: Date = .distantPast
 
 		/// Seconds since the last time the session's status has changed.
-		public package(set) var secondsSinceLasStatusChange: TimeInterval = 0
+		public package(set) var secondsSinceLastStatusChange: TimeInterval = 0
 
 		/// Returns `true` if a request is ongoing.
 		public var hasRequest: Bool {

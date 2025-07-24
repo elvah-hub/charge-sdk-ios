@@ -19,13 +19,13 @@ public extension ChargeSimulator.RequestHandlers {
       onSessionPolling: { context in
         switch context.currentStatus {
         case .startRequested:
-					if context.secondsSinceLasStatusChange > 8 {
+					if context.secondsSinceLastStatusChange > 8 {
             return .started
           }
         case .startRejected:
           break
         case .started:
-          if context.secondsSinceLasStatusChange > 6 {
+          if context.secondsSinceLastStatusChange > 6 {
             return .charging
           }
         case .charging:
@@ -33,7 +33,7 @@ public extension ChargeSimulator.RequestHandlers {
             return .stopRequested
           }
         case .stopRequested:
-          if context.secondsSinceLasStatusChange > 7 {
+          if context.secondsSinceLastStatusChange > 7 {
             return .stopped
           }
         case .stopRejected:
