@@ -10,8 +10,7 @@ import MapKit
 /// `ChargeSimulator` provides a complete simulation environment for charge sessions by intercepting
 /// network requests
 /// and replacing them with configurable behaviors. This allows developers to test various charge
-/// scenarios including
-/// successful flows, failures, and edge cases.
+/// scenarios including successful flows, failures, and edge cases.
 ///
 /// ## Core Concepts
 ///
@@ -47,8 +46,7 @@ import MapKit
 /// ```
 ///
 /// By default, the simulator uses a standard successful flow. No further configuration is necessary
-/// for most
-/// testing scenarios.
+/// for most testing scenarios.
 ///
 /// If you want to simulate specific behaviors or customize the flow, call
 /// `ChargeSimulator.configure`.
@@ -116,8 +114,7 @@ import MapKit
 /// The simulator must be configured at every app launch, after initializing the SDK with the
 /// simulator configuration.
 /// No changes to your app code are required beyond the initial setup - simply configure the
-/// simulator and use the
-/// SDK normally.
+/// simulator and use the SDK normally.
 ///
 /// - Note: The simulator is only available in debug builds via the `@_spi(Debug)` attribute.
 @_spi(Debug)
@@ -143,10 +140,12 @@ public actor ChargeSimulator {
 	/// Configures the charge simulator with a specific request handler flow and optional settings.
 	///
 	/// The simulator intercepts network requests and replaces them with configurable behaviors,
-	/// allowing you to test various charge scenarios including successful flows, failures, and edge cases.
+	/// allowing you to test various charge scenarios including successful flows, failures, and edge
+	/// cases.
 	///
 	/// - Parameters:
-	///   - requestHandlers: The request handler flow defining simulator behavior. Defaults to `.default`.
+	///   - requestHandlers: The request handler flow defining simulator behavior. Defaults to
+	/// `.default`.
 	///   - block: Optional configuration block for customizing response delays and other settings.
 	public static func configure(
 		flow requestHandlers: RequestHandlers = .default,
