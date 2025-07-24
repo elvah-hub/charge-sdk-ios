@@ -52,7 +52,7 @@ import MapKit
 ///
 /// If you want to simulate specific behaviors or customize the flow, call
 /// `ChargeSimulator.configure`.
-/// Not that this requires importing `ElvahCharge` with `@_spi(Debug)` access:
+/// Note that this requires importing `ElvahCharge` with `@_spi(Debug)` access:
 ///
 /// ```swift
 /// // Import debug API for advanced simulator flows
