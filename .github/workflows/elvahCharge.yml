@@ -28,19 +28,9 @@ jobs:
               | sed -e "s/ Simulator$//"
           )
 
-          # Detect whether this is a workspace or project
-          if ls -1A *.xcworkspace >/dev/null 2>&1; then
-            filetype_parameter="workspace"
-            file_to_build=$(ls -1A *.xcworkspace | head -1)
-          else
-            filetype_parameter="project"
-            file_to_build=$(ls -1A *.xcodeproj  | head -1)
-          fi
-
           # Build tests for the ElvahCharge scheme
           xcodebuild build-for-testing \
             -scheme "ElvahCharge" \
-            -"${filetype_parameter}" "${file_to_build}" \
             -testPlan "ElvahChargeTests" \
             -destination "platform=${platform},name=${device}"
 
@@ -57,18 +47,8 @@ jobs:
               | sed -e "s/ Simulator$//"
           )
 
-          # Same workspace/project detection
-          if ls -1A *.xcworkspace >/dev/null 2>&1; then
-            filetype_parameter="workspace"
-            file_to_build=$(ls -1A *.xcworkspace | head -1)
-          else
-            filetype_parameter="project"
-            file_to_build=$(ls -1A *.xcodeproj  | head -1)
-          fi
-
           # Run tests (without rebuilding) against the specified test plan
           xcodebuild test-without-building \
             -scheme "ElvahCharge" \
-            -"${filetype_parameter}" "${file_to_build}" \
             -testPlan "ElvahChargeTests" \
             -destination "platform=${platform},name=${device}"
