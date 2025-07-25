@@ -32,7 +32,7 @@ public struct Theme: Hashable, Sendable {
 		boldWeight: Font.Weight = .bold
 	) {
 		self.color = color
-		self.typography = Typography(
+		typography = Typography(
 			font: font,
 			regularWeight: regularWeight,
 			boldWeight: boldWeight
@@ -55,7 +55,7 @@ public extension Theme {
 		public init(
 			font: CoreFont = .default,
 			regularWeight: Font.Weight,
-			boldWeight: Font.Weight,
+			boldWeight: Font.Weight
 		) {
 			self.regularWeight = regularWeight
 			self.boldWeight = boldWeight
@@ -67,13 +67,13 @@ public extension Theme {
 		public static let elvah: Typography = .init(
 			font: .default,
 			regularWeight: .medium,
-			boldWeight: .semibold,
+			boldWeight: .semibold
 		)
 
 		public static let neutral: Typography = .init(
 			font: .default,
 			regularWeight: .regular,
-			boldWeight: .bold,
+			boldWeight: .bold
 		)
 	}
 
