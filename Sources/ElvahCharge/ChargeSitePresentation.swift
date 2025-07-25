@@ -15,7 +15,7 @@ public extension View {
 	/// - Returns: A view that presents a charge site detail view using the given ``ChargeSite``
 	/// object.
 	@ViewBuilder func chargePresentation(
-		site chargeSite: Binding<ChargeSite?>,
+		site chargeSite: Binding<ChargeSite?>
 	) -> some View {
 		if #available(iOS 16.0, *) {
 			modifier(PresentationViewModifier(chargeSite: chargeSite))

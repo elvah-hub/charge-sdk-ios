@@ -5,10 +5,9 @@ import MapKit
 import SwiftUI
 
 public extension ChargeSite {
-
 	@MainActor fileprivate static var discoveryProvider: DiscoveryProvider {
 		if Elvah.configuration.environment.isSimulation {
-			return  DiscoveryProvider.simulation
+			return DiscoveryProvider.simulation
 		} else {
 			return DiscoveryProvider.live
 		}
@@ -20,9 +19,9 @@ public extension ChargeSite {
 	///
 	/// - Note: Unsupported evse ids will be ignored.
 	/// - Parameter evseIds: The evse ids.
-	@MainActor static func sites(forEvseIds evseIds: [String]) async throws(Elvah
-		.Error
-	) -> [ChargeSite] {
+	@MainActor static func sites(
+		forEvseIds evseIds: [String]
+	) async throws(Elvah .Error ) -> [ChargeSite] {
 		do {
 			return try await discoveryProvider.sites(forEvseIds: evseIds)
 		} catch NetworkError.unauthorized {
@@ -156,7 +155,7 @@ public extension ChargeSite {
 	/// - Note: Unsupported evse ids will be ignored.
 	/// - Parameter evseIds: The evse ids.
 	@MainActor static func campaigns(
-		forEvseIds evseIds: [String],
+		forEvseIds evseIds: [String]
 	) async throws(Elvah.Error) -> [ChargeSite] {
 		do {
 			return try await discoveryProvider.campaigns(forEvseIds: evseIds)
@@ -278,4 +277,3 @@ public extension ChargeSite {
 		return TaskObserver(task: task)
 	}
 }
-
