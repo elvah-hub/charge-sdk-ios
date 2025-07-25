@@ -53,7 +53,7 @@ public struct ChargePoint: Identifiable, Hashable, Codable, Sendable {
 }
 
 public extension ChargePoint {
-	/// The chargepoint's speed.
+	/// The charge point's speed.
 	enum Speed: String, Hashable, Codable, Sendable {
 		case unknown = "UNKNOWN"
 		case slow = "SLOW"
@@ -104,18 +104,22 @@ public extension ChargePoint {
 // MARK: - Helpers
 
 public extension ChargePoint {
+	/// Returns `true` if the charge point is available for use.
 	var isAvailable: Bool {
 		availability == .available
 	}
 
+	/// Returns `true` if the charge point is not available for use.
 	var isUnavailable: Bool {
 		availability != .available
 	}
 
+	/// The maximum power formatted as a string with "kW" suffix.
 	@available(iOS 16.0, *) var maxPowerInKWFormatted: String {
 		return maxPowerInKw.formatted(.number.precision(.fractionLength(0))) + " kW"
 	}
 
+	/// The last 4 characters of the EVSE identifier.
 	var evseIdSuffix: String {
 		String(evseId.suffix(4))
 	}

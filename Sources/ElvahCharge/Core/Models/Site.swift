@@ -200,7 +200,7 @@ public extension Site {
 			return false
 		}
 
-		let currentTime = Time(date: date) ?? Time(hour: 0, minute: 0)
+		let currentTime = Time(date: date) ?? .zero
 
 		return todaysPeriods.contains { period in
 			currentTime >= period.opensAt && currentTime < period.closesAt
@@ -260,8 +260,8 @@ package extension Site {
 				openPeriods: [
 					Site.OpeningHours.OpenPeriod(
 						weekday: .monday,
-						opensAt: Time(hour: 08, minute: 00),
-						closesAt: Time(hour: 22, minute: 0)
+						opensAt: Time(hour: 8, minute: 0)!,
+						closesAt: Time(hour: 22, minute: 0)!
 					),
 				]
 			),
@@ -285,8 +285,8 @@ package extension Site {
 				openPeriods: [
 					Site.OpeningHours.OpenPeriod(
 						weekday: .monday,
-						opensAt: Time(hour: 08, minute: 00),
-						closesAt: Time(hour: 22, minute: 0)
+						opensAt: Time(hour: 8, minute: 0)!,
+						closesAt: Time(hour: 22, minute: 0)!
 					),
 				]
 			),

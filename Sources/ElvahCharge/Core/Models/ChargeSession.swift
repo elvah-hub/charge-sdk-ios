@@ -8,6 +8,8 @@ public struct ChargeSession: Codable, Hashable, Sendable {
 	package var evseId: String
 	public var status: Status?
 	package var consumption: KilowattHours
+
+	/// The duration of the charge session, in seconds.
 	public var duration: TimeInterval
 
 	package init(
