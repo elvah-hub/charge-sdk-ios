@@ -1,7 +1,6 @@
 // Copyright © elvah. All rights reserved.
 
 import Foundation
-import Playgrounds
 
 /// A time representation with timezone, independent of date.
 public struct Time: Hashable, Codable, Sendable {
