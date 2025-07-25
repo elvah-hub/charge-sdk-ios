@@ -8,7 +8,7 @@ import Testing
 	import Defaults
 #endif
 
-@Suite
+@Suite("Charge Session Observation Tests")
 @MainActor
 struct ChargeSessionObservationTests {
 	@available(iOS 16.0, *) typealias Stream = ChargeProvider.SessionUpdateStream
@@ -17,7 +17,7 @@ struct ChargeSessionObservationTests {
 		Defaults[.mockChargeSessionContext] = nil
 	}
 
-	@Test @available(iOS 16.0, *) func testBasicObservation() async throws {
+	@Test("Basic charge session observation with state transitions") @available(iOS 16.0, *) func testBasicObservation() async throws {
 		let subscriptionManager = ChargeProvider.SubscriptionManager()
 
 		let mockSessionContext = ChargeSessionContext(
