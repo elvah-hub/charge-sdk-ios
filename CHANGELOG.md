@@ -33,28 +33,34 @@ All notable changes to this project will be documented in this file.
 - Added support for customizing the behavior of the simulator 
 	- See `ChargeSimulator` for detailed instructions and examples
 
+**Support for Custom Fonts**
+- Added support for passing a custom font to `Theme.Typography`
+
 **Breaking API Changes**
 - This release changes a lot of the public API. See [MIGRATION.md](MIGRATION.md) for detailed migration instructions from version 0.1.0.
 
-### New Features
+### Additions
+- Added font property to `Theme.Typography` to support passing in custom fonts
+- Added migration guide: [MIGRATION.md](MIGRATION.md)
+- Added simulation mode via `Elvah.initialize(with: .simulator)`
+- Added `ChargeSite.sites(in:)`, `ChargeSite.sites(near:)` and `ChargeSite.sites(forEvseIds:)`
+- Added `ChargeSite.campaigns(forEvseIds:)`
+- Added `ChargeSimulator` for deep customization of the simulation mode
+- Added `.chargePresentation(offer:)`
+- Added `.chargePresentation(offers:)`
+- Added `.chargePresentation(site:)`
+- Added `fetching` parameter to `ChargeBannerSource` to specify the type of offers to fetch
 
-**Campaign Filtering**
-- Added `fetching` parameter to `@ChargeBannerSource`:
-  ```swift
-  @ChargeBannerSource(fetching: .campaigns) private var chargeBannerSource
-  ```
-- Enables filtering for campaign-only offers
-
-**Enhanced Charge Offer API**
-- New presentation modifier: `.chargePresentation(offers:)` for offer lists
-
-**Developer Experience**
-- Added migration guide in `MIGRATION.md`
-- Improved documentation with updated examples
-- Enhanced test infrastructure with better simulation flows
+### Changes
+- Removed `.campaignDetailPresentation(for:)`; Use `.chargePresentation(site:)` instead
+- Renamed concept of `Campaign` to `ChargeSite`
+- Renamed concept of `Deal` to `ChargeOffer`
+- Moved `Campaign.campaigns(in:)` to ChargeSite.campaigns(in:)`
+- Moved `Campaign.campaigns(near:)` to ChargeSite.campaigns(near:)`
 
 ### Bug Fixes
 - Added exit buttons for all states in the charge flow
+- Fixed background color in the support sheet
 
 ---
 

@@ -151,6 +151,51 @@ public extension ChargeSite {
 public extension ChargeSite {
 	// MARK: - By Region
 
+	/// Returns all campaigns for the given list of evse ids.
+	///
+	/// - Note: Unsupported evse ids will be ignored.
+	/// - Parameter evseIds: The evse ids.
+	@MainActor static func campaigns(
+		forEvseIds evseIds: [String],
+	) async throws(Elvah.Error) -> [ChargeSite] {
+		do {
+			return try await discoveryProvider.campaigns(forEvseIds: evseIds)
+		} catch NetworkError.unauthorized {
+			throw Elvah.Error.unauthorized
+		} catch let error as NetworkError {
+			throw Elvah.Error.network(error)
+		} catch {
+			throw Elvah.Error.unknown(error)
+		}
+	}
+
+	/// Returns all campaigns for the given list of evse ids.
+	///
+	/// - Note: Unsupported evse ids will be ignored.
+	/// - Parameter evseIds: The evse ids.
+	/// - Parameter completion: A closure that is called with the result of the operation.
+	/// - Returns: An observer object that you can use to cancel the operation.
+	@MainActor @discardableResult static func campaigns(
+		forEvseIds evseIds: [String],
+		completion: @MainActor @escaping (
+			_ result: Result<[ChargeSite], Elvah.Error>
+		) -> Void
+	) -> TaskObserver {
+		let task = Task {
+			do {
+				try await completion(.success(campaigns(forEvseIds: evseIds)))
+			} catch NetworkError.unauthorized {
+				completion(.failure(Elvah.Error.unauthorized))
+			} catch let error as NetworkError {
+				completion(.failure(Elvah.Error.network(error)))
+			} catch {
+				completion(.failure(Elvah.Error.unknown(error)))
+			}
+		}
+
+		return TaskObserver(task: task)
+	}
+
 	/// Returns all campaigns within the given map region.
 	/// - Parameter region: The region to search campaigns in.
 	@MainActor static func campaigns(in region: MKMapRect) async throws(Elvah.Error) -> [ChargeSite] {

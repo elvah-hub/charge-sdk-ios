@@ -97,7 +97,7 @@ View modifiers for presenting detail screens have been updated:
 
 **After (0.2.0):**
 ```swift
-.chargePresentation(offer: $chargeOffer)
+.chargePresentation(site: $site)
 ```
 
 ### Callback Changes

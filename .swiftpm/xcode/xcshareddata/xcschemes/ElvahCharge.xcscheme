@@ -30,7 +30,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:ElvahCharge.xctestplan"
+            reference = "container:Tests/ElvahChargeTests.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
