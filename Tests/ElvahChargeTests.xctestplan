@@ -14,7 +14,7 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:..\/..\/..\/..\/Shared\/Code\/charge-sdk-ios",
+        "containerPath" : "container:",
         "identifier" : "Tests",
         "name" : "Tests"
       }
