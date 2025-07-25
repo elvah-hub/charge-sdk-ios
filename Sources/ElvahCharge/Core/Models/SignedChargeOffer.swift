@@ -48,7 +48,7 @@ package extension SignedChargeOffer {
 		SignedChargeOffer(
 			offer: .mockAvailable,
 			token: "",
-			validUntil: Date().addingTimeInterval(120),
+			validUntil: Date().addingTimeInterval(120)
 		)
 	}
 
@@ -56,7 +56,7 @@ package extension SignedChargeOffer {
 		SignedChargeOffer(
 			offer: .mockUnavailable,
 			token: "",
-			validUntil: Date().addingTimeInterval(120),
+			validUntil: Date().addingTimeInterval(120)
 		)
 	}
 
@@ -64,7 +64,7 @@ package extension SignedChargeOffer {
 		SignedChargeOffer(
 			offer: .mockOutOfService,
 			token: "",
-			validUntil: Date().addingTimeInterval(120),
+			validUntil: Date().addingTimeInterval(120)
 		)
 	}
 }

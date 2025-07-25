@@ -124,7 +124,7 @@ package extension ChargeOffer {
 			price: ChargePrice.mock,
 			originalPrice: nil,
 			type: .standard,
-			site: .mock,
+			site: .mock
 		)
 	}
 
@@ -134,7 +134,7 @@ package extension ChargeOffer {
 			price: ChargePrice.mock,
 			originalPrice: ChargePrice.mock2,
 			type: .campaign(CampaignInfo(endDate: Date().addingTimeInterval(20))),
-			site: .mock,
+			site: .mock
 		)
 	}
 
@@ -144,7 +144,7 @@ package extension ChargeOffer {
 			price: ChargePrice.mock2,
 			originalPrice: ChargePrice.mock3,
 			type: .campaign(CampaignInfo(endDate: Date().addingTimeInterval(-10))),
-			site: .mock,
+			site: .mock
 		)
 	}
 
@@ -153,8 +153,8 @@ package extension ChargeOffer {
 			chargePoint: .mockOutOfService,
 			price: ChargePrice.mock3,
 			originalPrice: nil,
-			type: .standard,//.campaign(CampaignInfo(endDate: Date().addingTimeInterval(30))),
-			site: .mock,
+			type: .standard, // .campaign(CampaignInfo(endDate: Date().addingTimeInterval(30))),
+			site: .mock
 		)
 	}
 }
