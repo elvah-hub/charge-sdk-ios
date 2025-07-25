@@ -1,0 +1,74 @@
+name: Build and Test SDK
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    name: Build and Test ElvahCharge scheme
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build for Testing
+        env:
+          platform: iOS Simulator
+        run: |
+          # Pick the first available iPhone simulator
+          device=$(
+            xcrun xctrace list devices 2>&1 \
+              | grep -oE 'iPhone.*?[^\(]+' \
+              | head -1 \
+              | awk '{$1=$1;print}' \
+              | sed -e "s/ Simulator$//"
+          )
+
+          # Detect whether this is a workspace or project
+          if ls -1A *.xcworkspace >/dev/null 2>&1; then
+            filetype_parameter="workspace"
+            file_to_build=$(ls -1A *.xcworkspace | head -1)
+          else
+            filetype_parameter="project"
+            file_to_build=$(ls -1A *.xcodeproj  | head -1)
+          fi
+
+          # Build tests for the ElvahCharge scheme
+          xcodebuild build-for-testing \
+            -scheme "ElvahCharge" \
+            -"${filetype_parameter}" "${file_to_build}" \
+            -testPlan "ElvahChargeTests" \
+            -destination "platform=${platform},name=${device}"
+
+      - name: Run Tests
+        env:
+          platform: iOS Simulator
+        run: |
+          # Pick the same simulator
+          device=$(
+            xcrun xctrace list devices 2>&1 \
+              | grep -oE 'iPhone.*?[^\(]+' \
+              | head -1 \
+              | awk '{$1=$1;print}' \
+              | sed -e "s/ Simulator$//"
+          )
+
+          # Same workspace/project detection
+          if ls -1A *.xcworkspace >/dev/null 2>&1; then
+            filetype_parameter="workspace"
+            file_to_build=$(ls -1A *.xcworkspace | head -1)
+          else
+            filetype_parameter="project"
+            file_to_build=$(ls -1A *.xcodeproj  | head -1)
+          fi
+
+          # Run tests (without rebuilding) against the specified test plan
+          xcodebuild test-without-building \
+            -scheme "ElvahCharge" \
+            -"${filetype_parameter}" "${file_to_build}" \
+            -testPlan "ElvahChargeTests" \
+            -destination "platform=${platform},name=${device}"
