@@ -9,7 +9,7 @@ struct SimpleChargeBannerDemo: View {
 
   var body: some View {
     DemoContent {
-      Button("Show Deals Nearby") {
+      Button("Show Offers Nearby") {
         chargeBannerSource = .remote(in: .mock)
       }
       if let $chargeBannerSource {
@@ -17,7 +17,7 @@ struct SimpleChargeBannerDemo: View {
           .padding(.horizontal, 15)
       }
     }
-    .navigationTitle("Campaign Banner")
+    .navigationTitle("Charge Banner")
     .navigationBarTitleDisplayMode(.inline)
     .animation(.default, value: chargeBannerSource)
   }

@@ -27,7 +27,7 @@ struct AdvancedChargeBannerDemo: View {
 		}
 		.chargeSessionPresentation(isPresented: $showChargeSession)
 		.chargePresentation(site: $chargeSiteDetail)
-		.navigationTitle("Campaign Banner (Advanced)")
+		.navigationTitle("Charge Banner (Advanced)")
 		.navigationBarTitleDisplayMode(.inline)
 		.animation(.default, value: chargeBannerSource)
 		.task {

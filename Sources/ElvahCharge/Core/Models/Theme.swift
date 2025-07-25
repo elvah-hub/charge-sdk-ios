@@ -54,8 +54,8 @@ public extension Theme {
 
 		public init(
 			font: CoreFont = .default,
-			regularWeight: Font.Weight,
-			boldWeight: Font.Weight
+			regularWeight: Font.Weight = .regular,
+			boldWeight: Font.Weight = .bold
 		) {
 			self.regularWeight = regularWeight
 			self.boldWeight = boldWeight
