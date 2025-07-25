@@ -12,20 +12,24 @@ All notable changes to this project will be documented in this file.
 
 **New Entry Points**
 - Added view modifier to start the payment and charge flow for a specific charge offer:
+
   ```swift
   .chargePresentation(offer: myChargeOffer)
   ```
 - Added view modifier to display a list of charge offers:
+
   ```swift
   .chargePresentation(offers: myChargeOfferList)
   ```
 - Added view modifier to display a charge site with all its offers:
+
   ```swift
   .chargePresentation(site: myChargeSite)
   ```
 
 **Simulation Mode**
 - Added simulation mode to the SDK
+
   ```swift
   // No api key needed
   Elvah.initialize(with: .simulator)
