@@ -65,11 +65,12 @@ struct BottomSheetComponent<Content: View, Footer: View>: View {
 					.typography(.copy(size: .large), weight: .bold)
 					.foregroundStyle(.primaryContent)
 			}
-			ToolbarItem(placement: .topBarLeading) {
-				CloseButton {
-					dismiss()
+			if canBeDismissed {
+				ToolbarItem(placement: .topBarLeading) {
+					CloseButton {
+						dismiss()
+					}
 				}
-				.isHidden(canBeDismissed == false, remove: false)
 			}
 		}
 		.safeAreaInset(edge: .bottom) {

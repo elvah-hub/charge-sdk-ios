@@ -104,8 +104,16 @@ package extension ChargeSession {
 			startObservation()
 		}
 
+		private var chargeProvider: ChargeProvider {
+			if Elvah.configuration.environment.isSimulation {
+				return ChargeProvider.simulation
+			} else {
+				return ChargeProvider.live
+			}
+		}
+
 		func updates() -> AsyncThrowingStream<ChargeSession.Update, any Error> {
-			updates(using: ChargeProvider.live, sessionContextKey: .chargeSessionContext)
+			updates(using: chargeProvider, sessionContextKey: .chargeSessionContext)
 		}
 
 		/// A function that calls the provided handler whenever the charge session status changes, e.g.

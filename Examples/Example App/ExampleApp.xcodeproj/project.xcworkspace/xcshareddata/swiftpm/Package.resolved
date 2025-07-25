@@ -1,15 +1,6 @@
 {
-  "originHash" : "78a67d1fa89299e3a40b949b9df233e92887ab33bdf599a1386d9565329a5df2",
+  "originHash" : "104d99ac8fa5d676b077a28a075ccb9e4fad66f29d83d425ba6d27e92907c97e",
   "pins" : [
-    {
-      "identity" : "charge-sdk-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/elvah-hub/charge-sdk-ios",
-      "state" : {
-        "branch" : "main",
-        "revision" : "7bf7ebb5280a379616a44dd7e6f1f35199698d95"
-      }
-    },
     {
       "identity" : "defaults",
       "kind" : "remoteSourceControl",
@@ -33,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/stripe/stripe-ios",
       "state" : {
-        "revision" : "7ba1417474b96e1730d2a70d236d2154aa45f9fe",
-        "version" : "24.11.0"
+        "revision" : "69501b642a525ae9308842ac490ce1127f501901",
+        "version" : "24.17.0"
       }
     }
   ],

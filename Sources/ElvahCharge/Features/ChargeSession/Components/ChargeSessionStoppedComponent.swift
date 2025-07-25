@@ -17,7 +17,7 @@ struct ChargeSessionStoppedComponent: View {
 
 	var session: ChargeSession
 	var site: Site
-	var deal: Deal
+	var offer: ChargeOffer
 
 	var body: some View {
 		if #available(iOS 16.4, *) {
@@ -68,7 +68,7 @@ struct ChargeSessionStoppedComponent: View {
 				if isHorizontalStack {
 					Spacer()
 				}
-				Text(deal.chargePoint.evseId)
+				Text(offer.chargePoint.evseId)
 			}
 			.typography(.copy(size: .medium))
 		}
@@ -203,7 +203,7 @@ struct ChargeSessionStoppedComponent: View {
 		ChargeSessionStoppedComponent(
 			session: session,
 			site: .mock,
-			deal: .mockAvailable
+			offer: .mockAvailable
 		)
 	}
 	.preferredColorScheme(.dark)

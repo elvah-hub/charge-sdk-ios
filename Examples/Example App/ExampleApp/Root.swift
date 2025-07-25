@@ -13,20 +13,20 @@ struct Root: View {
 				}
 
 				Section {
-					NavigationLink("Charge Campaign", value: Destination.simpleCampaignBanner)
-					NavigationLink("Campaign Banner (Advanced)", value: Destination.advancedCampaignBanner)
+					NavigationLink("Charge Banner", value: Destination.simpleChargeBanner)
+					NavigationLink("Charge Banner (Advanced)", value: Destination.advancedChargeBanner)
 				} footer: {
 					Text(
-						"See how you can integrate charge campaigns into your app and offer charge deals to your users."
+						"See how you can integrate charge offers into your app and offer charge deals to your users."
 					)
 				}
 			}
 			.navigationDestination(for: Destination.self) { destination in
 				switch destination {
-				case .simpleCampaignBanner:
-					SimpleCampaignBannerDemo()
-				case .advancedCampaignBanner:
-					AdvancedCampaignBannerDemo()
+				case .simpleChargeBanner:
+					SimpleChargeBannerDemo()
+				case .advancedChargeBanner:
+					AdvancedChargeBannerDemo()
 				case .chargeSessionObservation:
 					ChargeSessionObservationDemo()
 				}
@@ -37,8 +37,8 @@ struct Root: View {
 }
 
 private enum Destination: Hashable {
-	case simpleCampaignBanner
-	case advancedCampaignBanner
+	case simpleChargeBanner
+	case advancedChargeBanner
 	case chargeSessionObservation
 }
 

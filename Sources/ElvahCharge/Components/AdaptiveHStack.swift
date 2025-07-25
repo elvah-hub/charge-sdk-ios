@@ -60,10 +60,10 @@ struct AdaptiveHStack<Content: View>: View {
 @available(iOS 16.0, *)
 #Preview("Default") {
 	AdaptiveHStack { isHorizontalStack in
-		Text("First")
+		Text(verbatim: "First")
 			.padding()
 			.background(Color.blue)
-		Text("Second")
+		Text(verbatim: "Second")
 			.padding()
 			.background(isHorizontalStack ? Color.green : Color.red)
 	}
@@ -72,10 +72,10 @@ struct AdaptiveHStack<Content: View>: View {
 @available(iOS 16.0, *)
 #Preview("Large Type") {
 	AdaptiveHStack { isHorizontalStack in
-		Text("First")
+		Text(verbatim: "First")
 			.padding()
 			.background(Color.blue)
-		Text("Second")
+		Text(verbatim: "Second")
 			.padding()
 			.background(isHorizontalStack ? Color.green : Color.red)
 	}

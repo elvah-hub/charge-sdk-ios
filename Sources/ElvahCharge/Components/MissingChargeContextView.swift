@@ -9,7 +9,7 @@ struct MissingChargeContextView: View {
 	var body: some View {
 		VStack(spacing: Size.M.size) {
 			Image(systemName: "bolt.slash.fill")
-				.font(.inter(size: 60))
+				.font(.themed(size: 60))
 				.symbolRenderingMode(.hierarchical)
 				.foregroundStyle(.secondaryContent)
 			Text("No Charge Session", bundle: .elvahCharge)

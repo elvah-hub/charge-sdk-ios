@@ -221,12 +221,12 @@ private struct PreviewData: View {
 	var body: some View {
 		VStack(spacing: Size.XL.size) {
 			Picker("Loading", selection: $state) {
-				Text("Loading", bundle: .elvahCharge)
+				Text(verbatim: "Loading")
 					.tag(ActivityInfoComponent.ActivityState.animating(iconSystemName: nil))
-				Text("Step", bundle: .elvahCharge)
+				Text(verbatim: "Step")
 					.tag(ActivityInfoComponent.ActivityState.outlined(iconSystemName: "checkmark"))
-				Text("Done", bundle: .elvahCharge).tag(ActivityInfoComponent.ActivityState.success)
-				Text("Error", bundle: .elvahCharge).tag(ActivityInfoComponent.ActivityState.error)
+				Text(verbatim: "Done").tag(ActivityInfoComponent.ActivityState.success)
+				Text(verbatim: "Error").tag(ActivityInfoComponent.ActivityState.error)
 			}
 			.labelsHidden()
 			VStack {
@@ -236,7 +236,7 @@ private struct PreviewData: View {
 			ActivityInfoComponent(
 				state: state,
 				title: showTitle ? "Preparing" : nil,
-				message: showMessage ? "Checking for current prices.\nWe're almost there!" : nil
+				message: showMessage ? "Checking for current price.\nWe're almost there!" : nil
 			)
 			.animation(.bouncy, value: state)
 			.animation(.default, value: showTitle)

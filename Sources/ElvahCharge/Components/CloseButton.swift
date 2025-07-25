@@ -4,15 +4,17 @@ import SwiftUI
 
 @available(iOS 16.0, *)
 package struct CloseButton: View {
-	var action: () -> Void
+	@Environment(\.dismiss) private var dismiss
 
-	package init(action: @escaping () -> Void) {
+	var action: (() -> Void)?
+
+	package init(action: (() -> Void)? = nil) {
 		self.action = action
 	}
 
 	package var body: some View {
 		Button {
-			action()
+			action?() ?? dismiss()
 		} label: {
 			Image(.close)
 				.resizable()

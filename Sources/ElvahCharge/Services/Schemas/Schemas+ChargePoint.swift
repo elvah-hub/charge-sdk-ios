@@ -3,7 +3,7 @@
 import Foundation
 
 extension ChargePoint {
-	static func parse(_ response: DealSchema) throws(NetworkError) -> ChargePoint {
+	static func parse(_ response: ChargeOfferSchema) throws(NetworkError.Client) -> ChargePoint {
 		var powerType: PowerType? {
 			if let powerSpecification = response.powerSpecification {
 				return PowerType(rawValue: powerSpecification.type)
@@ -12,20 +12,14 @@ extension ChargePoint {
 		}
 
 		return ChargePoint(
-			details: ChargePointDetails(
-				evseId: response.evseId,
-				physicalReference: nil,
-				maxPowerInKw: response.powerSpecification?.maxPowerInKW ?? 0,
-				availability: .available, // TODO: Missing
-				availabilityUpdatedAt: Date.now, // TODO: Missing
-				connectors: [], // TODO: Missing
-				speed: .unknown, // TODO: Missing
-				powerType: powerType
-			),
-			price: ChargePointPrice(
-				evseId: response.evseId,
-				value: Currency(response.pricePerKWh, identifier: response.currency)
-			)
+			evseId: response.evseId,
+			physicalReference: nil,
+			maxPowerInKw: response.powerSpecification?.maxPowerInKW ?? 0,
+			availability: .available, // TODO: Missing
+			availabilityUpdatedAt: Date.now, // TODO: Missing
+			connectors: [], // TODO: Missing
+			speed: .unknown, // TODO: Missing
+			powerType: powerType
 		)
 	}
 }

@@ -3,13 +3,13 @@
 import Foundation
 
 /// A charge point's connector.
-package enum ConnectorType: String, Hashable, Codable, Identifiable, Sendable, Comparable {
+public enum ConnectorType: String, Hashable, Codable, Identifiable, Sendable, Comparable {
 	case chademo = "CHADEMO"
 	case combo = "COMBO"
 	case other = "OTHER"
 	case type2 = "TYPE_2"
 
-	package var id: String {
+	public var id: String {
 		rawValue
 	}
 
@@ -17,7 +17,7 @@ package enum ConnectorType: String, Hashable, Codable, Identifiable, Sendable, C
 		self = .init(rawValue: rawOrOther ?? Self.other.rawValue) ?? .other
 	}
 
-	package var sortPriority: Int {
+	public var sortPriority: Int {
 		switch self {
 		case .combo:
 			return 1
@@ -33,7 +33,7 @@ package enum ConnectorType: String, Hashable, Codable, Identifiable, Sendable, C
 		}
 	}
 
-	package static func < (lhs: ConnectorType, rhs: ConnectorType) -> Bool {
+	public static func < (lhs: ConnectorType, rhs: ConnectorType) -> Bool {
 		return lhs.sortPriority < rhs.sortPriority
 	}
 }

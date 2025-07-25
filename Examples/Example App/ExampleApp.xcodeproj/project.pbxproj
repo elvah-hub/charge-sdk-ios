@@ -12,10 +12,22 @@
 
 /* Begin PBXFileReference section */
 		41763F5D2C2D340E00F42070 /* ExampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		41936C3F2E33589800FC9078 /* charge-sdk-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "charge-sdk-ios"; path = "/Users/Shared/Code/charge-sdk-ios"; sourceTree = "<absolute>"; };
+		41936C8C2E33954C00FC9078 /* CLAUDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLAUDE.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		41936C8B2E33907D00FC9078 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 41763F5C2C2D340E00F42070 /* ExampleApp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		41F04A382D78671600D981D6 /* ExampleApp */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ExampleApp; sourceTree = "<group>"; };
+		41F04A382D78671600D981D6 /* ExampleApp */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (41936C8B2E33907D00FC9078 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = ExampleApp; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +45,8 @@
 		41763F542C2D340E00F42070 = {
 			isa = PBXGroup;
 			children = (
+				41936C8C2E33954C00FC9078 /* CLAUDE.md */,
+				41936C3F2E33589800FC9078 /* charge-sdk-ios */,
 				41F04A382D78671600D981D6 /* ExampleApp */,
 				419FCA002DA51C6400F08009 /* Frameworks */,
 				41763F5E2C2D340E00F42070 /* Products */,
@@ -271,6 +285,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ExampleApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Charging Example";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -306,6 +321,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ExampleApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Charging Example";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

@@ -6,15 +6,17 @@ import SwiftUI
 /// An instance of charging an electric car at a charge point.
 public struct ChargeSession: Codable, Hashable, Sendable {
 	package var evseId: String
-	package var status: Status?
+	public var status: Status?
 	package var consumption: KilowattHours
-	package var duration: TimeInterval
+
+	/// The duration of the charge session, in seconds.
+	public var duration: TimeInterval
 
 	package init(
 		evseId: String,
 		status: Status? = nil,
-		consumption: KilowattHours,
-		duration: TimeInterval
+		consumption: KilowattHours = 0,
+		duration: TimeInterval = 0
 	) {
 		self.evseId = evseId
 		self.status = status
@@ -22,7 +24,7 @@ public struct ChargeSession: Codable, Hashable, Sendable {
 		self.duration = duration
 	}
 
-	package enum Status: String, Codable, Hashable, Sendable {
+	public enum Status: String, Codable, Hashable, Sendable {
 		case startRequested = "START_REQUESTED"
 		case startRejected = "START_REJECTED"
 		case started = "STARTED"
@@ -45,7 +47,7 @@ public struct ChargeSession: Codable, Hashable, Sendable {
 package extension ChargeSession {
 	static func mock(
 		status: ChargeSession.Status,
-		evseId: String = ChargePoint.mockAvailable.details.evseId
+		evseId: String = ChargePoint.mockAvailable.evseId
 	) -> ChargeSession {
 		.init(
 			evseId: evseId,

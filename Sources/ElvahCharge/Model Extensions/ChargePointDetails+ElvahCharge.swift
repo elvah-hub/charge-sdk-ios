@@ -3,7 +3,7 @@
 import SwiftUI
 
 @available(iOS 16.0, *)
-package extension ChargePointDetails {
+package extension ChargePoint {
 	/// Returns a user-facing label that can be used to describe the chargePoint's availability.
 	var localizedAvailability: String {
 		if isOccupied {
@@ -19,7 +19,7 @@ package extension ChargePointDetails {
 }
 
 @available(iOS 16.0, *)
-package extension [ChargePointDetails] {
+package extension [ChargePoint] {
 	var maxPowerInKW: Double? {
 		map(\.maxPowerInKw).max()
 	}

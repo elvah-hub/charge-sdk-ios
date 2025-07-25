@@ -47,9 +47,9 @@ extension LabeledContentStyle where Self == AdaptiveLabeledContentStyle {
 @available(iOS 16.0, *)
 #Preview {
 	LabeledContent {
-		Text("Content")
+		Text(verbatim: "Content")
 	} label: {
-		Text("Label")
+		Text(verbatim: "Label")
 	}
 	.labeledContentStyle(.adaptiveLayout)
 	.padding()

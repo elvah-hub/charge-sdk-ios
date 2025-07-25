@@ -7,7 +7,6 @@ import SwiftUI
 #endif
 
 final class ChargeService: Sendable {
-	private static let serviceName = "Charge"
 	private let client: NetworkClient
 	private let apiKey: String
 	private let environment: BackendEnvironment
@@ -17,7 +16,7 @@ final class ChargeService: Sendable {
 		self.environment = environment
 
 		let baseURL = environment.urlForService()
-		client = .init(baseURL: baseURL, environment: environment)
+		client = .init(name: "Charge", baseURL: baseURL, environment: environment)
 	}
 
 	func start(authentication: ChargeAuthentication) async throws(NetworkError) {
@@ -32,7 +31,6 @@ final class ChargeService: Sendable {
 				request.setBearerToken(authentication.token)
 			}
 		} catch {
-			logCommonNetworkError(error, name: Self.serviceName)
 			throw error.externalError
 		}
 	}
@@ -50,12 +48,8 @@ final class ChargeService: Sendable {
 			}
 
 			return try ChargeSession.parse(response.value.data)
-		} catch let error as NetworkError.Client {
-			logCommonNetworkError(error, name: Self.serviceName)
-			throw error.externalError
 		} catch {
-			logCommonNetworkError(error, name: Self.serviceName)
-			throw NetworkError.unknown
+			throw error.externalError
 		}
 	}
 
@@ -71,7 +65,6 @@ final class ChargeService: Sendable {
 				request.setBearerToken(authentication.token)
 			}
 		} catch {
-			logCommonNetworkError(error, name: Self.serviceName)
 			throw error.externalError
 		}
 	}

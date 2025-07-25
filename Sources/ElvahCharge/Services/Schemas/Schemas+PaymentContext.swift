@@ -3,7 +3,9 @@
 import Foundation
 
 extension PaymentContext {
-	static func parse(_ response: PaymentContextSchema) throws(NetworkError) -> PaymentContext {
+	static func parse(
+		_ response: PaymentContextSchema
+	) throws(NetworkError.Client) -> PaymentContext {
 		var logoUrl: URL? {
 			guard let logoUrlString = response.organisationDetails.logoUrl else {
 				return nil

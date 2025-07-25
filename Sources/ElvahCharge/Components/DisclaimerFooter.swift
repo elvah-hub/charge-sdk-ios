@@ -13,6 +13,7 @@ struct DisclaimerFooter: View {
 				Image(.diamond)
 					.foregroundStyle(.brand)
 				Image(.elvahTextLogo)
+					.foregroundStyle(.primaryContent)
 			}
 		}
 		.dynamicTypeSize(...(.xxLarge))

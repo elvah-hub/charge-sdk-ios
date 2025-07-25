@@ -3,14 +3,60 @@
 import SwiftUI
 
 /// An enum containing the names of the fonts that this SDK uses.
-package enum CoreFont: String, CaseIterable, Sendable {
-	case inter = "Inter"
+public enum CoreFont: Hashable, Sendable {
+	/// The default font of the SDK.
+	case `default`
+	
+	/// A custom font family that can be passed to the SDK.
+	///
+	/// Use this case to provide your own custom font to be used throughout the SDK's UI components.
+	/// The font family name should match exactly what you've registered with the system.
+	///
+	/// Example usage:
+	/// ```swift
+	/// let theme = Theme(
+	///   color: .default,
+	///   font: .custom(family: "MyCustomFont")
+	/// )
+	/// let configuration = Elvah.Configuration(
+	///   apiKey: "your-api-key",
+	///   theme: theme
+	/// )
+	/// ```
+	///
+	/// - Important: The custom font must already be registered with the system before initializing
+	/// the SDK. This typically means adding the font files to your app bundle and declaring them
+	/// in your app's Info.plist under the "Fonts provided by application" key.
+	///
+	/// - Important: The font must support different font weights (Font.Weight values used by SwiftUI)
+	/// to ensure proper display across all SDK components. The SDK uses various weights including
+	/// regular, medium, semibold, and bold depending on your theme configuration.
+	///
+	/// - Parameter family: The name of the custom font family as registered with the system.
+	case custom(family: String)
 
-	var fileName: String {
+	package var rawValue: String {
 		switch self {
-		case .inter:
-			"Inter.ttf"
+		case .default:
+			"Inter"
+		case .custom(let family):
+			family
 		}
+	}
+
+	package var fileName: String {
+		switch self {
+		case .default:
+			"Inter.ttf"
+		case .custom:
+			// Custom fonts are assumed to be already registered by the host app
+			""
+		}
+	}
+
+	/// Returns the cases that need font registration by the SDK.
+	package static var registrableCases: [CoreFont] {
+		[.default]
 	}
 
 	package enum Weight: Hashable, Sendable {
@@ -90,14 +136,14 @@ package extension View {
 	/// - Parameter style: The font style to apply.
 	/// - Returns: A view with a themed font and font weight.
 	func typography(_ style: CoreFont.Style) -> some View {
-		font(.inter(size: style.size, relativeTo: style.sizeRelation))
+		font(.themed(size: style.size, relativeTo: style.sizeRelation))
 	}
 
 	/// Returns a view with a themed font and font weight.
 	/// - Parameter style: The font style and weight to apply.
 	/// - Returns: A view with a themed font and font weight.
 	func typography(_ style: CoreFont.Style, weight: CoreFont.Weight) -> some View {
-		font(.inter(size: style.size, relativeTo: style.sizeRelation))
+		font(.themed(size: style.size, relativeTo: style.sizeRelation))
 			.fontWeight(weight.swiftUIWeight)
 	}
 
@@ -110,8 +156,8 @@ package extension View {
 }
 
 package extension Font {
-	/// Returns the "Inter" font with the specified size and relative text style.
-	static func inter(size: CGFloat, relativeTo textStyle: Font.TextStyle = .body) -> Font {
-		.custom(CoreFont.inter.rawValue, size: size, relativeTo: textStyle)
+	/// Returns the themed font with the specified size and relative text style.
+	static func themed(size: CGFloat, relativeTo textStyle: Font.TextStyle = .body) -> Font {
+		.custom(Elvah.configuration.theme.typography.font.rawValue, size: size, relativeTo: textStyle)
 	}
 }

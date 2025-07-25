@@ -10,13 +10,17 @@ public enum BackendEnvironment: Sendable, Hashable {
 	/// developers of this SDK.
 	@_spi(Debug) case integration
 
+	/// The simulation environment.
+	case simulation
+
 	/// The production environment.
 	case production
 
 	/// Returns the base domain URL for the current environment.
 	package var baseDomain: String {
 		return switch self {
-		case .integration:
+		case .integration,
+		     .simulation:
 			"integrate.int.elvah.de"
 		case .production:
 			// TODO: Replace with production url once available
@@ -27,6 +31,11 @@ public enum BackendEnvironment: Sendable, Hashable {
 	/// Returns `true` if the current environment is `integration`.
 	public var isIntegration: Bool {
 		self == .integration
+	}
+
+	/// Returns `true` if the current environment is `simulation`.
+	public var isSimulation: Bool {
+		self == .simulation
 	}
 
 	/// Returns true if the current environment is `production`.

@@ -4,7 +4,7 @@ import SwiftUI
 
 @available(iOS 16.0, *)
 actor ImageLoader {
-	private static let cache = NSCache<NSURL, UIImage>()
+	nonisolated(unsafe) private static let cache = NSCache<NSURL, UIImage>()
 	static let shared = ImageLoader()
 
 	private init() {}

@@ -5,7 +5,7 @@ import SwiftUI
 @available(iOS 16.0, *)
 struct StartChargeInfoComponent: View {
 	@Environment(\.dismiss) private var dismiss
-	let chargePoint: ChargePointDetails
+	let chargePoint: ChargePoint
 
 	var body: some View {
 		BottomSheetComponent(title: "Charge") {
