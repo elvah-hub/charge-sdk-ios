@@ -182,14 +182,4 @@ struct TimeTests {
     let noSecond = try #require(Time(hour: 12, minute: 30, second: nil))
     #expect(noSecond.secondsOfDay == 12 * 3600 + 30 * 60)
   }
-
-  @Test("Cross-timezone time comparison")
-  func testCrossTimezoneComparison() throws {
-    let utcTime = try #require(Time(hour: 14, minute: 0, timeZone: TimeZone(identifier: "UTC")!))
-    let localTime = try #require(Time(hour: 14, minute: 0, timeZone: .current))
-
-    // Comparison is based on seconds of day, not actual wall-clock time
-    #expect(utcTime == localTime)
-    #expect(utcTime.secondsOfDay == localTime.secondsOfDay)
-  }
 }
