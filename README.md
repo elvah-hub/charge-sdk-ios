@@ -41,12 +41,12 @@ The package should appear in the list. Select it and click "Add Package" in the 
 
 ## Getting Started
 
-To set up the SDK, call ``Elvah.initialize(with:)`` as early as possible in your app's lifecycle. A good place could be the `AppDelegate` for UIKit apps or the `App`'s initializer for SwiftUI apps.
+To set up the SDK, call `Elvah.initialize(with:)` as early as possible in your app's lifecycle. A good place could be the `AppDelegate` for UIKit apps or the `App`'s initializer for SwiftUI apps.
 
 The configuration allows you to pass the following values:
 - `apiKey`: The API key that allows the SDK to connect with elvah's backend.
 - `store`: The `UserDefaults` store that the SDK should use to store local data. Defaults to `UserDefaults.standard`.
-- `theme`: The theme that should be used in the visual components of the SDK. Defaults to `.neutral`.
+- `theme`: The theme that should be used in the visual components of the SDK. Defaults to `.default`.
 
 > [!NOTE]
 > If you do not have an api key yet or just want to quickly test capabilities, you can initialize the SDK in simulation mode:
@@ -167,7 +167,7 @@ Users should be able to reopen an active charge session that was minimized, whet
 However, it is usually a good idea to also offer a prominently placed button or banner in your app that users can tap
 to re-open an active charge session without having to go back to a place where the `ChargeBanner` is being shown.
 
-You can do this by adding the `.chargePresentation(isPresented:)` view modifier anywhere in your app. While you can trigger that presentation at any time, it makes sense to do so only when there is an active charge session.
+You can do this by adding the `.chargeSessionPresentation(isPresented:)` view modifier anywhere in your app. While you can trigger that presentation at any time, it makes sense to do so only when there is an active charge session.
 
 To detect this, you can observe charge session updates using the `ChargeSession.updates()` method. This method returns an `AsyncStream` that yields whenever there are changes to the charge session status. 
 
