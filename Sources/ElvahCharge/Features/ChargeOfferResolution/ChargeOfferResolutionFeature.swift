@@ -36,6 +36,7 @@ struct ChargeOfferResolutionFeature: View {
 	@ViewBuilder private var loadingContent: some View {
 		NavigationStack {
 			ActivityInfoComponent(state: .animating, title: nil, message: nil)
+				.frame(maxWidth: .infinity, maxHeight: .infinity)
 				.toolbar {
 					ToolbarItem(placement: .topBarLeading) {
 						CloseButton()
@@ -47,6 +48,7 @@ struct ChargeOfferResolutionFeature: View {
 	@ViewBuilder private func errorContent(error: any Error) -> some View {
 		NavigationStack {
 			ErrorView()
+				.frame(maxWidth: .infinity, maxHeight: .infinity)
 				.toolbar {
 					ToolbarItem(placement: .topBarLeading) {
 						CloseButton()
