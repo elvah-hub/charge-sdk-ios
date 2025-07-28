@@ -186,8 +186,10 @@ extension ChargeOfferDetailFeature {
 				}
 
 				let PriceLayout = dynamicTypeSize.isAccessibilitySize || offer.evseId.count > 15
-				? AnyLayout(VStackLayout(alignment: .trailing))
-				: AnyLayout(HStackLayout())
+					? AnyLayout(
+						VStackLayout(alignment: dynamicTypeSize.isAccessibilitySize ? .leading : .trailing)
+					)
+					: AnyLayout(HStackLayout())
 
 				HStack {
 					VStack(alignment: .leading, spacing: Size.XXS.size) {
@@ -213,8 +215,10 @@ extension ChargeOfferDetailFeature {
 						}
 						AdaptiveHStack(horizontalAlignment: .leading) { isHorizontalStack in
 							maxPowerLabel
-							if isHorizontalStack, offer.isDiscounted {
+							if isHorizontalStack {
 								Spacer()
+							}
+							if offer.isDiscounted {
 								offerEndTimer
 							}
 						}
