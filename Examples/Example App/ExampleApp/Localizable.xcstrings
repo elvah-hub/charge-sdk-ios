@@ -1,16 +1,37 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ kW" : {
+
+    },
+    "Available Charge Offers" : {
+
+    },
     "Charge Banner" : {
 
     },
     "Charge Banner (Advanced)" : {
 
     },
+    "Charge Offer List" : {
+
+    },
+    "Charge Offers" : {
+
+    },
     "Charge Session Active" : {
 
     },
     "Charging App" : {
+
+    },
+    "Error loading offers" : {
+
+    },
+    "Load Charge Offers" : {
+
+    },
+    "Loading offers..." : {
 
     },
     "See how you can integrate charge offers into your app and offer charge deals to your users." : {

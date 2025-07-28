@@ -15,6 +15,7 @@ struct Root: View {
 				Section {
 					NavigationLink("Charge Banner", value: Destination.simpleChargeBanner)
 					NavigationLink("Charge Banner (Advanced)", value: Destination.advancedChargeBanner)
+					NavigationLink("Charge Offer List", value: Destination.chargeOfferList)
 				} footer: {
 					Text(
 						"See how you can integrate charge offers into your app and offer charge deals to your users."
@@ -29,6 +30,8 @@ struct Root: View {
 					AdvancedChargeBannerDemo()
 				case .chargeSessionObservation:
 					ChargeSessionObservationDemo()
+				case .chargeOfferList:
+					ChargeOfferListDemo()
 				}
 			}
 			.navigationTitle("Charging App")
@@ -40,6 +43,7 @@ private enum Destination: Hashable {
 	case simpleChargeBanner
 	case advancedChargeBanner
 	case chargeSessionObservation
+	case chargeOfferList
 }
 
 #Preview {

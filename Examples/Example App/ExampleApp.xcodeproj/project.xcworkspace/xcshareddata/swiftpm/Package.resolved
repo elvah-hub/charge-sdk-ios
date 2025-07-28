@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/elvah-hub/charge-sdk-ios",
       "state" : {
-        "branch" : "list-of-chargepoints",
-        "revision" : "efdfebf46785ae400e3cb2ce4a8645faee1da664"
+        "revision" : "be0fa52f35dce5359be4be1a25286c603ddd1e20",
+        "version" : "0.1.0"
       }
     },
     {

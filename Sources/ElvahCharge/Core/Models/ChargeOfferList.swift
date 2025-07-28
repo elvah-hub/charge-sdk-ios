@@ -3,7 +3,7 @@
 import Foundation
 
 /// A collection of charge offers with a unique identifier for presentation purposes.
-public struct ChargeOfferList: Identifiable, Sendable, Collection {
+public struct ChargeOfferList: Identifiable, Sendable, Collection, RandomAccessCollection, Equatable {
 	/// A unique identifier for this list of charge offers.
 	public var id = UUID()
 
