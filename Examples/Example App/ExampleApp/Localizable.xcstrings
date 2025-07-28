@@ -1,12 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Campaign Banner" : {
-
-    },
-    "Campaign Banner (Advanced)" : {
-
-    },
     "Charge Banner" : {
 
     },
@@ -34,7 +28,7 @@
     "Show Charge Session" : {
 
     },
-    "Show Deals Nearby" : {
+    "Show Offers Nearby" : {
 
     }
   },

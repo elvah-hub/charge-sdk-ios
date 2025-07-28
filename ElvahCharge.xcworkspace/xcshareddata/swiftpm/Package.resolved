@@ -1,15 +1,6 @@
 {
-  "originHash" : "78a67d1fa89299e3a40b949b9df233e92887ab33bdf599a1386d9565329a5df2",
+  "originHash" : "104d99ac8fa5d676b077a28a075ccb9e4fad66f29d83d425ba6d27e92907c97e",
   "pins" : [
-    {
-      "identity" : "charge-sdk-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/elvah-hub/charge-sdk-ios",
-      "state" : {
-        "branch" : "list-of-chargepoints",
-        "revision" : "efdfebf46785ae400e3cb2ce4a8645faee1da664"
-      }
-    },
     {
       "identity" : "defaults",
       "kind" : "remoteSourceControl",

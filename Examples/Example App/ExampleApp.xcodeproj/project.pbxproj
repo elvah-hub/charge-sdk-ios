@@ -8,16 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		419FCA022DA51C6400F08009 /* ElvahCharge in Frameworks */ = {isa = PBXBuildFile; productRef = 419FCA012DA51C6400F08009 /* ElvahCharge */; };
+		41C1CF2B2E374E80003D5A2C /* ElvahCharge in Frameworks */ = {isa = PBXBuildFile; productRef = 41C1CF2A2E374E80003D5A2C /* ElvahCharge */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		41763F5D2C2D340E00F42070 /* ExampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		41936C3F2E33589800FC9078 /* charge-sdk-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "charge-sdk-ios"; path = "/Users/Shared/Code/charge-sdk-ios"; sourceTree = "<absolute>"; };
 		41936C8C2E33954C00FC9078 /* CLAUDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLAUDE.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		41936C8B2E33907D00FC9078 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		41333A6B2E3752470021C2A1 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -27,7 +27,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		41F04A382D78671600D981D6 /* ExampleApp */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (41936C8B2E33907D00FC9078 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = ExampleApp; sourceTree = "<group>"; };
+		41333A5F2E3752470021C2A1 /* ExampleApp */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (41333A6B2E3752470021C2A1 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = ExampleApp; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +36,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				419FCA022DA51C6400F08009 /* ElvahCharge in Frameworks */,
+				41C1CF2B2E374E80003D5A2C /* ElvahCharge in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,8 +47,7 @@
 			isa = PBXGroup;
 			children = (
 				41936C8C2E33954C00FC9078 /* CLAUDE.md */,
-				41936C3F2E33589800FC9078 /* charge-sdk-ios */,
-				41F04A382D78671600D981D6 /* ExampleApp */,
+				41333A5F2E3752470021C2A1 /* ExampleApp */,
 				419FCA002DA51C6400F08009 /* Frameworks */,
 				41763F5E2C2D340E00F42070 /* Products */,
 			);
@@ -84,7 +84,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				41F04A382D78671600D981D6 /* ExampleApp */,
+				41333A5F2E3752470021C2A1 /* ExampleApp */,
 			);
 			name = ExampleApp;
 			productName = ExampleApp;
@@ -117,7 +117,7 @@
 			);
 			mainGroup = 41763F542C2D340E00F42070;
 			packageReferences = (
-				41F04A832D786CF700D981D6 /* XCRemoteSwiftPackageReference "charge-sdk-ios" */,
+				41C1CF292E374E80003D5A2C /* XCRemoteSwiftPackageReference "charge-sdk-ios" */,
 			);
 			productRefGroup = 41763F5E2C2D340E00F42070 /* Products */;
 			projectDirPath = "";
@@ -370,6 +370,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		41C1CF292E374E80003D5A2C /* XCRemoteSwiftPackageReference "charge-sdk-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/elvah-hub/charge-sdk-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
 		41F04A832D786CF700D981D6 /* XCRemoteSwiftPackageReference "charge-sdk-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/elvah-hub/charge-sdk-ios";
@@ -384,6 +392,11 @@
 		419FCA012DA51C6400F08009 /* ElvahCharge */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 41F04A832D786CF700D981D6 /* XCRemoteSwiftPackageReference "charge-sdk-ios" */;
+			productName = ElvahCharge;
+		};
+		41C1CF2A2E374E80003D5A2C /* ElvahCharge */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 41C1CF292E374E80003D5A2C /* XCRemoteSwiftPackageReference "charge-sdk-ios" */;
 			productName = ElvahCharge;
 		};
 /* End XCSwiftPackageProductDependency section */
