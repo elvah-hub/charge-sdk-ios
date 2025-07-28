@@ -12,6 +12,9 @@ import MapKit
 /// and replacing them with configurable behaviors. This allows developers to test various charge
 /// scenarios including successful flows, failures, and edge cases.
 ///
+/// - Note: The simulator is only available in debug builds via the `@_spi(Debug)` attribute.
+/// - Warning: The `ChargeSimulator` is not part of the public api contract. Do not rely on it in production code.
+///
 /// ## Core Concepts
 ///
 /// ### Request Handler Flows
@@ -115,8 +118,6 @@ import MapKit
 /// simulator configuration.
 /// No changes to your app code are required beyond the initial setup - simply configure the
 /// simulator and use the SDK normally.
-///
-/// - Note: The simulator is only available in debug builds via the `@_spi(Debug)` attribute.
 @_spi(Debug)
 public actor ChargeSimulator {
 	package static let shared = ChargeSimulator()

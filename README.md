@@ -20,12 +20,10 @@ With just a few lines of code, you can add a `ChargeBanner` view to your app tha
 
 ## Installation
 
-The SDK supports integration into projects targeting iOS 15 and above.
-
-The SDK requires Swift 6 to compile.
+The SDK supports integration into projects targeting iOS 15 or later and requires Swift 6 for compilation.
 
 > [!NOTE]
-> While you can add the SDK to iOS 15 projects, the provided UI components require iOS 16 or above to work. See [Compatibility](#compatibility) for more details.
+> While you can add the SDK to iOS 15 projects, the provided UI components require iOS 16 or later to function. See [Compatibility](#compatibility) for more details.
 
 ### Swift Package Manager
 
@@ -37,7 +35,7 @@ Add the following line to the dependencies in your `Package.swift` file:
 
 Alternatively, if you want to add the package to your Xcode project, go to `File` > `Add Packages...` 
 and enter the URL "https://github.com/elvah-hub/charge-sdk-ios" into the search field at the top right. 
-The package should appear in the list. Select it and click "Add Package" in the bottom right.
+The package should appear in the list. Select it, then click "Add Package" in the bottom-right corner.
 
 ## Getting Started
 
@@ -297,7 +295,7 @@ You can safely include `ChargeBannerSource` and `ChargeBanner` in your view hier
 
 ## Examples
 
-You can find an example project in the `Examples` directory of this repository.
+Open `ElvahCharge.xcworkspace` at the root of the repository to run the example app. See the [Examples README](./Examples/README.md) for more information.
 
 ## Glossary
 

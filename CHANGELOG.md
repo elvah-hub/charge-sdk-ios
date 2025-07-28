@@ -61,6 +61,7 @@ All notable changes to this project will be documented in this file.
 - Renamed concept of `Deal` to `ChargeOffer`
 - Moved `Campaign.campaigns(in:)` to ChargeSite.campaigns(in:)`
 - Moved `Campaign.campaigns(near:)` to ChargeSite.campaigns(near:)`
+- Removed `onCampaignEnd(perform:)` modifier from `ChargeBanner`
 
 ### Bug Fixes
 - Added exit buttons for all states in the charge flow

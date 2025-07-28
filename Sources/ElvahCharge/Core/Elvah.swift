@@ -180,26 +180,60 @@ public extension Elvah {
 		}
 
 		/// Creates a simulation configuration for testing purposes.
-		/// 
+		///
+		/// When using simulation mode, you don't need to make any code changes to your implementation.
+		/// All internal network requests will be automatically re-routed to a simulated backend that
+		/// provides
+		/// all the data and states needed to use all of the SDK's features.
+		///
 		/// - Parameters:
 		///   - apiKey: An optional api key if you want to fetch real world charge sites.
 		///   - theme: The theme to apply to the SDK's native components.
 		///   - store: The `UserDefaults` store. Defaults to `UserDefaults.standard`.
 		/// - Returns: A Configuration instance configured for simulation mode.
 		public static func simulator(
-			apiKey: String? = nil,
 			theme: Theme = .default,
 			store: UserDefaults = .standard
 		) -> Configuration {
 			return Configuration(
-				apiKey: apiKey ?? "",
+				apiKey: "",
 				environment: .simulation,
 				theme: theme,
 				store: store,
 				isUninitialized: true
 			)
 		}
-		
+
+		/// Creates a simulation configuration for testing purposes.
+		///
+		/// When using simulation mode, you don't need to make any code changes to your implementation.
+		/// All internal network requests will be automatically re-routed to a simulated backend that
+		/// provides
+		/// all the data and states needed to use all of the SDK's features.
+		///
+		/// - Note: This initializer of `Elvah` includes a parameter for an api key, which is needed if
+		/// you want to fetch real site data in a custom flow inside the `ChargeSimulator`.
+		///
+		/// - Parameters:
+		///   - apiKey: The api key you need if you want to fetch real world charge sites using the
+		/// `ChargeSimulator`
+		///   - theme: The theme to apply to the SDK's native components.
+		///   - store: The `UserDefaults` store. Defaults to `UserDefaults.standard`.
+		/// - Returns: A Configuration instance configured for simulation mode.
+		@_spi(Debug) public static func simulator(
+			apiKey: String,
+			theme: Theme = .default,
+			store: UserDefaults = .standard
+		) -> Configuration {
+			return Configuration(
+				apiKey: apiKey,
+				environment: .simulation,
+				theme: theme,
+				store: store,
+				isUninitialized: true
+			)
+		}
+
 		/// Creates a simulation configuration for testing purposes.
 		public static var simulator: Configuration {
 			simulator()

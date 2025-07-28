@@ -65,7 +65,8 @@ struct ChargeSessionFeature: View {
 			}
 			.genericErrorBottomSheet(isPresented: $router.showGenericError)
 			.onChange(of: process) { process in
-				if process.hasFailed {
+				if case let .failed(_, error) = process {
+					Elvah.internalLogger.error("Charge Session Error: \(error)")
 					router.showGenericError = true
 				}
 			}

@@ -17,21 +17,29 @@ public struct ChargePoint: Identifiable, Hashable, Codable, Sendable {
 	public var maxPowerInKw: Double
 
 	/// The charge point's availability.
-	public var availability: Availability
+	///
+	/// - Important: Availability data is currently not available.
+	package var availability: Availability
 
 	/// The date at which the charge point's availability was last updated.
-	public var availabilityUpdatedAt: Date
+	///
+	/// - Important: Availability data is currently not available.
+	package var availabilityUpdatedAt: Date
 
 	/// The charge point's connectors.
-	public var connectors: Set<ConnectorType>
+	///
+	/// - Important: Connectors are currently not available.
+	package var connectors: Set<ConnectorType>
 
 	/// The charge point's speed.
-	public var speed: Speed
+	///
+	/// - Important: Speed data is currently not available.
+	package var speed: Speed
 
 	/// The charge point's power type.
 	public var powerType: PowerType?
 
-	package init(
+	@_spi(Debug) public init(
 		evseId: String,
 		physicalReference: String? = nil,
 		maxPowerInKw: Double,
