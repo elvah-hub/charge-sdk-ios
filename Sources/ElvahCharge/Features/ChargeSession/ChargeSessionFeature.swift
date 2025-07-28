@@ -44,6 +44,7 @@ struct ChargeSessionFeature: View {
 						router.showEndSessionConfirmation = true
 					} label: {
 						Image(.close)
+							.foregroundStyle(.primaryContent)
 					}
 					.confirmationDialog(
 						"End charge session",
