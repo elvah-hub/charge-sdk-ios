@@ -73,7 +73,7 @@ struct ChargeStartFeature: View {
 	@ViewBuilder private var successBanner: some View {
 		HStack(spacing: Size.M.size) {
 			Image(.checkmarkCircle)
-			Text("Authorization successful!", bundle: .elvahCharge)
+			Text("Authorization successful", bundle: .elvahCharge)
 				.typography(.copy(size: .small), weight: .bold)
 			Spacer()
 			Button {
@@ -111,9 +111,9 @@ struct ChargeStartFeature: View {
 
 	@ViewBuilder private var requestInformation: some View {
 		VStack(spacing: Size.M.size) {
-			ChargePointIdentifierView(point: request.deal.chargePoint)
+			ChargePointIdentifierView(point: request.signedOffer.chargePoint)
 			Button("Is the charge point locked?", bundle: .elvahCharge) {
-				router.startSessionInfo = .init(chargePoint: request.deal.chargePoint)
+				router.startSessionInfo = .init(chargePoint: request.signedOffer.chargePoint)
 			}
 			.buttonStyle(.textPrimary)
 		}
@@ -156,14 +156,14 @@ extension ChargeStartFeature {
 
 		struct StartSessionInfo: Identifiable {
 			var id = UUID()
-			var chargePoint: ChargePointDetails
+			var chargePoint: ChargePoint
 		}
 
 		@Published var showGenericError = false
 		@Published var startSessionInfo: StartSessionInfo?
 		@Published var showSupport = false
 
-		let supportSheetRouter = SupportBottomSheet.Router()
+		let supportSheetRouter = SupportFeature.Router()
 		let chargeSessionRouter = ChargeSessionFeature.Router()
 		let authenticationExpiredFeatureRouter = AuthenticationExpiredFeature.Router()
 

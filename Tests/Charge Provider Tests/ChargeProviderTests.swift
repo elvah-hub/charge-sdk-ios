@@ -4,12 +4,12 @@
 import Foundation
 import Testing
 
-@Suite
+@Suite("Charge Provider Tests")
 @MainActor
 struct ChargeProviderTests {
 	@available(iOS 16.0, *) typealias Stream = ChargeProvider.SessionUpdateStream
 
-	@Test @available(iOS 16.0, *) func testSharedSessionUpdates() async throws {
+	@Test("Shared session updates with single subscription") @available(iOS 16.0, *) func testSharedSessionUpdates() async throws {
 		let subscriptionManager = ChargeProvider.SubscriptionManager()
 		let authentication = ChargeAuthentication(token: "token", expiryDate: nil)
 
@@ -81,7 +81,7 @@ struct ChargeProviderTests {
 		await #expect(subscriptionManager.hasSubscribers() == false)
 	}
 
-	@Test @available(iOS 16.0, *)
+	@Test("Shared session updates with multiple subscriptions") @available(iOS 16.0, *)
 	func testSharedSessionUpdatesWithMultipleSubscriptions() async throws {
 		let subscriptionManager = ChargeProvider.SubscriptionManager()
 		let authentication = ChargeAuthentication(token: "token", expiryDate: nil)
@@ -157,7 +157,7 @@ struct ChargeProviderTests {
 		await #expect(simulator.metrics.fetchCount == 3)
 	}
 
-	@Test @available(iOS 16.0, *) func testSharedSessionUpdatePollingRestart() async throws {
+	@Test("Shared session update polling restart after subscription removal") @available(iOS 16.0, *) func testSharedSessionUpdatePollingRestart() async throws {
 		let subscriptionManager = ChargeProvider.SubscriptionManager()
 		let authentication = ChargeAuthentication(token: "token", expiryDate: nil)
 
@@ -222,7 +222,7 @@ struct ChargeProviderTests {
 		await #expect(simulator.metrics.fetchCount == 2)
 	}
 
-	@Test @available(iOS 16.0, *) func testSharedSessionUpdatesSpam() async throws {
+	@Test("Shared session updates with many concurrent subscriptions") @available(iOS 16.0, *) func testSharedSessionUpdatesSpam() async throws {
 		let subscriptionManager = ChargeProvider.SubscriptionManager()
 		let authentication = ChargeAuthentication(token: "token", expiryDate: nil)
 
@@ -268,7 +268,7 @@ struct ChargeProviderTests {
 
 	// MARK: - Failure Cases
 
-	@Test @available(iOS 16.0, *) func testSharedSessionUpdatesWithBasicFailure() async throws {
+	@Test("Shared session updates handles network failures and recovery") @available(iOS 16.0, *) func testSharedSessionUpdatesWithBasicFailure() async throws {
 		let subscriptionManager = ChargeProvider.SubscriptionManager()
 		let authentication = ChargeAuthentication(token: "token", expiryDate: nil)
 

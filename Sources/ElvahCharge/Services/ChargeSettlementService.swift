@@ -7,7 +7,6 @@ import SwiftUI
 #endif
 
 final class ChargeSettlementService: Sendable {
-	private static let serviceName = "ChargeSettlement"
 	private let client: NetworkClient
 	private let apiKey: String
 	private let environment: BackendEnvironment
@@ -17,7 +16,7 @@ final class ChargeSettlementService: Sendable {
 		self.environment = environment
 
 		let baseURL = environment.urlForService()
-		client = .init(baseURL: baseURL, environment: environment)
+		client = .init(name: "ChargeSettlement", baseURL: baseURL, environment: environment)
 	}
 
 	// MARK: - Setup
@@ -33,12 +32,8 @@ final class ChargeSettlementService: Sendable {
 				request.setAPIKey(apiKey)
 			}
 			return try StripeConfiguration.parse(response.value.data)
-		} catch let error as NetworkError.Client {
-			logCommonNetworkError(error, name: Self.serviceName)
-			throw error.externalError
 		} catch {
-			logCommonNetworkError(error, name: Self.serviceName)
-			throw NetworkError.unknown
+			throw error.externalError
 		}
 	}
 
@@ -58,12 +53,8 @@ final class ChargeSettlementService: Sendable {
 				request.setAPIKey(apiKey)
 			}
 			return try PaymentContext.parse(response.value.data)
-		} catch let error as NetworkError.Client {
-			logCommonNetworkError(error, name: Self.serviceName)
-			throw error.externalError
 		} catch {
-			logCommonNetworkError(error, name: Self.serviceName)
-			throw NetworkError.unknown
+			throw error.externalError
 		}
 	}
 
@@ -81,12 +72,8 @@ final class ChargeSettlementService: Sendable {
 				request.setAPIKey(apiKey)
 			}
 			return try ChargeAuthentication.parse(response.value)
-		} catch let error as NetworkError.Client {
-			logCommonNetworkError(error, name: Self.serviceName)
-			throw error.externalError
 		} catch {
-			logCommonNetworkError(error, name: Self.serviceName)
-			throw NetworkError.unknown
+			throw error.externalError
 		}
 	}
 
@@ -108,12 +95,8 @@ final class ChargeSettlementService: Sendable {
 			}
 
 			return try PaymentSummary.parse(data)
-		} catch let error as NetworkError.Client {
-			logCommonNetworkError(error, name: Self.serviceName)
-			throw error.externalError
 		} catch {
-			logCommonNetworkError(error, name: Self.serviceName)
-			throw NetworkError.unknown
+			throw error.externalError
 		}
 	}
 }

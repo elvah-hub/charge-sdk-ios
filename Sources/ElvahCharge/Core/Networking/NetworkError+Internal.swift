@@ -8,6 +8,7 @@ package extension NetworkError {
 		case connection(ConnectionError)
 		case encoding(EncodingError)
 		case decoding(DecodingError)
+		case parsing(ParsingError)
 		case serverErrorResponse(ServerErrorResponse)
 		case unacceptableStatusCode(httpStatusCode: Int)
 		case unknown(underlying: Error)
@@ -42,6 +43,8 @@ package extension NetworkError {
 			case .encoding:
 				return NetworkError.cannotParseClientRequest
 			case .decoding:
+				return NetworkError.cannotParseServerResponse
+			case .parsing:
 				return NetworkError.cannotParseServerResponse
 			case let .serverErrorResponse(serverErrorResponse):
 				switch serverErrorResponse.httpStatusCode {
@@ -108,6 +111,45 @@ package extension NetworkError {
 				}
 			}
 		}
+
+		// MARK: - Parsing Error
+
+		package struct ParsingError: Error, Sendable, CustomDebugStringConvertible {
+			package let fieldName: String
+			package let value: String?
+			package let expectedType: String?
+			package let context: String?
+
+			package init(
+				fieldName: String,
+				value: String? = nil,
+				expectedType: String? = nil,
+				context: String? = nil
+			) {
+				self.fieldName = fieldName
+				self.value = value
+				self.expectedType = expectedType
+				self.context = context
+			}
+
+			package var debugDescription: String {
+				var description = "Unable to parse '\(fieldName)'"
+
+				if let value = value {
+					description += " with value: \(value)"
+				}
+
+				if let expectedType = expectedType {
+					description += " (expected type: \(expectedType))"
+				}
+
+				if let context = context {
+					description += " - \(context)"
+				}
+
+				return description
+			}
+		}
 	}
 }
 
@@ -122,6 +164,8 @@ extension NetworkError.Client: CustomStringConvertible, LocalizedError {
 			return "Encoding error: " + errorDescription(for: error)
 		case let .decoding(error):
 			return "Decoding error: " + errorDescription(for: error)
+		case let .parsing(error):
+			return "Parsing error: \(error.debugDescription)"
 		case let .serverErrorResponse(error):
 			return error.debugDescription
 		case let .unacceptableStatusCode(httpStatusCode):

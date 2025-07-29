@@ -2,11 +2,11 @@
 
 import Foundation
 
-/// The display variant of a ``CampaignBanner`` view.
-public enum CampaignBannerVariant {
-	/// A large ``CampaignBanner`` variant.
+/// The display variant of a ``ChargeBanner`` view.
+public enum ChargeBannerVariant {
+	/// A large ``ChargeBanner`` variant.
 	case large
 
-	/// A compact ``CampaignBanner`` variant.
+	/// A compact ``ChargeBanner`` variant.
 	case compact
 }

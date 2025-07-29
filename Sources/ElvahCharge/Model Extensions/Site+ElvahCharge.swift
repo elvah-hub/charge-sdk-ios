@@ -44,43 +44,4 @@ package extension Site {
 		}
 		UIApplication.shared.open(googleMapsURL)
 	}
-
-	func chargePointsSections(
-		for deals: [Deal],
-		powerType: PowerType? = nil
-	) -> [ChargePointSection] {
-		deals.compactMap { deal in
-			// Filter by selected power type if needed
-			let chargePointPowerType = deal.chargePoint.powerType ?? .ac
-			if let powerType, chargePointPowerType != powerType {
-				return nil
-			}
-
-			return ChargePointSection(deals: [deal], pricePerKWh: deal.pricePerKWh)
-		}
-	}
-}
-
-// MARK: - Helper Types
-
-@available(iOS 16.0, *)
-package extension Site {
-	struct ChargePointSection: Identifiable, Equatable {
-		package var id: String {
-			"\(pricePerKWh.amount)+\(deals.map(\.evseId))"
-		}
-
-		package let deals: [Deal]
-		package let pricePerKWh: Currency
-		package let joinedEvseIdString: String
-
-		package init(
-			deals: [Deal],
-			pricePerKWh: Currency
-		) {
-			self.deals = deals
-			self.pricePerKWh = pricePerKWh
-			joinedEvseIdString = deals.map { $0.evseId }.sorted().joined()
-		}
-	}
 }

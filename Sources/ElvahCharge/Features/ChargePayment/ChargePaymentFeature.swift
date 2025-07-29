@@ -5,7 +5,7 @@ import Stripe
 import StripePaymentSheet
 import SwiftUI
 
-#if canImport(Code)
+#if canImport(Core)
 	import Core
 #endif
 
@@ -25,12 +25,12 @@ struct ChargePaymentFeature: View {
 		ScrollView {
 			VStack(spacing: 8) {
 				CPOLogo(url: request.paymentContext.organisationDetails.logoUrl)
-				Text(request.deal.chargePoint.evseId)
+				Text(request.signedOffer.chargePoint.evseId)
 					.typography(.title(size: .small), weight: .bold)
 					.foregroundStyle(.primaryContent)
 					.multilineTextAlignment(.center)
 
-				Text("\(request.deal.chargePoint.maxPowerInKw.formatted()) kW")
+				Text("\(request.signedOffer.chargePoint.maxPowerInKw.formatted()) kW")
 					.typography(.copy(size: .small))
 					.foregroundStyle(.secondaryContent)
 			}
@@ -47,7 +47,7 @@ struct ChargePaymentFeature: View {
 		.toolbarBackground(.canvas, for: .navigationBar)
 		.toolbar {
 			ToolbarItem(placement: .principal) {
-				StyledNavigationTitle(request.deal.chargePoint.evseId)
+				StyledNavigationTitle(request.signedOffer.chargePoint.evseId)
 			}
 			ToolbarItem(placement: .topBarLeading) {
 				CloseButton {
@@ -87,15 +87,17 @@ struct ChargePaymentFeature: View {
 				router.showLegalLinkOptions = false
 			}
 		}
-		.sheet(isPresented: $router.showDealEndedSheet) {
-			DealEndedBottomSheet()
+		.sheet(isPresented: $router.showOfferUnavailableSheet) {
+			OfferEndedBottomSheet()
 		}
 	}
 
 	@ViewBuilder private var costInformation: some View {
 		CustomSectionStack {
-			AdhocCostsBoxComponent(deal: request.deal) { action in }
-			offerEndLabel
+			AdhocCostsBoxComponent(offer: request.signedOffer.offer) { action in }
+			if request.signedOffer.offer.isDiscounted {
+				offerEndLabel
+			}
 		}
 		.padding(16)
 		.frame(maxWidth: .infinity, alignment: .leading)
@@ -103,8 +105,8 @@ struct ChargePaymentFeature: View {
 
 	@ViewBuilder private var offerEndLabel: some View {
 		TimelineView(.periodic(from: .now, by: 1)) { context in
-			DealEndLabel(
-				deal: request.deal,
+			OfferEndLabel(
+				offer: request.signedOffer.offer,
 				referenceDate: context.date,
 				prefix: "Offer ends in ",
 				primaryColor: .primaryContent,
@@ -119,12 +121,12 @@ struct ChargePaymentFeature: View {
 		FooterView {
 			VStack(spacing: Size.L.size) {
 				Button {
-					if request.deal.hasEnded {
-						router.showDealEndedSheet = true
-					} else {
+					if request.signedOffer.isAvailable {
 						$payment.run {
 							await pay()
 						}
+					} else {
+						router.showOfferUnavailableSheet = true
 					}
 				} label: {
 					ViewThatFits(in: .horizontal) {
@@ -159,15 +161,21 @@ struct ChargePaymentFeature: View {
 	private func pay() async {
 		do {
 			let paymentContext = request.paymentContext
+			let stripePaymentResult: PaymentSheetResult
 
-			// Set the Stripe connected account to the correct value from the initiated payment response
-			STPAPIClient.shared.stripeAccount = paymentContext.accountId
+			switch Elvah.configuration.environment {
+			case .simulation:
+				stripePaymentResult = .completed
+			default:
+				// Set the Stripe connected account to the correct value from the initiated payment response
+				STPAPIClient.shared.stripeAccount = paymentContext.accountId
 
-			// Show Stripe's payment sheet and wait for the result
-			paymentSheet = PaymentSheet.from(clientSecret: paymentContext.clientSecret)
-			let stripePaymentResult = await withCheckedContinuation { continuation in
-				self.paymentSheetContinuation = continuation
-				router.showPaymentSheet = true
+				// Show Stripe's payment sheet and wait for the result
+				paymentSheet = PaymentSheet.from(clientSecret: paymentContext.clientSecret)
+				stripePaymentResult = await withCheckedContinuation { continuation in
+					self.paymentSheetContinuation = continuation
+					router.showPaymentSheet = true
+				}
 			}
 
 			switch stripePaymentResult {
@@ -219,16 +227,16 @@ extension ChargePaymentFeature {
 		@Published var showLegalLinkOptions = false
 		@Published var showPaymentSheet = false
 		@Published var showGenericError = false
-		@Published var showDealEndedSheet = false
+		@Published var showOfferUnavailableSheet = false
 
-		let supportSheetRouter = SupportBottomSheet.Router()
+		let supportSheetRouter = SupportFeature.Router()
 		let chargeStartRouter = ChargeStartFeature.Router()
 
 		func dismissPresentation() {
 			showLegalLinkOptions = false
 			showPaymentSheet = false
 			showGenericError = false
-			showDealEndedSheet = false
+			showOfferUnavailableSheet = false
 		}
 
 		func reset() {

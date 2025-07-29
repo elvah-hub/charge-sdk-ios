@@ -4,6 +4,10 @@ import Combine
 import Foundation
 import OSLog
 
+#if canImport(Defaults)
+	import Defaults
+#endif
+
 /// A configuration object for the elvah Charge SDK.
 public enum Elvah {
 	/// A unique identifier that is used as prefix in shared storage like `UserDefaults`.
@@ -17,6 +21,18 @@ public enum Elvah {
 
 	/// A flag indicating if the SDK is in debug mode.
 	package private(set) nonisolated(unsafe) static var isDebugMode = false
+
+	/// A unique identifier for the SDK. It is generated the first time the SDK is initialized and
+	/// helps with identifying users anonymously.
+	///
+	/// - Important: This identifier is a randomly generated base62 string and cannot be used to track
+	/// users outside the use of this SDK.
+	package static var distinctId: ElvahDistinctId {
+		if Defaults[.distinctId] == nil {
+			Defaults[.distinctId] = ElvahDistinctId.generate()
+		}
+		return Defaults[.distinctId]!
+	}
 
 	/// A debug session delegate.
 	package private(set) nonisolated(unsafe)
@@ -58,7 +74,7 @@ public enum Elvah {
 	}
 
 	/// Destroys the internal Elvah initialization setup.
-	@MainActor package static func destroy() {
+	@MainActor @_spi(Debug) public static func destroy() {
 		_configuration = nil
 	}
 
@@ -72,6 +88,13 @@ public enum Elvah {
 		isDebugMode = true
 		Self.debugSessionDelegate = debugSessionDelegate
 		internalLogger = Logger(subsystem: "de.elvah.sdk", category: "Internal")
+	}
+}
+
+package extension Elvah {
+	enum Constant {
+		/// The default radius in meters.
+		static let defaultRadius: Double = 20000
 	}
 }
 
@@ -154,6 +177,66 @@ public extension Elvah {
 			self.theme = theme
 			self.store = store
 			self.isUninitialized = isUninitialized
+		}
+
+		/// Creates a simulation configuration for testing purposes.
+		///
+		/// When using simulation mode, you don't need to make any code changes to your implementation.
+		/// All internal network requests will be automatically re-routed to a simulated backend that
+		/// provides
+		/// all the data and states needed to use all of the SDK's features.
+		///
+		/// - Parameters:
+		///   - apiKey: An optional api key if you want to fetch real world charge sites.
+		///   - theme: The theme to apply to the SDK's native components.
+		///   - store: The `UserDefaults` store. Defaults to `UserDefaults.standard`.
+		/// - Returns: A Configuration instance configured for simulation mode.
+		public static func simulator(
+			theme: Theme = .default,
+			store: UserDefaults = .standard
+		) -> Configuration {
+			return Configuration(
+				apiKey: "",
+				environment: .simulation,
+				theme: theme,
+				store: store,
+				isUninitialized: true
+			)
+		}
+
+		/// Creates a simulation configuration for testing purposes.
+		///
+		/// When using simulation mode, you don't need to make any code changes to your implementation.
+		/// All internal network requests will be automatically re-routed to a simulated backend that
+		/// provides
+		/// all the data and states needed to use all of the SDK's features.
+		///
+		/// - Note: This initializer of `Elvah` includes a parameter for an api key, which is needed if
+		/// you want to fetch real site data in a custom flow inside the `ChargeSimulator`.
+		///
+		/// - Parameters:
+		///   - apiKey: The api key you need if you want to fetch real world charge sites using the
+		/// `ChargeSimulator`
+		///   - theme: The theme to apply to the SDK's native components.
+		///   - store: The `UserDefaults` store. Defaults to `UserDefaults.standard`.
+		/// - Returns: A Configuration instance configured for simulation mode.
+		@_spi(Debug) public static func simulator(
+			apiKey: String,
+			theme: Theme = .default,
+			store: UserDefaults = .standard
+		) -> Configuration {
+			return Configuration(
+				apiKey: apiKey,
+				environment: .simulation,
+				theme: theme,
+				store: store,
+				isUninitialized: true
+			)
+		}
+
+		/// Creates a simulation configuration for testing purposes.
+		public static var simulator: Configuration {
+			simulator()
 		}
 
 		/// An empty configuration that is used when the client has not (yet) initialized the

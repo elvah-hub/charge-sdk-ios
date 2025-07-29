@@ -19,6 +19,26 @@ public struct Theme: Hashable, Sendable {
 		self.typography = typography
 	}
 
+	/// Creates a new theme with a custom font.
+	///
+	/// - Parameter color: The color scheme to use for the theme.
+	/// - Parameter font: The custom font to use for the theme.
+	/// - Parameter regularWeight: The regular font weight.
+	/// - Parameter boldWeight: The bold font weight.
+	public init(
+		color: Color = .default,
+		font: CoreFont = .default,
+		regularWeight: Font.Weight = .regular,
+		boldWeight: Font.Weight = .bold
+	) {
+		self.color = color
+		typography = Typography(
+			font: font,
+			regularWeight: regularWeight,
+			boldWeight: boldWeight
+		)
+	}
+
 	/// The default theme.
 	public static let `default` = Theme(color: .default, typography: .default)
 }
@@ -28,22 +48,30 @@ public struct Theme: Hashable, Sendable {
 public extension Theme {
 	/// A structure representing typography information for a theme.
 	struct Typography: Hashable, Sendable {
+		public var font: CoreFont
 		public var regularWeight: Font.Weight
 		public var boldWeight: Font.Weight
 
-		public init(regularWeight: Font.Weight, boldWeight: Font.Weight) {
+		public init(
+			font: CoreFont = .default,
+			regularWeight: Font.Weight = .regular,
+			boldWeight: Font.Weight = .bold
+		) {
 			self.regularWeight = regularWeight
 			self.boldWeight = boldWeight
+			self.font = font
 		}
 
 		public static let `default`: Typography = .neutral
 
 		public static let elvah: Typography = .init(
+			font: .default,
 			regularWeight: .medium,
 			boldWeight: .semibold
 		)
 
 		public static let neutral: Typography = .init(
+			font: .default,
 			regularWeight: .regular,
 			boldWeight: .bold
 		)

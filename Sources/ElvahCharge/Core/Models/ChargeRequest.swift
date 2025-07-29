@@ -4,30 +4,26 @@ import SwiftUI
 
 package struct ChargeRequest: Hashable, Sendable, Identifiable {
 	package var id: String {
-		deal.chargePoint.id
+		signedOffer.chargePoint.id
 	}
 
 	package var site: Site
-	package var deal: Deal
+	package var signedOffer: SignedChargeOffer
 	package var paymentContext: PaymentContext
 
 	package init(
 		site: Site,
-		deal: Deal,
+		signedOffer: SignedChargeOffer,
 		paymentContext: PaymentContext
 	) {
 		self.site = site
-		self.deal = deal
+		self.signedOffer = signedOffer
 		self.paymentContext = paymentContext
 	}
 }
 
 package extension ChargeRequest {
 	static var mock: ChargeRequest {
-		.init(
-			site: .mock,
-			deal: .mockAvailable,
-			paymentContext: .mock
-		)
+		ChargeRequest(site: .mock, signedOffer: .mockAvailable, paymentContext: .mock)
 	}
 }

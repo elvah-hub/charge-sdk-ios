@@ -17,7 +17,7 @@ struct ChargeSessionFeature: View {
 	@TaskIdentifier private var sessionObservationId
 
 	@State private var session: ChargeSession?
-	@State private var status: Status = .loading
+	@State private var status: Status = .sessionLoading
 	@State private var progress: Double = 0
 	@State private var attempts = 1
 
@@ -32,22 +32,43 @@ struct ChargeSessionFeature: View {
 			.toolbarBackground(.canvas, for: .navigationBar)
 			.toolbar {
 				ToolbarItem(placement: .topBarLeading) {
-					if session?.status == .stopped {
-						CloseButton {
-							navigationRoot.dismiss()
-						}
-					} else {
-						MinimizeButton {
-							navigationRoot.dismiss()
-						}
+					MinimizeButton {
+						navigationRoot.dismiss()
 					}
 				}
 				ToolbarItem(placement: .principal) {
 					StyledNavigationTitle("Charge Session", bundle: .elvahCharge)
 				}
+				ToolbarItem(placement: .topBarTrailing) {
+					Button {
+						router.showEndSessionConfirmation = true
+					} label: {
+						Image(.close)
+							.foregroundStyle(.primaryContent)
+					}
+					.confirmationDialog(
+						"End charge session",
+						isPresented: $router.showEndSessionConfirmation
+					) {
+						Button("End charge session") {
+							navigationRoot.dismiss()
+							chargeSessionContext = nil
+						}
+						Button("Cancel", role: .destructive) {
+							router.showEndSessionConfirmation = false
+						}
+					}
+				}
 			}
 			.sheet(isPresented: $router.showSupport) {
-				SupportBottomSheet(router: router.supportRouter)
+				SupportFeature(router: router.supportRouter)
+			}
+			.genericErrorBottomSheet(isPresented: $router.showGenericError)
+			.onChange(of: process) { process in
+				if case let .failed(_, error) = process {
+					Elvah.internalLogger.error("Charge Session Error: \(error)")
+					router.showGenericError = true
+				}
 			}
 			.onChange(of: sessionRefresh) { sessionRefresh in
 				if let error = sessionRefresh.error {
@@ -102,19 +123,19 @@ struct ChargeSessionFeature: View {
 
 	private func makeStatus(session: ChargeSession?) -> Status {
 		guard let session else {
-			return .loading
+			return .sessionLoading
 		}
 
 		switch session.status {
 		case .startRequested,
 		     .none:
-			return .activation(progress: .loading)
+			return .startRequested
 
 		case .startRejected:
-			return .activation(progress: .error)
+			return .startRejected
 
 		case .started:
-			return .connection(progress: .initial)
+			return .started
 
 		case .charging:
 			return .charging(session: session)
@@ -123,13 +144,10 @@ struct ChargeSessionFeature: View {
 			return .stopRequested
 
 		case .stopRejected:
-			return .stopFailed
+			return .stopRejected
 
 		case .stopped:
-			return .stopped(
-				chargeSessionContext: Defaults[.chargeSessionContext],
-				session: session
-			)
+			return .stopped(session: session)
 		}
 	}
 
@@ -175,27 +193,16 @@ struct ChargeSessionFeature: View {
 @available(iOS 16.0, *)
 extension ChargeSessionFeature {
 	enum Status: Hashable {
-		case loading
-		case activation(progress: ActivationProgress)
-		case connection(progress: ConnectionProgress)
+		case sessionLoading
+		case startRequested
+		case startRejected
+		case started
 		case charging(session: ChargeSession)
 		case stopRequested
-		case stopFailed
-		case stopped(chargeSessionContext: ChargeSessionContext?, session: ChargeSession)
+		case stopRejected
+		case stopped(session: ChargeSession)
 		case unauthorized
 		case unknownError
-
-		enum ActivationProgress: Hashable {
-			case loading
-			case success
-			case error
-		}
-
-		enum ConnectionProgress: Hashable {
-			case initial
-			case delayInformation
-			case success
-		}
 	}
 }
 
@@ -205,11 +212,15 @@ extension ChargeSessionFeature {
 	final class Router: BaseRouter {
 		@Published var path: NavigationPath = .init()
 		@Published var showSupport = false
+		@Published var showEndSessionConfirmation = false
+		@Published var showGenericError = false
 
-		let supportRouter: SupportBottomSheet.Router = .init()
+		let supportRouter: SupportFeature.Router = .init()
 
 		func dismissPresentation() {
 			showSupport = false
+			showEndSessionConfirmation = false
+			showGenericError = false
 		}
 
 		func reset() {
@@ -230,7 +241,7 @@ extension ChargeSessionFeature {
 	.onAppear {
 		Defaults[.chargeSessionContext] = ChargeSessionContext(
 			site: .mock,
-			deal: .mockAvailable,
+			signedOffer: .mockAvailable,
 			organisationDetails: .mock,
 			authentication: .mock,
 			paymentId: "",

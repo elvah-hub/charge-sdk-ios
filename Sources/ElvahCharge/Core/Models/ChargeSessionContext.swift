@@ -8,7 +8,7 @@ package struct ChargeSessionContext: Codable, Hashable, Sendable {
 	package var site: Site
 
 	/// The details of the deal associated with this charge session.
-	package var deal: Deal
+	package var signedOffer: SignedChargeOffer
 
 	/// The details of the CPO that owns the charge point.
 	package var organisationDetails: PaymentContext.OrganisationDetails
@@ -24,14 +24,14 @@ package struct ChargeSessionContext: Codable, Hashable, Sendable {
 
 	package init(
 		site: Site,
-		deal: Deal,
+		signedOffer: SignedChargeOffer,
 		organisationDetails: PaymentContext.OrganisationDetails,
 		authentication: ChargeAuthentication,
 		paymentId: String,
 		startedAt: Date
 	) {
 		self.site = site
-		self.deal = deal
+		self.signedOffer = signedOffer
 		self.organisationDetails = organisationDetails
 		self.authentication = authentication
 		self.paymentId = paymentId
@@ -41,7 +41,7 @@ package struct ChargeSessionContext: Codable, Hashable, Sendable {
 	package static func from(request: AuthenticatedChargeRequest) -> ChargeSessionContext {
 		ChargeSessionContext(
 			site: request.site,
-			deal: request.deal,
+			signedOffer: request.signedOffer,
 			organisationDetails: request.paymentContext.organisationDetails,
 			authentication: request.authentication,
 			paymentId: request.paymentContext.paymentId,
@@ -50,6 +50,6 @@ package struct ChargeSessionContext: Codable, Hashable, Sendable {
 	}
 
 	package func matches(_ chargePoint: ChargePoint) -> Bool {
-		deal.chargePoint.evseId == chargePoint.details.evseId
+		signedOffer.chargePoint.evseId == chargePoint.evseId
 	}
 }

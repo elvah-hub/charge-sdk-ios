@@ -21,7 +21,7 @@ package struct ChargeEntryFeature: View {
 	/// new charge session is allowed to start.
 	private var passedChargeRequest: ChargeRequest?
 
-	/// Initializes the ``ChargeEntryFeature`` with a charge request. The view will attempt to restore
+	/// Initializes the ``ChargeEntryFeature`` without a charge request. The view will attempt to restore
 	/// an active session, if one exists.
 	package init() {}
 
