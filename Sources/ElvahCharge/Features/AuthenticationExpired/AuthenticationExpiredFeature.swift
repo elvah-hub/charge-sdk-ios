@@ -70,8 +70,10 @@ extension AuthenticationExpiredFeature {
 	}
 }
 
-@available(iOS 16.0, *)
+@available(iOS 17.0, *)
 #Preview {
-	AuthenticationExpiredFeature(router: .init())
+	@Previewable @StateObject var router = AuthenticationExpiredFeature.Router()
+	AuthenticationExpiredFeature(router: router)
+		.withMockEnvironmentObjects()
 		.withFontRegistration()
 }
