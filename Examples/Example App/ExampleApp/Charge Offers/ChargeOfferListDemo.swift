@@ -49,6 +49,9 @@ struct ChargeOfferListDemo: View {
 			// Using mock EVSE IDs - in simulation mode these will return mock data
 			let evseIds = [
 				"DE*SIM*1234",
+				"DE*SIM*1235",
+				"DE*SIM*1236",
+				"DE*SIM*1237",
 			]
 
 			let offers = try await ChargeOffer.offers(forEvseIds: evseIds)

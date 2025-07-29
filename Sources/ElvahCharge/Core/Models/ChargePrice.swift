@@ -64,4 +64,44 @@ package extension ChargePrice {
 			blockingFee: ChargePrice.BlockingFee(of: Currency(0.12), startingAfter: 20)
 		)
 	}
+
+	/// Creates a randomized charge price around a base price with optional variation.
+	/// - Parameters:
+	///   - basePrice: The base price per kWh in EUR
+	///   - variation: The maximum variation from the base price (default: 0.10)
+	/// - Returns: A charge price with randomized values
+	static func randomizedPrice(
+		around basePrice: Double = 0.59,
+		variation: Double = 0.10
+	) -> ChargePrice {
+		let priceVariation = Double.random(in: -variation ... variation)
+		let finalPrice = max(0.20, basePrice + priceVariation) // Ensure minimum reasonable price
+
+		let baseFees = [nil, Currency(0.50), Currency(1.00), Currency(1.50), Currency(2.00)]
+		let randomBaseFee = baseFees.randomElement()!
+
+		let blockingFeePrice = Currency(Double.random(in: 0.10 ... 0.80))
+		let gracePeriod = [0, 5, 10, 15, 30].randomElement()!
+		let blockingFee = ChargePrice.BlockingFee(of: blockingFeePrice, startingAfter: gracePeriod)
+
+		return ChargePrice(
+			pricePerKWh: Currency(finalPrice),
+			baseFee: randomBaseFee,
+			blockingFee: Bool.random() ? blockingFee : nil
+		)
+	}
+
+	/// Creates a campaign price that's discounted from a base price.
+	/// - Parameter basePrice: The original base price to discount from
+	/// - Returns: A discounted ChargePrice for campaign offers
+	static func campaignPrice(from basePrice: ChargePrice) -> ChargePrice {
+		let discountPercentage = Double.random(in: 0.10 ... 0.30) // 10-30% discount
+		let discountedPrice = basePrice.pricePerKWh.amount * (1 - discountPercentage)
+
+		return ChargePrice(
+			pricePerKWh: Currency(discountedPrice),
+			baseFee: basePrice.baseFee,
+			blockingFee: basePrice.blockingFee
+		)
+	}
 }

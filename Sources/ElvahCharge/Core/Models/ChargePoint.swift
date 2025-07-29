@@ -188,6 +188,35 @@ package extension ChargePoint {
 		)
 	}
 
+	/// Creates a simulated charge point with the specified evseId and randomized properties.
+	/// - Parameter evseId: The evse id for the charge point
+	/// - Returns: A charge point with realistic but varied specifications
+	static func simulation(evseId: String) -> ChargePoint {
+		let powers = [22.0, 50.0, 75.0, 150.0, 250.0, 350.0]
+		let maxPower = powers.randomElement()!
+
+		let speed: Speed
+		switch maxPower {
+		case 0 ..< 25: speed = .slow
+		case 25 ..< 75: speed = .medium
+		case 75 ..< 150: speed = .fast
+		default: speed = .hyper
+		}
+
+		let powerType: PowerType = maxPower > 22 ? .dc : .ac
+
+		return ChargePoint(
+			evseId: evseId,
+			physicalReference: nil,
+			maxPowerInKw: maxPower,
+			availability: .available,
+			availabilityUpdatedAt: Date().addingTimeInterval(-Double.random(in: 0 ... 86400)),
+			connectors: [.combo],
+			speed: speed,
+			powerType: powerType
+		)
+	}
+
 	static let mockAvailable = ChargePoint(
 		evseId: "DE*SIM*1234",
 		physicalReference: nil,

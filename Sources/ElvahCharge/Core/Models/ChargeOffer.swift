@@ -128,6 +128,39 @@ package extension ChargeOffer {
 		)
 	}
 
+	/// Creates a simulated charge offer with the specific evseId and randomized properties.
+	/// - Parameter evseId: The evse ids for the charge point
+	/// - Returns: A ChargeOffer with randomized pricing and potentially campaign status
+	static func simulation(evseId: String) -> ChargeOffer {
+		let chargePoint = ChargePoint.simulation(evseId: evseId)
+		let basePrice = ChargePrice.randomizedPrice()
+		
+		// Randomly determine if this should be a campaign offer (30% chance)
+		let isCampaign = Double.random(in: 0...1) < 0.3
+		
+		let (finalPrice, originalPrice, offerType): (ChargePrice, ChargePrice?, OfferType)
+		
+		if isCampaign {
+			let campaignPrice = ChargePrice.campaignPrice(from: basePrice)
+			let campaignEndDate = Date().addingTimeInterval(Double.random(in: 3600...604800))
+			finalPrice = campaignPrice
+			originalPrice = basePrice
+			offerType = .campaign(CampaignInfo(endDate: campaignEndDate))
+		} else {
+			finalPrice = basePrice
+			originalPrice = nil
+			offerType = .standard
+		}
+		
+		return ChargeOffer(
+			chargePoint: chargePoint,
+			price: finalPrice,
+			originalPrice: originalPrice,
+			type: offerType,
+			site: .simulation
+		)
+	}
+
 	static var mockAvailable: ChargeOffer {
 		ChargeOffer(
 			chargePoint: .mockAvailable,
