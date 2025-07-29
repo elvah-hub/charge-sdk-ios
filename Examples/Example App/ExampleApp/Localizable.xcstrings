@@ -1,13 +1,22 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Campaign Banner" : {
+    "%@ kW" : {
 
     },
-    "Campaign Banner (Advanced)" : {
+    "Available Charge Offers" : {
 
     },
-    "Charge Campaign" : {
+    "Charge Banner" : {
+
+    },
+    "Charge Banner (Advanced)" : {
+
+    },
+    "Charge Offer List" : {
+
+    },
+    "Charge Offers" : {
 
     },
     "Charge Session Active" : {
@@ -16,7 +25,16 @@
     "Charging App" : {
 
     },
-    "See how you can integrate charge campaigns into your app and offer charge deals to your users." : {
+    "Error loading offers" : {
+
+    },
+    "Load Charge Offers" : {
+
+    },
+    "Loading offers..." : {
+
+    },
+    "See how you can integrate charge offers into your app and offer charge deals to your users." : {
 
     },
     "See how you can observe the status of a charge session and how to present one." : {
@@ -31,7 +49,7 @@
     "Show Charge Session" : {
 
     },
-    "Show Deals Nearby" : {
+    "Show Offers Nearby" : {
 
     }
   },

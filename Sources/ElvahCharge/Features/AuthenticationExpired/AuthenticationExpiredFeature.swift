@@ -21,7 +21,7 @@ struct AuthenticationExpiredFeature: View {
 			.padding(.horizontal)
 			VStack {
 				VStack(spacing: Size.M.size) {
-					Button("Continue", bundle: .elvahCharge) {
+					Button("Understood", bundle: .elvahCharge) {
 						navigationRoot.path = .init()
 					}
 					.buttonStyle(.primary)
@@ -46,7 +46,7 @@ struct AuthenticationExpiredFeature: View {
 			}
 		}
 		.sheet(isPresented: $router.showSupport) {
-			SupportBottomSheet(router: router.supportRouter)
+			SupportFeature(router: router.supportRouter)
 		}
 	}
 }
@@ -57,7 +57,7 @@ extension AuthenticationExpiredFeature {
 	final class Router: BaseRouter {
 		@Published var showSupport = false
 
-		let supportRouter: SupportBottomSheet.Router = .init()
+		let supportRouter: SupportFeature.Router = .init()
 
 		func dismissPresentation() {
 			showSupport = false
@@ -70,8 +70,10 @@ extension AuthenticationExpiredFeature {
 	}
 }
 
-@available(iOS 16.0, *)
+@available(iOS 17.0, *)
 #Preview {
-	AuthenticationExpiredFeature(router: .init())
+	@Previewable @StateObject var router = AuthenticationExpiredFeature.Router()
+	AuthenticationExpiredFeature(router: router)
+		.withMockEnvironmentObjects()
 		.withFontRegistration()
 }

@@ -58,8 +58,8 @@ struct ChargeEntryActivityView: View {
 		case .failedToPrepareChargeRequest:
 			ActivityInfoData(
 				state: .error,
-				title: "Could not load data",
-				message: "An unexpected error occurred"
+				title: "Oh, that didn't work out!",
+				message: "An unexpected error has occurred. Please try again or contact our support."
 			)
 		}
 	}

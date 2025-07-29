@@ -4,16 +4,22 @@ import SwiftUI
 
 @available(iOS 16.0, *)
 struct AdhocCostsBoxComponent: View {
-	let deal: Deal
+	let offer: ChargeOffer
 	let onAction: (_ action: Action) -> Void
 
 	var body: some View {
 		Group {
 			CustomSection {
 				LabeledContent {
-					HStack {
+					AdaptiveHStack(spacing: 4) {
+						if let originalPrice = offer.originalPrice?.pricePerKWh {
+							Text(originalPrice.formatted())
+								.typography(.copy(size: .large), weight: .regular)
+								.foregroundStyle(.secondaryContent)
+								.strikethrough()
+						}
 						HStack(spacing: 0) {
-							Text("\(deal.pricePerKWh.formatted())")
+							Text(verbatim: "\(offer.price.pricePerKWh.formatted())")
 								.typography(.bold)
 							Text(" /kWh", bundle: .elvahCharge)
 								.foregroundStyle(.secondaryContent)
@@ -41,7 +47,7 @@ extension AdhocCostsBoxComponent {
 #Preview {
 	ScrollView {
 		VStack(spacing: 10) {
-			AdhocCostsBoxComponent(deal: .mockAvailable) { _ in }
+			AdhocCostsBoxComponent(offer: .mockAvailable) { _ in }
 		}
 		.padding(.horizontal)
 	}

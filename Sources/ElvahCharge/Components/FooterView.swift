@@ -23,7 +23,7 @@ struct FooterView<ViewContent: View>: View {
 	VStack {
 		Spacer()
 		FooterView {
-			Text("content-sample", bundle: .elvahCharge)
+			Text(verbatim: "content-sample")
 		}
 	}
 }

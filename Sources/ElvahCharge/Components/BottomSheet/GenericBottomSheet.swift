@@ -44,7 +44,7 @@ extension View {
 			description: "An unexpected error has occurred. Please try again or contact our support.",
 			onDismiss: onDismiss,
 			actions: { dismiss in
-				Button("Got it", bundle: .elvahCharge) {
+				Button("Understood", bundle: .elvahCharge) {
 					dismiss()
 				}
 				.buttonStyle(.primary)

@@ -9,8 +9,8 @@ struct ChargePointIdentifierLabel: View {
 
 	init(point: ChargePoint) {
 		self.init(
-			evseId: point.details.evseId,
-			physicalReference: point.details.physicalReference
+			evseId: point.evseId,
+			physicalReference: point.physicalReference
 		)
 	}
 

@@ -26,10 +26,10 @@
     "%@/kWh" : {
 
     },
-    "%@kW" : {
+    "AC" : {
 
     },
-    "AC" : {
+    "Ad-hoc" : {
 
     },
     "An error occurred" : {
@@ -38,19 +38,13 @@
     "An unexpected error has occurred. Please try again or contact our support." : {
 
     },
-    "An unexpected error occurred" : {
-
-    },
-    "An unexpected error occurred." : {
-
-    },
     "Apple Maps" : {
 
     },
-    "Attempting to restore charge session" : {
+    "Attempting to restore charge session." : {
 
     },
-    "Authorization successful!" : {
+    "Authorization successful" : {
 
     },
     "Available now" : {
@@ -59,16 +53,7 @@
     "Back" : {
 
     },
-    "Best deal" : {
-
-    },
-    "Best deal around you" : {
-
-    },
     "Call" : {
-
-    },
-    "Campaign" : {
 
     },
     "Cancel" : {
@@ -86,27 +71,13 @@
     "Charge" : {
 
     },
-    "Charge at %@ from %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Charge at %1$@ from %2$@"
-          }
-        }
-      }
-    },
-    "Charge at %@ station from %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Charge at %1$@ station from %2$@"
-          }
-        }
-      }
+    "Charge Now" : {
+
     },
     "Charge Session" : {
+
+    },
+    "Charge without registration" : {
 
     },
     "Charger is awake!\nStarting session with the charger." : {
@@ -115,16 +86,10 @@
     "Charging duration" : {
 
     },
-    "Charging in progress..." : {
-
-    },
-    "Charging..." : {
+    "Charging…" : {
 
     },
     "Checking for current price.\nWe're almost there!" : {
-
-    },
-    "Checking for current prices.\nWe're almost there!" : {
 
     },
     "Close" : {
@@ -133,22 +98,7 @@
     "Connect your electric vehicle now and start the charging process." : {
 
     },
-    "Contact \"%@\" for help and support" : {
-
-    },
     "Contact Web Support Agent" : {
-
-    },
-    "Content" : {
-
-    },
-    "content-sample" : {
-
-    },
-    "Continue" : {
-
-    },
-    "Could not load data" : {
 
     },
     "CPO" : {
@@ -157,34 +107,19 @@
     "DC" : {
 
     },
-    "Deal Ended" : {
-
-    },
-    "Discover" : {
-
-    },
-    "Discover the Offer" : {
-
-    },
     "Done" : {
 
     },
     "E-Mail" : {
 
     },
-    "End Charge Session" : {
+    "End charge session" : {
 
     },
     "Ended" : {
 
     },
-    "Ends in " : {
-
-    },
     "Energy" : {
-
-    },
-    "Error" : {
 
     },
     "EVSE ID:" : {
@@ -193,22 +128,19 @@
     "Failed to load charge session details" : {
 
     },
-    "Failed to load deal" : {
+    "Failed to load offer" : {
 
     },
-    "Feedback" : {
+    "Friday" : {
 
     },
-    "First" : {
+    "from %@" : {
 
     },
-    "Found no deal" : {
+    "Get in touch with %@s team. You can do so immediately via WhatsApp or E-mail." : {
 
     },
     "Google Maps" : {
-
-    },
-    "Got it" : {
 
     },
     "Help & Support" : {
@@ -220,9 +152,6 @@
     "kWh charged" : {
 
     },
-    "Label" : {
-
-    },
     "Later" : {
 
     },
@@ -232,22 +161,7 @@
     "Loading charge point details" : {
 
     },
-    "Loading chargepoints" : {
-
-    },
-    "Loading data..." : {
-
-    },
-    "Loading site" : {
-
-    },
     "Location" : {
-
-    },
-    "Manage" : {
-
-    },
-    "Manage Charge Session" : {
 
     },
     "Manage your current charge session" : {
@@ -256,10 +170,16 @@
     "Message" : {
 
     },
+    "Monday" : {
+
+    },
+    "Need help or want to give us feedback?" : {
+
+    },
     "No Charge Session" : {
 
     },
-    "No data" : {
+    "No offer found" : {
 
     },
     "No Session" : {
@@ -274,13 +194,7 @@
     "Oh, that didn't work out!" : {
 
     },
-    "Okay" : {
-
-    },
     "Open with" : {
-
-    },
-    "Opening hours" : {
 
     },
     "Other" : {
@@ -305,6 +219,9 @@
 
     },
     "Please stop charging manually by removing the charging cable first from your car and then from the charging station.\n\nWe will analyze the problem and try to solve it together with the operator of the charging station." : {
+
+    },
+    "Please try again." : {
 
     },
     "Plug in your charging cable" : {
@@ -334,13 +251,13 @@
     "Route" : {
 
     },
-    "Second" : {
+    "Saturday" : {
 
     },
     "Select charge point" : {
 
     },
-    "Server Error" : {
+    "Server error" : {
 
     },
     "Sign in" : {
@@ -367,13 +284,13 @@
     "Starting" : {
 
     },
-    "Step" : {
-
-    },
     "Stop charging" : {
 
     },
     "Stopping" : {
+
+    },
+    "Sunday" : {
 
     },
     "Support" : {
@@ -388,25 +305,22 @@
     "Terms of Service and Charging" : {
 
     },
-    "Thanks for charging\nwith E.ON" : {
+    "The charge offers could not be loaded. Please try again later." : {
 
     },
     "The charge point reported an error" : {
 
     },
-    "The charge points could not be loaded. Please try again later." : {
+    "This offer has ended, but more are coming!" : {
 
     },
-    "The charger takes longer than usual to start.\nPlease bear with us for a moment." : {
-
-    },
-    "The current deal has ended. Please check back later for more offers and promotions." : {
-
-    },
-    "The site could not be loaded. Please try again later." : {
+    "This offer has expired, but more are coming!" : {
 
     },
     "This offer has expired, but more deals are coming!" : {
+
+    },
+    "Thursday" : {
 
     },
     "Title" : {
@@ -418,25 +332,25 @@
     "Try again" : {
 
     },
-    "Type 2" : {
+    "Tuesday" : {
 
     },
     "Understood" : {
 
     },
+    "Unfortunately, the charging session could not be started at this charge point. Please try again later or use another charge point." : {
+
+    },
     "Unfortunately, the time between payment and session start was too long. We need you to authorize a new deposit on your payment method." : {
-
-    },
-    "Unfortunately, we did not find your email app." : {
-
-    },
-    "Unfortunatly, the charging session could not be started at this charge point. Please try again later or use another charge point." : {
 
     },
     "We are connecting to the station to end the charging session." : {
 
     },
     "Web Support" : {
+
+    },
+    "Wednesday" : {
 
     },
     "WhatsApp" : {

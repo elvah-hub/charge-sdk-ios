@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
 	name: "charge-sdk-ios",
 	defaultLocalization: "en",
-	platforms: [.iOS(.v15)],
+	platforms: [.iOS(.v15), .macOS(.v11)],
 	products: [
 		.library(
 			name: "ElvahCharge",
@@ -27,6 +27,7 @@ let package = Package(
 				.product(name: "StripePaymentSheet", package: "stripe-ios"),
 			],
 			path: "Sources/ElvahCharge",
+			exclude: ["Core/Note.txt"],
 			resources: [
 				.copy("PrivacyInfo.xcprivacy"),
 				.copy("Core/Resources/Colors.xcassets"),

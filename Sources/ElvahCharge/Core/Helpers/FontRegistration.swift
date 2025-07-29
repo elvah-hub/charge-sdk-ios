@@ -6,7 +6,7 @@ import SwiftUI
 package enum FontRegistration {
 	/// Registers all fonts that this module uses.
 	package static func registerFonts() {
-		for item in CoreFont.allCases {
+		for item in CoreFont.registrableCases {
 			registerFont(fileName: item.fileName)
 		}
 	}

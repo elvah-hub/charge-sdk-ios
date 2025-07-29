@@ -17,7 +17,7 @@ final class ChargeSettlementProvider: ObservableObject {
 		self.dependencies = dependencies
 	}
 
-	func initiate(signedOffer: String) async throws -> PaymentContext {
+	func initiate(with signedOffer: String) async throws -> PaymentContext {
 		try await dependencies.initiate(signedOffer)
 	}
 
@@ -59,6 +59,23 @@ extension ChargeSettlementProvider {
 			)
 		)
 	}()
+
+	static let simulation = ChargeSettlementProvider(
+		dependencies: .init(
+			stripeConfiguration: {
+				try await ChargeSimulator.shared.stripeConfiguration()
+			},
+			initiate: { signedOffer in
+				try await ChargeSimulator.shared.initiate(signedOffer: signedOffer)
+			},
+			authorize: { paymentId in
+				try await ChargeSimulator.shared.authorize(paymentId: paymentId)
+			},
+			summary: { paymentId in
+				try await ChargeSimulator.shared.summary(paymentId: paymentId)
+			}
+		)
+	)
 
 	static let mock = ChargeSettlementProvider(
 		dependencies: .init(

@@ -6,7 +6,15 @@ import SwiftUI
 @MainActor
 final class DiscoveryProvider: ObservableObject {
 	struct Dependencies: Sendable {
-		var deals: @Sendable (_ region: MKMapRect) async throws -> [Campaign]
+		var siteOffers: @Sendable (
+			_ region: MKMapRect?,
+			_ evseIds: [String]?,
+			_ onlyCampaigns: Bool
+		) async throws -> [ChargeSite]
+		var signOffer: @Sendable (
+			_ siteId: String,
+			_ evseId: String
+		) async throws -> SignedChargeOffer
 	}
 
 	private let dependencies: Dependencies
@@ -15,13 +23,40 @@ final class DiscoveryProvider: ObservableObject {
 		self.dependencies = dependencies
 	}
 
-	func deals(in region: MKMapRect) async throws -> [Campaign] {
-		try await dependencies.deals(region)
+	func sites(forEvseIds evseIds: [String]) async throws -> [ChargeSite] {
+		try await dependencies.siteOffers(nil, evseIds, false)
 	}
 
-	func deals(near location: CLLocationCoordinate2D, radius: Double = 5) async throws -> [Campaign] {
+	func sites(in region: MKMapRect) async throws -> [ChargeSite] {
+		try await dependencies.siteOffers(region, nil, false)
+	}
+
+	func sites(
+		near location: CLLocationCoordinate2D,
+		radius: Double = Elvah.Constant.defaultRadius
+	) async throws -> [ChargeSite] {
 		let region = MKMapRect.around(location, radius: radius)
-		return try await dependencies.deals(region)
+		return try await dependencies.siteOffers(region, nil, false)
+	}
+
+	func campaigns(forEvseIds evseIds: [String]) async throws -> [ChargeSite] {
+		try await dependencies.siteOffers(nil, evseIds, true)
+	}
+
+	func campaigns(in region: MKMapRect) async throws -> [ChargeSite] {
+		try await dependencies.siteOffers(region, nil, true)
+	}
+
+	func campaigns(
+		near location: CLLocationCoordinate2D,
+		radius: Double = Elvah.Constant.defaultRadius
+	) async throws -> [ChargeSite] {
+		let region = MKMapRect.around(location, radius: radius)
+		return try await dependencies.siteOffers(region, nil, true)
+	}
+
+	func signOffer(_ offer: ChargeOffer) async throws -> SignedChargeOffer {
+		try await dependencies.signOffer(offer.site.id, offer.evseId)
 	}
 }
 
@@ -33,18 +68,43 @@ extension DiscoveryProvider {
 		)
 		return DiscoveryProvider(
 			dependencies: .init(
-				deals: { region in
-					try await service.deals(in: region)
+				siteOffers: { region, evseIds, onlyCampaigns in
+					try await service.siteOffers(
+						region: region,
+						evseIds: evseIds,
+						onlyCampaigns: onlyCampaigns
+					)
+				},
+				signOffer: { siteId, evseId in
+					try await service.signOffer(siteId: siteId, evseId: evseId)
 				}
 			)
 		)
 	}()
 
+	static let simulation = DiscoveryProvider(
+		dependencies: .init(
+			siteOffers: { region, evseIds, onlyCampaigns in
+				try await ChargeSimulator.shared.sites(
+					region: region,
+					evseIds: evseIds,
+					onlyCampaigns: onlyCampaigns
+				)
+			},
+			signOffer: { siteId, evseId in
+				try await ChargeSimulator.shared.signOffer(siteId: siteId, evseId: evseId)
+			}
+		)
+	)
+
 	@available(iOS 16.0, *) static let mock = DiscoveryProvider(
 		dependencies: .init(
-			deals: { region in
+			siteOffers: { _, _, _ in
 				try await Task.sleep(for: .milliseconds(2000))
-				return [Campaign.mock]
+				return [ChargeSite.mock]
+			},
+			signOffer: { _, _ in
+				.mockAvailable
 			}
 		)
 	)
