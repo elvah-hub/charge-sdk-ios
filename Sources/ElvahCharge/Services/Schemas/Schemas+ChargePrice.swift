@@ -5,12 +5,12 @@ import Foundation
 extension ChargePrice {
 	static func parse(_ response: ChargePriceSchema) throws(NetworkError.Client) -> ChargePrice {
 		var blockingFee: ChargePrice.BlockingFee? {
-			guard let pricePerMinute = response.blockingFee?.pricePerMinute else {
+			guard let blockingFee = response.blockingFee else {
 				return nil
 			}
 
 			return ChargePrice.BlockingFee(
-				of: Currency(pricePerMinute, identifier: response.currency),
+				of: Currency(blockingFee.pricePerMinute, identifier: response.currency),
 				startingAfter: response.blockingFee?.startsAfterMinutes
 			)
 		}
