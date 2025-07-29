@@ -627,7 +627,7 @@ public extension ChargeSimulator {
 			) async throws -> [ChargeSite] {
 				switch self {
 				case .live:
-					if Elvah.configuration.apiKey != "" {
+					if Elvah.configuration.apiKey == "" {
 						Elvah.logger.warning(
 							"""
 							You are using a live site provider but no API key was configured. \
@@ -651,7 +651,7 @@ public extension ChargeSimulator {
 			) async throws -> [ChargeSite] {
 				switch self {
 				case .live:
-					if Elvah.configuration.apiKey != "" {
+					if Elvah.configuration.apiKey == "" {
 						Elvah.logger.warning(
 							"""
 							You are using a live site provider but no API key was configured. \
