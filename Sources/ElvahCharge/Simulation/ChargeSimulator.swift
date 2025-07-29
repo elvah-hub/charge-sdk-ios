@@ -74,7 +74,7 @@ import MapKit
 ///
 /// ```swift
 /// let customFlow = ChargeSimulator.RequestHandlers(
-///     siteProvider: .demoSite,
+///     siteProvider: .demoSite, // Or: .live
 ///     onStartRequest: {
 ///         // Custom start logic - could throw errors, add delays, etc.
 ///     },
@@ -468,9 +468,106 @@ private extension Defaults.Keys {
 
 @_spi(Debug)
 public extension ChargeSimulator {
+	/// Defines the behavior of the charge simulator through a set of request handler closures.
+	///
+	/// The `RequestHandlers` struct contains closures that intercept and respond to different types
+	/// of network requests during a charge session simulation. Each handler allows you to customize
+	/// the simulator's behavior for specific scenarios like successful flows, failures, or edge cases.
+	///
+	/// ## Handler Types
+	///
+	/// ### Site Provider
+	/// Determines how charge sites are discovered and returned. Can use live API data, demo data,
+	/// or custom implementations.
+	///
+	/// ### Start Request Handler
+	/// Called when a charge session start is requested. This is where you can simulate start
+	/// failures, delays, or custom validation logic.
+	///
+	/// ### Stop Request Handler
+	/// Called when a charge session stop is requested. Receives the current session context,
+	/// allowing you to make decisions based on the session's current state.
+	///
+	/// ### Session Polling Handler
+	/// Called repeatedly (approximately every 2 seconds) during
+	/// the charge session to determine status transitions. This handler receives the current
+	/// session context and should return the next status the session should transition to,
+	/// or `nil` if no transition should occur.
 	struct RequestHandlers: Sendable {
+		/// Closure type for handling charge session start requests.
+		///
+		/// This closure is called when the SDK requests to start a charge session. It can throw
+		/// errors to simulate start failures or perform async operations to simulate delays.
+		///
+		/// - Throws: Any error to simulate a failed start request
 		public typealias StartRequest = @Sendable () async throws -> Void
+		
+		/// Closure type for handling charge session stop requests.
+		///
+		/// This closure is called when the SDK requests to stop a charge session. It receives
+		/// the current session context, allowing you to make decisions based on the session's
+		/// current state, duration, or other factors.
+		///
+		/// - Parameter session: The current session context containing status, timing, and request information
+		/// - Throws: Any error to simulate a failed stop request
 		public typealias StopRequest = @Sendable (_ session: Context) async throws -> Void
+		
+		/// Closure type for handling session status polling.
+		///
+		/// The SDK calls this closure regularly (approximately every 2 seconds) during an active
+		/// charge session to determine if the session status should change. The closure receives
+		/// detailed context about the current session state and should return:
+		///
+		/// - A new `ChargeSession.Status` if the session should transition to that status
+		/// - `nil` if the session should remain in its current status
+		///
+		/// ## Context Information Available
+		///
+		/// The `session` parameter provides access to:
+		/// - `currentStatus`: The session's current status
+		/// - `currentRequest`: Any pending user requests (start/stop)
+		/// - `elapsedSeconds`: Total time since session started
+		/// - `secondsSinceLastStatusChange`: Time since the last status transition
+		/// - `secondsSinceLastPolling`: Time since the last polling call
+		///
+		/// ## Example Usage
+		///
+		/// ```swift
+		/// onSessionPolling: { context in
+		///     switch context.currentStatus {
+		///     case .startRequested:
+		///         // Immediately transition to started
+		///         return .started
+		///         
+		///     case .started:
+		///         // Wait 3 seconds before starting to charge
+		///         return context.secondsSinceLastStatusChange > 3 ? .charging : nil
+		///         
+		///     case .charging:
+		///         // If user requested stop, transition to stopRequested
+		///         if context.currentRequest == .stopRequested {
+		///             return .stopRequested
+		///         }
+		///         // Otherwise keep charging
+		///         return nil
+		///         
+		///     case .stopRequested:
+		///         // Wait 2 seconds then stop
+		///         return context.secondsSinceLastStatusChange > 2 ? .stopped : nil
+		///         
+		///     case .stopped:
+		///         // Session is finished, no more transitions
+		///         return nil
+		///         
+		///     default:
+		///         return nil
+		///     }
+		/// }
+		/// ```
+		///
+		/// - Parameter session: The current session context with timing and status information
+		/// - Returns: The next status to transition to, or `nil` to remain in the current status
+		/// - Throws: Any error to simulate polling failures
 		public typealias SessionRequest = @Sendable (
 			_ session: Context
 		) async throws -> ChargeSession.Status?
