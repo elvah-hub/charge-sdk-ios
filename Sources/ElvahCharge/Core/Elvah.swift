@@ -187,7 +187,6 @@ public extension Elvah {
 		/// all the data and states needed to use all of the SDK's features.
 		///
 		/// - Parameters:
-		///   - apiKey: An optional api key if you want to fetch real world charge sites.
 		///   - theme: The theme to apply to the SDK's native components.
 		///   - store: The `UserDefaults` store. Defaults to `UserDefaults.standard`.
 		/// - Returns: A Configuration instance configured for simulation mode.

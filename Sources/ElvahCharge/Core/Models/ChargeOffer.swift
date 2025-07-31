@@ -49,7 +49,7 @@ public struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 
 	/// Information about a campaign that is associated with this offer, if there is one.
 	///
-	/// - Note: This property will only hold a value when the charge offer is part of a ``Campaign``.
+	/// - Note: This property will only hold a value when the charge offer is part of a campaign.
 	public var campaign: CampaignInfo? {
 		guard case let .campaign(campaignInfo) = type else {
 			return nil
@@ -61,8 +61,6 @@ public struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 	/// A flag indicating if the offer is still available.
 	///
 	/// This flag will always be `true` for offers that are not part of a campaign.
-	/// - Note: This is different from ``ChargeOffer/validUntil``, which notes the date at
-	/// which the conditions of the offer might change.
 	public var isAvailable: Bool {
 		if let campaign {
 			return campaign.hasEnded == false
