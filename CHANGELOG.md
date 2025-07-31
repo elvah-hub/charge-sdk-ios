@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0]
+
+### Bug Fixes
+- Fixed crash that could occur if the backend sends incorrect coordinate values
+- Fixed warning log message appearing erroneously in simulation mode
+
 ## [0.2.0]
 
 ### Major Changes
