@@ -5,7 +5,9 @@ import CoreLocation
 import Foundation
 import Testing
 
-extension SchemaParsingTests {
+/// Tests for Site schema parsing functionality.
+@Suite("Site Schema Parsing Tests", .tags(.parsing))
+struct SiteSchemaTests {
   @Test("Site schema parses valid JSON correctly")
   func siteValidParsing() throws {
     // Given: Valid site offer schema JSON
@@ -25,7 +27,7 @@ extension SchemaParsingTests {
     """
 
     // When: Parsing the schema
-    let schema = try decodeSchema(validJSON, as: SiteOfferSchema.self)
+    let schema = try SchemaTestHelpers.decodeSchema(validJSON, as: SiteOfferSchema.self)
     let site = try Site.parse(schema)
 
     // Then: Values are correctly parsed
@@ -62,7 +64,7 @@ extension SchemaParsingTests {
     """
 
     // When: Parsing the schema
-    let schema = try decodeSchema(minimalJSON, as: SiteOfferSchema.self)
+    let schema = try SchemaTestHelpers.decodeSchema(minimalJSON, as: SiteOfferSchema.self)
     let site = try Site.parse(schema)
 
     // Then: Required fields are parsed, optional fields handle null values
@@ -98,7 +100,7 @@ extension SchemaParsingTests {
     """
 
     // When: Parsing the schema (should not throw for unknown power type)
-    let schema = try decodeSchema(invalidPowerTypeJSON, as: SiteOfferSchema.self)
+    let schema = try SchemaTestHelpers.decodeSchema(invalidPowerTypeJSON, as: SiteOfferSchema.self)
     let site = try Site.parse(schema)
 
     // Then: Invalid power type defaults to AC
@@ -130,7 +132,7 @@ extension SchemaParsingTests {
       """
 
       // When: Parsing the schema
-      let schema = try decodeSchema(jsonString, as: SiteOfferSchema.self)
+      let schema = try SchemaTestHelpers.decodeSchema(jsonString, as: SiteOfferSchema.self)
       let site = try Site.parse(schema)
 
       // Then: Power type is correctly parsed
@@ -164,7 +166,7 @@ extension SchemaParsingTests {
       """
 
       // When: Parsing the schema
-      let schema = try decodeSchema(jsonString, as: SiteOfferSchema.self)
+      let schema = try SchemaTestHelpers.decodeSchema(jsonString, as: SiteOfferSchema.self)
       let site = try Site.parse(schema)
 
       // Then: Coordinates are correctly parsed (longitude, latitude order in schema)
@@ -205,7 +207,7 @@ extension SchemaParsingTests {
       """
 
       // When: Parsing the schema
-      let schema = try decodeSchema(jsonString, as: SiteOfferSchema.self)
+      let schema = try SchemaTestHelpers.decodeSchema(jsonString, as: SiteOfferSchema.self)
       let site = try Site.parse(schema)
 
       // Then: Street address is correctly parsed
@@ -235,7 +237,7 @@ extension SchemaParsingTests {
     """
 
     // When: Parsing the schema
-    let schema = try decodeSchema(emptyOperatorJSON, as: SiteOfferSchema.self)
+    let schema = try SchemaTestHelpers.decodeSchema(emptyOperatorJSON, as: SiteOfferSchema.self)
     let site = try Site.parse(schema)
 
     // Then: Empty operator name is preserved
@@ -260,7 +262,7 @@ extension SchemaParsingTests {
     """
 
     // When: Parsing the schema
-    let schema = try decodeSchema(jsonString, as: SiteOfferSchema.self)
+    let schema = try SchemaTestHelpers.decodeSchema(jsonString, as: SiteOfferSchema.self)
     let site = try Site.parse(schema)
 
     // Then: Availability is always set to available
@@ -284,7 +286,7 @@ extension SchemaParsingTests {
     """
 
     // When: Parsing the schema
-    let schema = try decodeSchema(jsonString, as: SiteOfferSchema.self)
+    let schema = try SchemaTestHelpers.decodeSchema(jsonString, as: SiteOfferSchema.self)
     let site = try Site.parse(schema)
 
     // Then: Opening hours is always nil
