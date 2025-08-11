@@ -13,7 +13,6 @@
 
 /* Begin PBXFileReference section */
 		41763F5D2C2D340E00F42070 /* ExampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		41936C8C2E33954C00FC9078 /* CLAUDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLAUDE.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -46,7 +45,6 @@
 		41763F542C2D340E00F42070 = {
 			isa = PBXGroup;
 			children = (
-				41936C8C2E33954C00FC9078 /* CLAUDE.md */,
 				41333A5F2E3752470021C2A1 /* ExampleApp */,
 				419FCA002DA51C6400F08009 /* Frameworks */,
 				41763F5E2C2D340E00F42070 /* Products */,
