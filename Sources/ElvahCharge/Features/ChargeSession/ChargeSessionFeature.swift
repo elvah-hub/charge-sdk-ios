@@ -50,11 +50,11 @@ struct ChargeSessionFeature: View {
 						"End charge session",
 						isPresented: $router.showEndSessionConfirmation
 					) {
-						Button("End charge session") {
+						Button("End charge session", bundle: .elvahCharge) {
 							navigationRoot.dismiss()
 							chargeSessionContext = nil
 						}
-						Button("Cancel", role: .destructive) {
+						Button("Cancel", role: .destructive, bundle: .elvahCharge) {
 							router.showEndSessionConfirmation = false
 						}
 					}
