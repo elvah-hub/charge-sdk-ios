@@ -103,7 +103,7 @@ extension ChargeBannerComponent {
 					if isHorizontalStack {
 						Spacer()
 					}
-					Text("\(elapsedSeconds.formatted(.units()))", bundle: .elvahCharge)
+					Text(verbatim: elapsedSeconds.formatted(.units()))
 						.foregroundStyle(.brand)
 				}
 			}

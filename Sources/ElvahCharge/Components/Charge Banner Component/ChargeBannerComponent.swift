@@ -251,30 +251,40 @@ package extension ChargeBannerComponent {
 		FooterView {
 			ButtonStack {
 				ButtonStack(axis: .horizontal) {
-					Button("Location") {
+					Button {
 						chargeBannerSource = .remote(near: .init())
+					} label: {
+						Text(verbatim: "Location")
 					}
 					.disabled(chargeBannerSource.usesLocation)
-					Button("Region") {
+					Button {
 						chargeBannerSource = .remote(in: .mock)
+					} label: {
+						Text(verbatim: "Region")
 					}
 					.disabled(chargeBannerSource.usesRegion)
-					Button("Site") {
+					Button {
 						chargeBannerSource = .direct(.mock)
+					} label: {
+						Text(verbatim: "Site")
 					}
 					.disabled(chargeBannerSource.usesChargeSite)
 				}
-				Button("Reset") {
+				Button {
 					chargeBannerSource = nil
+				} label: {
+					Text(verbatim: "Reset")
 				}
 				.disabled(chargeBannerSource.isEmpty)
 				Divider()
 				ButtonStack(axis: .horizontal) {
-					Button("No Session") {
+					Button {
 						chargeSessionContext = nil
+					} label: {
+						Text(verbatim: "No Session")
 					}
 					.disabled(Defaults[.chargeSessionContext] == nil)
-					Button("With Session") {
+					Button {
 						chargeSessionContext = ChargeSessionContext(
 							site: .mock,
 							signedOffer: .mockAvailable,
@@ -283,6 +293,8 @@ package extension ChargeBannerComponent {
 							paymentId: "",
 							startedAt: Date()
 						)
+					} label: {
+						Text(verbatim: "With Session")
 					}
 					.disabled(Defaults[.chargeSessionContext] != nil)
 				}

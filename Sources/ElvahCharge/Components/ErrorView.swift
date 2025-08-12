@@ -10,7 +10,7 @@ struct ErrorView: View {
 		ActivityInfoComponent(
 			state: .error,
 			title: "An error occurred",
-			message: "Please try again."
+			message: "An unexpected error occurred."
 		)
 	}
 }

@@ -70,13 +70,13 @@ struct ChargeOfferPricingView: View {
 	}
 
 	@ViewBuilder private func priceLabel(price: Currency) -> some View {
-		Text("from \(Text("\(price.formatted())/kWh", bundle: .elvahCharge))")
+		Text("From \(price.formatted())/kWh", bundle: .elvahCharge)
 			.typography(.copy(size: .medium), weight: .bold)
 			.layoutPriority(1)
 	}
 
 	@ViewBuilder private func originalPriceLabel(price: Currency) -> some View {
-		Text("\(price.formatted())/kWh", bundle: .elvahCharge)
+		Text(verbatim: "\(price.formatted())/kWh")
 			.strikethrough()
 			.typography(.copy(size: .small), weight: .regular)
 			.layoutPriority(1)

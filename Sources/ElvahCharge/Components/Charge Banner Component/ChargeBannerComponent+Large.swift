@@ -73,7 +73,7 @@ extension ChargeBannerComponent {
 		}
 
 		@ViewBuilder private var endedContent: some View {
-			Text("This offer has expired, but more are coming!", bundle: .elvahCharge)
+			Text("This offer has ended, but more are coming!", bundle: .elvahCharge)
 				.typography(.title(size: .small), weight: .bold)
 				.fixedSize(horizontal: false, vertical: true)
 		}

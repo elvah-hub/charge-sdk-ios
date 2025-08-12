@@ -111,15 +111,20 @@ public extension Site {
 
 		/// Returns the localized name of the weekday.
 		public var localizedName: String {
+			let calendar = Calendar.current
+			let weekdayIndex: Int
+
 			switch self {
-			case .monday: return String(localized: "Monday")
-			case .tuesday: return String(localized: "Tuesday")
-			case .wednesday: return String(localized: "Wednesday")
-			case .thursday: return String(localized: "Thursday")
-			case .friday: return String(localized: "Friday")
-			case .saturday: return String(localized: "Saturday")
-			case .sunday: return String(localized: "Sunday")
+			case .sunday: weekdayIndex = 1
+			case .monday: weekdayIndex = 2
+			case .tuesday: weekdayIndex = 3
+			case .wednesday: weekdayIndex = 4
+			case .thursday: weekdayIndex = 5
+			case .friday: weekdayIndex = 6
+			case .saturday: weekdayIndex = 7
 			}
+
+			return calendar.weekdaySymbols[weekdayIndex - 1]
 		}
 	}
 

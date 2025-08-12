@@ -101,9 +101,6 @@ extension ChargeEntryFeature {
 	enum ViewState {
 		case loading
 		case missingChargeContext
-		case preparingChargeRequest
-		case preparedChargeRequest
-		case failedToPrepareChargeRequest
 	}
 }
 

@@ -30,7 +30,7 @@ struct ChargePaymentFeature: View {
 					.foregroundStyle(.primaryContent)
 					.multilineTextAlignment(.center)
 
-				Text("\(request.signedOffer.chargePoint.maxPowerInKw.formatted()) kW")
+				Text(verbatim: "\(request.signedOffer.chargePoint.maxPowerInKw.formatted()) kW")
 					.typography(.copy(size: .small))
 					.foregroundStyle(.secondaryContent)
 			}
@@ -72,7 +72,10 @@ struct ChargePaymentFeature: View {
 				paymentSheetContinuation = nil
 			}
 		)
-		.confirmationDialog("Terms and Conditions", isPresented: $router.showLegalLinkOptions) {
+		.confirmationDialog(
+			"Terms of Service and Charging",
+			isPresented: $router.showLegalLinkOptions
+		) {
 			Button("Terms of Service and Charging", bundle: .elvahCharge) {
 				if let url = request.paymentContext.organisationDetails.termsOfConditionUrl {
 					UIApplication.shared.open(url)
