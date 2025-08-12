@@ -1,12 +1,16 @@
 # Migration Guide
 
-## 0.2.0
+## [0.3.0]
+
+The 0.3.0 release contais no breaking changes. No migration is needed.
+
+## [0.2.0]
 
 The 0.2.0 release introduces several significant API changes, primarily focused on renaming components to better reflect their functionality and introducing a more consistent domain model.
 
-## Breaking Changes
+### Breaking Changes
 
-### CampaignBanner → ChargeBanner
+#### CampaignBanner → ChargeBanner
 
 The banner component has been renamed from `CampaignBanner` to `ChargeBanner`.
 
@@ -46,7 +50,7 @@ struct MyView: View {
 }
 ```
 
-### CampaignSource → ChargeBannerSource
+#### CampaignSource → ChargeBannerSource
 
 The property wrapper has been renamed from `CampaignSource` to `ChargeBannerSource`.
 
@@ -62,7 +66,7 @@ The property wrapper has been renamed from `CampaignSource` to `ChargeBannerSour
 @ChargeBannerSource(display: .whenContentAvailable) private var chargeBannerSource
 ```
 
-### Campaign → ChargeSite Domain Model
+#### Campaign → ChargeSite Domain Model
 
 The core domain model has shifted from `Campaign` to `ChargeSite`:
 
@@ -86,7 +90,7 @@ let chargeSites = try await ChargeSite.sites(near: location)
 chargeBannerSource = .direct(chargeSite)
 ```
 
-### Presentation Modifiers
+#### Presentation Modifiers
 
 View modifiers for presenting detail screens have been updated:
 
@@ -100,7 +104,7 @@ View modifiers for presenting detail screens have been updated:
 .chargePresentation(site: $site)
 ```
 
-### Callback Changes
+#### Callback Changes
 
 The callback signature for charge banner actions has been updated:
 
