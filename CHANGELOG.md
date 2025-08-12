@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [0.3.0]
 
 ### Additions
-- Added support for French and German in the SDK
+- Added preliminary support for French and German in the SDK
 
 ### Bug Fixes
 - Fixed crash that could occur if the backend sends incorrect coordinate values
