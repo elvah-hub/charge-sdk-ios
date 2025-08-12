@@ -86,7 +86,7 @@ extension ChargeBannerComponent {
 					Spacer()
 					Image(.chevronRight)
 				} else {
-					Text("Error loading offers", bundle: .elvahCharge)
+					Text("Failed to load offer", bundle: .elvahCharge)
 					Spacer()
 				}
 			}
