@@ -53,7 +53,6 @@
     },
     "/kWh" : {
       "comment" : "kwh_label",
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -75,8 +74,29 @@
         }
       }
     },
-    "%@" : {
-      "shouldTranslate" : false
+    "%@/kWh" : {
+      "comment" : "campaign_banner__original_price_text",
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/kWh"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/kWh"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/kWh"
+          }
+        }
+      }
     },
     "%@€/kWh" : {
       "comment" : "euros_kw_label",
@@ -98,6 +118,78 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@€/kWh"
+          }
+        }
+      }
+    },
+    "%lld %%" : {
+      "comment" : "progress_percentage_template",
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld %%"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld %%"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld %%"
+          }
+        }
+      }
+    },
+    "+45 123 456 456" : {
+      "comment" : "contact_phone",
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+45 123 456 456"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+45 123 456 456"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+45 123 456 456"
+          }
+        }
+      }
+    },
+    "€" : {
+      "comment" : "euros_label",
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "€"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "€"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "€"
           }
         }
       }
@@ -148,30 +240,6 @@
         }
       }
     },
-    "AdHocChargingActivity" : {
-      "comment" : "title_activity_ad_hoc_charging",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AdHocChargingActivity"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AdHocChargingActivity"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AdHocChargingActivity"
-          }
-        }
-      }
-    },
     "An error occurred" : {
       "comment" : "generic_error__title",
       "localizations" : {
@@ -213,14 +281,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Une erreur inattendue s'est produite. Veuillez réessayer ou contacter notre support."
+            "value" : "Une erreur inattendue s'est produite. Veuillez réessayer ou contacter notre support utilisateur."
           }
         }
       }
     },
     "An unexpected error occurred." : {
       "comment" : "charge_session__unknown_error__message",
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -283,7 +350,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tentative de restauration de la session de recharge."
+            "value" : "Tentative de récupération de la session de recharge."
           }
         }
       }
@@ -306,7 +373,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Autorisation réussie"
+            "value" : "Recharge autorisée"
           }
         }
       }
@@ -353,30 +420,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Retour"
-          }
-        }
-      }
-    },
-    "Best offer" : {
-      "comment" : "best_deal_around_you_label__short",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bestes Angebot"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Best offer"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Meilleure offre"
           }
         }
       }
@@ -608,7 +651,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Le chargeur est prêt!\nDémarrage de la session avec le chargeur."
+            "value" : "La borne est disponible!\nLancement de la recharge."
           }
         }
       }
@@ -631,7 +674,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Durée de charge"
+            "value" : "Durée de recharge"
           }
         }
       }
@@ -684,7 +727,7 @@
       }
     },
     "Checking for current price.\nWe're almost there!" : {
-      "shouldTranslate" : false
+
     },
     "Close" : {
       "comment" : "close",
@@ -756,7 +799,27 @@
       }
     },
     "CPO" : {
-
+      "comment" : "cpo_label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPO"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPO"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPO"
+          }
+        }
+      }
     },
     "DC" : {
       "comment" : "dc_label",
@@ -777,30 +840,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "DC"
-          }
-        }
-      }
-    },
-    "Discover" : {
-      "comment" : "discover_button__short",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entdecken"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Discover"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Découvrir"
           }
         }
       }
@@ -846,7 +885,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "E-mail"
+            "value" : "Email"
           }
         }
       }
@@ -920,30 +959,6 @@
         }
       }
     },
-    "Error loading offers…" : {
-      "comment" : "error_deal_banner",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fehler beim Laden des Angebots…"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Error loading offers…"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erreur…"
-          }
-        }
-      }
-    },
     "Error…" : {
       "comment" : "error_label",
       "extractionState" : "stale",
@@ -969,7 +984,27 @@
       }
     },
     "EVSE ID:" : {
-
+      "comment" : "code_label",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EVSE ID:"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EVSE ID:"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EVSE ID:"
+          }
+        }
+      }
     },
     "export__ios" : {
       "comment" : "export__ios",
@@ -996,7 +1031,27 @@
       }
     },
     "Failed to load charge session details" : {
-
+      "comment" : "campaign_banner__charge_session__failed_to_load__text",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ladevorgang konnte nicht geladen werden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to load charge session details"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Échec du chargement des détails de la session de recharge"
+          }
+        }
+      }
     },
     "Failed to load offer" : {
       "comment" : "campaign_banner__deal_loading_error__text",
@@ -1022,7 +1077,27 @@
       }
     },
     "From %@/kWh" : {
-
+      "comment" : "campaign_banner__current_price_text",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ab %@/kWh"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From %@/kWh"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Depuis %@/kWh"
+          }
+        }
+      }
     },
     "Get in touch with %@s team. You can do so immediately via WhatsApp or E-mail." : {
       "comment" : "support_subtitle",
@@ -1042,7 +1117,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Communiquez avec l'équipe %@. Vous pouvez le faire immédiatement via WhatsApp ou E-mail."
+            "value" : "Communiquez avec l'équipe %@. Vous pouvez le faire immédiatement via WhatsApp ou Email."
           }
         }
       }
@@ -1158,13 +1233,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "kWh chargés"
+            "value" : "kWh rechargés"
           }
         }
       }
     },
     "Later" : {
-      "shouldTranslate" : false
+
     },
     "Loading data…" : {
       "comment" : "campaign_banner__loading__text",
@@ -1190,33 +1265,8 @@
         }
       }
     },
-    "Manage" : {
-      "comment" : "campaign_banner__active_session_text__short",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verwalten"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Manage"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gérer"
-          }
-        }
-      }
-    },
-    "Manage Charge Session" : {
+    "Manage your current charge session" : {
       "comment" : "campaign_banner__active_session_text",
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1227,19 +1277,16 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Manage Charge Session"
+            "value" : "Manage your current charge session"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gérer la session de recharge"
+            "value" : "Gérer la charge"
           }
         }
       }
-    },
-    "Manage your current charge session" : {
-
     },
     "Need help or want to give us feedback?" : {
       "comment" : "support_title",
@@ -1259,7 +1306,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Besoin d'aide ou souhaitez nous faire part de vos commentaires ?"
+            "value" : "Besoin d'aide ou souhaitez nous faire part de vos commentaires?"
           }
         }
       }
@@ -1774,13 +1821,10 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Veuillez arrêter la recharge manuellement en retirant d'abord le câble de votre voiture, puis de la borne."
+            "value" : "Veuillez arrêter la recharge manuellement en débranchant d'abord le câble de votre voiture, ensuite de la borne."
           }
         }
       }
-    },
-    "Please try again." : {
-
     },
     "Plug in your charging cable" : {
       "comment" : "help_unlock_item_2",
@@ -1990,7 +2034,7 @@
       }
     },
     "Sign in" : {
-      "shouldTranslate" : false
+
     },
     "Site" : {
       "comment" : "site",
@@ -2293,30 +2337,6 @@
         }
       }
     },
-    "Thanks for charging\nwith E.ON" : {
-      "comment" : "charge_session__stopped__title",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Danke dass du geladen hast"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Thanks for charging\nwith E.ON"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Merci d’avoir rechargé"
-          }
-        }
-      }
-    },
     "The charge offers could not be loaded. Please try again later." : {
       "comment" : "charge_offer_details__loading_error_message",
       "localizations" : {
@@ -2358,7 +2378,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Le point de charge a signalé une erreur"
+            "value" : "Le point de charge a renvoyé une erreur"
           }
         }
       }
@@ -2497,7 +2517,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La session n’a pas pu être démarrée à ce point de charge. Veuillez réessayer ou utiliser un autre point."
+            "value" : "La session n’a pas pu être démarrée avec ce point de charge. Veuillez réessayer ou utiliser une autre prise."
           }
         }
       }
@@ -2544,7 +2564,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Malheureusement, aucune application email n’a été trouvée."
+            "value" : "Malheureusement, aucune application Email n’a été trouvée."
           }
         }
       }
