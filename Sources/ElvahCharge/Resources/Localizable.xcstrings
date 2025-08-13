@@ -1,2643 +1,2605 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "" : {
-
-    },
-    " as well as our " : {
-      "comment" : "terms_privacy_template_2",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : " als auch unsere "
+  "sourceLanguage": "en",
+  "strings": {
+    " as well as our ": {
+      "comment": "terms_privacy_template_2",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " as well as our "
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : " as well as our "
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " als auch unsere "
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : " ainsi que notre "
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " ainsi que notre "
           }
         }
       }
     },
-    "'%@' %@ as well as our %@ apply" : {
-      "comment" : "charge_payment__disclaimer",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "'%1$@' %2$@ sowie unsere %3$@ gelten"
+    "%@/kWh": {
+      "comment": "campaign_banner__original_price_text",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@/kWh"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "'%1$@' %2$@ as well as our %3$@ apply"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@/kWh"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "'%1$@' %2$@ ainsi que %3$@ appliquer"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@/kWh"
           }
         }
       }
     },
-    "/kWh" : {
-      "comment" : "kwh_label",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "/kWh"
+    "%@€/kWh": {
+      "comment": "euros_kw_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@€/kWh"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "/kWh"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@€/kWh"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "/kWh"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@€/kWh"
           }
         }
       }
     },
-    "%@/kWh" : {
-      "comment" : "campaign_banner__original_price_text",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@/kWh"
+    "%lld %%": {
+      "comment": "progress_percentage_template",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld %%"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@/kWh"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld %%"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@/kWh"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld %%"
           }
         }
       }
     },
-    "%@€/kWh" : {
-      "comment" : "euros_kw_label",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@€/kWh"
+    "'%@' %@ as well as our %@ apply": {
+      "comment": "charge_payment__disclaimer",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "'%1$@' %2$@ as well as our %3$@ apply"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@€/kWh"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "'%1$@' %2$@ sowie unsere %3$@ gelten"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@€/kWh"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "'%1$@' %2$@ ainsi que %3$@ appliquer"
           }
         }
       }
     },
-    "%lld %%" : {
-      "comment" : "progress_percentage_template",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld %%"
+    "+45 123 456 456": {
+      "comment": "contact_phone",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+45 123 456 456"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld %%"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+45 123 456 456"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld %%"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+45 123 456 456"
           }
         }
       }
     },
-    "+45 123 456 456" : {
-      "comment" : "contact_phone",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "+45 123 456 456"
+    "/kWh": {
+      "comment": "kwh_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "/kWh"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "+45 123 456 456"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "/kWh"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "+45 123 456 456"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "/kWh"
           }
         }
       }
     },
-    "€" : {
-      "comment" : "euros_label",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "€"
+    "AC": {
+      "comment": "ac_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AC"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "€"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AC"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "€"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AC"
           }
         }
       }
     },
-    "AC" : {
-      "comment" : "ac_label",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AC"
+    "Ad-hoc": {
+      "comment": "campaign_banncampaign_banner__ad_hocer__ad_hoc",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ad-hoc"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AC"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ad-hoc"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AC"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ad-hoc"
           }
         }
       }
     },
-    "Ad-hoc" : {
-      "comment" : "campaign_banncampaign_banner__ad_hocer__ad_hoc",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ad-hoc"
+    "An error occurred": {
+      "comment": "generic_error__title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An error occurred"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ad-hoc"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ein Fehler ist aufgetreten"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ad-hoc"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une erreur s'est produite"
           }
         }
       }
     },
-    "An error occurred" : {
-      "comment" : "generic_error__title",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ein Fehler ist aufgetreten"
+    "An unexpected error has occurred. Please try again or contact our support.": {
+      "comment": "generic_error_bottom_sheet__message",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An unexpected error has occurred. Please try again or contact our support."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "An error occurred"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut oder kontaktiere unseren Support."
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Une erreur s'est produite"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une erreur inattendue s'est produite. Veuillez réessayer ou contacter notre support utilisateur."
           }
         }
       }
     },
-    "An unexpected error has occurred. Please try again or contact our support." : {
-      "comment" : "generic_error_bottom_sheet__message",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut oder kontaktiere unseren Support."
+    "An unexpected error occurred.": {
+      "comment": "charge_session__unknown_error__message",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An unexpected error occurred."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "An unexpected error has occurred. Please try again or contact our support."
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ein unerwarteter Fehler ist aufgetreten."
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Une erreur inattendue s'est produite. Veuillez réessayer ou contacter notre support utilisateur."
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une erreur inattendue s'est produite."
           }
         }
       }
     },
-    "An unexpected error occurred." : {
-      "comment" : "charge_session__unknown_error__message",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ein unerwarteter Fehler ist aufgetreten."
+    "Apple Maps": {
+      "comment": "apple_maps",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Maps"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "An unexpected error occurred."
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Karten"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Une erreur inattendue s'est produite."
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cartes Apple"
           }
         }
       }
     },
-    "Apple Maps" : {
-      "comment" : "apple_maps",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Karten"
+    "Attempting to restore charge session.": {
+      "comment": "charge_session__restoratiojn__message",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attempting to restore charge session."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Maps"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Versuch die Ladesitzung wiederherzustellen."
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cartes Apple"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tentative de récupération de la session de recharge."
           }
         }
       }
     },
-    "Attempting to restore charge session." : {
-      "comment" : "charge_session__restoratiojn__message",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Versuch die Ladesitzung wiederherzustellen."
+    "Authorization successful": {
+      "comment": "authorization_successful",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Authorization successful"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Attempting to restore charge session."
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anmeldung erfolgreich"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tentative de récupération de la session de recharge."
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recharge autorisée"
           }
         }
       }
     },
-    "Authorization successful" : {
-      "comment" : "authorization_successful",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anmeldung erfolgreich"
+    "Available now": {
+      "comment": "charge_point__availability__available",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Available now"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Authorization successful"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jetzt verfügbar"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recharge autorisée"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disponible maintenant"
           }
         }
       }
     },
-    "Available now" : {
-      "comment" : "charge_point__availability__available",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jetzt verfügbar"
+    "Back": {
+      "comment": "back",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Available now"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zurück"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Disponible maintenant"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retour"
           }
         }
       }
     },
-    "Back" : {
-      "comment" : "back",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zurück"
+    "CPO": {
+      "comment": "cpo_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CPO"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Back"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CPO"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Retour"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CPO"
           }
         }
       }
     },
-    "Call" : {
-      "comment" : "call",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anrufen"
+    "Call": {
+      "comment": "call",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Call"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Call"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anrufen"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Appeler"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Appeler"
           }
         }
       }
     },
-    "Cancel" : {
-      "comment" : "cancel",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abbrechen"
+    "Cancel": {
+      "comment": "cancel",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abbrechen"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Annuler"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annuler"
           }
         }
       }
     },
-    "Cannot fetch summary" : {
-      "comment" : "charge_session__payment_summary_error",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zusammenfassung konnte nicht geladen werden"
+    "Cannot fetch summary": {
+      "comment": "charge_session__payment_summary_error",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cannot fetch summary"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cannot fetch summary"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zusammenfassung konnte nicht geladen werden"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Impossible de récupérer le résumé"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impossible de récupérer le résumé"
           }
         }
       }
     },
-    "Charge" : {
-      "comment" : "charge_label",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Laden"
+    "Charge": {
+      "comment": "charge_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Charge"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laden"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recharger"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recharger"
           }
         }
       }
     },
-    "Charge at %@ from %@" : {
-      "comment" : "campaign_banner__charge_at_station_text",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lade an %1$@ ab %2$@"
+    "Charge Now": {
+      "comment": "discover_button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge Now"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Charge at %1$@ from %2$@"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jetzt Laden"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Charger à %1$@ depuis %2$@"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charger"
           }
         }
       }
     },
-    "Charge at %@ station for " : {
-      "comment" : "charge_at_station_placeholder",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lade an der Station %1$@ für "
+    "Charge Session": {
+      "comment": "charge_session__title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge Session"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Charge at %1$@ station for "
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ladevorgang"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Charger à la station %1$@ pour "
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Session de recharge"
           }
         }
       }
     },
-    "Charge Now" : {
-      "comment" : "discover_button",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jetzt Laden"
+    "Charge at %@ from %@": {
+      "comment": "campaign_banner__charge_at_station_text",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge at %1$@ from %2$@"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Charge Now"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lade an %1$@ ab %2$@"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Charger"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charger à %1$@ depuis %2$@"
           }
         }
       }
     },
-    "Charge Session" : {
-      "comment" : "charge_session__title",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ladevorgang"
+    "Charge at %@ station for ": {
+      "comment": "charge_at_station_placeholder",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge at %1$@ station for "
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Charge Session"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lade an der Station %1$@ für "
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Session de recharge"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charger à la station %1$@ pour "
           }
         }
       }
     },
-    "Charge without registration" : {
-      "comment" : "Charge without registration",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lade ohne Anmeldung"
+    "Charge without registration": {
+      "comment": "Charge without registration",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge without registration"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Charge without registration"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lade ohne Anmeldung"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recharger sans inscription"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recharger sans inscription"
           }
         }
       }
     },
-    "Charger is awake!\nStarting session with the charger." : {
-      "comment" : "charge_session__connection_initial_success__message",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ladepunkt ist Aktiv.\nLadevorgang wird eingeleitet."
+    "Charger is awake!\nStarting session with the charger.": {
+      "comment": "charge_session__connection_initial_success__message",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charger is awake!\nStarting session with the charger."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Charger is awake!\nStarting session with the charger."
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ladepunkt ist Aktiv.\nLadevorgang wird eingeleitet."
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La borne est disponible!\nLancement de la recharge."
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La borne est disponible!\nLancement de la recharge."
           }
         }
       }
     },
-    "Charging duration" : {
-      "comment" : "charging_duration_label",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ladezeit"
+    "Charging duration": {
+      "comment": "charging_duration_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charging duration"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Charging duration"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ladezeit"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Durée de recharge"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Durée de recharge"
           }
         }
       }
     },
-    "Charging session is active" : {
-      "comment" : "charging_session_active_title",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ladevorgang aktiv"
+    "Charging session is active": {
+      "comment": "charging_session_active_title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charging session is active"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Charging session is active"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ladevorgang aktiv"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recharge en cours"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recharge en cours"
           }
         }
       }
     },
-    "Charging…" : {
-      "comment" : "charging_label",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lädt…"
+    "Charging…": {
+      "comment": "charging_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charging…"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Charging…"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lädt…"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recharge…"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recharge…"
           }
         }
       }
-    },
-    "Checking for current price.\nWe're almost there!" : {
-
     },
-    "Close" : {
-      "comment" : "close",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schließen"
+    "Close": {
+      "comment": "close",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Close"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schließen"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fermer"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fermer"
           }
         }
       }
     },
-    "Connect your electric vehicle now and start the charging process." : {
-      "comment" : "connect_vehicle",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bitte verbinde dein Elektroauto mit der Ladestation und starte den Ladevorgang."
+    "Connect your electric vehicle now and start the charging process.": {
+      "comment": "connect_vehicle",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connect your electric vehicle now and start the charging process."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connect your electric vehicle now and start the charging process."
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bitte verbinde dein Elektroauto mit der Ladestation und starte den Ladevorgang."
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connectez votre véhicule électrique maintenant et lancez la recharge."
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez votre véhicule électrique maintenant et lancez la recharge."
           }
         }
       }
     },
-    "Contact Web Support Agent" : {
-      "comment" : "contact_support_agent",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Support Agenten kontaktieren"
+    "Contact Web Support Agent": {
+      "comment": "contact_support_agent",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contact Web Support Agent"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Contact Web Support Agent"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Support Agenten kontaktieren"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Contacter le support en ligne"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contacter le support en ligne"
           }
         }
       }
     },
-    "CPO" : {
-      "comment" : "cpo_label",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CPO"
+    "DC": {
+      "comment": "dc_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DC"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CPO"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DC"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CPO"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DC"
           }
         }
       }
     },
-    "DC" : {
-      "comment" : "dc_label",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "DC"
+    "Done": {
+      "comment": "done_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "DC"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fertig"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "DC"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminé"
           }
         }
       }
     },
-    "Done" : {
-      "comment" : "done_label",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fertig"
+    "E-Mail": {
+      "comment": "email",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E-Mail"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Done"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E-Mail"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Terminé"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Email"
           }
         }
       }
     },
-    "E-Mail" : {
-      "comment" : "email",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "E-Mail"
+    "EVSE ID:": {
+      "comment": "code_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "EVSE ID:"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "E-Mail"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "EVSE ID:"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Email"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "EVSE ID:"
           }
         }
       }
     },
-    "End charge session" : {
-      "comment" : "charge_session__error__end_session",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ladevorgang beenden"
+    "End charge session": {
+      "comment": "charge_session__error__end_session",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "End charge session"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "End charge session"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ladevorgang beenden"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Terminer la session"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminer la session"
           }
         }
       }
     },
-    "Ended" : {
-      "comment" : "deal_ended",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beendet"
+    "Ended": {
+      "comment": "deal_ended",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ended"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ended"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beendet"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Terminé"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminé"
           }
         }
       }
     },
-    "Energy" : {
-      "comment" : "energy_label",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Energie"
+    "Energy": {
+      "comment": "energy_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Energy"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Energy"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Energie"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Énergie"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Énergie"
           }
         }
       }
     },
-    "Error…" : {
-      "comment" : "error_label",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fehler…"
+    "Error…": {
+      "comment": "error_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Error…"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Error…"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fehler…"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erreur…"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erreur…"
           }
         }
       }
     },
-    "EVSE ID:" : {
-      "comment" : "code_label",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EVSE ID:"
+    "Failed to load charge session details": {
+      "comment": "campaign_banner__charge_session__failed_to_load__text",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to load charge session details"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EVSE ID:"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ladevorgang konnte nicht geladen werden"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EVSE ID:"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Échec du chargement des détails de la session de recharge"
           }
         }
       }
     },
-    "export__ios" : {
-      "comment" : "export__ios",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "export__ios"
+    "Failed to load offer": {
+      "comment": "campaign_banner__deal_loading_error__text",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to load offer"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "export__ios"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Angebot konnte nicht geladen werden"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "export__ios"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impossible de charger l'offre"
           }
         }
       }
     },
-    "Failed to load charge session details" : {
-      "comment" : "campaign_banner__charge_session__failed_to_load__text",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ladevorgang konnte nicht geladen werden"
+    "From %@/kWh": {
+      "comment": "campaign_banner__current_price_text",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "From %@/kWh"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Failed to load charge session details"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ab %@/kWh"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Échec du chargement des détails de la session de recharge"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Depuis %@/kWh"
           }
         }
       }
     },
-    "Failed to load offer" : {
-      "comment" : "campaign_banner__deal_loading_error__text",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Angebot konnte nicht geladen werden"
+    "Get in touch with %@s team. You can do so immediately via WhatsApp or E-mail.": {
+      "comment": "support_subtitle",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get in touch with %@s team. You can do so immediately via WhatsApp or E-mail."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Failed to load offer"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nimm Kontakt mit dem %@ Team auf, dies funktioniert über WhatsApp oder E-Mail."
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Impossible de charger l'offre"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Communiquez avec l'équipe %@. Vous pouvez le faire immédiatement via WhatsApp ou Email."
           }
         }
       }
     },
-    "From %@/kWh" : {
-      "comment" : "campaign_banner__current_price_text",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ab %@/kWh"
+    "Google Maps": {
+      "comment": "google_maps",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Google Maps"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "From %@/kWh"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Google Maps"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Depuis %@/kWh"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Google Maps"
           }
         }
       }
     },
-    "Get in touch with %@s team. You can do so immediately via WhatsApp or E-mail." : {
-      "comment" : "support_subtitle",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nimm Kontakt mit dem %@ Team auf, dies funktioniert über WhatsApp oder E-Mail."
+    "Help & Support": {
+      "comment": "help_support_heading",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Help & Support"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Get in touch with %@s team. You can do so immediately via WhatsApp or E-mail."
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hilfe und Support"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Communiquez avec l'équipe %@. Vous pouvez le faire immédiatement via WhatsApp ou Email."
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aide & Support"
           }
         }
       }
     },
-    "Google Maps" : {
-      "comment" : "google_maps",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Google Maps"
+    "Is the charge point locked?": {
+      "comment": "is_charging_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Is the charge point locked?"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Google Maps"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ist die Station verriegelt?"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Google Maps"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le point de charge est-il verrouillé?"
           }
         }
       }
     },
-    "Help & Support" : {
-      "comment" : "help_support_heading",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hilfe und Support"
+    "Loading data…": {
+      "comment": "campaign_banner__loading__text",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading data…"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Help & Support"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daten werden geladen…"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aide & Support"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chargement des données…"
           }
         }
       }
     },
-    "Is the charge point locked?" : {
-      "comment" : "is_charging_label",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ist die Station verriegelt?"
+    "Manage your current charge session": {
+      "comment": "campaign_banner__active_session_text",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manage your current charge session"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Is the charge point locked?"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ladevorgang verwalten"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Le point de charge est-il verrouillé?"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gérer la charge"
           }
         }
       }
     },
-    "kW" : {
-      "comment" : "kw_label",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "kW"
+    "Need help or want to give us feedback?": {
+      "comment": "support_title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Need help or want to give us feedback?"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "kW"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Benötigst du Hilfe oder möchtest du uns Feedback geben?"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "kW"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Besoin d'aide ou souhaitez nous faire part de vos commentaires?"
           }
         }
       }
     },
-    "kWh charged" : {
-      "comment" : "kilowatts_charged_label",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "kWh geladen"
+    "No Charge Session": {
+      "comment": "charge_session_not_found",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Charge Session"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "kWh charged"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kein aktiver Ladevorgang"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "kWh rechargés"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pas de session active"
           }
         }
       }
     },
-    "Later" : {
-
-    },
-    "Loading data…" : {
-      "comment" : "campaign_banner__loading__text",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Daten werden geladen…"
+    "No charge points available": {
+      "comment": "no_charge_points_available",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No charge points available"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Loading data…"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Ladepunkte verfügbar"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chargement des données…"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pas de points de charge disponibles"
           }
         }
       }
     },
-    "Manage your current charge session" : {
-      "comment" : "campaign_banner__active_session_text",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ladevorgang verwalten"
+    "No offer found": {
+      "comment": "campaign_banner__no_data_text",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No offer found"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Manage your current charge session"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kein Angebot gefunden"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gérer la charge"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pas d'offre trouvée"
           }
         }
       }
     },
-    "Need help or want to give us feedback?" : {
-      "comment" : "support_title",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Benötigst du Hilfe oder möchtest du uns Feedback geben?"
+    "Occupied": {
+      "comment": "charge_point__availability__occupied",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Occupied"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Need help or want to give us feedback?"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Belegt"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Besoin d'aide ou souhaitez nous faire part de vos commentaires?"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Occupé"
           }
         }
       }
     },
-    "No charge points available" : {
-      "comment" : "no_charge_points_available",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine Ladepunkte verfügbar"
+    "Offer ends in ": {
+      "comment": "offer_ends_in",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offer ends in "
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No charge points available"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Angebot endet in "
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pas de points de charge disponibles"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se termine dans "
           }
         }
       }
     },
-    "No Charge Session" : {
-      "comment" : "charge_session_not_found",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kein aktiver Ladevorgang"
+    "Offer ends in %@ days": {
+      "comment": "ends_in_days_placeholder",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offer ends in %1$@ days"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No Charge Session"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Angebot endet in %1$@ Tagen"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pas de session active"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’offre se termine dans %1$@ jours"
           }
         }
       }
     },
-    "No offer found" : {
-      "comment" : "campaign_banner__no_data_text",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kein Angebot gefunden"
+    "Offer ends in %@h %@m": {
+      "comment": "ends_in_hours_placeholder",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offer ends in %1$@h %2$@m"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No offer found"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Angebot endet in %1$@h %2$@m"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pas d'offre trouvée"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’offre se termine dans %1$@h %2$@m"
           }
         }
       }
     },
-    "Occupied" : {
-      "comment" : "charge_point__availability__occupied",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Belegt"
+    "Offer ends in %@m %@s": {
+      "comment": "ends_in_minutes_placeholder",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offer ends in %1$@m %2$@s"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Occupied"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Angebot endet in %1$@m %2$@s"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Occupé"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’offre se termine dans %1$@m %2$@s"
           }
         }
       }
     },
-    "Offer ends in " : {
-      "comment" : "offer_ends_in",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Angebot endet in "
+    "Offer ends in %@s": {
+      "comment": "ends_in_seconds_placeholder",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offer ends in %1$@s"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Offer ends in "
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Angebot endet in %1$@s"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se termine dans "
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’offre se termine dans %1$@s"
           }
         }
       }
     },
-    "Offer ends in %@ days" : {
-      "comment" : "ends_in_days_placeholder",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Angebot endet in %1$@ Tagen"
+    "Offer has ended": {
+      "comment": "deal_expired_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offer has ended"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Offer ends in %1$@ days"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Angebot ist abgelaufen"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’offre se termine dans %1$@ jours"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'offre est terminée"
           }
         }
       }
     },
-    "Offer ends in %@h %@m" : {
-      "comment" : "ends_in_hours_placeholder",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Angebot endet in %1$@h %2$@m"
+    "Oh, that didn't work out!": {
+      "comment": "generic_error_bottom_sheet__title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oh, that didn't work out!"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Offer ends in %1$@h %2$@m"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oh, das hat nicht funktioniert!"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’offre se termine dans %1$@h %2$@m"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oh, cela n'a pas fonctionné!"
           }
         }
       }
     },
-    "Offer ends in %@m %@s" : {
-      "comment" : "ends_in_minutes_placeholder",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Angebot endet in %1$@m %2$@s"
+    "Open with": {
+      "comment": "open_with",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open with"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Offer ends in %1$@m %2$@s"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Öffnen mit"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’offre se termine dans %1$@m %2$@s"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir avec"
           }
         }
       }
     },
-    "Offer ends in %@s" : {
-      "comment" : "ends_in_seconds_placeholder",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Angebot endet in %1$@s"
+    "Our Terms of Service and Charging as well as our Privacy Policy apply": {
+      "comment": "terms_and_conditions_text",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Our Terms of Service and Charging as well as our Privacy Policy apply"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Offer ends in %1$@s"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Es gelten unsere Nutzungs- und Ladebedingungen sowie unsere Datenschutzbestimmungen."
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’offre se termine dans %1$@s"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nos conditions d'utilisation et de facturation ainsi que notre politique de confidentialité s'appliquent"
           }
         }
       }
     },
-    "Offer has ended" : {
-      "comment" : "deal_expired_label",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Angebot ist abgelaufen"
+    "Out of service": {
+      "comment": "charge_point__availability__out_of_service",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Out of service"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Offer has ended"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Außer Betrieb"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L'offre est terminée"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hors service"
           }
         }
       }
     },
-    "Oh, that didn't work out!" : {
-      "comment" : "generic_error_bottom_sheet__title",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Oh, das hat nicht funktioniert!"
+    "Pay Now": {
+      "comment": "pay_with_credit_card_button__short",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pay Now"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Oh, that didn't work out!"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jetzt bezahlen"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Oh, cela n'a pas fonctionné!"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Payer maintenant"
           }
         }
       }
     },
-    "Open with" : {
-      "comment" : "open_with",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Öffnen mit"
+    "Pay with Apple Pay": {
+      "comment": "apple_pay_button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pay with Apple Pay"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open with"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mit Apple Pay bezahlen"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ouvrir avec"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Payer avec Apple Pay"
           }
         }
       }
     },
-    "Our Terms of Service and Charging as well as our Privacy Policy apply" : {
-      "comment" : "terms_and_conditions_text",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Es gelten unsere Nutzungs- und Ladebedingungen sowie unsere Datenschutzbestimmungen."
+    "Pay with Credit Card": {
+      "comment": "pay_with_credit_card_button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pay with Credit Card"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Our Terms of Service and Charging as well as our Privacy Policy apply"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mit Kreditkarte zahlen"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nos conditions d'utilisation et de facturation ainsi que notre politique de confidentialité s'appliquent"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Payer par carte bancaire"
           }
         }
       }
     },
-    "Out of service" : {
-      "comment" : "charge_point__availability__out_of_service",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Außer Betrieb"
+    "Pay with Google Pay": {
+      "comment": "google_pay_button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pay with Google Pay"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Out of service"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mit Google Pay bezahlen"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hors service"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Payer avec Google Pay"
           }
         }
       }
     },
-    "Pay Now" : {
-      "comment" : "pay_with_credit_card_button__short",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jetzt bezahlen"
+    "Payment Summary": {
+      "comment": "charge_session__payment_summary_loading__title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Payment Summary"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pay Now"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zusammenfassung"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Payer maintenant"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Résumé du paiement"
           }
         }
       }
     },
-    "Pay with Apple Pay" : {
-      "comment" : "apple_pay_button",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mit Apple Pay bezahlen"
+    "Payment expired": {
+      "comment": "charge_session__unauthorized_error__title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Payment expired"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pay with Apple Pay"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zahlung abgelaufen"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Payer avec Apple Pay"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paiement expiré"
           }
         }
       }
     },
-    "Pay with Credit Card" : {
-      "comment" : "pay_with_credit_card_button",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mit Kreditkarte zahlen"
+    "Please end charging manually": {
+      "comment": "charge_session__stop_failed_title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Please end charging manually"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pay with Credit Card"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bitte beende den Ladevorgang manuell"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Payer par carte bancaire"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Veuillez terminer la recharge manuellement"
           }
         }
       }
     },
-    "Pay with Google Pay" : {
-      "comment" : "google_pay_button",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mit Google Pay bezahlen"
+    "Please stop charging manually by removing the charging cable first from your car and then from the charging station.\n\nWe will analyze the problem and try to solve it together with the operator of the charging station.": {
+      "comment": "charge_session__stop_failed_message",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Please stop charging manually by removing the charging cable first from your car and then from the charging station.\n\nWe will analyze the problem and try to solve it together with the operator of the charging station."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pay with Google Pay"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bitte beende das Laden manuell, indem du das Ladekabel zunächst aus deinem Auto und dann aus der Ladesäule entfernst.\n\nWir werden das Problem analysieren und versuchen gemeinsam mit dem Betreiber der Säule zu lösen."
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Payer avec Google Pay"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Veuillez arrêter la recharge manuellement en débranchant d'abord le câble de votre voiture, ensuite de la borne."
           }
         }
       }
     },
-    "Payment expired" : {
-      "comment" : "charge_session__unauthorized_error__title",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zahlung abgelaufen"
+    "Plug in your charging cable": {
+      "comment": "help_unlock_item_2",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plug in your charging cable"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Payment expired"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ladekabel einstecken"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paiement expiré"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Branchez votre câble de recharge"
           }
         }
       }
     },
-    "Payment Summary" : {
-      "comment" : "charge_session__payment_summary_loading__title",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zusammenfassung"
+    "Powered by": {
+      "comment": "powered_by_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Powered by"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Payment Summary"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ermöglicht durch"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Résumé du paiement"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Propulsé par"
           }
         }
       }
     },
-    "Please end charging manually" : {
-      "comment" : "charge_session__stop_failed_title",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bitte beende den Ladevorgang manuell"
+    "Preparing": {
+      "comment": "charge_session__activation_loading__title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please end charging manually"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wird initialisiert"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Veuillez terminer la recharge manuellement"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Préparation"
           }
         }
       }
     },
-    "Please stop charging manually by removing the charging cable first from your car and then from the charging station.\n\nWe will analyze the problem and try to solve it together with the operator of the charging station." : {
-      "comment" : "charge_session__stop_failed_message",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bitte beende das Laden manuell, indem du das Ladekabel zunächst aus deinem Auto und dann aus der Ladesäule entfernst.\n\nWir werden das Problem analysieren und versuchen gemeinsam mit dem Betreiber der Säule zu lösen."
+    "Privacy Policy": {
+      "comment": "privacy_policy_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy Policy"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please stop charging manually by removing the charging cable first from your car and then from the charging station.\n\nWe will analyze the problem and try to solve it together with the operator of the charging station."
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datenschutzerklärung"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Veuillez arrêter la recharge manuellement en débranchant d'abord le câble de votre voiture, ensuite de la borne."
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Politique de confidentialité"
           }
         }
       }
     },
-    "Plug in your charging cable" : {
-      "comment" : "help_unlock_item_2",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ladekabel einstecken"
+    "Reaching out to the charger.\nPlease bear with us for a moment.": {
+      "comment": "charge_session__activation_loading__message",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reaching out to the charger.\nPlease bear with us for a moment."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Plug in your charging cable"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verbindung zum Ladepunkt wird hergestellt.\nBitte etwas Geduld."
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Branchez votre câble de recharge"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connexion au chargeur en cours.\nVeuillez patienter un instant."
           }
         }
       }
     },
-    "Powered by" : {
-      "comment" : "powered_by_label",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ermöglicht durch"
+    "Restoring session": {
+      "comment": "charge_session__restoration__title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restoring session"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Powered by"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ladesitzung wird wiederhergestellt"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Propulsé par"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restauration de la session"
           }
         }
       }
     },
-    "Preparing" : {
-      "comment" : "charge_session__activation_loading__title",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wird initialisiert"
+    "Route": {
+      "comment": "route_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Route"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Preparing"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Route"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Préparation"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Itinéraire"
           }
         }
       }
     },
-    "Privacy Policy" : {
-      "comment" : "privacy_policy_label",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Datenschutzerklärung"
+    "Select charge point": {
+      "comment": "select_charge_point_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select charge point"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Privacy Policy"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ladepunkt wählen"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Politique de confidentialité"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sélectionner un point de charge"
           }
         }
       }
     },
-    "Reaching out to the charger.\nPlease bear with us for a moment." : {
-      "comment" : "charge_session__activation_loading__message",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verbindung zum Ladepunkt wird hergestellt.\nBitte etwas Geduld."
+    "Server error": {
+      "comment": "charge_session__unknown_error__title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Server error"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reaching out to the charger.\nPlease bear with us for a moment."
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Server Fehler"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connexion au chargeur en cours.\nVeuillez patienter un instant."
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erreur serveur"
           }
         }
       }
     },
-    "Restoring session" : {
-      "comment" : "charge_session__restoration__title",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ladesitzung wird wiederhergestellt"
+    "Site": {
+      "comment": "site",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Site"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Restoring session"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Station"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Restauration de la session"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Site"
           }
         }
       }
     },
-    "Route" : {
-      "comment" : "route_label",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Route"
+    "Start": {
+      "comment": "start_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Route"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starten"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Itinéraire"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Démarrer"
           }
         }
       }
     },
-    "Select charge point" : {
-      "comment" : "select_charge_point_label",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ladepunkt wählen"
+    "Start charging before the offer ends & get the full discount!": {
+      "comment": "charging_discont_banner_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start charging before the offer ends & get the full discount!"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select charge point"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lade bevor das Angebot ausläuft und erhalte den vollen Rabatt!"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sélectionner un point de charge"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Commencez à recharger avant la fin de l’offre pour profiter de la remise complète!"
           }
         }
       }
     },
-    "Server error" : {
-      "comment" : "charge_session__unknown_error__title",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Server Fehler"
+    "Start charging process": {
+      "comment": "start_charging_process",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start charging process"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Server error"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ladevorgang starten"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erreur serveur"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Démarrer la recharge"
           }
         }
       }
-    },
-    "Sign in" : {
-
     },
-    "Site" : {
-      "comment" : "site",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Station"
+    "Start your charging session to unlock the charge point": {
+      "comment": "help_unlock_item_1",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start your charging session to unlock the charge point"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Site"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starte das Laden um die Ladepunkt zu entsperren"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Site"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Démarrez votre session pour déverrouiller le point de charge"
           }
         }
       }
     },
-    "Start" : {
-      "comment" : "start_label",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Starten"
+    "Start your session to unlock": {
+      "comment": "start_your_session_to_unlock",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start your session to unlock"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starte das Laden um die Ladestation zu entsperren"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Démarrer"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Démarrez votre session pour déverrouiller"
           }
         }
       }
     },
-    "Start charging before the offer ends & get the full discount!" : {
-      "comment" : "charging_discont_banner_label",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lade bevor das Angebot ausläuft und erhalte den vollen Rabatt!"
+    "Starting": {
+      "comment": "charge_session__connection_initial_success__title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starting"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start charging before the offer ends & get the full discount!"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ladung wird initialisiert"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Commencez à recharger avant la fin de l’offre pour profiter de la remise complète!"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Démarrage"
           }
         }
       }
     },
-    "Start charging process" : {
-      "comment" : "start_charging_process",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ladevorgang starten"
+    "Stop charging": {
+      "comment": "stop_charging_button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop charging"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start charging process"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laden beenden"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Démarrer la recharge"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arrêter la recharge"
           }
         }
       }
     },
-    "Start your charging session to unlock the charge point" : {
-      "comment" : "help_unlock_item_1",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Starte das Laden um die Ladepunkt zu entsperren"
+    "Stopping": {
+      "comment": "charge_session__stop_requested__title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stopping"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start your charging session to unlock the charge point"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ladevorgang wird gestoppt"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Démarrez votre session pour déverrouiller le point de charge"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arrêt en cours"
           }
         }
       }
     },
-    "Start your session to unlock" : {
-      "comment" : "start_your_session_to_unlock",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Starte das Laden um die Ladestation zu entsperren"
+    "Stopping the charging station": {
+      "comment": "stop_charging_session_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stopping the charging station"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start your session to unlock"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stoppen der Ladestation"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Démarrez votre session pour déverrouiller"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arrêt en cours"
           }
         }
       }
     },
-    "Starting" : {
-      "comment" : "charge_session__connection_initial_success__title",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ladung wird initialisiert"
+    "Support": {
+      "comment": "support_button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Support"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Starting"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Support"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Démarrage"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Support"
           }
         }
       }
     },
-    "Stop charging" : {
-      "comment" : "stop_charging_button",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Laden beenden"
+    "Terms of Service & Charging": {
+      "comment": "terms_privacy_template_1",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terms of Service & Charging"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stop charging"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nutzungs- und Ladebedingungen"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arrêter la recharge"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conditions d’utilisation & recharge"
           }
         }
       }
     },
-    "Stopping" : {
-      "comment" : "charge_session__stop_requested__title",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ladevorgang wird gestoppt"
+    "Terms of Service and Charging": {
+      "comment": "term_and_conditions_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terms of Service and Charging"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stopping"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nutzungs- und Ladebedingungen"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arrêt en cours"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conditions d’utilisation et de recharge"
           }
         }
       }
     },
-    "Stopping the charging station" : {
-      "comment" : "stop_charging_session_label",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stoppen der Ladestation"
+    "The charge offers could not be loaded. Please try again later.": {
+      "comment": "charge_offer_details__loading_error_message",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The charge offers could not be loaded. Please try again later."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stopping the charging station"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Angebote konnten nicht geladen werden. Bitte versuche es erneut."
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arrêt en cours"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’offres n’a pas pu être chargé. Veuillez réessayer plus tard."
           }
         }
       }
     },
-    "Support" : {
-      "comment" : "support_button",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Support"
+    "The charge point reported an error": {
+      "comment": "charge_session__activation_error__title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The charge point reported an error"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Support"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Ladepunkt hat einen Fehler gemeldet"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Support"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le point de charge a renvoyé une erreur"
           }
         }
       }
     },
-    "Terms of Service & Charging" : {
-      "comment" : "terms_privacy_template_1",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nutzungs- und Ladebedingungen"
+    "The station is awake Start the charging session with the charger": {
+      "comment": "start_hint",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The station is awake Start the charging session with the charger"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Terms of Service & Charging"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ladestation aktiviert, starte den Ladepunkt"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conditions d’utilisation & recharge"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La station est éveillée Démarrer la session de chargement avec le chargeur"
           }
         }
       }
     },
-    "Terms of Service and Charging" : {
-      "comment" : "term_and_conditions_label",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nutzungs- und Ladebedingungen"
+    "This offer has ended, but more are coming!": {
+      "comment": "campaign_banner__deal_expired_message",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This offer has ended, but more are coming!"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Terms of Service and Charging"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dieses Angebot ist abgelaufen, aber es kommen noch mehr!"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conditions d’utilisation et de recharge"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cette offre a expiré, mais d'autres arrivent bientôt!"
           }
         }
       }
     },
-    "The charge offers could not be loaded. Please try again later." : {
-      "comment" : "charge_offer_details__loading_error_message",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Die Angebote konnten nicht geladen werden. Bitte versuche es erneut."
+    "Total": {
+      "comment": "total",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The charge offers could not be loaded. Please try again later."
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gesamt"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’offres n’a pas pu être chargé. Veuillez réessayer plus tard."
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total"
           }
         }
       }
     },
-    "The charge point reported an error" : {
-      "comment" : "charge_session__activation_error__title",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Der Ladepunkt hat einen Fehler gemeldet"
+    "Try again": {
+      "comment": "try_again",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try again"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The charge point reported an error"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erneut versuchen"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Le point de charge a renvoyé une erreur"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réessayer"
           }
         }
       }
     },
-    "The station is awake Start the charging session with the charger" : {
-      "comment" : "start_hint",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ladestation aktiviert, starte den Ladepunkt"
+    "Understood": {
+      "comment": "understood",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Understood"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The station is awake Start the charging session with the charger"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verstanden"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La station est éveillée Démarrer la session de chargement avec le chargeur"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compris"
           }
         }
       }
     },
-    "This offer has ended, but more are coming!" : {
-      "comment" : "campaign_banner__deal_expired_message",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dieses Angebot ist abgelaufen, aber es kommen noch mehr!"
+    "Unfortunately, the charging session could not be started at this charge point. Please try again later or use another charge point.": {
+      "comment": "charge_session__activation_error__message",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unfortunately, the charging session could not be started at this charge point. Please try again later or use another charge point."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This offer has ended, but more are coming!"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leider konnten wir die Ladung an dieser Station nicht starten. Bitte versuch es später erneut oder wähle einen anderen Ladepunkt."
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette offre a expiré, mais d'autres arrivent bientôt!"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La session n’a pas pu être démarrée avec ce point de charge. Veuillez réessayer ou utiliser une autre prise."
           }
         }
       }
     },
-    "Total" : {
-      "comment" : "total",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gesamt"
+    "Unfortunately, the time between payment and session start was too long. We need you to authorize a new deposit on your payment method.": {
+      "comment": "charge_session__unauthorized_error__message",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unfortunately, the time between payment and session start was too long. We need you to authorize a new deposit on your payment method."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leider ist die Zahlung ausgelaufen. Wir müssen erneut den Betrag auf deiner Zahlungsmethode reservieren."
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le délai entre le paiement et le début de la session a été trop long. Veuillez autoriser un nouveau paiement."
           }
         }
       }
     },
-    "Try again" : {
-      "comment" : "try_again",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erneut versuchen"
+    "Unfortunately, we did not find your email app.": {
+      "comment": "email_app_missing_title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unfortunately, we did not find your email app."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Try again"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wir konnten leider keine E-Mail-App finden."
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réessayer"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Malheureusement, aucune application Email n’a été trouvée."
           }
         }
       }
     },
-    "Understood" : {
-      "comment" : "understood",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verstanden"
+    "We are connecting to the station to end the charging session.": {
+      "comment": "end_session_message",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We are connecting to the station to end the charging session."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Understood"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verbindung zum Ladepunkt wird hergestellt, um die Ladung zu beenden."
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Compris"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connexion à la station pour terminer la session."
           }
         }
       }
     },
-    "Unfortunately, the charging session could not be started at this charge point. Please try again later or use another charge point." : {
-      "comment" : "charge_session__activation_error__message",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leider konnten wir die Ladung an dieser Station nicht starten. Bitte versuch es später erneut oder wähle einen anderen Ladepunkt."
+    "Web Support": {
+      "comment": "contact_support_agent_short",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Web Support"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unfortunately, the charging session could not be started at this charge point. Please try again later or use another charge point."
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Web Support"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La session n’a pas pu être démarrée avec ce point de charge. Veuillez réessayer ou utiliser une autre prise."
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Support web"
           }
         }
       }
     },
-    "Unfortunately, the time between payment and session start was too long. We need you to authorize a new deposit on your payment method." : {
-      "comment" : "charge_session__unauthorized_error__message",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leider ist die Zahlung ausgelaufen. Wir müssen erneut den Betrag auf deiner Zahlungsmethode reservieren."
+    "WhatsApp": {
+      "comment": "whatsapp",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhatsApp"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unfortunately, the time between payment and session start was too long. We need you to authorize a new deposit on your payment method."
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhatsApp"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Le délai entre le paiement et le début de la session a été trop long. Veuillez autoriser un nouveau paiement."
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhatsApp"
           }
         }
       }
     },
-    "Unfortunately, we did not find your email app." : {
-      "comment" : "email_app_missing_title",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wir konnten leider keine E-Mail-App finden."
+    "export__ios": {
+      "comment": "export__ios",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "export__ios"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unfortunately, we did not find your email app."
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "export__ios"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Malheureusement, aucune application Email n’a été trouvée."
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "export__ios"
           }
         }
       }
     },
-    "We are connecting to the station to end the charging session." : {
-      "comment" : "end_session_message",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verbindung zum Ladepunkt wird hergestellt, um die Ladung zu beenden."
+    "kW": {
+      "comment": "kw_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kW"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "We are connecting to the station to end the charging session."
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kW"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connexion à la station pour terminer la session."
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kW"
           }
         }
       }
     },
-    "Web Support" : {
-      "comment" : "contact_support_agent_short",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Web Support"
+    "kWh charged": {
+      "comment": "kilowatts_charged_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kWh charged"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Web Support"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kWh geladen"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Support web"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kWh rechargés"
           }
         }
       }
     },
-    "WhatsApp" : {
-      "comment" : "whatsapp",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "WhatsApp"
+    "€": {
+      "comment": "euros_label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "€"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "WhatsApp"
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "€"
           }
         },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "WhatsApp"
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "€"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

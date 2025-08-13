@@ -1,14 +1,14 @@
 // Copyright © elvah. All rights reserved.
 
-import Foundation
 import CoreLocation
+import Foundation
 
 extension Site {
 	static func parse(_ response: SiteOfferSchema) throws(NetworkError.Client) -> Site {
 		guard response.location.count >= 2 else {
 			throw .parsing(.field("location"))
 		}
-		
+
 		return Site(
 			id: response.id,
 			location: CLLocationCoordinate2D(

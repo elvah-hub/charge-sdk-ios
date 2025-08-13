@@ -76,7 +76,7 @@ struct ChargeOfferPricingView: View {
 	}
 
 	@ViewBuilder private func originalPriceLabel(price: Currency) -> some View {
-		Text(verbatim: "\(price.formatted())/kWh")
+		Text("\(price.formatted())/kWh", bundle: .elvahCharge)
 			.strikethrough()
 			.typography(.copy(size: .small), weight: .regular)
 			.layoutPriority(1)

@@ -8,8 +8,7 @@ struct OfferEndedBottomSheet: View {
 
 	var body: some View {
 		BottomSheetComponent(title: title) {
-			Text("This offer has ended, but more are coming!",
-			     bundle: .elvahCharge)
+			Text("This offer has ended, but more are coming!", bundle: .elvahCharge)
 				.fixedSize(horizontal: false, vertical: true)
 		} footer: {
 			Button("Understood", bundle: .elvahCharge) {
