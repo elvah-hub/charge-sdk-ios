@@ -56,9 +56,11 @@ struct SupportFeature: View {
 				}
 			}
 			.background(.canvas)
-			.navigationTitle("Help & Support")
 			.navigationBarTitleDisplayMode(.inline)
 			.toolbar {
+				ToolbarItem(placement: .principal) {
+					StyledNavigationTitle("Help & Support", bundle: .elvahCharge)
+				}
 				ToolbarItem(placement: .topBarLeading) {
 					CloseButton()
 				}
@@ -71,12 +73,13 @@ struct SupportFeature: View {
 		Image(.helpSupport)
 		if let companyName = chargeSessionContext?.organisationDetails.companyName {
 			VStack(spacing: Size.XS.size) {
-				Text("Need help or want to give us feedback?")
+				Text("Need help or want to give us feedback?", bundle: .elvahCharge)
 					.typography(.title(size: .small), weight: .bold)
 					.foregroundStyle(.primaryContent)
 					.fixedSize(horizontal: false, vertical: true)
 				Text(
-					"Get in touch with \(companyName)s team. You can do so immediately via WhatsApp or E-mail."
+					"Get in touch with \(companyName)s team. You can do so immediately via WhatsApp or E-mail.",
+					bundle: .elvahCharge
 				)
 				.typography(.copy(size: .medium), weight: .regular)
 				.foregroundStyle(.secondaryContent)

@@ -149,7 +149,7 @@ package struct ChargeOfferDetailFeature: View {
 	}
 
 	@ViewBuilder private var routeButton: some View {
-		Button("Route", icon: .directions) {
+		Button("Route", icon: .directions, bundle: .elvahCharge) {
 			router.showRouteOptions = true
 		}
 		.controlSize(.small)

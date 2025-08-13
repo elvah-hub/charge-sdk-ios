@@ -6,7 +6,7 @@ import SwiftUI
 struct DisclaimerFooter: View {
 	var body: some View {
 		HStack(spacing: Size.S.size) {
-			Text("Powered by")
+			Text("Powered by", bundle: .elvahCharge)
 				.foregroundStyle(.secondaryContent)
 				.typography(.copy(size: .small))
 			HStack(spacing: Size.XS.size) {
