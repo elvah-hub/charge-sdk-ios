@@ -149,7 +149,7 @@ package struct ChargeOfferDetailFeature: View {
 	}
 
 	@ViewBuilder private var routeButton: some View {
-		Button("Route", icon: .directions) {
+		Button("Route", icon: .directions, bundle: .elvahCharge) {
 			router.showRouteOptions = true
 		}
 		.controlSize(.small)
@@ -200,7 +200,7 @@ package struct ChargeOfferDetailFeature: View {
 			let signedOffer = try await discoveryProvider.signOffer(offer)
 			let context = try await chargeSettlementProvider.initiate(with: signedOffer.token)
 			try Task.checkCancellation()
-			
+
 			router.chargeRequest = ChargeRequest(
 				site: site,
 				signedOffer: signedOffer,

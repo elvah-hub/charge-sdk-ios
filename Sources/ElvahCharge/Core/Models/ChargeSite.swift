@@ -23,6 +23,10 @@ public struct ChargeSite: Codable, Hashable, Identifiable, Sendable {
 		self.offers = offers
 	}
 
+	public subscript<V>(dynamicMember keyPath: KeyPath<Site, V>) -> V {
+		site[keyPath: keyPath]
+	}
+
 	public subscript<V>(dynamicMember keyPath: WritableKeyPath<Site, V>) -> V {
 		get { site[keyPath: keyPath] }
 		set { site[keyPath: keyPath] = newValue }

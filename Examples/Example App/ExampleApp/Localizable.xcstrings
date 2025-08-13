@@ -8,7 +8,20 @@
 
     },
     "Charge Banner" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Charge Banner"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Charge Banner"
+          }
+        }
+      }
     },
     "Charge Banner (Advanced)" : {
 

@@ -21,7 +21,7 @@ struct AdhocCostsBoxComponent: View {
 						HStack(spacing: 0) {
 							Text(verbatim: "\(offer.price.pricePerKWh.formatted())")
 								.typography(.bold)
-							Text(" /kWh", bundle: .elvahCharge)
+							Text("/kWh")
 								.foregroundStyle(.secondaryContent)
 						}
 					}

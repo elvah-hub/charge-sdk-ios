@@ -220,18 +220,24 @@ private struct PreviewData: View {
 	@State private var showMessage = true
 	var body: some View {
 		VStack(spacing: Size.XL.size) {
-			Picker("Loading", selection: $state) {
+			Picker(selection: $state) {
 				Text(verbatim: "Loading")
 					.tag(ActivityInfoComponent.ActivityState.animating(iconSystemName: nil))
 				Text(verbatim: "Step")
 					.tag(ActivityInfoComponent.ActivityState.outlined(iconSystemName: "checkmark"))
 				Text(verbatim: "Done").tag(ActivityInfoComponent.ActivityState.success)
 				Text(verbatim: "Error").tag(ActivityInfoComponent.ActivityState.error)
+			} label: {
+				Text(verbatim: "Loading")
 			}
 			.labelsHidden()
 			VStack {
-				Toggle("Title", isOn: $showTitle)
-				Toggle("Message", isOn: $showMessage)
+				Toggle(isOn: $showTitle) {
+					Text(verbatim: "Title")
+				}
+				Toggle(isOn: $showMessage) {
+					Text(verbatim: "Message")
+				}
 			}
 			ActivityInfoComponent(
 				state: state,

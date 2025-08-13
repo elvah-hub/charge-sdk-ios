@@ -17,10 +17,6 @@ extension ChargeSession {
 	}
 }
 
-struct ChargeSessionCommandSchema: Decodable {
-	var session: ChargeSessionSchema
-}
-
 struct ChargeSessionSchema: Decodable {
 	var evseId: String
 	var status: String

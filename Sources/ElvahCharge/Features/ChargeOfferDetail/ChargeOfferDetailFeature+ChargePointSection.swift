@@ -69,7 +69,7 @@ extension ChargeOfferDetailFeature {
 							Image(.bolt)
 								.foregroundStyle(.brand)
 								.typography(.copy(size: .xLarge), weight: .bold)
-							Text("You are already charging", bundle: .elvahCharge)
+							Text("Manage your current charge session", bundle: .elvahCharge)
 								.frame(maxWidth: .infinity, alignment: .leading)
 							Image(.chevronRight)
 						}

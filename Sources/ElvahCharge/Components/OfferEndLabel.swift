@@ -50,8 +50,11 @@ struct OfferEndLabel: View {
 			: String(localized: "Ended", bundle: .elvahCharge)
 
 		if timeLeft > .zero, let prefix = prefix {
-			(Text(prefix).foregroundColor(primaryColor) + Text(suffixText).foregroundColor(suffixColor))
-				.fixedSize(horizontal: false, vertical: true)
+			(Text(prefix, bundle: .elvahCharge)
+				.foregroundColor(primaryColor) + Text(suffixText)
+				.foregroundColor(suffixColor)
+			)
+			.fixedSize(horizontal: false, vertical: true)
 		} else {
 			Text(suffixText).foregroundColor(suffixColor).fixedSize(horizontal: false, vertical: true)
 		}

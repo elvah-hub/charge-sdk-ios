@@ -28,6 +28,10 @@ package struct SignedChargeOffer: Codable, Hashable, Identifiable, Sendable {
 		self.validUntil = validUntil
 	}
 
+	public subscript<V>(dynamicMember keyPath: KeyPath<ChargeOffer, V>) -> V {
+		offer[keyPath: keyPath]
+	}
+
 	public subscript<V>(dynamicMember keyPath: WritableKeyPath<ChargeOffer, V>) -> V {
 		get { offer[keyPath: keyPath] }
 		set { offer[keyPath: keyPath] = newValue }

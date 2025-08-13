@@ -83,7 +83,7 @@ extension ChargeSessionFeature {
 					case .started:
 						EmptyView()
 					case .charging:
-						Button("Stop charging") {
+						Button("Stop charging", bundle: .elvahCharge) {
 							onAction(.stop)
 						}
 						.buttonStyle(.primary)

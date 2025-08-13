@@ -46,7 +46,6 @@
 		41763F542C2D340E00F42070 = {
 			isa = PBXGroup;
 			children = (
-				41936C8C2E33954C00FC9078 /* CLAUDE.md */,
 				41333A5F2E3752470021C2A1 /* ExampleApp */,
 				419FCA002DA51C6400F08009 /* Frameworks */,
 				41763F5E2C2D340E00F42070 /* Products */,
@@ -114,6 +113,7 @@
 				en,
 				Base,
 				de,
+				fr,
 			);
 			mainGroup = 41763F542C2D340E00F42070;
 			packageReferences = (
