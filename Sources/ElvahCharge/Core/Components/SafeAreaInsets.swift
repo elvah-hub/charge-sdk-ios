@@ -24,7 +24,7 @@ package extension View {
 	/// RootView()
 	///  .withSafeAreaInsets()
 	/// ```
-	@MainActor func withSafeAreaInsets() -> some View {
+	func withSafeAreaInsets() -> some View {
 		environment(\.safeAreaInsets, .determine())
 	}
 }

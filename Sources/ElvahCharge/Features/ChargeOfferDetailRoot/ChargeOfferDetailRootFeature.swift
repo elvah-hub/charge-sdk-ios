@@ -30,7 +30,6 @@ package struct ChargeOfferDetailRootFeature: View {
 
 @available(iOS 16.0, *)
 package extension ChargeOfferDetailRootFeature {
-  @MainActor
   final class Router: BaseRouter {
     @Published var path = NavigationPath()
 

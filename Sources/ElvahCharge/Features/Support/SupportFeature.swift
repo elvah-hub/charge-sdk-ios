@@ -167,7 +167,6 @@ struct SupportFeature: View {
 
 @available(iOS 16.0, *)
 extension SupportFeature {
-	@MainActor
 	final class Router: BaseRouter {
 		func reset() {}
 	}

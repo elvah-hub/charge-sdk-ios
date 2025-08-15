@@ -34,7 +34,7 @@ struct ChargeSliderView: View {
 		}
 	}
 
-	@MainActor @ViewBuilder private var content: some View {
+	@ViewBuilder private var content: some View {
 		GeometryReader { geo in
 			ZStack(alignment: .leading) {
 				sliderBackground
@@ -74,7 +74,7 @@ struct ChargeSliderView: View {
 			.allowsHitTesting(false)
 	}
 
-	@MainActor private func knob(in geo: GeometryProxy) -> some View {
+	private func knob(in geo: GeometryProxy) -> some View {
 		ZStack(alignment: .leading) {
 			ZStack {
 				Color.onBrand
@@ -123,7 +123,7 @@ struct ChargeSliderView: View {
 		}
 	}
 
-	@MainActor private func onDragEnded() {
+	private func onDragEnded() {
 		switch dragState {
 		case let .dragging(offsetX, maxX):
 			if offsetX >= (thresholdPercentage * maxX) || offsetX == maxX {
@@ -144,7 +144,7 @@ struct ChargeSliderView: View {
 		}
 	}
 
-	@MainActor private func onTap(geo: GeometryProxy) {
+	private func onTap(geo: GeometryProxy) {
 		if dragState.isReady {
 			withAnimation {
 				dragState = .dragging(
@@ -152,7 +152,7 @@ struct ChargeSliderView: View {
 					maxX: geo.size.width - geo.size.height
 				)
 
-				Task { @MainActor in
+				Task {
 					try await Task.sleep(for: .seconds(0.01))
 					dragState = .ready
 				}

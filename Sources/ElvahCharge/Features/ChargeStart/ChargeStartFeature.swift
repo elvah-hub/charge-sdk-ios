@@ -147,8 +147,7 @@ struct ChargeStartFeature: View {
 
 @available(iOS 16.0, *)
 extension ChargeStartFeature {
-	@MainActor
-	final class Router: ObservableObject {
+	final class Router: BaseRouter {
 		enum Destination: Hashable {
 			case chargeSession
 			case chargeAuthenticationExpired

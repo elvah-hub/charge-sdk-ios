@@ -32,7 +32,7 @@ public struct Currency: Codable, Sendable, Hashable, Comparable, ExpressibleByFl
 	/// Returns the formatted string representation of the currency.
 	///
 	/// - Returns: A string representing the formatted currency amount.
-	@MainActor public func formatted() -> String {
+	public func formatted() -> String {
 		if amount.truncatingRemainder(dividingBy: 100) == 0 {
 			return amount.formatted(.currency(code: identifier).precision(.fractionLength(0)))
 		} else {

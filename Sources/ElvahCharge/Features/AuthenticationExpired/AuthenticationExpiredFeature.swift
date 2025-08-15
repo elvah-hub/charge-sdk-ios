@@ -53,7 +53,6 @@ struct AuthenticationExpiredFeature: View {
 
 @available(iOS 16.0, *)
 extension AuthenticationExpiredFeature {
-	@MainActor
 	final class Router: BaseRouter {
 		@Published var showSupport = false
 

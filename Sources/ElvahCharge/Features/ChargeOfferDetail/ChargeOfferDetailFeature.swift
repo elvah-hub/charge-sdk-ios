@@ -212,7 +212,6 @@ package struct ChargeOfferDetailFeature: View {
 
 @available(iOS 16.0, *)
 package extension ChargeOfferDetailFeature {
-	@MainActor
 	final class Router: BaseRouter {
 		@Published var showGenericError = false
 		@Published var showRouteOptions = false

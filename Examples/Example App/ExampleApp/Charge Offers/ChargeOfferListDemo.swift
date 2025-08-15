@@ -41,7 +41,7 @@ struct ChargeOfferListDemo: View {
 		.chargePresentation(offer: $selectedOffer)
 	}
 
-	@MainActor private func performLoadChargeOffers() async {
+	private func performLoadChargeOffers() async {
 		isLoading = true
 		error = nil
 

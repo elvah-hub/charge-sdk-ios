@@ -501,7 +501,7 @@ public extension ChargeSimulator {
 		///
 		/// - Throws: Any error to simulate a failed start request
 		public typealias StartRequest = @Sendable () async throws -> Void
-		
+
 		/// Closure type for handling charge session stop requests.
 		///
 		/// This closure is called when the SDK requests to stop a charge session. It receives
@@ -511,7 +511,7 @@ public extension ChargeSimulator {
 		/// - Parameter session: The current session context containing status, timing, and request information
 		/// - Throws: Any error to simulate a failed stop request
 		public typealias StopRequest = @Sendable (_ session: Context) async throws -> Void
-		
+
 		/// Closure type for handling session status polling.
 		///
 		/// The SDK calls this closure regularly (approximately every 2 seconds) during an active
@@ -538,11 +538,11 @@ public extension ChargeSimulator {
 		///     case .startRequested:
 		///         // Immediately transition to started
 		///         return .started
-		///         
+		///
 		///     case .started:
 		///         // Wait 3 seconds before starting to charge
 		///         return context.secondsSinceLastStatusChange > 3 ? .charging : nil
-		///         
+		///
 		///     case .charging:
 		///         // If user requested stop, transition to stopRequested
 		///         if context.currentRequest == .stopRequested {
@@ -550,15 +550,15 @@ public extension ChargeSimulator {
 		///         }
 		///         // Otherwise keep charging
 		///         return nil
-		///         
+		///
 		///     case .stopRequested:
 		///         // Wait 2 seconds then stop
 		///         return context.secondsSinceLastStatusChange > 2 ? .stopped : nil
-		///         
+		///
 		///     case .stopped:
 		///         // Session is finished, no more transitions
 		///         return nil
-		///         
+		///
 		///     default:
 		///         return nil
 		///     }

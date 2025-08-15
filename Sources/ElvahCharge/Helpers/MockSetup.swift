@@ -9,7 +9,7 @@ enum PreviewLanguage: String {
 
 @available(iOS 16.0, *)
 extension View {
-	@MainActor func withMockEnvironmentObjects(language: PreviewLanguage = .english) -> some View {
+	func withMockEnvironmentObjects(language: PreviewLanguage = .english) -> some View {
 		environmentObject(ChargeSettlementProvider.mock)
 			.environmentObject(DiscoveryProvider.mock)
 			.environmentObject(ChargeProvider.mock)

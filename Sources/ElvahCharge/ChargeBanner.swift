@@ -175,7 +175,6 @@ public struct ChargeBanner: View {
 }
 
 package extension ChargeBanner {
-	@MainActor
 	final class Router: BaseRouter {
 		@Published var chargeSiteDetail: ChargeSite?
 		@Published var showChargeSession = false

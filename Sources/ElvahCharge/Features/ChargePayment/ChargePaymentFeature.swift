@@ -221,7 +221,6 @@ extension PaymentSheet {
 
 @available(iOS 16.0, *)
 extension ChargePaymentFeature {
-	@MainActor
 	final class Router: BaseRouter {
 		enum Destination: Hashable {
 			case chargeStart(request: AuthenticatedChargeRequest)

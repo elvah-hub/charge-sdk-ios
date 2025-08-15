@@ -106,7 +106,6 @@ extension ChargeEntryFeature {
 
 @available(iOS 16.0, *)
 extension ChargeEntryFeature {
-	@MainActor
 	final class Router: BaseRouter {
 		@Published var path = NavigationPath()
 

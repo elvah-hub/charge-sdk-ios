@@ -208,7 +208,6 @@ extension ChargeSessionFeature {
 
 @available(iOS 16.0, *)
 extension ChargeSessionFeature {
-	@MainActor
 	final class Router: BaseRouter {
 		@Published var path: NavigationPath = .init()
 		@Published var showSupport = false
