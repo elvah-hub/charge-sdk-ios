@@ -23,8 +23,7 @@ public enum BackendEnvironment: Sendable, Hashable {
 		     .simulation:
 			"integrate.int.elvah.de"
 		case .production:
-			// TODO: Replace with production url once available
-			"integrate.int.elvah.de"
+			"integrate.elvah.de"
 		}
 	}
 
