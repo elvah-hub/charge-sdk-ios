@@ -15,6 +15,9 @@ final class DiscoveryProvider: ObservableObject {
 			_ siteId: String,
 			_ evseId: String
 		) async throws -> SignedChargeOffer
+		var pricingSchedule: @Sendable (
+			_ siteId: String
+		) async throws -> ChargeSitePricingSchedule
 	}
 
 	private let dependencies: Dependencies
@@ -58,6 +61,10 @@ final class DiscoveryProvider: ObservableObject {
 	func signOffer(_ offer: ChargeOffer) async throws -> SignedChargeOffer {
 		try await dependencies.signOffer(offer.site.id, offer.evseId)
 	}
+
+	func pricingSchedule(siteId: String) async throws -> ChargeSitePricingSchedule {
+		try await dependencies.pricingSchedule(siteId)
+	}
 }
 
 extension DiscoveryProvider {
@@ -77,6 +84,9 @@ extension DiscoveryProvider {
 				},
 				signOffer: { siteId, evseId in
 					try await service.signOffer(siteId: siteId, evseId: evseId)
+				},
+				pricingSchedule: { siteId in
+					try await service.pricingSchedule(siteId: siteId)
 				}
 			)
 		)
@@ -93,6 +103,10 @@ extension DiscoveryProvider {
 			},
 			signOffer: { siteId, evseId in
 				try await ChargeSimulator.shared.signOffer(siteId: siteId, evseId: evseId)
+			},
+			pricingSchedule: { _ in
+				// Simple simulated schedule
+				.mock
 			}
 		)
 	)
@@ -105,6 +119,9 @@ extension DiscoveryProvider {
 			},
 			signOffer: { _, _ in
 				.mockAvailable
+			},
+			pricingSchedule: { _ in
+				.mock
 			}
 		)
 	)
