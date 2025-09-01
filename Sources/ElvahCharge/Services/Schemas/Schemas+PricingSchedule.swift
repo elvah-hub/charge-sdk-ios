@@ -6,6 +6,24 @@ extension ChargeSitePricingSchedule {
 	static func parse(
 		_ response: PricingScheduleSchema
 	) throws(NetworkError.Client) -> ChargeSitePricingSchedule {
+		func parseSlots(_ slots: [PricingScheduleSchema.TimeSlotSchema]) throws(NetworkError.Client) -> [DiscountedTimeSlot] {
+			try slots.map { slot throws(NetworkError.Client) -> DiscountedTimeSlot in
+				guard let from = Time(timeString: slot.from) else {
+					throw .parsing(.keyPath(in: slot, keyPath: \.from))
+				}
+
+				guard let to = Time(timeString: slot.to) else {
+					throw .parsing(.keyPath(in: slot, keyPath: \.to))
+				}
+
+				return try DiscountedTimeSlot(
+					from: from,
+					to: to,
+					price: ChargePrice.parse(slot.price)
+				)
+			}
+		}
+
 		func parseEntry(
 			_ entry: PricingScheduleSchema.DailyPriceEntry?
 		) throws(NetworkError.Client) -> Entry? {
@@ -13,7 +31,7 @@ extension ChargeSitePricingSchedule {
 				return nil
 			}
 
-			let price = try ChargePrice.parse(entry.price)
+			let lowestPrice = try ChargePrice.parse(entry.lowestPrice)
 
 			var trend: PriceTrend?
 			if let trendRaw = entry.trend {
@@ -25,7 +43,8 @@ extension ChargeSitePricingSchedule {
 				}
 			}
 
-			return Entry(price: price, trend: trend)
+			let slots = try parseSlots(entry.timeSlots)
+			return Entry(lowestPrice: lowestPrice, trend: trend, timeSlots: slots)
 		}
 
 		let daily = try DailyPricing(
@@ -34,31 +53,14 @@ extension ChargeSitePricingSchedule {
 			tomorrow: parseEntry(response.dailyPricing.tomorrow)
 		)
 
-		let slots: [DiscountedTimeSlot] = try response.discountedTimeSlots.map { slot throws(NetworkError.Client) -> DiscountedTimeSlot in
-			guard let from = Time(timeString: slot.from) else {
-				throw .parsing(.keyPath(in: slot, keyPath: \.from))
-			}
-			guard let to = Time(timeString: slot.to) else {
-				throw .parsing(.keyPath(in: slot, keyPath: \.to))
-			}
-
-			return try DiscountedTimeSlot(
-				from: from,
-				to: to,
-				price: ChargePrice.parse(slot.price)
-			)
-		}
-
 		return ChargeSitePricingSchedule(
-			dailyPricing: daily,
-			discountedTimeSlots: slots
+			dailyPricing: daily
 		)
 	}
 }
 
 struct PricingScheduleSchema: Decodable {
 	var dailyPricing: DailyPricingSchema
-	var discountedTimeSlots: [DiscountedTimeSlotSchema]
 
 	struct DailyPricingSchema: Decodable {
 		var yesterday: DailyPriceEntry?
@@ -67,11 +69,12 @@ struct PricingScheduleSchema: Decodable {
 	}
 
 	struct DailyPriceEntry: Decodable {
-		var price: ChargePriceSchema
+		var lowestPrice: ChargePriceSchema
 		var trend: String?
+		var timeSlots: [TimeSlotSchema]
 	}
 
-	struct DiscountedTimeSlotSchema: Decodable {
+	struct TimeSlotSchema: Decodable {
 		var from: String
 		var to: String
 		var price: ChargePriceSchema

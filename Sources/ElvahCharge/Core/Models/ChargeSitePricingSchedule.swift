@@ -7,15 +7,8 @@ package struct ChargeSitePricingSchedule: Codable, Hashable, Sendable {
 	/// Daily pricing entries for yesterday, today and tomorrow.
 	package var dailyPricing: DailyPricing
 
-	/// Discounted time slots during which special prices apply.
-	package var discountedTimeSlots: [DiscountedTimeSlot]
-
-	package init(
-		dailyPricing: DailyPricing,
-		discountedTimeSlots: [DiscountedTimeSlot]
-	) {
+	package init(dailyPricing: DailyPricing) {
 		self.dailyPricing = dailyPricing
-		self.discountedTimeSlots = discountedTimeSlots
 	}
 
 	/// Price trend direction compared to the previous day.
@@ -39,11 +32,14 @@ package struct ChargeSitePricingSchedule: Codable, Hashable, Sendable {
 
 	/// A daily pricing entry with optional trend.
 	package struct Entry: Codable, Hashable, Sendable {
-		/// The price for the day.
-		package var price: ChargePrice
+		/// The lowest price for the day.
+		package var lowestPrice: ChargePrice
 
 		/// The price trend, if provided.
 		package var trend: PriceTrend?
+
+		/// Discounted time slots for this specific day.
+		package var timeSlots: [DiscountedTimeSlot]
 	}
 
 	/// A discounted time slot in a day.
@@ -63,21 +59,32 @@ package extension ChargeSitePricingSchedule {
 	static var mock: ChargeSitePricingSchedule {
 		ChargeSitePricingSchedule(
 			dailyPricing: DailyPricing(
-				yesterday: Entry(price: .mock, trend: .stable),
-				today: Entry(price: .mock2, trend: nil),
-				tomorrow: Entry(price: .mock3, trend: .down)
-			),
-			discountedTimeSlots: [
-				DiscountedTimeSlot(
-					from: Time(timeString: "10:00:00")!,
-					to: Time(timeString: "15:00:00")!,
-					price: ChargePrice(
-						pricePerKWh: Currency(0.32),
-						baseFee: nil,
-						blockingFee: nil
-					)
+				yesterday: Entry(
+					lowestPrice: .mock,
+					trend: .stable,
+					timeSlots: [
+						DiscountedTimeSlot(
+							from: Time(timeString: "10:00:00")!,
+							to: Time(timeString: "15:00:00")!,
+							price: ChargePrice(
+								pricePerKWh: Currency(0.32),
+								baseFee: nil,
+								blockingFee: nil
+							)
+						),
+					]
 				),
-			]
+				today: Entry(
+					lowestPrice: .mock2,
+					trend: nil,
+					timeSlots: []
+				),
+				tomorrow: Entry(
+					lowestPrice: .mock3,
+					trend: .down,
+					timeSlots: []
+				)
+			)
 		)
 	}
 }
