@@ -79,8 +79,8 @@ public struct ChargeSitePricingChart: View {
 			}
 		}
 		.chartXAxis {
-			// Show ticks/labels at 4-hour intervals; gridlines are custom dotted rules above.
-			AxisMarks(values: .stride(by: .hour, count: 4)) { _ in
+			// Show ticks/labels at fixed 4-hour points including 24:00 (next midnight)
+			AxisMarks(values: hourlyTicks(for: data.day)) { _ in
 				AxisTick()
 				AxisValueLabel(format: .dateTime.hour(.twoDigits(amPM: .omitted)))
 			}
@@ -218,4 +218,43 @@ private extension ChargeSitePricingChart {
 	let chartData = schedule.makeChart(for: Date())
 	return ChargeSitePricingChart(data: chartData)
 		.frame(height: 180)
+}
+
+@available(iOS 16.0, *)
+#Preview("Three-Day Scroll") {
+	let schedule = ChargeSitePricingSchedule.mock
+	let calendar = Calendar.current
+	let today = calendar.startOfDay(for: Date())
+	let days = [
+		calendar.date(byAdding: .day, value: -1, to: today) ?? today,
+		today,
+		calendar.date(byAdding: .day, value: 1, to: today) ?? today
+	]
+	let datasets = days.map { schedule.makeChart(for: $0) }
+	return ChargeSitePricingChartThreeDays(datasets: datasets)
+		.frame(height: 180)
+}
+
+// MARK: - Multi-day container
+
+@available(iOS 16.0, *)
+public struct ChargeSitePricingChartThreeDays: View {
+	/// Datasets for each day, typically yesterday, today, and tomorrow.
+	public var datasets: [ChargeSitePricingChartData]
+
+	public init(datasets: [ChargeSitePricingChartData]) {
+		self.datasets = datasets
+	}
+
+	public var body: some View {
+		let screenWidth = UIScreen.main.bounds.width
+		ScrollView(.horizontal, showsIndicators: false) {
+			HStack(spacing: 0) {
+				ForEach(Array(datasets.enumerated()), id: \.offset) { _, data in
+					ChargeSitePricingChart(data: data)
+						.frame(width: screenWidth)
+				}
+			}
+		}
+	}
 }
