@@ -14,6 +14,13 @@ public struct ChargeSitePricingChart: View {
 
 	public var body: some View {
 		Chart {
+			// Dotted vertical lines for every fourth hour across the day
+			ForEach(hourlyTicks(for: data.day), id: \.self) { tick in
+				RuleMark(x: .value("Hour", tick))
+					.foregroundStyle(.gray.opacity(0.3))
+					.lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 2]))
+			}
+
 			// Baseline band across non-discount ranges only (interrupted by green)
 			ForEach(nonDiscountSegments()) { segment in
 				RectangleMark(
@@ -30,6 +37,7 @@ public struct ChargeSitePricingChart: View {
 					y: .value("Base Line", data.basePrice.amount)
 				)
 				.foregroundStyle(.gray)
+				.lineStyle(StrokeStyle(lineWidth: 1))
 			}
 
 			// Discounted segments (green overlay)
@@ -47,17 +55,38 @@ public struct ChargeSitePricingChart: View {
 					xEnd: .value("End", segment.endTime),
 					y: .value("Price Line", segment.price)
 				)
-				.foregroundStyle(.green)
+				.foregroundStyle(.brand)
+				.lineStyle(StrokeStyle(lineWidth: 1))
+			}
+
+			// Solid vertical borders at discount edges from base down to discount price
+			ForEach(discountSegments()) { segment in
+				RuleMark(
+					x: .value("Boundary Start", segment.startTime),
+					yStart: .value("Base", data.basePrice.amount),
+					yEnd: .value("Price", segment.price)
+				)
+				.foregroundStyle(.gray)
+				.lineStyle(StrokeStyle(lineWidth: 1))
+
+				RuleMark(
+					x: .value("Boundary End", segment.endTime),
+					yStart: .value("Base", data.basePrice.amount),
+					yEnd: .value("Price", segment.price)
+				)
+				.foregroundStyle(.gray)
+				.lineStyle(StrokeStyle(lineWidth: 1))
 			}
 		}
 		.chartXAxis {
-			// Show ticks at 4-hour intervals across the day.
-			AxisMarks(values: .stride(by: .hour, count: 4)) { value in
-				AxisGridLine()
+			// Show ticks/labels at 4-hour intervals; gridlines are custom dotted rules above.
+			AxisMarks(values: .stride(by: .hour, count: 4)) { _ in
 				AxisTick()
 				AxisValueLabel(format: .dateTime.hour(.twoDigits(amPM: .omitted)))
 			}
 		}
+		// Hide all Y-axis elements (grid lines, ticks, labels)
+		.chartYAxis(.hidden)
 		.chartXScale(domain: fullDayDomain(for: data.day))
 	}
 
@@ -69,6 +98,15 @@ public struct ChargeSitePricingChart: View {
 		let start = calendar.startOfDay(for: day)
 		let end = calendar.date(byAdding: .hour, value: 24, to: start) ?? start
 		return start ... end
+	}
+
+	/// Four-hour marks across a day used for vertical guide lines.
+	private func hourlyTicks(for day: Date) -> [Date] {
+		let calendar = Calendar.current
+		let start = calendar.startOfDay(for: day)
+		return Array(stride(from: 0, through: 24, by: 4)).compactMap { hour in
+			calendar.date(byAdding: .hour, value: hour, to: start)
+		}
 	}
 
 	/// Extracts discount pricing segments from the chart data points.
@@ -180,5 +218,4 @@ private extension ChargeSitePricingChart {
 	let chartData = schedule.makeChart(for: Date())
 	return ChargeSitePricingChart(data: chartData)
 		.frame(height: 180)
-		.padding()
 }
