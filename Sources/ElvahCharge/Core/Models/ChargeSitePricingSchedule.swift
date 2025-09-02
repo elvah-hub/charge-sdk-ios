@@ -62,6 +62,11 @@ package extension ChargeSitePricingSchedule {
 				yesterday: Entry(
 					lowestPrice: .mock,
 					trend: .stable,
+					timeSlots: []
+				),
+				today: Entry(
+					lowestPrice: .mock2,
+					trend: nil,
 					timeSlots: [
 						DiscountedTimeSlot(
 							from: Time(timeString: "10:00:00")!,
@@ -73,11 +78,6 @@ package extension ChargeSitePricingSchedule {
 							)
 						),
 					]
-				),
-				today: Entry(
-					lowestPrice: .mock2,
-					trend: nil,
-					timeSlots: []
 				),
 				tomorrow: Entry(
 					lowestPrice: .mock3,
