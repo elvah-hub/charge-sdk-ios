@@ -35,8 +35,7 @@ public enum Elvah {
 	}
 
 	/// A debug session delegate.
-	package private(set) nonisolated(unsafe)
-	static var debugSessionDelegate: (any URLSessionDelegate)?
+	package private(set) nonisolated(unsafe) static var debugSessionDelegate: (any URLSessionDelegate)?
 
 	/// The configuration for the elvah Charge SDK.
 	///
@@ -65,6 +64,9 @@ public enum Elvah {
 		guard _configuration == nil else {
 			return
 		}
+
+		// Validate API key format for the selected environment
+		validateApiKey(configuration.apiKey, for: configuration.environment)
 
 		// Store the configuration
 		_configuration = configuration
@@ -95,6 +97,38 @@ package extension Elvah {
 	enum Constant {
 		/// The default radius in meters.
 		static let defaultRadius: Double = 20000
+	}
+}
+
+// MARK: - API Key Validation
+
+package extension Elvah {
+	/// Validates that the api key matches the selected backend environment and logs a critical
+	/// message when it does not. Simulation is ignored.
+	static func validateApiKey(_ apiKey: String, for environment: BackendEnvironment) {
+		// Ignore simulation and uninitialized setups
+		guard environment != .simulation else {
+			return
+		}
+
+		let expectedPrefix: String
+		let environmentName: String
+		switch environment {
+		case .integration:
+			expectedPrefix = "evpk_test"
+			environmentName = "integration"
+		case .production:
+			expectedPrefix = "evpk_prod"
+			environmentName = "production"
+		case .simulation:
+			// Already handled by the guard above
+			return
+		}
+
+		guard apiKey.hasPrefix(expectedPrefix) else {
+			logger.critical("API key mismatch: \(environmentName) environment expects keys starting with \(expectedPrefix).")
+			return
+		}
 	}
 }
 
