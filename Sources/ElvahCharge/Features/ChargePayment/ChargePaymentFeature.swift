@@ -156,7 +156,6 @@ struct ChargePaymentFeature: View {
 					.dynamicTypeSize(...(.xxxLarge))
 				}
 				.disabled(request.paymentContext.organisationDetails.hasLegalUrls == false)
-				DisclaimerFooter()
 			}
 		}
 	}

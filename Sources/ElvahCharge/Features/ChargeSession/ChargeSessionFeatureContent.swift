@@ -104,7 +104,6 @@ extension ChargeSessionFeature {
 						supportButton
 					}
 				}
-				DisclaimerFooter()
 			}
 			.padding(.M)
 			.animation(.default, value: status)

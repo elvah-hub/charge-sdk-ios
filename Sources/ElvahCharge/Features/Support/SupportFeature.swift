@@ -52,7 +52,6 @@ struct SupportFeature: View {
 							}
 						}
 					}
-					DisclaimerFooter()
 				}
 			}
 			.background(.canvas)
