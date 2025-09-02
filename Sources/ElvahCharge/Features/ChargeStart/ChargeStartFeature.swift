@@ -37,7 +37,6 @@ struct ChargeStartFeature: View {
 			FooterView {
 				VStack(spacing: Size.L.size) {
 					startSlider
-					DisclaimerFooter()
 				}
 			}
 		}

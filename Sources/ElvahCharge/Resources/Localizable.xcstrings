@@ -423,6 +423,12 @@
         }
       }
     },
+    "Base" : {
+
+    },
+    "Base Line" : {
+
+    },
     "Call" : {
       "comment" : "call",
       "localizations" : {
@@ -888,6 +894,9 @@
           }
         }
       }
+    },
+    "End" : {
+
     },
     "End charge session" : {
       "comment" : "charge_session__error__end_session",
@@ -1894,6 +1903,12 @@
         }
       }
     },
+    "Price" : {
+
+    },
+    "Price Line" : {
+
+    },
     "Privacy Policy" : {
       "comment" : "privacy_policy_label",
       "localizations" : {
@@ -2636,6 +2651,9 @@
           }
         }
       }
+    },
+    "Zero" : {
+
     }
   },
   "version" : "1.0"
