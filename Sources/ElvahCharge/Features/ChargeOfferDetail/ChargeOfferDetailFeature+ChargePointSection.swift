@@ -79,7 +79,7 @@ extension ChargeOfferDetailFeature {
 				.foregroundStyle(.primaryContent)
 				.padding(.horizontal, 16)
 				.dynamicTypeSize(...(.accessibility1))
-			} else if offers.contains(where: { $0.isDiscounted }) == false {
+			} else if offers.contains(where: { $0.isDiscounted }) {
 				CustomSection {
 					HStack(spacing: Size.S.size) {
 						if dynamicTypeSize.isAccessibilitySize == false {
