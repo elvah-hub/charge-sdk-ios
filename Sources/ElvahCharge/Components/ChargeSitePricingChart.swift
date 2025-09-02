@@ -3,9 +3,6 @@
 import Charts
 import SwiftUI
 
-/// A simple SwiftUI chart that visualizes discounted pricing slots across a day.
-///
-/// - Note: Requires iOS 16 since it uses the Charts framework.
 @available(iOS 16.0, *)
 public struct ChargeSitePricingChart: View {
 	/// Chart data representing the selected day.
@@ -18,36 +15,36 @@ public struct ChargeSitePricingChart: View {
 	public var body: some View {
 		Chart {
 			// Baseline band across non-discount ranges only (interrupted by green)
-			ForEach(nonDiscountSegments(), id: \.start) { segment in
+			ForEach(nonDiscountSegments()) { segment in
 				RectangleMark(
-					xStart: .value("Start", segment.start),
-					xEnd: .value("End", segment.end),
+					xStart: .value("Start", segment.startTime),
+					xEnd: .value("End", segment.endTime),
 					yStart: .value("Zero", 0.0),
 					yEnd: .value("Base", data.basePrice.amount)
 				)
 				.foregroundStyle(.gray.opacity(0.15))
 
 				RuleMark(
-					xStart: .value("Start", segment.start),
-					xEnd: .value("End", segment.end),
+					xStart: .value("Start", segment.startTime),
+					xEnd: .value("End", segment.endTime),
 					y: .value("Base Line", data.basePrice.amount)
 				)
 				.foregroundStyle(.gray)
 			}
 
 			// Discounted segments (green overlay)
-			ForEach(discountSegments(), id: \.start) { segment in
+			ForEach(discountSegments()) { segment in
 				RectangleMark(
-					xStart: .value("Start", segment.start),
-					xEnd: .value("End", segment.end),
+					xStart: .value("Start", segment.startTime),
+					xEnd: .value("End", segment.endTime),
 					yStart: .value("Zero", 0.0),
 					yEnd: .value("Price", segment.price)
 				)
 				.foregroundStyle(.green.opacity(0.25))
 
 				RuleMark(
-					xStart: .value("Start", segment.start),
-					xEnd: .value("End", segment.end),
+					xStart: .value("Start", segment.startTime),
+					xEnd: .value("End", segment.endTime),
 					y: .value("Price Line", segment.price)
 				)
 				.foregroundStyle(.green)
@@ -74,45 +71,104 @@ public struct ChargeSitePricingChart: View {
 		return start ... end
 	}
 
-	/// Build non-overlapping discount segments from the step points in the data.
-	private func discountSegments() -> [(start: Date, end: Date, price: Double)] {
-		let points = data.points.sorted(by: { $0.time < $1.time })
-		var result: [(Date, Date, Double)] = []
+	/// Extracts discount pricing segments from the chart data points.
+	///
+	/// Each discount slot is represented by two consecutive points in the data:
+	/// the start point (with pricing) and the end point (marking the end of that price).
+	/// We pair these points to create segments showing when discounted pricing applies.
+	private func discountSegments() -> [PricingSegment] {
+		let sortedPoints = data.points.sorted { $0.time < $1.time }
+		var segments: [PricingSegment] = []
+
+		// Process points in pairs: (start, end), (start, end), etc.
 		var index = 0
-		while index + 1 < points.count {
-			let start = points[index]
-			let end = points[index + 1]
-			result.append((start.time, end.time, start.priceValue))
+		while index + 1 < sortedPoints.count {
+			let startPoint = sortedPoints[index]
+			let endPoint = sortedPoints[index + 1]
+
+			let segment = PricingSegment(startPoint: startPoint, endPoint: endPoint)
+			segments.append(segment)
+
+			// Skip to next pair (increment by 2)
 			index += 2
 		}
-		return result
+
+		return segments
 	}
 
-	/// Non-discount segments = full-day domain minus discount segments.
-	private func nonDiscountSegments() -> [(start: Date, end: Date)] {
-		let domain = fullDayDomain(for: data.day)
-		// Clip discount segments to the domain first
-		let clipped = discountSegments()
-			.compactMap { segment -> (Date, Date) in
-				let startTime = max(segment.start, domain.lowerBound)
-				let endTime = min(segment.end, domain.upperBound)
-				return (startTime, endTime)
-			}
-			.filter { startTime, endTime in startTime < endTime }
-			.sorted { $0.0 < $1.0 }
+	/// Calculates time segments that are NOT covered by discount pricing.
+	///
+	/// This creates the gray baseline areas by finding gaps between discount segments
+	/// across the full day domain (midnight to midnight).
+	private func nonDiscountSegments() -> [TimeSegment] {
+		let fullDayRange = fullDayDomain(for: data.day)
 
-		var result: [(Date, Date)] = []
-		var cursor = domain.lowerBound
-		for (startTime, endTime) in clipped {
-			if cursor < startTime {
-				result.append((cursor, startTime))
+		// Get discount segments and clip them to the full day range
+		let clippedDiscountSegments = discountSegments()
+			.compactMap { segment -> (start: Date, end: Date)? in
+				let clippedStart = max(segment.startTime, fullDayRange.lowerBound)
+				let clippedEnd = min(segment.endTime, fullDayRange.upperBound)
+
+				// Only include segments that have valid time ranges after clipping
+				guard clippedStart < clippedEnd else {
+					return nil
+				}
+				return (start: clippedStart, end: clippedEnd)
 			}
-			cursor = max(cursor, endTime)
+			.sorted { $0.start < $1.start }
+
+		var nonDiscountSegments: [TimeSegment] = []
+		var currentTime = fullDayRange.lowerBound
+
+		// Fill gaps between discount segments
+		for discountSegment in clippedDiscountSegments {
+			// Add segment before this discount (if there's a gap)
+			if currentTime < discountSegment.start {
+				let gapSegment = TimeSegment(start: currentTime, end: discountSegment.start)
+				nonDiscountSegments.append(gapSegment)
+			}
+
+			// Move past this discount segment
+			currentTime = max(currentTime, discountSegment.end)
 		}
-		if cursor < domain.upperBound {
-			result.append((cursor, domain.upperBound))
+
+		// Add final segment after the last discount (if there's remaining time)
+		if currentTime < fullDayRange.upperBound {
+			let finalSegment = TimeSegment(start: currentTime, end: fullDayRange.upperBound)
+			nonDiscountSegments.append(finalSegment)
 		}
-		return result
+
+		return nonDiscountSegments
+	}
+}
+
+@available(iOS 16.0, *)
+private extension ChargeSitePricingChart {
+	/// Represents a time segment with pricing information for discount visualization
+	struct PricingSegment: Identifiable {
+		let id = UUID()
+		let startTime: Date
+		let endTime: Date
+		let price: Double
+
+		/// Creates a pricing segment from two consecutive chart points
+		init(startPoint: ChargeSitePricingChartData.Point, endPoint: ChargeSitePricingChartData.Point) {
+			startTime = startPoint.time
+			endTime = endPoint.time
+			price = startPoint.priceValue
+		}
+	}
+
+	/// Represents a time segment without specific pricing (uses base price)
+	struct TimeSegment: Identifiable {
+		let id = UUID()
+		let startTime: Date
+		let endTime: Date
+
+		init(start: Date, end: Date) {
+			startTime = start
+			endTime = end
+		}
 	}
 }
 
