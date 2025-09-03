@@ -18,6 +18,7 @@ public struct DailyPriceChart: View {
 			baselineBand
 			discountedSegments
 			discountBoundaries
+			currentTimeMarker
 		}
 		.chartXAxis {
 			// Show ticks/labels at fixed 4-hour points including 24:00 (next midnight)
@@ -120,6 +121,38 @@ public struct DailyPriceChart: View {
 		}
 	}
 
+	@ChartContentBuilder
+	private var currentTimeMarker: some ChartContent {
+		let now = Date()
+		let price = currentPrice(at: now)
+
+		RuleMark(
+			x: .value("Now", now),
+			yStart: .value("Zero", 0.0),
+			yEnd: .value("Current Price", price)
+		)
+		.foregroundStyle(.brand)
+		.lineStyle(StrokeStyle(lineWidth: 2))
+
+		// Outer green circle (ring)
+		PointMark(
+			x: .value("Now", now),
+			y: .value("Current Price", price)
+		)
+		.symbol(.circle)
+		.symbolSize(100)
+		.foregroundStyle(.brand)
+
+		// Inner white fill to create the ring effect
+		PointMark(
+			x: .value("Now", now),
+			y: .value("Current Price", price)
+		)
+		.symbol(.circle)
+		.symbolSize(30)
+		.foregroundStyle(.white)
+	}
+
 	// MARK: - Helpers
 
 	/// Full day domain from midnight to midnight + 24h for consistent x-axis.
@@ -135,6 +168,11 @@ public struct DailyPriceChart: View {
 	private func yAxisDomain() -> ClosedRange<Double> {
 		let upper = data.basePrice.amount + 0.1
 		return 0 ... max(upper, 0.2)
+	}
+
+	/// True if the chart represents today's date (used to show the time marker).
+	private var isToday: Bool {
+		Calendar.current.isDate(Date(), inSameDayAs: data.day)
 	}
 
 	/// Returns true if the given `Date` is at the top of an hour equal to midnight.
@@ -167,6 +205,16 @@ public struct DailyPriceChart: View {
 			}
 			return tick
 		}
+	}
+
+	/// Price at a point in time for this day, considering discounts.
+	private func currentPrice(at date: Date) -> Double {
+		for seg in data.discounts {
+			if date >= seg.startTime && date < seg.endTime {
+				return seg.price.amount
+			}
+		}
+		return data.basePrice.amount
 	}
 }
 
@@ -218,6 +266,7 @@ public struct DailyPriceChartPager: View {
 		TabView(selection: page) {
 			ForEach(Array(datasets.enumerated()), id: \.offset) { index, data in
 				DailyPriceChart(data: data)
+					.padding(.vertical, 4)
 					.frame(maxWidth: .infinity)
 					.tag(index)
 			}
