@@ -14,77 +14,10 @@ public struct DailyPriceChart: View {
 
 	public var body: some View {
 		Chart {
-			// Hour grid: solid at midnights, dotted every 4 hours otherwise
-			ForEach(hourlyTicks(for: data.day), id: \.self) { tick in
-				if isMidnight(tick) {
-					RuleMark(x: .value("Hour", tick))
-						.foregroundStyle(.gray.opacity(0.3))
-						.lineStyle(StrokeStyle(lineWidth: 1))
-				} else {
-					RuleMark(x: .value("Hour", tick))
-						.foregroundStyle(.gray.opacity(0.3))
-						.lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 2]))
-				}
-			}
-
-			// Baseline band across non-discount ranges only (interrupted by green)
-			ForEach(data.gaps) { segment in
-				RectangleMark(
-					xStart: .value("Start", segment.startTime),
-					xEnd: .value("End", segment.endTime),
-					yStart: .value("Zero", 0.0),
-					yEnd: .value("Base", data.basePrice.amount)
-				)
-				.foregroundStyle(.gray.opacity(0.15))
-				.lineStyle(StrokeStyle(lineWidth: 1))
-
-				RuleMark(
-					xStart: .value("Start", segment.startTime),
-					xEnd: .value("End", segment.endTime),
-					y: .value("Base Line", data.basePrice.amount)
-				)
-				.foregroundStyle(.gray)
-				.lineStyle(StrokeStyle(lineWidth: 1))
-			}
-
-			// Discounted segments (green overlay)
-			ForEach(data.discounts) { segment in
-				RectangleMark(
-					xStart: .value("Start", segment.startTime),
-					xEnd: .value("End", segment.endTime),
-					yStart: .value("Zero", 0.0),
-					yEnd: .value("Price", segment.price.amount)
-				)
-				.foregroundStyle(.green.opacity(0.25))
-				.lineStyle(StrokeStyle(lineWidth: 1))
-
-				RuleMark(
-					xStart: .value("Start", segment.startTime),
-					xEnd: .value("End", segment.endTime),
-					y: .value("Price Line", segment.price.amount)
-				)
-				.foregroundStyle(.brand)
-				.lineStyle(StrokeStyle(lineWidth: 1))
-			}
-
-			// Solid vertical borders at discount edges from base down to discount price
-			ForEach(data.discounts) { segment in
-				RuleMark(
-					x: .value("Boundary Start", segment.startTime),
-					yStart: .value("Base", data.basePrice.amount),
-					yEnd: .value("Price", segment.price.amount)
-				)
-				.foregroundStyle(.gray)
-				.lineStyle(StrokeStyle(lineWidth: 1))
-
-				RuleMark(
-					x: .value("Boundary End", segment.endTime),
-					yStart: .value("Base", data.basePrice.amount),
-					yEnd: .value("Price", segment.price.amount)
-				)
-				.foregroundStyle(.gray)
-				.lineStyle(StrokeStyle(lineWidth: 1))
-			}
+			hourGrid
+			baselineBand
+			discountedSegments
+			discountBoundaries
 		}
 		.chartXAxis {
 			// Show ticks/labels at fixed 4-hour points including 24:00 (next midnight)
@@ -103,6 +36,88 @@ public struct DailyPriceChart: View {
 		.chartYAxis(.hidden)
 		.chartXScale(domain: fullDayDomain(for: data.day))
 		.chartYScale(domain: yAxisDomain())
+	}
+
+	// MARK: - Chart content pieces
+
+	/// Hour grid: solid at midnights, dotted every 4 hours otherwise.
+	private var hourGrid: some ChartContent {
+		ForEach(hourlyTicks(for: data.day), id: \.self) { tick in
+			if isMidnight(tick) {
+				RuleMark(x: .value("Hour", tick))
+					.foregroundStyle(.gray.opacity(0.3))
+					.lineStyle(StrokeStyle(lineWidth: 1))
+			} else {
+				RuleMark(x: .value("Hour", tick))
+					.foregroundStyle(.gray.opacity(0.3))
+					.lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 2]))
+			}
+		}
+	}
+
+	/// Baseline band across non-discount ranges only (interrupted by green).
+	private var baselineBand: some ChartContent {
+		ForEach(data.gaps) { segment in
+			RectangleMark(
+				xStart: .value("Start", segment.startTime),
+				xEnd: .value("End", segment.endTime),
+				yStart: .value("Zero", 0.0),
+				yEnd: .value("Base", data.basePrice.amount)
+			)
+			.foregroundStyle(.gray.opacity(0.15))
+			.lineStyle(StrokeStyle(lineWidth: 1))
+
+			RuleMark(
+				xStart: .value("Start", segment.startTime),
+				xEnd: .value("End", segment.endTime),
+				y: .value("Base Line", data.basePrice.amount)
+			)
+			.foregroundStyle(.gray)
+			.lineStyle(StrokeStyle(lineWidth: 1))
+		}
+	}
+
+	/// Discounted segments fill and price line overlay.
+	private var discountedSegments: some ChartContent {
+		ForEach(data.discounts) { segment in
+			RectangleMark(
+				xStart: .value("Start", segment.startTime),
+				xEnd: .value("End", segment.endTime),
+				yStart: .value("Zero", 0.0),
+				yEnd: .value("Price", segment.price.amount)
+			)
+			.foregroundStyle(.green.opacity(0.25))
+			.lineStyle(StrokeStyle(lineWidth: 1))
+
+			RuleMark(
+				xStart: .value("Start", segment.startTime),
+				xEnd: .value("End", segment.endTime),
+				y: .value("Price Line", segment.price.amount)
+			)
+			.foregroundStyle(.brand)
+			.lineStyle(StrokeStyle(lineWidth: 1))
+		}
+	}
+
+	/// Solid vertical borders at discount edges from base down to discount price.
+	private var discountBoundaries: some ChartContent {
+		ForEach(data.discounts) { segment in
+			RuleMark(
+				x: .value("Boundary Start", segment.startTime),
+				yStart: .value("Base", data.basePrice.amount),
+				yEnd: .value("Price", segment.price.amount)
+			)
+			.foregroundStyle(.gray)
+			.lineStyle(StrokeStyle(lineWidth: 1))
+
+			RuleMark(
+				x: .value("Boundary End", segment.endTime),
+				yStart: .value("Base", data.basePrice.amount),
+				yEnd: .value("Price", segment.price.amount)
+			)
+			.foregroundStyle(.gray)
+			.lineStyle(StrokeStyle(lineWidth: 1))
+		}
 	}
 
 	// MARK: - Helpers
