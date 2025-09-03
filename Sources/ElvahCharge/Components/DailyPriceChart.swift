@@ -13,14 +13,16 @@ package struct DailyPriceChart: View {
 	}
 
 	package var body: some View {
-		Chart {
-			hourGrid
-			baselineBand
-			discountedSegments
-			discountBoundaries
-			// Only draw the current time marker for today's chart
-			if isToday {
-				currentTimeMarker
+		TimelineView(.periodic(from: .now, by: 60)) { context in
+			Chart {
+				hourGrid
+				baselineBand
+				discountedSegments
+				discountBoundaries
+				// Only draw the current time marker for today's chart
+				if isToday {
+					currentTimeMarker(now: context.date)
+				}
 			}
 		}
 		.chartXAxis {
@@ -125,8 +127,7 @@ package struct DailyPriceChart: View {
 	}
 
 	@ChartContentBuilder
-	private var currentTimeMarker: some ChartContent {
-		let now = Date()
+	private func currentTimeMarker(now: Date) -> some ChartContent {
 		let price = currentPrice(at: now)
 		let isDiscount = isDiscounted(at: now)
 		let markerColor: Color = isDiscount ? .brand : .gray
