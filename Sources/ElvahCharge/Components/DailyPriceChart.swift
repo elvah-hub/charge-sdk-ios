@@ -18,7 +18,10 @@ public struct DailyPriceChart: View {
 			baselineBand
 			discountedSegments
 			discountBoundaries
-			currentTimeMarker
+			// Only draw the current time marker for today's chart
+			if isToday {
+				currentTimeMarker
+			}
 		}
 		.chartXAxis {
 			// Show ticks/labels at fixed 4-hour points including 24:00 (next midnight)
