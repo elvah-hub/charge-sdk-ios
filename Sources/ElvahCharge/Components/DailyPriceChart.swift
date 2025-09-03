@@ -128,13 +128,15 @@ package struct DailyPriceChart: View {
 	private var currentTimeMarker: some ChartContent {
 		let now = Date()
 		let price = currentPrice(at: now)
+		let isDiscount = isDiscounted(at: now)
+		let markerColor: Color = isDiscount ? .brand : .gray
 
 		RuleMark(
 			x: .value("Now", now),
 			yStart: .value("Zero", 0.0),
 			yEnd: .value("Current Price", price)
 		)
-		.foregroundStyle(.brand)
+		.foregroundStyle(markerColor)
 		.lineStyle(StrokeStyle(lineWidth: 2))
 
 		// Outer green circle (ring)
@@ -144,7 +146,7 @@ package struct DailyPriceChart: View {
 		)
 		.symbol(.circle)
 		.symbolSize(100)
-		.foregroundStyle(.brand)
+		.foregroundStyle(markerColor)
 
 		// Inner white fill to create the ring effect
 		PointMark(
@@ -218,6 +220,16 @@ package struct DailyPriceChart: View {
 			}
 		}
 		return data.basePrice.amount
+	}
+
+	/// True when the given time falls within a discounted segment (not the base price).
+	private func isDiscounted(at date: Date) -> Bool {
+		for seg in data.discounts {
+			if date >= seg.startTime && date < seg.endTime {
+				return true
+			}
+		}
+		return false
 	}
 }
 
