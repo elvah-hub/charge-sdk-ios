@@ -76,7 +76,7 @@ package extension ChargeSitePricingSchedule {
 					]
 				),
 				today: Entry(
-					lowestPrice: .mock2,
+					lowestPrice: .mock,
 					trend: nil,
 					timeSlots: [
 						// Midday longer discount
@@ -102,7 +102,7 @@ package extension ChargeSitePricingSchedule {
 					]
 				),
 				tomorrow: Entry(
-					lowestPrice: .mock3,
+					lowestPrice: .mock,
 					trend: .down,
 					timeSlots: [
 						DiscountedTimeSlot(
