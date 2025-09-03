@@ -68,54 +68,54 @@ package extension ChargeSitePricingSchedule {
 							from: Time(timeString: "08:00:00")!,
 							to: Time(timeString: "12:00:00")!,
 							price: ChargePrice(
-								pricePerKWh: Currency(0.35),
+								pricePerKWh: Currency(0.25),
 								baseFee: nil,
 								blockingFee: nil
 							)
-						)
+						),
 					]
 				),
-      today: Entry(
-        lowestPrice: .mock2,
-        trend: nil,
-        timeSlots: [
-          // Midday longer discount
-          DiscountedTimeSlot(
-            from: Time(timeString: "10:00:00")!,
-            to: Time(timeString: "15:00:00")!,
-            price: ChargePrice(
-              pricePerKWh: Currency(0.32),
-              baseFee: nil,
-              blockingFee: nil
-            )
-          ),
-          // Early evening discount
-          DiscountedTimeSlot(
-            from: Time(timeString: "18:00:00")!,
-            to: Time(timeString: "20:00:00")!,
-            price: ChargePrice(
-              pricePerKWh: Currency(0.30),
-              baseFee: nil,
-              blockingFee: nil
-            )
-          ),
-        ]
-      ),
-      tomorrow: Entry(
-        lowestPrice: .mock3,
-        trend: .down,
-        timeSlots: [
-          DiscountedTimeSlot(
-            from: Time(timeString: "07:00:00")!,
-            to: Time(timeString: "08:00:00")!,
-            price: ChargePrice(
-              pricePerKWh: Currency(0.28),
-              baseFee: nil,
-              blockingFee: nil
-            )
-          ),
-        ]
-      )
+				today: Entry(
+					lowestPrice: .mock2,
+					trend: nil,
+					timeSlots: [
+						// Midday longer discount
+						DiscountedTimeSlot(
+							from: Time(timeString: "10:00:00")!,
+							to: Time(timeString: "15:00:00")!,
+							price: ChargePrice(
+								pricePerKWh: Currency(0.28),
+								baseFee: nil,
+								blockingFee: nil
+							)
+						),
+						// Early evening discount
+						DiscountedTimeSlot(
+							from: Time(timeString: "16:00:00")!,
+							to: Time(timeString: "20:00:00")!,
+							price: ChargePrice(
+								pricePerKWh: Currency(0.21),
+								baseFee: nil,
+								blockingFee: nil
+							)
+						),
+					]
+				),
+				tomorrow: Entry(
+					lowestPrice: .mock3,
+					trend: .down,
+					timeSlots: [
+						DiscountedTimeSlot(
+							from: Time(timeString: "07:00:00")!,
+							to: Time(timeString: "08:00:00")!,
+							price: ChargePrice(
+								pricePerKWh: Currency(0.28),
+								baseFee: nil,
+								blockingFee: nil
+							)
+						),
+					]
+				)
 			)
 		)
 	}

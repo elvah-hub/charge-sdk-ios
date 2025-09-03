@@ -6,38 +6,30 @@ import Foundation
 ///
 /// x-axis: the hour within the selected day (Date values)
 /// y-axis: the price per kWh (Currency.amount as Double)
-public struct ChargeSitePricingChartData: Hashable, Sendable {
-  /// The day the chart points represent (midnight at the current timezone).
-  public var day: Date
+package struct ChargeSitePricingChartData: Hashable, Sendable {
+	/// The day the chart points represent (midnight at the current timezone).
+	package var day: Date
 
-  /// The base price (usually the day's lowest price) used as the baseline band.
-  public var basePrice: Currency
+	/// The base price (usually the day's lowest price) used as the baseline band.
+	package var basePrice: Currency
 
-  /// The points forming step segments for discounted time slots.
-  /// Each slot contributes two points: the start and end time with the slot price.
-  public var points: [Point]
-
-	/// Convenience accessor returning the domain covering all points.
-	public var xDomain: ClosedRange<Date>? {
-		guard let first = points.map(\.time).min(), let last = points.map(\.time).max() else {
-			return nil
-		}
-    return first ... last
-	}
+	/// The points forming step segments for discounted time slots.
+	/// Each slot contributes two points: the start and end time with the slot price.
+	package var points: [Point]
 
 	/// A single data point for Swift Charts.
-	public struct Point: Identifiable, Hashable, Sendable {
+	package struct Point: Identifiable, Hashable, Sendable {
 		/// Stable identity based on time and price.
-		public var id: String { "\(time.timeIntervalSince1970)-\(price.amount)" }
+		package var id: String { "\(time.timeIntervalSince1970)-\(price.amount)" }
 
 		/// Exact point on the x-axis.
-		public var time: Date
+		package var time: Date
 
 		/// Price for this time point.
-		public var price: Currency
+		package var price: Currency
 
 		/// Numeric price to map to Chart's y-axis.
-		public var priceValue: Double { price.amount }
+		package var priceValue: Double { price.amount }
 	}
 }
 
@@ -53,7 +45,7 @@ package extension ChargeSitePricingSchedule {
 		for day: Date = Date(),
 		calendar: Calendar = .current,
 		timeZone: TimeZone = .current
-  ) -> ChargeSitePricingChartData {
+	) -> ChargeSitePricingChartData {
 		var calendar = calendar
 		calendar.timeZone = timeZone
 
@@ -74,9 +66,9 @@ package extension ChargeSitePricingSchedule {
 		// Midnight start-of-day to anchor `Time` values.
 		let startOfDay = calendar.startOfDay(for: day)
 
-    // Map discounted slots to step points: [start, end] per slot.
-    let points: [ChargeSitePricingChartData.Point] = (entry?.timeSlots ?? [])
-      .flatMap { slot -> [ChargeSitePricingChartData.Point] in
+		// Map discounted slots to step points: [start, end] per slot.
+		let points: [ChargeSitePricingChartData.Point] = (entry?.timeSlots ?? [])
+			.flatMap { slot -> [ChargeSitePricingChartData.Point] in
 				// Ensure the `Time` uses the desired timezone when creating Dates.
 				var fromTime = slot.from
 				var toTime = slot.to
@@ -93,19 +85,19 @@ package extension ChargeSitePricingSchedule {
 					toDate = advanced
 				}
 
-        let startPoint = ChargeSitePricingChartData.Point(
-          time: fromDate,
-          price: slot.price.pricePerKWh
-        )
-        let endPoint = ChargeSitePricingChartData.Point(
-          time: toDate,
-          price: slot.price.pricePerKWh
-        )
-        return [startPoint, endPoint]
-      }
-      .sorted(by: { $0.time < $1.time })
+				let startPoint = ChargeSitePricingChartData.Point(
+					time: fromDate,
+					price: slot.price.pricePerKWh
+				)
+				let endPoint = ChargeSitePricingChartData.Point(
+					time: toDate,
+					price: slot.price.pricePerKWh
+				)
+				return [startPoint, endPoint]
+			}
+			.sorted(by: { $0.time < $1.time })
 
-    let basePrice = entry?.lowestPrice.pricePerKWh ?? Currency(0)
-    return ChargeSitePricingChartData(day: startOfDay, basePrice: basePrice, points: points)
-  }
+		let basePrice = entry?.lowestPrice.pricePerKWh ?? Currency(0)
+		return ChargeSitePricingChartData(day: startOfDay, basePrice: basePrice, points: points)
+	}
 }

@@ -429,6 +429,12 @@
     "Base Line" : {
 
     },
+    "Boundary End" : {
+
+    },
+    "Boundary Start" : {
+
+    },
     "Call" : {
       "comment" : "call",
       "localizations" : {
@@ -826,6 +832,9 @@
         }
       }
     },
+    "Day" : {
+
+    },
     "DC" : {
       "comment" : "dc_label",
       "localizations" : {
@@ -1175,6 +1184,9 @@
           }
         }
       }
+    },
+    "Hour" : {
+
     },
     "Is the charge point locked?" : {
       "comment" : "is_charging_label",
@@ -2444,6 +2456,12 @@
         }
       }
     },
+    "Today" : {
+
+    },
+    "Tomorrow" : {
+
+    },
     "Total" : {
       "comment" : "total",
       "localizations" : {
@@ -2651,6 +2669,9 @@
           }
         }
       }
+    },
+    "Yesterday" : {
+
     },
     "Zero" : {
 
