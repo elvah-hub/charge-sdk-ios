@@ -15,19 +15,23 @@ public struct ChargeSitePricingChart: View {
   public var body: some View {
     Chart {
 			// Hour grid: solid at midnights, dotted every 4 hours otherwise
-			ForEach(hourlyTicks(for: data.day), id: \.self) { tick in
-				if isMidnight(tick) {
-					RuleMark(x: .value("Hour", tick))
-						.foregroundStyle(.gray)
-						.lineStyle(StrokeStyle(lineWidth: 1))
-						.offset(y: 1)
-				} else {
-					RuleMark(x: .value("Hour", tick))
-						.foregroundStyle(.gray.opacity(0.3))
-						.lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 2]))
-						.offset(y: 1)
-				}
-			}
+      ForEach(hourlyTicks(for: data.day), id: \.self) { tick in
+        if isMidnight(tick) {
+          RuleMark(
+            x: .value("Hour", tick),
+            yStart: .value("Zero", 0.0),
+            yEnd: .value("Base", data.basePrice.amount)
+          )
+          .foregroundStyle(.gray)
+          .lineStyle(StrokeStyle(lineWidth: 1))
+          .offset(y: 1)
+        } else {
+          RuleMark(x: .value("Hour", tick))
+            .foregroundStyle(.gray.opacity(0.3))
+            .lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 2]))
+            .offset(y: 1)
+        }
+      }
 
       // Baseline band across non-discount ranges only (interrupted by green)
       ForEach(data.nonDiscountSegments) { segment in
