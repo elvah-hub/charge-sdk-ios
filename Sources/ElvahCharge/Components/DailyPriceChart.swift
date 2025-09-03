@@ -4,15 +4,15 @@ import Charts
 import SwiftUI
 
 @available(iOS 16.0, *)
-public struct DailyPriceChart: View {
+package struct DailyPriceChart: View {
 	/// Chart data representing the selected day.
-	public var data: DailyPriceChartData
+	package var data: DailyPriceChartData
 
-	public init(data: DailyPriceChartData) {
+	package init(data: DailyPriceChartData) {
 		self.data = data
 	}
 
-	public var body: some View {
+	package var body: some View {
 		Chart {
 			hourGrid
 			baselineBand
@@ -248,24 +248,24 @@ public struct DailyPriceChart: View {
 // MARK: - Multi-day container
 
 @available(iOS 16.0, *)
-public struct DailyPriceChartPager: View {
+package struct DailyPriceChartPager: View {
 	/// Datasets for each day, typically yesterday, today, and tomorrow.
-	public var datasets: [DailyPriceChartData]
+	package var datasets: [DailyPriceChartData]
 
 	/// Exposed currently selected page (0: yesterday, 1: today, 2: tomorrow)
-	public var page: Binding<Int>
+	package var page: Binding<Int>
 
-	public init(datasets: [DailyPriceChartData], page: Binding<Int>) {
+	package init(datasets: [DailyPriceChartData], page: Binding<Int>) {
 		self.datasets = datasets
 		self.page = page
 	}
 
 	/// Convenience init that defaults to the first page
-	public init(datasets: [DailyPriceChartData]) {
+	package init(datasets: [DailyPriceChartData]) {
 		self.init(datasets: datasets, page: .constant(0))
 	}
 
-	public var body: some View {
+	package var body: some View {
 		TabView(selection: page) {
 			ForEach(Array(datasets.enumerated()), id: \.offset) { index, data in
 				DailyPriceChart(data: data)
