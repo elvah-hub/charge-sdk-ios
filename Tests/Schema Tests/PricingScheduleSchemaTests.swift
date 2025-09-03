@@ -58,7 +58,7 @@ struct PricingScheduleSchemaTests {
 
 		// When: Decoding schema and parsing to domain
 		let schema = try SchemaTestHelpers.decodeSchema(json, as: PricingScheduleSchema.self)
-		let schedule = try ChargeSitePricingSchedule.parse(schema)
+		let schedule = try PricingSchedule.parse(schema)
 
     // Then: Daily pricing parsed
     #expect(schedule.dailyPricing.yesterday?.lowestPrice.pricePerKWh.amount == 0.54)
@@ -105,7 +105,7 @@ struct PricingScheduleSchemaTests {
 
 		// Then: Parsing throws a keyPath error for the trend
     try SchemaTestHelpers.expectParsingError(
-      ChargeSitePricingSchedule.parse(schema),
+      PricingSchedule.parse(schema),
       expectedKeyPath: \PricingScheduleSchema.DailyPriceEntry.trend,
       in: entry
     )
@@ -146,7 +146,7 @@ struct PricingScheduleSchemaTests {
 
     // Then: Parsing throws a keyPath error for 'from'
     try SchemaTestHelpers.expectParsingError(
-      ChargeSitePricingSchedule.parse(schema),
+      PricingSchedule.parse(schema),
       expectedKeyPath: \PricingScheduleSchema.TimeSlotSchema.from,
       in: slot
     )

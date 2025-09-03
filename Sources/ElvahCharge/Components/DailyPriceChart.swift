@@ -4,11 +4,11 @@ import Charts
 import SwiftUI
 
 @available(iOS 16.0, *)
-public struct ChargeSitePricingChart: View {
+public struct DailyPriceChart: View {
 	/// Chart data representing the selected day.
-	public var data: ChargeSitePricingChartData
+	public var data: DailyPriceChartData
 
-	public init(data: ChargeSitePricingChartData) {
+	public init(data: DailyPriceChartData) {
 		self.data = data
 	}
 
@@ -20,17 +20,15 @@ public struct ChargeSitePricingChart: View {
 					RuleMark(x: .value("Hour", tick))
 						.foregroundStyle(.gray.opacity(0.3))
 						.lineStyle(StrokeStyle(lineWidth: 1))
-						.offset(y: 1)
 				} else {
 					RuleMark(x: .value("Hour", tick))
 						.foregroundStyle(.gray.opacity(0.3))
 						.lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 2]))
-						.offset(y: 1)
 				}
 			}
 
 			// Baseline band across non-discount ranges only (interrupted by green)
-			ForEach(data.nonDiscountSegments) { segment in
+			ForEach(data.gaps) { segment in
 				RectangleMark(
 					xStart: .value("Start", segment.startTime),
 					xEnd: .value("End", segment.endTime),
@@ -47,11 +45,10 @@ public struct ChargeSitePricingChart: View {
 				)
 				.foregroundStyle(.gray)
 				.lineStyle(StrokeStyle(lineWidth: 1))
-				.offset(y: 1)
 			}
 
 			// Discounted segments (green overlay)
-			ForEach(data.discountSegments) { segment in
+			ForEach(data.discounts) { segment in
 				RectangleMark(
 					xStart: .value("Start", segment.startTime),
 					xEnd: .value("End", segment.endTime),
@@ -68,11 +65,10 @@ public struct ChargeSitePricingChart: View {
 				)
 				.foregroundStyle(.brand)
 				.lineStyle(StrokeStyle(lineWidth: 1))
-				.offset(y: 1)
 			}
 
 			// Solid vertical borders at discount edges from base down to discount price
-			ForEach(data.discountSegments) { segment in
+			ForEach(data.discounts) { segment in
 				RuleMark(
 					x: .value("Boundary Start", segment.startTime),
 					yStart: .value("Base", data.basePrice.amount),
@@ -80,7 +76,6 @@ public struct ChargeSitePricingChart: View {
 				)
 				.foregroundStyle(.gray)
 				.lineStyle(StrokeStyle(lineWidth: 1))
-				.offset(y: 1)
 
 				RuleMark(
 					x: .value("Boundary End", segment.endTime),
@@ -89,7 +84,6 @@ public struct ChargeSitePricingChart: View {
 				)
 				.foregroundStyle(.gray)
 				.lineStyle(StrokeStyle(lineWidth: 1))
-				.offset(y: 1)
 			}
 		}
 		.chartXAxis {
@@ -167,18 +161,11 @@ public struct ChargeSitePricingChart: View {
 #Preview("Three-Day Scroll") {
 	@Previewable @State var page = 1
 
-	let schedule = ChargeSitePricingSchedule.mock
-	let calendar = Calendar.current
-	let today = calendar.startOfDay(for: Date())
-	let days = [
-		calendar.date(byAdding: .day, value: -1, to: today) ?? today,
-		today,
-		calendar.date(byAdding: .day, value: 1, to: today) ?? today,
-	]
-	let datasets = days.map { schedule.makeChart(for: $0) }
+	let schedule = PricingSchedule.mock
+	let datasets = schedule.chartData()
 
 	return VStack(spacing: 12) {
-		ChargeSitePricingChartThreeDays(datasets: datasets, page: $page)
+		DailyPriceChartPager(datasets: datasets, page: $page)
 			.frame(height: 180)
 
 		Picker("Day", selection: $page) {
@@ -195,27 +182,27 @@ public struct ChargeSitePricingChart: View {
 // MARK: - Multi-day container
 
 @available(iOS 16.0, *)
-public struct ChargeSitePricingChartThreeDays: View {
+public struct DailyPriceChartPager: View {
 	/// Datasets for each day, typically yesterday, today, and tomorrow.
-	public var datasets: [ChargeSitePricingChartData]
+	public var datasets: [DailyPriceChartData]
 
 	/// Exposed currently selected page (0: yesterday, 1: today, 2: tomorrow)
 	public var page: Binding<Int>
 
-	public init(datasets: [ChargeSitePricingChartData], page: Binding<Int>) {
+	public init(datasets: [DailyPriceChartData], page: Binding<Int>) {
 		self.datasets = datasets
 		self.page = page
 	}
 
 	/// Convenience init that defaults to the first page
-	public init(datasets: [ChargeSitePricingChartData]) {
+	public init(datasets: [DailyPriceChartData]) {
 		self.init(datasets: datasets, page: .constant(0))
 	}
 
 	public var body: some View {
 		TabView(selection: page) {
 			ForEach(Array(datasets.enumerated()), id: \.offset) { index, data in
-				ChargeSitePricingChart(data: data)
+				DailyPriceChart(data: data)
 					.frame(maxWidth: .infinity)
 					.tag(index)
 			}

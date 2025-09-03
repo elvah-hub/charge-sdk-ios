@@ -17,7 +17,7 @@ final class DiscoveryProvider: ObservableObject {
 		) async throws -> SignedChargeOffer
 		var pricingSchedule: @Sendable (
 			_ siteId: String
-		) async throws -> ChargeSitePricingSchedule
+		) async throws -> PricingSchedule
 	}
 
 	private let dependencies: Dependencies
@@ -62,7 +62,7 @@ final class DiscoveryProvider: ObservableObject {
 		try await dependencies.signOffer(offer.site.id, offer.evseId)
 	}
 
-	func pricingSchedule(siteId: String) async throws -> ChargeSitePricingSchedule {
+	func pricingSchedule(siteId: String) async throws -> PricingSchedule {
 		try await dependencies.pricingSchedule(siteId)
 	}
 }

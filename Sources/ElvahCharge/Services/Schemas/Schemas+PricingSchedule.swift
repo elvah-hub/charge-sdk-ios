@@ -2,12 +2,12 @@
 
 import Foundation
 
-extension ChargeSitePricingSchedule {
+extension PricingSchedule {
 	static func parse(
 		_ response: PricingScheduleSchema
-	) throws(NetworkError.Client) -> ChargeSitePricingSchedule {
-		func parseSlots(_ slots: [PricingScheduleSchema.TimeSlotSchema]) throws(NetworkError.Client) -> [DiscountedTimeSlot] {
-			try slots.map { slot throws(NetworkError.Client) -> DiscountedTimeSlot in
+	) throws(NetworkError.Client) -> PricingSchedule {
+		func parseSlots(_ slots: [PricingScheduleSchema.TimeSlotSchema]) throws(NetworkError.Client) -> [DiscountSlot] {
+			try slots.map { slot throws(NetworkError.Client) -> DiscountSlot in
 				guard let from = Time(timeString: slot.from) else {
 					throw .parsing(.keyPath(in: slot, keyPath: \.from))
 				}
@@ -16,7 +16,7 @@ extension ChargeSitePricingSchedule {
 					throw .parsing(.keyPath(in: slot, keyPath: \.to))
 				}
 
-				return try DiscountedTimeSlot(
+				return try DiscountSlot(
 					from: from,
 					to: to,
 					price: ChargePrice.parse(slot.price)
@@ -26,7 +26,7 @@ extension ChargeSitePricingSchedule {
 
 		func parseEntry(
 			_ entry: PricingScheduleSchema.DailyPriceEntry?
-		) throws(NetworkError.Client) -> Entry? {
+		) throws(NetworkError.Client) -> DayPricing? {
 			guard let entry else {
 				return nil
 			}
@@ -44,16 +44,16 @@ extension ChargeSitePricingSchedule {
 			}
 
 			let slots = try parseSlots(entry.timeSlots)
-			return Entry(lowestPrice: lowestPrice, trend: trend, timeSlots: slots)
+			return DayPricing(lowestPrice: lowestPrice, trend: trend, discounts: slots)
 		}
 
-		let daily = try DailyPricing(
+		let daily = try Days(
 			yesterday: parseEntry(response.dailyPricing.yesterday),
 			today: parseEntry(response.dailyPricing.today),
 			tomorrow: parseEntry(response.dailyPricing.tomorrow)
 		)
 
-		return ChargeSitePricingSchedule(
+		return PricingSchedule(
 			dailyPricing: daily
 		)
 	}

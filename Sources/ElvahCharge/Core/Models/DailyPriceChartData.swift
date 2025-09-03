@@ -6,7 +6,7 @@ import Foundation
 ///
 /// - x-axis: hour of the selected day represented as `Date` values
 /// - y-axis: price per kWh (taken from `Currency.amount`)
-public struct ChargeSitePricingChartData: Hashable, Sendable {
+public struct DailyPriceChartData: Hashable, Sendable {
 	/// The day the chart represents (normalized to midnight in the used timezone).
 	public var day: Date
 
@@ -14,13 +14,13 @@ public struct ChargeSitePricingChartData: Hashable, Sendable {
 	public var basePrice: Currency
 
 	/// Discounted pricing segments with explicit start/end times and a price.
-	public var discountSegments: [DiscountSegment]
+	public var discounts: [DiscountSpan]
 
 	/// Non-discount segments (baseline) covering the remaining parts of the day.
-	public var nonDiscountSegments: [TimeSegment]
+	public var gaps: [GapSpan]
 
 	/// A time range with a specific discounted price.
-	public struct DiscountSegment: Identifiable, Hashable, Sendable {
+	public struct DiscountSpan: Identifiable, Hashable, Sendable {
 		/// Stable identity from start, end and price.
 		public var id: String {
 			"\(startTime.timeIntervalSince1970)-\(endTime.timeIntervalSince1970)-\(price.amount)"
@@ -40,7 +40,7 @@ public struct ChargeSitePricingChartData: Hashable, Sendable {
 	}
 
 	/// A simple time range used for baseline (non-discount) visualization.
-	public struct TimeSegment: Identifiable, Hashable, Sendable {
+	public struct GapSpan: Identifiable, Hashable, Sendable {
 		/// Stable identity from start and end.
 		public var id: String {
 			"\(startTime.timeIntervalSince1970)-\(endTime.timeIntervalSince1970)"
@@ -54,44 +54,66 @@ public struct ChargeSitePricingChartData: Hashable, Sendable {
 	}
 }
 
-package extension ChargeSitePricingSchedule {
-	/// Builds chart data for a specific day using the schedule's discounted slots as segments.
+package extension PricingSchedule {
+	/// Chart data for multiple days. Defaults to all supported days in order, omitting any missing entries.
 	///
 	/// - Parameters:
-	///   - day: The day to build chart data for (defaults to today).
-	///   - calendar: Calendar used to resolve the day and build Date values.
-	///   - timeZone: Timezone for anchoring `Time` values to concrete `Date`s.
-	/// - Returns: A `ChargeSitePricingChartData` with precomputed segments.
-	func makeChart(
-		for day: Date = Date(),
+	///   - days: The days to generate chart data for. Defaults to `[.yesterday, .today, .tomorrow]`.
+	///   - calendar: Calendar used to anchor the days to concrete dates.
+	///   - timeZone: Timezone for converting `Time` into `Date` values.
+	/// - Returns: Array of chart data for the requested days that exist in the schedule.
+	func chartData(
+		for days: [RelativeDay] = RelativeDay.allCases,
 		calendar: Calendar = .current,
 		timeZone: TimeZone = .current
-	) -> ChargeSitePricingChartData {
+	) -> [DailyPriceChartData] {
+		days.compactMap { day in
+			chartData(for: day, calendar: calendar, timeZone: timeZone)
+		}
+	}
+
+	/// Chart data for a specific schedule day using discounted slots as segments.
+	///
+	/// - Parameters:
+	///   - day: One of `.yesterday`, `.today`, `.tomorrow`.
+	///   - calendar: Calendar used to anchor the day to a concrete date.
+	///   - timeZone: Timezone for converting `Time` into `Date` values.
+	/// - Returns: Chart data if the requested day exists; otherwise `nil`.
+	func chartData(
+		for day: RelativeDay,
+		calendar: Calendar = .current,
+		timeZone: TimeZone = .current
+	) -> DailyPriceChartData? {
 		var calendar = calendar
 		calendar.timeZone = timeZone
 
-		// Select the appropriate entry for the given day.
-		let entry: Entry? = {
-			if calendar.isDateInToday(day) {
-				return dailyPricing.today
-			}
-			if calendar.isDateInYesterday(day) {
-				return dailyPricing.yesterday
-			}
-			if calendar.isDateInTomorrow(day) {
-				return dailyPricing.tomorrow
-			}
-			return dailyPricing.today
-		}()
+		// Resolve entry and the day's midnight from the current time.
+		let now = Date()
+		let baseMidnight = calendar.startOfDay(for: now)
+		let entry: DayPricing?
+		let startOfDay: Date
+		switch day {
+		case .yesterday:
+			entry = dailyPricing.yesterday
+			startOfDay = calendar.date(byAdding: .day, value: -1, to: baseMidnight) ?? baseMidnight
+		case .today:
+			entry = dailyPricing.today
+			startOfDay = baseMidnight
+		case .tomorrow:
+			entry = dailyPricing.tomorrow
+			startOfDay = calendar.date(byAdding: .day, value: 1, to: baseMidnight) ?? baseMidnight
+		}
+		guard let entry else {
+			return nil
+		}
 
 		// Midnight boundaries used both for clipping and x-domain in the chart.
-		let startOfDay = calendar.startOfDay(for: day)
 		let endOfDay = calendar.date(byAdding: .hour, value: 24, to: startOfDay) ?? startOfDay
 		let fullDay = startOfDay ... endOfDay
 
 		// Map discounted time slots to concrete date segments, handling overnight spans
 		// and clipping to the selected day.
-		let discountSegments: [ChargeSitePricingChartData.DiscountSegment] = (entry?.timeSlots ?? [])
+		let discountSegments: [DailyPriceChartData.DiscountSpan] = entry.discounts
 			.compactMap { slot in
 				var fromTime = slot.from
 				var toTime = slot.to
@@ -116,7 +138,7 @@ package extension ChargeSitePricingSchedule {
 					return nil
 				}
 
-				return ChargeSitePricingChartData.DiscountSegment(
+				return DailyPriceChartData.DiscountSpan(
 					startTime: clippedStart,
 					endTime: clippedEnd,
 					price: slot.price.pricePerKWh
@@ -125,7 +147,7 @@ package extension ChargeSitePricingSchedule {
 			.sorted(by: { $0.startTime < $1.startTime })
 
 		// Compute baseline (non-discount) segments as the gaps across the full day.
-		var nonDiscount: [ChargeSitePricingChartData.TimeSegment] = []
+		var nonDiscount: [DailyPriceChartData.GapSpan] = []
 		var cursor = fullDay.lowerBound
 		for seg in discountSegments {
 			if cursor < seg.startTime {
@@ -137,12 +159,12 @@ package extension ChargeSitePricingSchedule {
 			nonDiscount.append(.init(startTime: cursor, endTime: fullDay.upperBound))
 		}
 
-		let basePrice = entry?.lowestPrice.pricePerKWh ?? Currency(0)
-		return ChargeSitePricingChartData(
+		let basePrice = entry.lowestPrice.pricePerKWh
+		return DailyPriceChartData(
 			day: startOfDay,
 			basePrice: basePrice,
-			discountSegments: discountSegments,
-			nonDiscountSegments: nonDiscount
+			discounts: discountSegments,
+			gaps: nonDiscount
 		)
 	}
 }

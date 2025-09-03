@@ -3,11 +3,11 @@
 import Foundation
 
 /// A pricing schedule for a charge site including daily pricing and discounted time slots.
-package struct ChargeSitePricingSchedule: Codable, Hashable, Sendable {
+package struct PricingSchedule: Codable, Hashable, Sendable {
 	/// Daily pricing entries for yesterday, today and tomorrow.
-	package var dailyPricing: DailyPricing
+	package var dailyPricing: Days
 
-	package init(dailyPricing: DailyPricing) {
+	package init(dailyPricing: Days) {
 		self.dailyPricing = dailyPricing
 	}
 
@@ -19,19 +19,19 @@ package struct ChargeSitePricingSchedule: Codable, Hashable, Sendable {
 	}
 
 	/// Collection of daily pricing entries.
-	package struct DailyPricing: Codable, Hashable, Sendable {
+	package struct Days: Codable, Hashable, Sendable {
 		/// Pricing for yesterday, if available.
-		package var yesterday: Entry?
+		package var yesterday: DayPricing?
 
 		/// Pricing for today, if available.
-		package var today: Entry?
+		package var today: DayPricing?
 
 		/// Pricing for tomorrow, if available.
-		package var tomorrow: Entry?
+		package var tomorrow: DayPricing?
 	}
 
 	/// A daily pricing entry with optional trend.
-	package struct Entry: Codable, Hashable, Sendable {
+	package struct DayPricing: Codable, Hashable, Sendable {
 		/// The lowest price for the day.
 		package var lowestPrice: ChargePrice
 
@@ -39,11 +39,11 @@ package struct ChargeSitePricingSchedule: Codable, Hashable, Sendable {
 		package var trend: PriceTrend?
 
 		/// Discounted time slots for this specific day.
-		package var timeSlots: [DiscountedTimeSlot]
+		package var discounts: [DiscountSlot]
 	}
 
 	/// A discounted time slot in a day.
-	package struct DiscountedTimeSlot: Codable, Hashable, Sendable {
+	package struct DiscountSlot: Codable, Hashable, Sendable {
 		/// Start time of the discounted period.
 		package var from: Time
 
@@ -53,18 +53,25 @@ package struct ChargeSitePricingSchedule: Codable, Hashable, Sendable {
 		/// The discounted price applied within the time slot.
 		package var price: ChargePrice
 	}
+
+	/// The three concrete days supported by a pricing schedule.
+	package enum RelativeDay: CaseIterable, Sendable, Hashable {
+		case yesterday
+		case today
+		case tomorrow
+	}
 }
 
-package extension ChargeSitePricingSchedule {
-	static var mock: ChargeSitePricingSchedule {
-		ChargeSitePricingSchedule(
-			dailyPricing: DailyPricing(
-				yesterday: Entry(
+package extension PricingSchedule {
+	static var mock: PricingSchedule {
+		PricingSchedule(
+			dailyPricing: Days(
+				yesterday: DayPricing(
 					lowestPrice: .mock,
 					trend: .stable,
-					timeSlots: [
+					discounts: [
 						// Morning short discount
-						DiscountedTimeSlot(
+						DiscountSlot(
 							from: Time(timeString: "08:00:00")!,
 							to: Time(timeString: "12:00:00")!,
 							price: ChargePrice(
@@ -75,12 +82,11 @@ package extension ChargeSitePricingSchedule {
 						),
 					]
 				),
-				today: Entry(
+				today: DayPricing(
 					lowestPrice: .mock,
 					trend: nil,
-					timeSlots: [
-						// Midday longer discount
-						DiscountedTimeSlot(
+					discounts: [
+						DiscountSlot(
 							from: Time(timeString: "10:00:00")!,
 							to: Time(timeString: "15:00:00")!,
 							price: ChargePrice(
@@ -89,8 +95,7 @@ package extension ChargeSitePricingSchedule {
 								blockingFee: nil
 							)
 						),
-						// Early evening discount
-						DiscountedTimeSlot(
+						DiscountSlot(
 							from: Time(timeString: "16:00:00")!,
 							to: Time(timeString: "20:00:00")!,
 							price: ChargePrice(
@@ -101,11 +106,11 @@ package extension ChargeSitePricingSchedule {
 						),
 					]
 				),
-				tomorrow: Entry(
+				tomorrow: DayPricing(
 					lowestPrice: .mock,
 					trend: .down,
-					timeSlots: [
-						DiscountedTimeSlot(
+					discounts: [
+						DiscountSlot(
 							from: Time(timeString: "07:00:00")!,
 							to: Time(timeString: "08:00:00")!,
 							price: ChargePrice(

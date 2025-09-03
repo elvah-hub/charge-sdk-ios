@@ -90,7 +90,7 @@ final class DiscoveryService: Sendable {
 		}
 	}
 
-	func pricingSchedule(siteId: String) async throws(NetworkError) -> ChargeSitePricingSchedule {
+	func pricingSchedule(siteId: String) async throws(NetworkError) -> PricingSchedule {
 		do {
 			let request = Request<PricingScheduleResponse>(
 				path: "/api/sites/\(siteId)/pricing-schedule",
@@ -102,7 +102,7 @@ final class DiscoveryService: Sendable {
 				request.setAPIKey(apiKey)
 			}
 
-			return try ChargeSitePricingSchedule.parse(response.value.data)
+			return try PricingSchedule.parse(response.value.data)
 		} catch {
 			throw error.externalError
 		}
