@@ -12,35 +12,31 @@ public struct ChargeSitePricingChart: View {
 		self.data = data
 	}
 
-  public var body: some View {
-    Chart {
+	public var body: some View {
+		Chart {
 			// Hour grid: solid at midnights, dotted every 4 hours otherwise
-      ForEach(hourlyTicks(for: data.day), id: \.self) { tick in
-        if isMidnight(tick) {
-          RuleMark(
-            x: .value("Hour", tick),
-            yStart: .value("Zero", 0.0),
-            yEnd: .value("Base", data.basePrice.amount)
-          )
-          .foregroundStyle(.gray)
-          .lineStyle(StrokeStyle(lineWidth: 1))
-          .offset(y: 1)
-        } else {
-          RuleMark(x: .value("Hour", tick))
-            .foregroundStyle(.gray.opacity(0.3))
-            .lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 2]))
-            .offset(y: 1)
-        }
-      }
+			ForEach(hourlyTicks(for: data.day), id: \.self) { tick in
+				if isMidnight(tick) {
+					RuleMark(x: .value("Hour", tick))
+						.foregroundStyle(.gray.opacity(0.3))
+						.lineStyle(StrokeStyle(lineWidth: 1))
+						.offset(y: 1)
+				} else {
+					RuleMark(x: .value("Hour", tick))
+						.foregroundStyle(.gray.opacity(0.3))
+						.lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 2]))
+						.offset(y: 1)
+				}
+			}
 
-      // Baseline band across non-discount ranges only (interrupted by green)
-      ForEach(data.nonDiscountSegments) { segment in
-        RectangleMark(
-          xStart: .value("Start", segment.startTime),
-          xEnd: .value("End", segment.endTime),
-          yStart: .value("Zero", 0.0),
-          yEnd: .value("Base", data.basePrice.amount)
-        )
+			// Baseline band across non-discount ranges only (interrupted by green)
+			ForEach(data.nonDiscountSegments) { segment in
+				RectangleMark(
+					xStart: .value("Start", segment.startTime),
+					xEnd: .value("End", segment.endTime),
+					yStart: .value("Zero", 0.0),
+					yEnd: .value("Base", data.basePrice.amount)
+				)
 				.foregroundStyle(.gray.opacity(0.15))
 				.lineStyle(StrokeStyle(lineWidth: 1))
 
@@ -54,66 +50,65 @@ public struct ChargeSitePricingChart: View {
 				.offset(y: 1)
 			}
 
-      // Discounted segments (green overlay)
-      ForEach(data.discountSegments) { segment in
-        RectangleMark(
-          xStart: .value("Start", segment.startTime),
-          xEnd: .value("End", segment.endTime),
-          yStart: .value("Zero", 0.0),
-          yEnd: .value("Price", segment.price.amount)
-        )
-        .foregroundStyle(.green.opacity(0.25))
-        .lineStyle(StrokeStyle(lineWidth: 1))
+			// Discounted segments (green overlay)
+			ForEach(data.discountSegments) { segment in
+				RectangleMark(
+					xStart: .value("Start", segment.startTime),
+					xEnd: .value("End", segment.endTime),
+					yStart: .value("Zero", 0.0),
+					yEnd: .value("Price", segment.price.amount)
+				)
+				.foregroundStyle(.green.opacity(0.25))
+				.lineStyle(StrokeStyle(lineWidth: 1))
 
-        RuleMark(
-          xStart: .value("Start", segment.startTime),
-          xEnd: .value("End", segment.endTime),
-          y: .value("Price Line", segment.price.amount)
-        )
-        .foregroundStyle(.brand)
-        .lineStyle(StrokeStyle(lineWidth: 1))
-        .offset(y: 1)
-      }
+				RuleMark(
+					xStart: .value("Start", segment.startTime),
+					xEnd: .value("End", segment.endTime),
+					y: .value("Price Line", segment.price.amount)
+				)
+				.foregroundStyle(.brand)
+				.lineStyle(StrokeStyle(lineWidth: 1))
+				.offset(y: 1)
+			}
 
-      // Solid vertical borders at discount edges from base down to discount price
-      ForEach(data.discountSegments) { segment in
-        RuleMark(
-          x: .value("Boundary Start", segment.startTime),
-          yStart: .value("Base", data.basePrice.amount),
-          yEnd: .value("Price", segment.price.amount)
-        )
-        .foregroundStyle(.gray)
-        .lineStyle(StrokeStyle(lineWidth: 1))
-        .offset(y: 1)
+			// Solid vertical borders at discount edges from base down to discount price
+			ForEach(data.discountSegments) { segment in
+				RuleMark(
+					x: .value("Boundary Start", segment.startTime),
+					yStart: .value("Base", data.basePrice.amount),
+					yEnd: .value("Price", segment.price.amount)
+				)
+				.foregroundStyle(.gray)
+				.lineStyle(StrokeStyle(lineWidth: 1))
+				.offset(y: 1)
 
-        RuleMark(
-          x: .value("Boundary End", segment.endTime),
-          yStart: .value("Base", data.basePrice.amount),
-          yEnd: .value("Price", segment.price.amount)
-        )
-        .foregroundStyle(.gray)
-        .lineStyle(StrokeStyle(lineWidth: 1))
-        .offset(y: 1)
-      }
-    }
+				RuleMark(
+					x: .value("Boundary End", segment.endTime),
+					yStart: .value("Base", data.basePrice.amount),
+					yEnd: .value("Price", segment.price.amount)
+				)
+				.foregroundStyle(.gray)
+				.lineStyle(StrokeStyle(lineWidth: 1))
+				.offset(y: 1)
+			}
+		}
 		.chartXAxis {
 			// Show ticks/labels at fixed 4-hour points including 24:00 (next midnight)
-				AxisMarks(values: hourlyTicks(for: data.day)) { _ in
-					AxisValueLabel(
-						format: .dateTime.hour(.twoDigits(amPM: .omitted)),
-						centered: false,
-						anchor: .top,
-						offsetsMarks: false,
-						orientation: .horizontal,
-						horizontalSpacing: 0
-					)
-					.font(.caption.bold())
+			if #available(iOS 17.0, *) {
+				AxisMarks(preset: .aligned, values: hourlyTicks(for: data.day)) { _ in
+					AxisValueLabel(format: .dateTime.hour(.twoDigits(amPM: .omitted)))
+						.font(.caption.bold())
 				}
+			} else {
+				AxisMarks(values: axisHourlyTicks(for: data.day)) { _ in
+					AxisValueLabel(format: .dateTime.hour(.twoDigits(amPM: .omitted)))
+						.font(.caption.bold())
+				}
+			}
 		}
-			// Hide all Y-axis elements (grid lines, ticks, labels)
-			.chartYAxis(.hidden)
-			.chartXScale(domain: fullDayDomain(for: data.day))
-			.chartYScale(domain: yAxisDomain())
+		.chartYAxis(.hidden)
+		.chartXScale(domain: fullDayDomain(for: data.day))
+		.chartYScale(domain: yAxisDomain())
 	}
 
 	// MARK: - Helpers
@@ -123,7 +118,7 @@ public struct ChargeSitePricingChart: View {
 		let calendar = Calendar.current
 		let start = calendar.startOfDay(for: day)
 		let end = calendar.date(byAdding: .hour, value: 24, to: start) ?? start
-		return start ... end.addingTimeInterval(1)
+		return start ... end
 	}
 
 	/// Y-axis domain from zero up to base price plus a small headroom.
@@ -148,10 +143,23 @@ public struct ChargeSitePricingChart: View {
 		}
 	}
 
-  // No per-view segment computation needed; data already provides segments.
+	/// Axis label ticks nudged inside the domain for iOS 16 rendering.
+	private func axisHourlyTicks(for day: Date) -> [Date] {
+		let calendar = Calendar.current
+		let start = calendar.startOfDay(for: day)
+		let end = calendar.date(byAdding: .hour, value: 24, to: start) ?? start
+		let epsilon: TimeInterval = 1
+		return hourlyTicks(for: day).map { tick in
+			if tick == start {
+				return tick.addingTimeInterval(epsilon)
+			}
+			if tick == end {
+				return tick.addingTimeInterval(-epsilon)
+			}
+			return tick
+		}
+	}
 }
-
-// No private segment types here; the data model exposes segments directly.
 
 // MARK: - Preview
 
@@ -215,5 +223,3 @@ public struct ChargeSitePricingChartThreeDays: View {
 		.tabViewStyle(.page(indexDisplayMode: .never))
 	}
 }
-
-// MARK: - Preview helpers
