@@ -4,6 +4,9 @@
     "" : {
 
     },
+    " " : {
+
+    },
     " as well as our " : {
       "comment" : "terms_privacy_template_2",
       "extractionState" : "stale",
@@ -70,6 +73,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "/kWh"
+          }
+        }
+      }
+    },
+    "%@ /kWh" : {
+
+    },
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%@ → %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ → %2$@"
           }
         }
       }
@@ -504,6 +530,9 @@
         }
       }
     },
+    "CCS, Very fast (350 kW)" : {
+
+    },
     "Charge" : {
       "comment" : "charge_label",
       "localizations" : {
@@ -831,6 +860,9 @@
           }
         }
       }
+    },
+    "Current Price" : {
+
     },
     "Day" : {
 
@@ -1261,6 +1293,9 @@
     "Later" : {
 
     },
+    "Live pricing" : {
+
+    },
     "Loading data…" : {
       "comment" : "campaign_banner__loading__text",
       "extractionState" : "stale",
@@ -1331,6 +1366,9 @@
         }
       }
     },
+    "Next offer available:" : {
+
+    },
     "No charge points available" : {
       "comment" : "no_charge_points_available",
       "extractionState" : "stale",
@@ -1378,6 +1416,9 @@
         }
       }
     },
+    "No offer available" : {
+
+    },
     "No offer found" : {
       "comment" : "campaign_banner__no_data_text",
       "localizations" : {
@@ -1401,6 +1442,9 @@
         }
       }
     },
+    "Now" : {
+
+    },
     "Occupied" : {
       "comment" : "charge_point__availability__occupied",
       "localizations" : {
@@ -1423,6 +1467,9 @@
           }
         }
       }
+    },
+    "Offer available:" : {
+
     },
     "Offer ends in " : {
       "comment" : "offer_ends_in",
