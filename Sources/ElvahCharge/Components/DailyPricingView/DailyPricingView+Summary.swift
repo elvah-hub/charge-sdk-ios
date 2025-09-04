@@ -104,11 +104,8 @@ package extension DailyPricingView {
 						.transition(.opacity.combined(with: .scale(scale: 0.8)))
 						.layoutPriority(1)
 				}
-				OfferBadge(
-					state: currentBadgeState(reference: reference),
-					showsTimeRange: selectedMoment == nil
-				)
-				.lineLimit(1)
+				OfferBadge(state: currentBadgeState(reference: reference), showsTimeRange: selectedMoment == nil)
+					.lineLimit(1)
 			}
 		}
 
@@ -118,8 +115,7 @@ package extension DailyPricingView {
 		/// block only (active if inside a discount, otherwise none). Without a selection,
 		/// it reflects the current reference time (active / upcoming / none).
 		private func currentBadgeState(reference: Date) -> OfferBadge.State {
-			if let selected = selectedMoment,
-			   DailyPricingComputation.fullDayDomain(for: dataset.day).contains(selected) {
+			if let selected = selectedMoment, DailyPricingComputation.fullDayDomain(for: dataset.day).contains(selected) {
 				if let active = dataset.discounts.first(where: { selected >= $0.startTime && selected < $0.endTime }) {
 					return .active(active)
 				}
@@ -129,6 +125,7 @@ package extension DailyPricingView {
 			if let active = dataset.discounts.first(where: { reference >= $0.startTime && reference < $0.endTime }) {
 				return .active(active)
 			}
+
 			if let next = dataset.discounts.first(where: { $0.startTime > reference }) {
 				return .upcoming(next)
 			}
@@ -169,6 +166,7 @@ package extension DailyPricingView {
 			if calendar.isDateInTomorrow(day) {
 				return "Tomorrow"
 			}
+			
 			return "Today"
 		}
 
