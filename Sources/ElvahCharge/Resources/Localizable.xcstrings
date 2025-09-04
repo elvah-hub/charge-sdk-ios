@@ -769,6 +769,9 @@
     "Checking for current price.\nWe're almost there!" : {
 
     },
+    "Clear selection" : {
+
+    },
     "Close" : {
       "comment" : "close",
       "localizations" : {
@@ -1365,9 +1368,6 @@
           }
         }
       }
-    },
-    "Next offer available:" : {
-
     },
     "No charge points available" : {
       "comment" : "no_charge_points_available",
