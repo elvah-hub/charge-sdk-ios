@@ -13,12 +13,14 @@ package extension DailyPricingView {
 		}
 
 		package var body: some View {
-			VStack(alignment: .leading, spacing: Size.M.size) {
-				headerRow
-				priceRow
-				availabilityRow
+			TimelineView(.periodic(from: .now, by: 60)) { context in
+				VStack(alignment: .leading, spacing: Size.S.size) {
+					headerRow
+					priceRow(now: context.date)
+					availabilityRow(now: context.date)
+				}
+				.frame(maxWidth: .infinity, alignment: .leading)
 			}
-			.frame(maxWidth: .infinity, alignment: .leading)
 		}
 
 		/// Top row: "Live pricing" on the left, connector description on the right.
@@ -40,8 +42,7 @@ package extension DailyPricingView {
 		}
 
 		/// Middle row: prominent current price with optional struck-through base price.
-		@ViewBuilder private var priceRow: some View {
-			let now = Date()
+		@ViewBuilder private func priceRow(now: Date) -> some View {
 			let isToday = Calendar.current.isDateInToday(dataset.day)
 			let reference = isToday ? now : Calendar.current.date(byAdding: .hour, value: 12, to: dataset.day) ?? dataset.day
 			let price = currentPrice(at: reference)
@@ -66,28 +67,34 @@ package extension DailyPricingView {
 			}
 		}
 
-		/// Bottom row: relative day + time on the left and a tag-like availability badge.
-		@ViewBuilder private var availabilityRow: some View {
-			let now = Date()
-			let label = Text(relativeDayLabel(for: dataset.day), bundle: .elvahCharge)
-			let timeText = Text(now, format: .dateTime.hour().minute())
+		@ViewBuilder private func availabilityRow(now: Date) -> some View {
+			let isToday = Calendar.current.isDateInToday(dataset.day)
+			let relativeLabel = Text(relativeDayLabel(for: dataset.day), bundle: .elvahCharge)
 
 			AdaptiveHStack(horizontalAlignment: .leading, verticalAlignment: .center, spacing: Size.S.size) {
-				Text("\(label) \(timeText)")
-					.typography(.copy(size: .medium), weight: .bold)
-					.foregroundStyle(.primaryContent)
-				OfferBadge(state: currentBadgeState(reference: now))
+				if isToday {
+					Text("\(relativeLabel) \(now, format: .dateTime.hour().minute())", bundle: .elvahCharge)
+						.typography(.copy(size: .medium), weight: .bold)
+						.foregroundStyle(.primaryContent)
+						.contentTransition(.numericText())
+						.monospacedDigit()
+				} else {
+					relativeLabel
+						.typography(.copy(size: .medium), weight: .bold)
+						.foregroundStyle(.primaryContent)
+				}
+				OfferBadge(state: currentBadgeState(now: now))
 			}
 		}
 
 		/// Determines the visual badge state for the given reference time.
-		private func currentBadgeState(reference: Date) -> OfferBadge.State {
-			if let active = dataset.discounts.first(where: { reference >= $0.startTime &&
-					reference < $0.endTime
+		private func currentBadgeState(now: Date) -> OfferBadge.State {
+			if let active = dataset.discounts.first(where: { now >= $0.startTime &&
+					now < $0.endTime
 			}) {
 				return .active(active)
 			}
-			if let next = dataset.discounts.first(where: { $0.startTime > reference }) {
+			if let next = dataset.discounts.first(where: { $0.startTime > now }) {
 				return .upcoming(next)
 			}
 			return .none

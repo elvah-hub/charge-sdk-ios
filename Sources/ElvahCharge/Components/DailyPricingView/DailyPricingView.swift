@@ -43,7 +43,7 @@ package struct DailyPricingView: View {
 						.tag(day)
 				}
 			}
-			.frame(height: 180)
+			.frame(height: 150)
 			.tabViewStyle(.page(indexDisplayMode: .never))
 			.animation(.default, value: selectedDay)
 

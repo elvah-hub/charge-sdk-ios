@@ -47,13 +47,8 @@ package extension DailyPricingView {
 
 		@ViewBuilder private var label: some View {
 			switch state {
-			case let .active(span):
+			case let .active(span), let .upcoming(span):
 				adaptiveLabel(prefix: Text("Offer available:", bundle: .elvahCharge), span: span)
-			case let .upcoming(span):
-				adaptiveLabel(
-					prefix: Text("Next offer available:", bundle: .elvahCharge),
-					span: span
-				)
 			case .none:
 				Text("No offer available", bundle: .elvahCharge)
 			}
