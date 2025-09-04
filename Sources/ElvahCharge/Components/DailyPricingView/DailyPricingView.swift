@@ -11,39 +11,44 @@ package struct DailyPricingView: View {
 	/// Pricing schedule providing yesterday/today/tomorrow data.
 	package var schedule: PricingSchedule
 
-	/// Current page (0: yesterday, 1: today, 2: tomorrow). Defaults to today if available.
-	@State private var page: Int
+	/// Currently selected day in the pager. Defaults to today if available.
+	@State private var selectedDay: PricingSchedule.RelativeDay
 
 	package init(schedule: PricingSchedule) {
 		self.schedule = schedule
-		let data = schedule.chartData()
-		// Prefer today if available, otherwise fall back to 0
-		let defaultIndex = min(1, max(0, data.count - 1))
-		_page = State(initialValue: defaultIndex)
+		// Determine available days and prefer today when possible.
+		let availableDays = PricingSchedule.RelativeDay.allCases.filter { day in
+			schedule.chartData(for: day) != nil
+		}
+		let initial = availableDays.contains(.today) ? .today : (availableDays.first ?? .today)
+		_selectedDay = State(initialValue: initial)
 	}
 
 	package var body: some View {
-		let datasets = schedule.chartData()
+		// Pair each available relative day with its corresponding dataset.
+		let dayDatasets = PricingSchedule.RelativeDay.allCases
+			.compactMap { day in schedule.chartData(for: day).map { (day, $0) } }
+
 		VStack(spacing: 12) {
-			if page >= 0 && page < datasets.count {
-				let current = datasets[page]
-				Summary(dataset: current)
+			if let current = dayDatasets.first(where: { $0.0 == selectedDay })?.1 {
+				Summary(dataset: current).padding(.horizontal)
+					.animation(.default, value: selectedDay)
 			}
 
-			TabView(selection: $page) {
-				ForEach(datasets.indices, id: \.self) { index in
-					let data = datasets[index]
+			TabView(selection: $selectedDay) {
+				ForEach(dayDatasets, id: \.0) { day, data in
 					PriceChart(data: data)
 						.padding(.vertical, 4)
 						.frame(maxWidth: .infinity)
-						.tag(index)
+						.tag(day)
 				}
 			}
 			.frame(height: 180)
 			.tabViewStyle(.page(indexDisplayMode: .never))
+			.animation(.default, value: selectedDay)
 
-			if datasets.count >= 2 {
-				dayPicker(datasets: datasets, selection: $page)
+			if dayDatasets.count >= 2 {
+				dayPicker(dayDatasets: dayDatasets, selection: $selectedDay)
 					.padding(.horizontal)
 			}
 		}
@@ -51,13 +56,12 @@ package struct DailyPricingView: View {
 
 	/// Segmented control to switch between available days.
 	private func dayPicker(
-		datasets: [DailyPriceChartData],
-		selection: Binding<Int>
+		dayDatasets: [(PricingSchedule.RelativeDay, DailyPriceChartData)],
+		selection: Binding<PricingSchedule.RelativeDay>
 	) -> some View {
 		Picker("Day", selection: selection) {
-			ForEach(datasets.indices, id: \.self) { index in
-				let data = datasets[index]
-				Text(relativeDayLabel(for: data.day)).tag(index)
+			ForEach(dayDatasets, id: \.0) { day, _ in
+				Text(relativeDayLabel(for: day)).tag(day)
 			}
 		}
 		.pickerStyle(.segmented)
@@ -77,11 +81,22 @@ package struct DailyPricingView: View {
 		}
 		return "Today" // Fallback
 	}
+
+	/// Returns a localized label for the given relative day.
+	private func relativeDayLabel(for day: PricingSchedule.RelativeDay) -> LocalizedStringKey {
+		switch day {
+		case .yesterday:
+			return "Yesterday"
+		case .today:
+			return "Today"
+		case .tomorrow:
+			return "Tomorrow"
+		}
+	}
 }
 
 @available(iOS 17.0, *)
 #Preview {
 	DailyPricingView(schedule: .mock)
-		.padding()
 		.withFontRegistration()
 }

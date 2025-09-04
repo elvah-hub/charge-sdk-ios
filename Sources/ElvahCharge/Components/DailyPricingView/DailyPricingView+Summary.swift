@@ -50,13 +50,18 @@ package extension DailyPricingView {
 			AdaptiveHStack(horizontalAlignment: .leading, verticalAlignment: .center, spacing: Size.S.size) {
 				Text("\(Currency(price).formatted()) /kWh", bundle: .elvahCharge)
 					.typography(.copy(size: .xLarge), weight: .bold)
+					.monospacedDigit()
 					.foregroundStyle(discounted ? .brand : .primaryContent)
+					.contentTransition(.numericText())
 
 				if discounted {
 					Text("\(dataset.basePrice.formatted()) /kWh", bundle: .elvahCharge)
 						.typography(.copy(size: .medium), weight: .regular)
+						.monospacedDigit()
 						.strikethrough(true, pattern: .solid)
 						.foregroundStyle(.secondaryContent)
+						.contentTransition(.numericText())
+						.transition(.opacity.combined(with: .scale(scale: 1.2)))
 				}
 			}
 		}

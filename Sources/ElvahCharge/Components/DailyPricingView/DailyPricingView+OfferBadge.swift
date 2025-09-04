@@ -30,15 +30,19 @@ package extension DailyPricingView {
 			}
 			.padding(.horizontal, 10)
 			.padding(.vertical, 6)
-			.background {
-				if dynamicTypeSize < .accessibility1 {
-					Capsule().fill(background)
-				} else {
-					RoundedRectangle(cornerRadius: 12).fill(background)
-				}
-			}
+			.background(backgroundShape.fill(background))
+			.clipShape(backgroundShape)
 			.foregroundStyle(foreground)
 			.typography(.copy(size: .small), weight: .bold)
+			.transformEffect(.identity)
+		}
+
+		private var backgroundShape: some Shape {
+			if dynamicTypeSize < .accessibility1 {
+				AnyShape(Capsule())
+			} else {
+				AnyShape(RoundedRectangle(cornerRadius: 12))
+			}
 		}
 
 		@ViewBuilder private var label: some View {
