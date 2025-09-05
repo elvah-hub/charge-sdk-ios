@@ -11,7 +11,7 @@ public enum BackendEnvironment: Sendable, Hashable {
 	@_spi(Debug) case integration
 
 	/// The simulation environment.
-	case simulation
+	@_spi(Debug) case simulation
 
 	/// The production environment.
 	case production
