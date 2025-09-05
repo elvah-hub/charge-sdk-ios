@@ -66,6 +66,11 @@ public enum Elvah {
 			return
 		}
 
+		// Validate API key format for the selected environment. This only reports
+		// mismatches for known prefixes and stays silent for unknown prefixes
+		// (allowing production fallback without noise).
+		validateApiKey(configuration.apiKey, for: configuration.environment)
+
 		// Store the configuration
 		_configuration = configuration
 
@@ -95,6 +100,59 @@ package extension Elvah {
 	enum Constant {
 		/// The default radius in meters.
 		static let defaultRadius: Double = 20000
+	}
+}
+
+// MARK: - API Key Validation
+
+package extension Elvah {
+	/// Determines the backend environment to use based on the given API key.
+	///
+	/// - Important: This performs simple prefix checks and falls back to
+	/// ``BackendEnvironment/production`` when the key does not match a known prefix.
+	/// - Parameter apiKey: The API key to inspect.
+	/// - Returns: The auto-routed backend environment for the provided key.
+	static func autoRoutedEnvironment(for apiKey: String) -> BackendEnvironment {
+		if apiKey.hasPrefix("evpk_test") {
+			return .integration
+		}
+		if apiKey.hasPrefix("evpk_prod") {
+			return .production
+		}
+		// Fallback to production for unknown prefixes
+		return .production
+	}
+
+	/// Validates that the API key matches the selected backend environment and logs a critical
+	/// message when it does not. Simulation is ignored. Unknown prefixes are treated as a valid
+	/// production fallback and do not trigger validation errors.
+	///
+	/// - Parameters:
+	///   - apiKey: The API key to validate.
+	///   - environment: The backend environment to validate against.
+	static func validateApiKey(_ apiKey: String, for environment: BackendEnvironment) {
+		// Ignore simulation and uninitialized setups
+		guard environment != .simulation else {
+			return
+		}
+
+		// Only enforce validation when the API key clearly identifies an environment
+		let isTestKey = apiKey.hasPrefix("evpk_test")
+		let isProductionKey = apiKey.hasPrefix("evpk_prod")
+
+		switch (environment, isTestKey, isProductionKey) {
+		case (.integration, true, _):
+			return // valid
+		case (.production, _, true):
+			return // valid
+		case (.integration, false, true):
+			logger.critical("API key mismatch: integration environment expects keys starting with evpk_test.")
+		case (.production, true, false):
+			logger.critical("API key mismatch: production environment expects keys starting with evpk_prod.")
+		default:
+			// Unknown prefixes: accept silently to allow production fallback without noise
+			return
+		}
 	}
 }
 
@@ -136,7 +194,8 @@ public extension Elvah {
 			store: UserDefaults = .standard
 		) {
 			self.apiKey = apiKey
-			environment = .production
+			// Automatically route the environment based on the API key prefix.
+			environment = Elvah.autoRoutedEnvironment(for: apiKey)
 			self.theme = theme
 			self.store = store
 			isUninitialized = false
@@ -162,6 +221,8 @@ public extension Elvah {
 			self.theme = theme
 			self.store = store
 			isUninitialized = false
+			// Perform strict validation when an explicit environment is provided through SPI.
+			Elvah.validateApiKey(apiKey, for: environment)
 		}
 
 		/// A helper initializer to set the `isUninitialized` flag to `true`.
