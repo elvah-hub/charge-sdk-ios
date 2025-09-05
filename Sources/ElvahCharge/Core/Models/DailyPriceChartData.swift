@@ -6,51 +6,51 @@ import Foundation
 ///
 /// - x-axis: hour of the selected day represented as `Date` values
 /// - y-axis: price per kWh (taken from `Currency.amount`)
-public struct DailyPriceChartData: Hashable, Sendable {
+package struct DailyPriceChartData: Hashable, Sendable {
 	/// The day the chart represents (normalized to midnight in the used timezone).
-	public var day: Date
+	package var day: Date
 
 	/// The base price used for the baseline band.
-	public var basePrice: Currency
+	package var basePrice: Currency
 
 	/// Discounted pricing segments with explicit start/end times and a price.
-	public var discounts: [DiscountSpan]
+	package var discounts: [DiscountSpan]
 
 	/// Non-discount segments (baseline) covering the remaining parts of the day.
-	public var gaps: [GapSpan]
+	package var gaps: [GapSpan]
 
 	/// A time range with a specific discounted price.
-	public struct DiscountSpan: Identifiable, Hashable, Sendable {
+	package struct DiscountSpan: Identifiable, Hashable, Sendable {
 		/// Stable identity from start, end and price.
-		public var id: String {
+		package var id: String {
 			"\(startTime.timeIntervalSince1970)-\(endTime.timeIntervalSince1970)-\(price.amount)"
 		}
 
 		/// Inclusive start of the discounted range.
-		public var startTime: Date
+		package var startTime: Date
 
 		/// Exclusive end of the discounted range.
-		public var endTime: Date
+		package var endTime: Date
 
 		/// Discounted price applied in the time range.
-		public var price: Currency
+		package var price: Currency
 
 		/// Numeric value helper for Swift Charts axes.
-		public var priceValue: Double { price.amount }
+		package var priceValue: Double { price.amount }
 	}
 
 	/// A simple time range used for baseline (non-discount) visualization.
-	public struct GapSpan: Identifiable, Hashable, Sendable {
+	package struct GapSpan: Identifiable, Hashable, Sendable {
 		/// Stable identity from start and end.
-		public var id: String {
+		package var id: String {
 			"\(startTime.timeIntervalSince1970)-\(endTime.timeIntervalSince1970)"
 		}
 
 		/// Inclusive start of the range.
-		public var startTime: Date
+		package var startTime: Date
 
 		/// Exclusive end of the range.
-		public var endTime: Date
+		package var endTime: Date
 	}
 }
 
