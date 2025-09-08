@@ -13,13 +13,15 @@ public extension PricingSchedule {
 
 	/// Loads the pricing schedule for a given charge site.
 	///
+	/// - Note: You can also use ``ChargeSite/pricingSchedule()``.
 	/// - Parameter chargeSite: The charge site to load the schedule for.
 	/// - Returns: The pricing schedule for the charge site.
 	@MainActor static func schedule(
 		for chargeSite: ChargeSite
-	) async throws(Elvah.Error) -> PricingSchedule {
+	) async throws(Elvah.Error) -> ChargeSiteSchedule {
 		do {
-			return try await discoveryProvider.pricingSchedule(siteId: chargeSite.id)
+			let schedule = try await discoveryProvider.pricingSchedule(siteId: chargeSite.id)
+			return ChargeSiteSchedule(chargeSite: chargeSite, pricingSchedule: schedule)
 		} catch NetworkError.unauthorized {
 			throw Elvah.Error.unauthorized
 		} catch let error as NetworkError {
@@ -31,13 +33,14 @@ public extension PricingSchedule {
 
 	/// Loads the pricing schedule for a given charge site.
 	///
+	/// - Note: You can also use ``ChargeSite/pricingSchedule()``.
 	/// - Parameters:
 	///   - chargeSite: The charge site to load the schedule for.
 	///   - completion: A closure called with the result of the operation.
 	/// - Returns: An observer you can use to cancel the operation.
 	@MainActor @discardableResult static func schedule(
 		for chargeSite: ChargeSite,
-		completion: @MainActor @escaping (_ result: Result<PricingSchedule, Elvah.Error>) -> Void
+		completion: @MainActor @escaping (_ result: Result<ChargeSiteSchedule, Elvah.Error>) -> Void
 	) -> TaskObserver {
 		let task = Task {
 			do {
@@ -52,5 +55,14 @@ public extension PricingSchedule {
 		}
 
 		return TaskObserver(task: task)
+	}
+}
+
+public extension ChargeSite {
+	/// Loads the pricing schedule for this charge site.
+	///
+	/// You can also use ``PricingSchedule/schedule(for:)``.
+	func pricingSchedule() async throws -> ChargeSiteSchedule {
+		try await PricingSchedule.schedule(for: self)
 	}
 }
