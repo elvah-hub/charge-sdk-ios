@@ -7,14 +7,16 @@ import SwiftUI
 package struct PricingScheduleViewComponent: View {
 	@ObservedObject private var router: PricingScheduleView.Router
 
-	/// Cached chart entries per relative day, computed when `schedule` changes.
-	@State private var chartEntries: [PricingScheduleChartEntry] = []
-
 	/// Currently selected day in the pager. Defaults to today if available.
 	@State private var selectedDay: PricingSchedule.RelativeDay = .today
 
 	/// Selected moment within the chart to reflect in the summary.
 	@State private var selectedMoment: Date?
+
+	/// Cached chart entries per relative day, computed when `schedule` changes.
+	private var chartEntries: [PricingScheduleChartEntry] {
+		schedule.chartEntries
+	}
 
 	/// The pricing schedule to visualize.
 	private var schedule: ChargeSiteSchedule
@@ -58,9 +60,6 @@ package struct PricingScheduleViewComponent: View {
 			}
 				.buttonStyle(.primary)
 				.padding(.horizontal)
-		}
-		.task(id: schedule) {
-			chartEntries = schedule.chartEntries()
 		}
 		.onChange(of: selectedDay) { _ in
 			// Reset any specific time selection when switching days

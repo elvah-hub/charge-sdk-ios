@@ -6,7 +6,7 @@ import Foundation
 ///
 /// - x-axis: hour of the selected day represented as `Date` values
 /// - y-axis: price per kWh (taken from `Currency.amount`)
-package struct DailyPriceChartData: Hashable, Sendable {
+package struct DailyPriceChartData: Hashable, Sendable, Codable {
 	/// The day the chart represents (normalized to midnight in the used timezone).
 	package var day: Date
 
@@ -20,7 +20,7 @@ package struct DailyPriceChartData: Hashable, Sendable {
 	package var gaps: [GapSpan]
 
 	/// A time range with a specific discounted price.
-	package struct DiscountSpan: Identifiable, Hashable, Sendable {
+	package struct DiscountSpan: Identifiable, Hashable, Sendable, Codable {
 		/// Stable identity from start, end and price.
 		package var id: String {
 			"\(startTime.timeIntervalSince1970)-\(endTime.timeIntervalSince1970)-\(price.amount)"
@@ -40,7 +40,7 @@ package struct DailyPriceChartData: Hashable, Sendable {
 	}
 
 	/// A simple time range used for baseline (non-discount) visualization.
-	package struct GapSpan: Identifiable, Hashable, Sendable {
+	package struct GapSpan: Identifiable, Hashable, Sendable, Codable {
 		/// Stable identity from start and end.
 		package var id: String {
 			"\(startTime.timeIntervalSince1970)-\(endTime.timeIntervalSince1970)"

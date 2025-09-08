@@ -55,7 +55,7 @@ public struct PricingSchedule: Codable, Hashable, Sendable {
 	}
 
 	/// The three concrete days supported by a pricing schedule.
-	package enum RelativeDay: CaseIterable, Sendable, Hashable {
+	package enum RelativeDay: CaseIterable, Sendable, Hashable, Codable {
 		case yesterday
 		case today
 		case tomorrow

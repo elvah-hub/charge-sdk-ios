@@ -46,4 +46,5 @@ package extension PricingScheduleView {
 #Preview {
 	PricingScheduleView(schedule: .mock)
 		.withFontRegistration()
+		.preferredColorScheme(.dark)
 }

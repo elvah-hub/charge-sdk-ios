@@ -15,9 +15,12 @@ public struct ChargeSiteSchedule: Codable, Hashable, Identifiable, Sendable {
 	/// The underlying pricing schedule.
 	package var pricingSchedule: PricingSchedule
 
+	package var chartEntries: [PricingScheduleChartEntry]
+
 	package init(chargeSite: ChargeSite, pricingSchedule: PricingSchedule) {
 		self.chargeSite = chargeSite
 		self.pricingSchedule = pricingSchedule
+		self.chartEntries = pricingSchedule.chartEntries()
 	}
 
 	package subscript<V>(dynamicMember keyPath: KeyPath<PricingSchedule, V>) -> V {
@@ -27,10 +30,6 @@ public struct ChargeSiteSchedule: Codable, Hashable, Identifiable, Sendable {
 	package subscript<V>(dynamicMember keyPath: WritableKeyPath<PricingSchedule, V>) -> V {
 		get { pricingSchedule[keyPath: keyPath] }
 		set { pricingSchedule[keyPath: keyPath] = newValue }
-	}
-
-	package func chartEntries() -> [PricingScheduleChartEntry] {
-		pricingSchedule.chartEntries()
 	}
 
 	package var dailyPricing: PricingSchedule.Days {

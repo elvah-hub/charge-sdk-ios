@@ -31,12 +31,6 @@ package struct ChargeOfferDetailFeature: View {
 			.animation(.default, value: routeDistanceToStation)
 			.foregroundStyle(.primaryContent)
 			.navigationBarTitleDisplayMode(.inline)
-			.toolbar {
-				ToolbarItem(placement: .principal) {
-					StyledNavigationTitle("Select charge point", bundle: .elvahCharge)
-				}
-			}
-			.toolbarBackground(.canvas, for: .navigationBar)
 			.task {
 				await reloadContinuously()
 			}
@@ -55,10 +49,14 @@ package struct ChargeOfferDetailFeature: View {
 				}
 			}
 			.toolbar {
+				ToolbarItem(placement: .principal) {
+					StyledNavigationTitle("Select charge point", bundle: .elvahCharge)
+				}
 				ToolbarItem(placement: .topBarLeading) {
 					CloseButton()
 				}
 			}
+			.toolbarBackground(.canvas, for: .navigationBar)
 			.background {
 				VStack(spacing: 0) {
 					Color.canvas.ignoresSafeArea().frame(height: max(0, scrollPosition.y))
@@ -103,6 +101,7 @@ package struct ChargeOfferDetailFeature: View {
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.padding(.vertical, 16)
 		}
+		.scrollDismissesKeyboard(.interactively)
 		.coordinateSpace(name: "ScrollView")
 	}
 

@@ -3,7 +3,7 @@
 import Foundation
 
 /// A single chartable entry combining a relative day with its precomputed chart dataset.
-package struct PricingScheduleChartEntry: Identifiable, Hashable, Sendable {
+package struct PricingScheduleChartEntry: Identifiable, Hashable, Sendable, Codable {
 	/// The relative day (yesterday, today, tomorrow) represented by this entry.
 	package var day: PricingSchedule.RelativeDay
 
