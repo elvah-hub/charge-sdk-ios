@@ -13,6 +13,7 @@ package struct ChargeOfferDetailFeature: View {
 	private var associatedSite: Site?
 
 	@State private var processingOffer: ChargeOffer?
+	@State private var scrollPosition = CGPoint.zero
 	@TaskIdentifier private var reloadTaskId
 	@Loadable<Site> private var site
 	@Loadable<[ChargeOffer]> private var offers
@@ -29,6 +30,12 @@ package struct ChargeOfferDetailFeature: View {
 			.animation(.default, value: site)
 			.animation(.default, value: routeDistanceToStation)
 			.foregroundStyle(.primaryContent)
+			.navigationBarTitleDisplayMode(.inline)
+			.toolbar {
+				ToolbarItem(placement: .principal) {
+					StyledNavigationTitle("Select charge point", bundle: .elvahCharge)
+				}
+			}
 			.toolbarBackground(.canvas, for: .navigationBar)
 			.task {
 				await reloadContinuously()
@@ -52,7 +59,12 @@ package struct ChargeOfferDetailFeature: View {
 					CloseButton()
 				}
 			}
-			.background(Color.canvas)
+			.background {
+				VStack(spacing: 0) {
+					Color.canvas.ignoresSafeArea().frame(height: max(0, scrollPosition.y))
+					Color.container.ignoresSafeArea()
+				}
+			}
 			.onChange(of: paymentInitiation) { paymentInitiation in
 				if paymentInitiation.hasFailed {
 					router.showGenericError = true
@@ -82,7 +94,7 @@ package struct ChargeOfferDetailFeature: View {
 
 	@ViewBuilder private var content: some View {
 		ScrollView {
-			VStack(alignment: .leading, spacing: 24) {
+			VStack(alignment: .leading, spacing: Size.L.size) {
 				if associatedSite != nil {
 					siteContent
 				}
@@ -113,6 +125,7 @@ package struct ChargeOfferDetailFeature: View {
 	@ViewBuilder private var chargePointsContent: some View {
 		ChargeOfferDetailFeature.ChargePointSection(
 			offers: offers,
+			offersSectionOrigin: $scrollPosition,
 			processingOffer: processingOffer,
 			offerAction: { offer in
 				handleChargePointTap(for: offer)

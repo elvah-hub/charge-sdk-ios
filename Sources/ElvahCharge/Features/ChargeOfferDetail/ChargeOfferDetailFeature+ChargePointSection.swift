@@ -11,8 +11,11 @@ extension ChargeOfferDetailFeature {
 	struct ChargePointSection: View {
 		typealias Action = (_ offers: ChargeOffer) -> Void
 
+		@FocusState private var isSearchFieldFocused: Bool
 		@Environment(\.dynamicTypeSize) private var dynamicTypeSize
 		@Default(.chargeSessionContext) private var chargeSessionContext
+		@State private var searchText: String = ""
+		@Binding private var offersSectionOrigin: CGPoint
 		private var largestCommonPrefix: String
 		private var offers: LoadableState<[ChargeOffer]>
 		private var processingOffer: ChargeOffer?
@@ -21,11 +24,13 @@ extension ChargeOfferDetailFeature {
 
 		init(
 			offers: LoadableState<[ChargeOffer]>,
+			offersSectionOrigin: Binding<CGPoint>,
 			processingOffer: ChargeOffer?,
 			offerAction: @escaping Action,
 			chargeSessionAction: @escaping () -> Void
 		) {
 			self.offers = offers
+			_offersSectionOrigin = offersSectionOrigin
 			self.processingOffer = processingOffer
 			self.offerAction = offerAction
 			self.chargeSessionAction = chargeSessionAction
@@ -34,11 +39,6 @@ extension ChargeOfferDetailFeature {
 
 		var body: some View {
 			VStack(alignment: .leading, spacing: 16) {
-				Text("Select charge point", bundle: .elvahCharge)
-					.typography(.copy(size: .xLarge), weight: .bold)
-					.foregroundStyle(.primaryContent)
-					.padding(.horizontal, 16)
-					.dynamicTypeSize(...(.accessibility2))
 				switch offers {
 				case .absent,
 				     .loading,
@@ -93,24 +93,125 @@ extension ChargeOfferDetailFeature {
 		}
 
 		@ViewBuilder private func chargePointList(for offers: [ChargeOffer]) -> some View {
-			VStack(alignment: .leading, spacing: 24) {
-				TimelineView(.periodic(from: .now, by: 1)) { _ in
-					VStack(spacing: 0) {
-						ForEach(offers) { offer in
-							chargePointButton(for: offer)
-								.overlay {
-									loadingOverlay(show: processingOffer?.id == offer.id)
+			let filteredOffers = filtered(offers: offers)
+
+			LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
+				Section {
+					TimelineView(.periodic(from: .now, by: 1)) { _ in
+						VStack(spacing: 0) {
+							if filteredOffers.isEmpty, isSearchActive {
+								noResultsView
+							} else {
+								ForEach(filteredOffers) { offer in
+									chargePointButton(for: offer)
+										.overlay {
+											loadingOverlay(show: processingOffer?.id == offer.id)
+										}
+									Divider().padding(.leading, .M)
 								}
-							Divider()
-								.padding(.leading, .M)
+							}
 						}
+						.buttonStyle(ChargePointButtonStyle())
+						.foregroundStyle(.primaryContent)
+						.animation(.bouncy, value: processingOffer)
+						.animation(.default, value: searchText)
 					}
-					.buttonStyle(ChargePointButtonStyle())
-					.foregroundStyle(.primaryContent)
-					.animation(.bouncy, value: processingOffer)
+				} header: {
+					if offers.count >= 5 {
+						searchField
+							.background(Color.canvas)
+					}
 				}
 			}
+			.overlay(alignment: .top) {
+				Color.clear.frame(height: 0)
+					.scrollPositionReader($offersSectionOrigin, in: "ScrollView")
+			}
 			.frame(maxWidth: .infinity)
+		}
+
+		private var isSearchActive: Bool {
+			searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
+		}
+
+		private func filtered(offers: [ChargeOffer]) -> [ChargeOffer] {
+			let needle = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+			guard needle.isEmpty == false else {
+				return offers
+			}
+
+			func matches(_ value: String?) -> Bool {
+				guard let value = value, value.isEmpty == false else {
+					return false
+				}
+				return value.localizedCaseInsensitiveContains(needle)
+			}
+
+			return offers.filter { offer in
+				let chargePoint = offer.chargePoint
+				return matches(chargePoint.evseId)
+					|| matches(chargePoint.physicalReference)
+					|| chargePoint.evseId.fuzzyMatches(needle)
+					|| matches(String(chargePoint.evseId.filter { $0 != "*" }))
+			}
+		}
+
+		@ViewBuilder private var noResultsView: some View {
+			VStack(alignment: .center, spacing: Size.S.size) {
+				Text("No results for \(Text(verbatim: searchText))", bundle: .elvahCharge)
+					.typography(.copy(size: .xLarge), weight: .bold)
+					.foregroundStyle(.primaryContent)
+				Text("Check your search input and try again", bundle: .elvahCharge)
+					.typography(.copy(size: .small))
+					.foregroundStyle(.secondaryContent)
+				Button("Clear filters", bundle: .elvahCharge) {
+					searchText = ""
+				}
+				.buttonStyle(.textPrimary)
+			}
+			.padding(.vertical, .M)
+			.multilineTextAlignment(.center)
+			.frame(maxWidth: .infinity)
+			.animation(nil, value: searchText)
+		}
+
+		@ViewBuilder private var searchField: some View {
+			HStack(spacing: Size.S.size) {
+				Image(systemName: "magnifyingglass")
+					.accessibilityHidden(true)
+				TextField("Type charge point ID", text: $searchText, prompt: Text("Type charge point ID", bundle: .elvahCharge))
+					.focused($isSearchFieldFocused)
+					.typography(.copy(size: .medium))
+					.frame(maxWidth: .infinity, alignment: .leading)
+				Spacer(minLength: 0)
+				if searchText.isEmpty == false {
+					Button {
+						searchText = ""
+					} label: {
+						Image(systemName: "xmark")
+							.foregroundStyle(.primaryContent)
+					}
+					.accessibilityHidden(true)
+				}
+			}
+			.padding(.M)
+			.background(.container, in: .rect(cornerRadius: 8))
+			.overlay {
+				RoundedRectangle(cornerRadius: 8)
+					.strokeBorder(Color.decorativeStroke, lineWidth: 1)
+			}
+			.padding(.horizontal, .M)
+			.background(Color.canvas)
+			.padding(.bottom, .M)
+			.dynamicTypeSize(...(.accessibility2))
+			.accessibilityElement(children: .combine)
+			.accessibilityAction(named: Text("Clear input", bundle: .elvahCharge)) {
+				searchText = ""
+			}
+			.contentShape(.rect)
+			.onTapGesture {
+				isSearchFieldFocused = true
+			}
 		}
 
 		@ViewBuilder private func loadingOverlay(show: Bool) -> some View {
@@ -118,7 +219,7 @@ extension ChargeOfferDetailFeature {
 				if show {
 					LinearGradient(
 						stops: [
-							Gradient.Stop(color: .canvas, location: 0),
+							Gradient.Stop(color: .container, location: 0),
 							Gradient.Stop(color: .clear, location: 1),
 						],
 						startPoint: .trailing,
@@ -140,7 +241,6 @@ extension ChargeOfferDetailFeature {
 			Button {
 				offerAction(offer)
 			} label: {
-				// Determine the label for the charge point identifier
 				let evseDisplayText: String = {
 					if let physicalReference = chargePoint.physicalReference, physicalReference.isEmpty == false {
 						return physicalReference
@@ -153,13 +253,10 @@ extension ChargeOfferDetailFeature {
 
 				let evseIdLabel = Text(verbatim: evseDisplayText)
 					.typography(.copy(size: .medium), weight: .bold)
-					.foregroundStyle(.onSuccess)
+					.foregroundStyle(.onBrand)
 					.padding(.horizontal, .XS)
 					.padding(.vertical, .XXS)
-					.background(
-						RoundedRectangle(cornerRadius: 4)
-							.fill(Color.success)
-					)
+					.background(.brand, in: .rect(cornerRadius: 4))
 
 				let priceLabel = Text(offer.price.pricePerKWh.formatted())
 
@@ -184,7 +281,6 @@ extension ChargeOfferDetailFeature {
 				}()
 
 				VStack(alignment: .leading, spacing: Size.XXS.size) {
-					// Row 1: EVSE badge on the left, price on the right
 					HStack(alignment: .firstTextBaseline) {
 						evseIdLabel
 						Spacer()
@@ -296,6 +392,7 @@ private struct ChargePointButtonStyle: ButtonStyle {
 						.opacity(0.2)
 					ChargeOfferDetailFeature.ChargePointSection(
 						offers: .loaded([.mockAvailable, .mockUnavailable, .mockOutOfService]),
+						offersSectionOrigin: .constant(.zero),
 						processingOffer: .mockAvailable
 					) { _ in } chargeSessionAction: {}
 				}

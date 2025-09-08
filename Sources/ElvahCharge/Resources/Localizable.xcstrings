@@ -785,7 +785,16 @@
         }
       }
     },
+    "Check your search input and try again" : {
+
+    },
     "Checking for current price.\nWe're almost there!" : {
+
+    },
+    "Clear filters" : {
+
+    },
+    "Clear input" : {
 
     },
     "Close" : {
@@ -1457,6 +1466,9 @@
           }
         }
       }
+    },
+    "No results for %@" : {
+
     },
     "Now" : {
 
@@ -2576,6 +2588,9 @@
           }
         }
       }
+    },
+    "Type charge point ID" : {
+
     },
     "Understood" : {
       "comment" : "understood",
