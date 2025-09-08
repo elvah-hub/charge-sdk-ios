@@ -13,8 +13,6 @@ extension ChargeOfferDetailFeature {
 
 		@Environment(\.dynamicTypeSize) private var dynamicTypeSize
 		@Default(.chargeSessionContext) private var chargeSessionContext
-		@State private var selectedPowerType: PowerType
-		@Binding private var offersSectionOrigin: CGPoint
 		private var largestCommonPrefix: String
 		private var offers: LoadableState<[ChargeOffer]>
 		private var processingOffer: ChargeOffer?
@@ -22,20 +20,16 @@ extension ChargeOfferDetailFeature {
 		private var chargeSessionAction: () -> Void
 
 		init(
-			initialPowerTypeSelection: PowerType? = nil,
 			offers: LoadableState<[ChargeOffer]>,
-			offersSectionOrigin: Binding<CGPoint>,
 			processingOffer: ChargeOffer?,
 			offerAction: @escaping Action,
 			chargeSessionAction: @escaping () -> Void
 		) {
 			self.offers = offers
-			_offersSectionOrigin = offersSectionOrigin
 			self.processingOffer = processingOffer
 			self.offerAction = offerAction
 			self.chargeSessionAction = chargeSessionAction
 			largestCommonPrefix = offers.data?.largestCommonEvseIdPrefix ?? ""
-			_selectedPowerType = State(initialValue: initialPowerTypeSelection ?? .ac)
 		}
 
 		var body: some View {
@@ -55,7 +49,6 @@ extension ChargeOfferDetailFeature {
 					chargePointList(for: offers)
 				}
 			}
-			.animation(.default, value: selectedPowerType)
 			.animation(.default, value: offers)
 			.frame(maxWidth: .infinity, alignment: .leading)
 		}
@@ -102,38 +95,20 @@ extension ChargeOfferDetailFeature {
 		@ViewBuilder private func chargePointList(for offers: [ChargeOffer]) -> some View {
 			VStack(alignment: .leading, spacing: 24) {
 				TimelineView(.periodic(from: .now, by: 1)) { _ in
-					let hasMultiplePowerTypes = offers
-						.compactMap(\.chargePoint.powerType)
-						.unique()
-						.count > 1
-					let groups = chargePointGroups(for: hasMultiplePowerTypes ? selectedPowerType : nil)
-
 					VStack(spacing: 0) {
-						if hasMultiplePowerTypes {
-							PowerTypeSelector(selection: $selectedPowerType)
-						}
-						ForEach(groups) { group in
-							ForEach(group.offers) { offers in
-								chargePointButton(for: offers)
-									.overlay {
-										loadingOverlay(show: processingOffer?.id == offers.id)
-									}
-							}
-							.buttonStyle(ChargePointButtonStyle())
-							.foregroundStyle(.primaryContent)
-							if group != groups.last {
-								Divider()
-									.padding(.leading, .M)
-							}
+						ForEach(offers) { offer in
+							chargePointButton(for: offer)
+								.overlay {
+									loadingOverlay(show: processingOffer?.id == offer.id)
+								}
+							Divider()
+								.padding(.leading, .M)
 						}
 					}
-					.animation(.default, value: groups)
+					.buttonStyle(ChargePointButtonStyle())
+					.foregroundStyle(.primaryContent)
 					.animation(.bouncy, value: processingOffer)
 				}
-			}
-			.overlay(alignment: .top) {
-				Color.clear.frame(height: 0)
-					.scrollPositionReader($offersSectionOrigin, in: "ScrollView")
 			}
 			.frame(maxWidth: .infinity)
 		}
@@ -143,7 +118,7 @@ extension ChargeOfferDetailFeature {
 				if show {
 					LinearGradient(
 						stops: [
-							Gradient.Stop(color: .container, location: 0),
+							Gradient.Stop(color: .canvas, location: 0),
 							Gradient.Stop(color: .clear, location: 1),
 						],
 						startPoint: .trailing,
@@ -186,16 +161,16 @@ extension ChargeOfferDetailFeature {
 							.fill(Color.success)
 					)
 
-				let priceLabel = Text(offer.price.pricePerKWh.formatted() + " / kWh")
+				let priceLabel = Text(offer.price.pricePerKWh.formatted())
 
 				let originalPriceLabel: Text? = {
 					if let originalPrice = offer.originalPrice?.pricePerKWh {
-						return Text(originalPrice.formatted() + " / kWh")
+						return Text(originalPrice.formatted())
 					}
 					return nil
 				}()
 
-				let connectorTitle: String = {
+				let connectorTitle: String? = {
 					if let connector = chargePoint.connectors.sorted().first {
 						if connector == .type2 {
 							return "Type 2"
@@ -204,12 +179,9 @@ extension ChargeOfferDetailFeature {
 					} else if let powerType = chargePoint.powerType {
 						return powerType.localizedTitle
 					} else {
-						return ""
+						return nil
 					}
 				}()
-
-				let powerString = chargePoint.maxPowerInKw
-					.formatted(.number.precision(.fractionLength(0))) + "kW"
 
 				VStack(alignment: .leading, spacing: Size.XXS.size) {
 					// Row 1: EVSE badge on the left, price on the right
@@ -235,10 +207,14 @@ extension ChargeOfferDetailFeature {
 
 					HStack(alignment: .firstTextBaseline) {
 						Spacer()
-						Text("\(connectorTitle) • \(powerString)")
-							.typography(.copy(size: .small))
-							.foregroundStyle(.secondaryContent)
+						if let connectorTitle {
+							Text("\(connectorTitle) • \(chargePoint.maxPowerInKWFormatted)")
+						} else {
+							Text(chargePoint.maxPowerInKWFormatted)
+						}
 					}
+					.typography(.copy(size: .small))
+					.foregroundStyle(.secondaryContent)
 				}
 				.withChevron()
 				.padding(.M)
@@ -274,47 +250,10 @@ extension ChargeOfferDetailFeature {
 				.padding(.horizontal, 16)
 				.padding(.vertical, 16)
 		}
-
-		// MARK: - Helpers
-
-		private func chargePointGroups(for powerType: PowerType? = nil) -> [ChargePointGroup] {
-			guard let offers = offers.data else {
-				return []
-			}
-
-			return offers.compactMap { offer -> ChargePointGroup? in
-				// Filter by selected power type if needed
-				let chargePointPowerType = offer.chargePoint.powerType ?? .ac
-				if let powerType, chargePointPowerType != powerType {
-					return nil
-				}
-
-				return ChargePointGroup(offers: [offer], pricePerKWh: offer.price.pricePerKWh)
-			}
-		}
 	}
 }
 
 // MARK: - Helpers
-
-private struct ChargePointGroup: Identifiable, Equatable {
-	package var id: String {
-		"\(pricePerKWh.amount)+\(offers.map(\.evseId))"
-	}
-
-	package let offers: [ChargeOffer]
-	package let pricePerKWh: Currency
-	package let joinedEvseIdString: String
-
-	package init(
-		offers: [ChargeOffer],
-		pricePerKWh: Currency
-	) {
-		self.offers = offers
-		self.pricePerKWh = pricePerKWh
-		joinedEvseIdString = offers.map { $0.evseId }.sorted().joined()
-	}
-}
 
 @available(iOS 16.0, *)
 private struct AvailabilityPill: View {
@@ -357,7 +296,6 @@ private struct ChargePointButtonStyle: ButtonStyle {
 						.opacity(0.2)
 					ChargeOfferDetailFeature.ChargePointSection(
 						offers: .loaded([.mockAvailable, .mockUnavailable, .mockOutOfService]),
-						offersSectionOrigin: .constant(.zero),
 						processingOffer: .mockAvailable
 					) { _ in } chargeSessionAction: {}
 				}
