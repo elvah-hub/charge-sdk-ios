@@ -97,6 +97,7 @@ package extension PricingScheduleViewComponent {
 
 		@ViewBuilder private func availabilityRow(reference: Date) -> some View {
 			let dayText = Text(relativeDayLabel(for: dataset.day), bundle: .elvahCharge)
+			let isYesterday = Calendar.current.isDateInYesterday(dataset.day)
 
 			AdaptiveHStack(
 				horizontalAlignment: .leading,
@@ -122,6 +123,7 @@ package extension PricingScheduleViewComponent {
 				}
 				OfferBadge(state: currentBadgeState(reference: reference), showsTimeRange: selectedMoment == nil)
 					.lineLimit(1)
+					.opacity(isYesterday && selectedMoment == nil ? 0 : 1)
 			}
 		}
 
