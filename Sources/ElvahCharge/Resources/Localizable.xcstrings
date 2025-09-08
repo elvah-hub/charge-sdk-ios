@@ -219,6 +219,12 @@
         }
       }
     },
+    "22 kW" : {
+
+    },
+    "50 kW" : {
+
+    },
     "AC" : {
       "comment" : "ac_label",
       "localizations" : {
@@ -603,6 +609,9 @@
           }
         }
       }
+    },
+    "Charge now" : {
+
     },
     "Charge Now" : {
       "comment" : "discover_button",
@@ -1293,7 +1302,7 @@
     "Later" : {
 
     },
-    "Live pricing" : {
+    "Live Pricing" : {
 
     },
     "Loading data…" : {
@@ -1659,6 +1668,9 @@
           }
         }
       }
+    },
+    "Other charge points" : {
+
     },
     "Our Terms of Service and Charging as well as our Privacy Policy apply" : {
       "comment" : "terms_and_conditions_text",
