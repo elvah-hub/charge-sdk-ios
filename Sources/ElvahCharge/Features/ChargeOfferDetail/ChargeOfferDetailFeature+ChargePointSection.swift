@@ -15,6 +15,7 @@ extension ChargeOfferDetailFeature {
 		@Default(.chargeSessionContext) private var chargeSessionContext
 		@State private var selectedPowerType: PowerType
 		@Binding private var offersSectionOrigin: CGPoint
+		private var largestCommonPrefix: String
 		private var offers: LoadableState<[ChargeOffer]>
 		private var processingOffer: ChargeOffer?
 		private var offerAction: Action
@@ -32,8 +33,8 @@ extension ChargeOfferDetailFeature {
 			_offersSectionOrigin = offersSectionOrigin
 			self.processingOffer = processingOffer
 			self.offerAction = offerAction
-			self.offerAction = offerAction
 			self.chargeSessionAction = chargeSessionAction
+			largestCommonPrefix = offers.data?.largestCommonEvseIdPrefix ?? ""
 			_selectedPowerType = State(initialValue: initialPowerTypeSelection ?? .ac)
 		}
 
@@ -164,68 +165,79 @@ extension ChargeOfferDetailFeature {
 			Button {
 				offerAction(offer)
 			} label: {
-				let evseIdLabel = Text(chargePoint.evseId)
+				// Determine the label for the charge point identifier
+				let evseDisplayText: String = {
+					if let physicalReference = chargePoint.physicalReference, physicalReference.isEmpty == false {
+						return physicalReference
+					}
+					if chargePoint.evseId.hasPrefix(largestCommonPrefix) {
+						return String(chargePoint.evseId.dropFirst(largestCommonPrefix.count))
+					}
+					return chargePoint.evseId
+				}()
+
+				let evseIdLabel = Text(verbatim: evseDisplayText)
 					.typography(.copy(size: .medium), weight: .bold)
+					.foregroundStyle(.onSuccess)
+					.padding(.horizontal, .XS)
+					.padding(.vertical, .XXS)
+					.background(
+						RoundedRectangle(cornerRadius: 4)
+							.fill(Color.success)
+					)
 
 				let priceLabel = Text(offer.price.pricePerKWh.formatted() + " / kWh")
-					.typography(.copy(size: .medium), weight: .bold)
-					.foregroundStyle(.brand)
 
-				let maxPowerLabel = Text(chargePoint.maxPowerInKWFormatted)
-					.typography(.copy(size: .small))
-
-				let offerEndTimer = TimelineView(.periodic(from: .now, by: 1)) { context in
-					OfferEndLabel(
-						offer: offer,
-						referenceDate: context.date,
-						prefix: "Offer ends in ",
-						primaryColor: .secondaryContent
-					)
-					.typography(.copy(size: .small), weight: .bold)
-					.multilineTextAlignment(dynamicTypeSize.isAccessibilitySize ? .leading : .trailing)
-				}
-
-				let PriceLayout = dynamicTypeSize.isAccessibilitySize || offer.evseId.count > 15
-					? AnyLayout(
-						VStackLayout(alignment: dynamicTypeSize.isAccessibilitySize ? .leading : .trailing)
-					)
-					: AnyLayout(HStackLayout())
-
-				HStack {
-					VStack(alignment: .leading, spacing: Size.XXS.size) {
-						HStack(alignment: .firstTextBaseline) {
-							if dynamicTypeSize.isAccessibilitySize == false {
-								evseIdLabel
-								Spacer()
-							}
-							if offer.isDiscounted {
-								PriceLayout {
-									if let originalPrice = offer.originalPrice?.pricePerKWh {
-										Text(originalPrice.formatted() + " / kWh")
-											.typography(.copy(size: .small), weight: .regular)
-											.foregroundStyle(.secondaryContent)
-											.strikethrough()
-									}
-									priceLabel
-								}
-							}
-						}
-						if dynamicTypeSize.isAccessibilitySize {
-							evseIdLabel
-						}
-						AdaptiveHStack(horizontalAlignment: .leading) { isHorizontalStack in
-							maxPowerLabel
-							if isHorizontalStack {
-								Spacer()
-							}
-							if offer.isDiscounted {
-								offerEndTimer
-							}
-						}
-						.frame(maxWidth: .infinity, alignment: .leading)
+				let originalPriceLabel: Text? = {
+					if let originalPrice = offer.originalPrice?.pricePerKWh {
+						return Text(originalPrice.formatted() + " / kWh")
 					}
-					if offer.isDiscounted == false {
-						priceLabel
+					return nil
+				}()
+
+				let connectorTitle: String = {
+					if let connector = chargePoint.connectors.sorted().first {
+						if connector == .type2 {
+							return "Type 2"
+						}
+						return connector.localizedTitle
+					} else if let powerType = chargePoint.powerType {
+						return powerType.localizedTitle
+					} else {
+						return ""
+					}
+				}()
+
+				let powerString = chargePoint.maxPowerInKw
+					.formatted(.number.precision(.fractionLength(0))) + "kW"
+
+				VStack(alignment: .leading, spacing: Size.XXS.size) {
+					// Row 1: EVSE badge on the left, price on the right
+					HStack(alignment: .firstTextBaseline) {
+						evseIdLabel
+						Spacer()
+						if offer.isDiscounted, let original = originalPriceLabel {
+							HStack(spacing: Size.XS.size) {
+								priceLabel
+									.typography(.copy(size: .medium), weight: .bold)
+									.foregroundStyle(.primaryContent)
+								original
+									.typography(.copy(size: .small), weight: .regular)
+									.foregroundStyle(.secondaryContent)
+									.strikethrough()
+							}
+						} else {
+							priceLabel
+								.typography(.copy(size: .medium), weight: .bold)
+								.foregroundStyle(.primaryContent)
+						}
+					}
+
+					HStack(alignment: .firstTextBaseline) {
+						Spacer()
+						Text("\(connectorTitle) • \(powerString)")
+							.typography(.copy(size: .small))
+							.foregroundStyle(.secondaryContent)
 					}
 				}
 				.withChevron()

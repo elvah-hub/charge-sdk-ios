@@ -132,15 +132,15 @@ package extension ChargeOffer {
 	static func simulation(evseId: String) -> ChargeOffer {
 		let chargePoint = ChargePoint.simulation(evseId: evseId)
 		let basePrice = ChargePrice.randomizedPrice()
-		
+
 		// Randomly determine if this should be a campaign offer (30% chance)
-		let isCampaign = Double.random(in: 0...1) < 0.3
-		
+		let isCampaign = Double.random(in: 0 ... 1) < 0.3
+
 		let (finalPrice, originalPrice, offerType): (ChargePrice, ChargePrice?, OfferType)
-		
+
 		if isCampaign {
 			let campaignPrice = ChargePrice.campaignPrice(from: basePrice)
-			let campaignEndDate = Date().addingTimeInterval(Double.random(in: 3600...604800))
+			let campaignEndDate = Date().addingTimeInterval(Double.random(in: 3600 ... 604_800))
 			finalPrice = campaignPrice
 			originalPrice = basePrice
 			offerType = .campaign(CampaignInfo(endDate: campaignEndDate))
@@ -149,7 +149,7 @@ package extension ChargeOffer {
 			originalPrice = nil
 			offerType = .standard
 		}
-		
+
 		return ChargeOffer(
 			chargePoint: chargePoint,
 			price: finalPrice,
@@ -197,5 +197,12 @@ package extension [ChargeOffer] {
 
 	var earliestEndingOffer: ChargeOffer? {
 		sorted(using: KeyPathComparator(\.price.pricePerKWh)).first
+	}
+
+	/// The largest common prefix across all offer EVSE identifiers.
+	///
+	/// Returns an empty string when the collection is empty or when no common prefix exists.
+	var largestCommonEvseIdPrefix: String {
+		map(\.evseId).largestCommonPrefix()
 	}
 }

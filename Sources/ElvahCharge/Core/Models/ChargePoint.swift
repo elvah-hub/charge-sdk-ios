@@ -250,3 +250,14 @@ package extension ChargePoint {
 		powerType: .dc
 	)
 }
+
+// MARK: - Collection Helpers
+
+package extension [ChargePoint] {
+	/// The largest common prefix across all EVSE identifiers in the collection.
+	///
+	/// Returns an empty string when the collection is empty or when no common prefix exists.
+	var largestCommonEvseIdPrefix: String {
+		map(\.evseId).largestCommonPrefix()
+	}
+}
