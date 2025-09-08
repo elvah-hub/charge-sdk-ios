@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0]
+
+### Bug Fixes
+- Fixed a bug where charge points in the charge offer detail screen would not be tappable when no charge site was provided
+
 ## [0.3.0]
 
 ### Additions

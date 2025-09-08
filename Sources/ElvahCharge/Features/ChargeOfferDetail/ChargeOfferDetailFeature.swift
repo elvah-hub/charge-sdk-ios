@@ -181,9 +181,7 @@ package struct ChargeOfferDetailFeature: View {
 	}
 
 	private func handleChargePointTap(for offer: ChargeOffer) {
-		guard let site = site.data else {
-			return
-		}
+		let site = site.data ?? offer.site
 
 		$paymentInitiation.run {
 			defer { processingOffer = nil }
