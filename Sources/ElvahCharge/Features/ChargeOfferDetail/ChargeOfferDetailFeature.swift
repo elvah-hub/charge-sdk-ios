@@ -2,12 +2,6 @@
 
 import SwiftUI
 
-/*
-
- Is this not just charge point selection feature (without the site header)?
-
- */
-
 @available(iOS 16.0, *)
 package struct ChargeOfferDetailFeature: View {
 	@Environment(\.dismiss) private var dismiss
