@@ -6,6 +6,9 @@ import SwiftUI
 package extension PricingScheduleViewComponent {
 	/// Header view summarizing the current pricing state for the selected day.
 	struct Summary: View {
+		/// Controls presentation of the "More Prices" sheet.
+		@State private var showOtherPricesSheet: Bool = false
+
 		/// The dataset that the drives the summary.
 		private var dataset: DailyPriceChartData
 
@@ -33,13 +36,17 @@ package extension PricingScheduleViewComponent {
 					availabilityRow(reference: reference)
 				}
 				.frame(maxWidth: .infinity, alignment: .leading)
+				.animation(.default, value: context.date)
+			}
+			.sheet(isPresented: $showOtherPricesSheet) {
+				MorePricesSheetContent()
 			}
 		}
 
 		@ViewBuilder private func headerRow() -> some View {
-			AdaptiveHStack(horizontalAlignment: .leading, verticalAlignment: .center, spacing: Size.XS.size) { isHorizontal in
+			AdaptiveHStack(horizontalAlignment: .leading, verticalAlignment: .center, spacing: Size.XXS.size) { isHorizontal in
 				HStack(spacing: Size.XXS.size) {
-					Text("Live pricing", bundle: .elvahCharge)
+					Text("Live Pricing", bundle: .elvahCharge)
 						.typography(.copy(size: .medium), weight: .bold)
 						.foregroundStyle(.secondaryContent)
 						.contentTransition(.interpolate)
@@ -47,11 +54,18 @@ package extension PricingScheduleViewComponent {
 				if isHorizontal {
 					Spacer()
 				}
-				HStack(spacing: Size.XXS.size) {
-					Text("CCS, Very fast (350 kW)", bundle: .elvahCharge)
-					Image(systemName: "chevron.down")
+				Button {
+					showOtherPricesSheet = true
+				} label: {
+					HStack(spacing: Size.XXXS.size) {
+						Text("CCS, Very fast (350 kW)")
+							.typography(.copy(size: .medium))
+							.foregroundStyle(.primaryContent)
+						Image(.chevronSmallDown)
+					}
 				}
-				.foregroundStyle(.primaryContent)
+				.buttonStyle(.plain)
+				.foregroundStyle(.secondaryContent)
 				.typography(.copy(size: .small), weight: .regular)
 			}
 		}
@@ -60,21 +74,23 @@ package extension PricingScheduleViewComponent {
 			let price = PricingComputation.currentPrice(at: reference, in: dataset)
 			let discounted = PricingComputation.isDiscounted(at: reference, in: dataset)
 
-			AdaptiveHStack(horizontalAlignment: .leading, verticalAlignment: .center, spacing: Size.S.size) {
-				Text("\(Currency(price).formatted()) /kWh", bundle: .elvahCharge)
-					.typography(.copy(size: .xLarge), weight: .bold)
-					.monospacedDigit()
-					.foregroundStyle(discounted ? .brand : .primaryContent)
-					.contentTransition(.numericText())
-
-				if discounted {
-					Text("\(dataset.basePrice.formatted()) /kWh", bundle: .elvahCharge)
-						.typography(.copy(size: .medium), weight: .regular)
+			VStack(alignment: .leading, spacing: Size.XXS.size) {
+				AdaptiveHStack(horizontalAlignment: .leading, verticalAlignment: .center, spacing: Size.XXS.size) {
+					Text("\(Currency(price).formatted()) /kWh", bundle: .elvahCharge)
+						.typography(.copy(size: .xLarge), weight: .bold)
 						.monospacedDigit()
-						.strikethrough(true, pattern: .solid)
-						.foregroundStyle(.secondaryContent)
+						.foregroundStyle(discounted ? .brand : .primaryContent)
 						.contentTransition(.numericText())
-						.transition(.opacity.combined(with: .scale(scale: 1.2)))
+
+					if discounted {
+						Text("\(dataset.basePrice.formatted()) /kWh", bundle: .elvahCharge)
+							.typography(.copy(size: .medium), weight: .regular)
+							.monospacedDigit()
+							.strikethrough(true, pattern: .solid)
+							.foregroundStyle(.secondaryContent)
+							.contentTransition(.numericText())
+							.transition(.opacity.combined(with: .scale(scale: 1.2)))
+					}
 				}
 			}
 		}
@@ -92,7 +108,7 @@ package extension PricingScheduleViewComponent {
 				   let range = PricingComputation.segmentRange(containing: moment, in: dataset) {
 					Text("\(dayText) \(timeRangeText(range))", bundle: .elvahCharge)
 						.typography(.copy(size: .medium), weight: .bold)
-						.foregroundStyle(.primaryContent)
+						.foregroundStyle(.secondaryContent)
 						.contentTransition(.numericText())
 						.monospacedDigit()
 						.transition(.opacity.combined(with: .scale(scale: 0.8)))
@@ -100,7 +116,7 @@ package extension PricingScheduleViewComponent {
 				} else {
 					dayText
 						.typography(.copy(size: .medium), weight: .bold)
-						.foregroundStyle(.primaryContent)
+						.foregroundStyle(.secondaryContent)
 						.transition(.opacity.combined(with: .scale(scale: 0.8)))
 						.layoutPriority(1)
 				}
@@ -155,18 +171,21 @@ package extension PricingScheduleViewComponent {
 		}
 
 		/// Returns a localized label for a given day relative to today.
+		///
+		/// When no specific moment is selected and the given day is today,
+		/// the label reads "Now" to reflect the live state.
 		private func relativeDayLabel(for day: Date) -> LocalizedStringKey {
 			let calendar = Calendar.current
 			if calendar.isDateInYesterday(day) {
 				return "Yesterday"
 			}
 			if calendar.isDateInToday(day) {
-				return "Today"
+				return selectedMoment == nil ? "Now" : "Today"
 			}
 			if calendar.isDateInTomorrow(day) {
 				return "Tomorrow"
 			}
-			
+
 			return "Today"
 		}
 

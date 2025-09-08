@@ -5,48 +5,62 @@ import SwiftUI
 /// Daily pricing composite view hosting a summary header and a three-day price chart pager.
 @available(iOS 16.0, *)
 package struct PricingScheduleViewComponent: View {
-	/// Precomputed chart entries to avoid recomputation on redraw.
-	package var chartEntries: [PricingScheduleChartEntry]
+	@ObservedObject private var router: PricingScheduleView.Router
+
+	/// Cached chart entries per relative day, computed when `schedule` changes.
+	@State private var chartEntries: [PricingScheduleChartEntry] = []
 
 	/// Currently selected day in the pager. Defaults to today if available.
-	@State private var selectedDay: PricingSchedule.RelativeDay
+	@State private var selectedDay: PricingSchedule.RelativeDay = .today
 
 	/// Selected moment within the chart to reflect in the summary.
 	@State private var selectedMoment: Date?
 
+	/// The pricing schedule to visualize.
+	private var schedule: ChargeSiteSchedule
+
 	/// Create the component with precomputed chart entries.
-	package init(chartEntries: [PricingScheduleChartEntry]) {
-		self.chartEntries = chartEntries
-		let availableDays = chartEntries.map(\.day)
-		let initial = availableDays.contains(.today) ? .today : (availableDays.first ?? .today)
-		_selectedDay = State(initialValue: initial)
+	package init(schedule: ChargeSiteSchedule, router: PricingScheduleView.Router) {
+		self.schedule = schedule
+		self.router = router
 	}
 
 	package var body: some View {
-		VStack(spacing: 12) {
+		VStack(spacing: Size.L.size) {
 			if let current = chartEntries.first(where: { $0.day == selectedDay })?.dataset {
 				Summary(dataset: current, selectedMoment: $selectedMoment).padding(.horizontal)
 					.animation(.default, value: selectedDay)
 					.animation(.default, value: selectedMoment)
 			}
 
-			TabView(selection: $selectedDay) {
-				ForEach(chartEntries) { entry in
-					PriceChart(data: entry.dataset, selectedMoment: $selectedMoment)
-						.padding(.vertical, 4)
-						.frame(maxWidth: .infinity)
-						.tag(entry.day)
+			VStack(spacing: Size.M.size) {
+				TabView(selection: $selectedDay) {
+					ForEach(chartEntries) { entry in
+						PriceChart(data: entry.dataset, selectedMoment: $selectedMoment)
+							.padding(.vertical, 4)
+							.frame(maxWidth: .infinity)
+							.tag(entry.day)
+					}
+				}
+				.frame(height: 140)
+				.tabViewStyle(.page(indexDisplayMode: .never))
+				.animation(.default, value: selectedDay)
+				.animation(.default, value: selectedMoment)
+
+				if chartEntries.count >= 2 {
+					dayPicker(chartEntries: chartEntries, selection: $selectedDay)
+						.padding(.horizontal)
 				}
 			}
-			.frame(height: 150)
-			.tabViewStyle(.page(indexDisplayMode: .never))
-			.animation(.default, value: selectedDay)
-			.animation(.default, value: selectedMoment)
 
-			if chartEntries.count >= 2 {
-				dayPicker(chartEntries: chartEntries, selection: $selectedDay)
-					.padding(.horizontal)
+			Button("Charge now", icon: .bolt) {
+				router.chargeOfferDetail = schedule
 			}
+				.buttonStyle(.primary)
+				.padding(.horizontal)
+		}
+		.task(id: schedule) {
+			chartEntries = schedule.chartEntries()
 		}
 		.onChange(of: selectedDay) { _ in
 			// Reset any specific time selection when switching days
@@ -92,8 +106,7 @@ package struct PricingScheduleViewComponent: View {
 
 @available(iOS 17.0, *)
 #Preview {
-	let schedule = PricingSchedule.mock
-	let entries = schedule.chartEntries()
-	PricingScheduleViewComponent(chartEntries: entries)
+	let schedule = ChargeSiteSchedule.mock
+	PricingScheduleView(schedule: schedule)
 		.withFontRegistration()
 }

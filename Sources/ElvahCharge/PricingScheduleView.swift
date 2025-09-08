@@ -2,28 +2,28 @@
 
 import SwiftUI
 
-/// A stateful wrapper around the pricing schedule component that computes and caches chart data.
+#if canImport(Core)
+	import Core
+#endif
+
 public struct PricingScheduleView: View {
-	@StateObject private var router = ChargeBanner.Router()
+	@StateObject private var router = PricingScheduleView.Router()
 
 	/// The pricing schedule to visualize.
-	public var schedule: PricingSchedule
-
-	/// Cached chart entries per relative day, computed when `schedule` changes.
-	@State private var chartEntries: [PricingScheduleChartEntry] = []
+	private var schedule: ChargeSiteSchedule
 
 	/// Create a pricing schedule view.
-	public init(schedule: PricingSchedule) {
+	public init(schedule: ChargeSiteSchedule) {
 		self.schedule = schedule
 	}
 
 	public var body: some View {
 		if #available(iOS 16.0, *) {
-			PricingScheduleViewComponent(chartEntries: chartEntries)
-				.withEnvironmentObjects()
-				.task(id: schedule) { @MainActor in
-					chartEntries = schedule.chartEntries()
+			PricingScheduleViewComponent(schedule: schedule, router: router)
+				.fullScreenCover(item: $router.chargeOfferDetail) { siteSchedule in
+					ChargeOfferDetailRootFeature(site: nil, offers: siteSchedule.chargeSite.offers)
 				}
+				.withEnvironmentObjects()
 		} else {
 			EmptyView()
 		}
@@ -32,11 +32,11 @@ public struct PricingScheduleView: View {
 
 package extension PricingScheduleView {
 	final class Router: BaseRouter {
-		@Published var chargeSiteDetail: ChargeSite?
+		@Published var chargeOfferDetail: ChargeSiteSchedule?
 		@Published var showChargeSession = false
 
 		package func reset() {
-			chargeSiteDetail = nil
+			chargeOfferDetail = nil
 			showChargeSession = false
 		}
 	}

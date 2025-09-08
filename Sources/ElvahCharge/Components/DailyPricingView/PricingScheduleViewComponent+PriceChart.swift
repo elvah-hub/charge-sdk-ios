@@ -30,6 +30,7 @@ package extension PricingScheduleViewComponent {
 						currentTimeMarker(now: context.date)
 					}
 				}
+				.animation(.default, value: context.date)
 				.animation(.default, value: selectedMoment)
 				.chartOverlay { proxy in
 					GeometryReader { geometry in
