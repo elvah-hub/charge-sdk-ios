@@ -9,11 +9,11 @@ struct StartChargeInfoComponent: View {
 
 	var body: some View {
 		BottomSheetComponent(title: "Charge") {
-			VStack(alignment: .leading, spacing: Size.S.size) {
+			VStack(alignment: .leading, spacing: .size(.S)) {
 				Text("Start your session to unlock", bundle: .elvahCharge)
 					.typography(.copy(size: .xLarge), weight: .bold)
 					.fixedSize(horizontal: false, vertical: true)
-				VStack(alignment: .leading, spacing: Size.XXS.size) {
+				VStack(alignment: .leading, spacing: .size(.XXS)) {
 					makeStep(number: "1", title: "Start your charging session to unlock the charge point")
 					makeStep(number: "2", title: "Plug in your charging cable")
 				}

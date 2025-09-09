@@ -33,7 +33,7 @@ extension ChargeOfferDetailFeature {
 		}
 
 		var body: some View {
-			VStack(alignment: .leading, spacing: Size.M.size) {
+			VStack(alignment: .leading, spacing: .size(.M)) {
 				switch offers {
 				case .absent,
 				     .loading,
@@ -90,7 +90,7 @@ private struct ChargeOfferDetailOfferBanner: View {
 			.dynamicTypeSize(...(.accessibility1))
 		} else if offers.contains(where: { $0.isDiscounted }) {
 			CustomSection {
-				HStack(spacing: Size.S.size) {
+				HStack(spacing: .size(.S)) {
 					if dynamicTypeSize.isAccessibilitySize == false {
 						Image(.discounting)
 					}
@@ -210,7 +210,7 @@ private struct ChargePointSearchField: View {
 	@FocusState var isSearchFieldFocused: Bool
 
 	var body: some View {
-		HStack(spacing: Size.S.size) {
+		HStack(spacing: .size(.S)) {
 			Image(systemName: "magnifyingglass")
 				.accessibilityHidden(true)
 			TextField(
@@ -307,12 +307,12 @@ private struct ChargePointRowButton: View {
 
 			let connectorTitle: String? = connectorTitle(for: chargePoint)
 
-			VStack(alignment: .leading, spacing: Size.XXS.size) {
+			VStack(alignment: .leading, spacing: .size(.XXS)) {
 				HStack(alignment: .firstTextBaseline) {
 					evseIdLabel
 					Spacer()
 					if offer.isDiscounted, let original = originalPriceLabel {
-						HStack(spacing: Size.XS.size) {
+						HStack(spacing: .size(.XS)) {
 							priceLabel
 								.typography(.copy(size: .medium), weight: .bold)
 								.foregroundStyle(.primaryContent)
@@ -378,7 +378,7 @@ private struct ChargePointNoResultsView: View {
 	@Binding var searchText: String
 
 	var body: some View {
-		VStack(alignment: .center, spacing: Size.S.size) {
+		VStack(alignment: .center, spacing: .size(.S)) {
 			Text("No results for \(Text(verbatim: searchText))", bundle: .elvahCharge)
 				.typography(.copy(size: .xLarge), weight: .bold)
 				.foregroundStyle(.primaryContent)

@@ -2073,6 +2073,7 @@
     },
     "Route" : {
       "comment" : "route_label",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

@@ -7,7 +7,7 @@ struct MissingChargeContextView: View {
 	@Environment(\.navigationRoot) private var navigationRoot
 
 	var body: some View {
-		VStack(spacing: Size.M.size) {
+		VStack(spacing: .size(.M)) {
 			Image(systemName: "bolt.slash.fill")
 				.font(.themed(size: 60))
 				.symbolRenderingMode(.hierarchical)

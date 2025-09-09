@@ -5,11 +5,11 @@ import SwiftUI
 @available(iOS 16.0, *)
 struct DisclaimerFooter: View {
 	var body: some View {
-		HStack(spacing: Size.S.size) {
+		HStack(spacing: .size(.S)) {
 			Text("Powered by", bundle: .elvahCharge)
 				.foregroundStyle(.secondaryContent)
 				.typography(.copy(size: .small))
-			HStack(spacing: Size.XS.size) {
+			HStack(spacing: .size(.XS)) {
 				Image(.diamond)
 					.foregroundStyle(.brand)
 				Image(.elvahTextLogo)

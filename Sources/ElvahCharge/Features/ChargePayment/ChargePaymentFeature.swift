@@ -122,7 +122,7 @@ struct ChargePaymentFeature: View {
 
 	@ViewBuilder private var footer: some View {
 		FooterView {
-			VStack(spacing: Size.L.size) {
+			VStack(spacing: .size(.L)) {
 				Button {
 					if request.signedOffer.isAvailable {
 						$payment.run {

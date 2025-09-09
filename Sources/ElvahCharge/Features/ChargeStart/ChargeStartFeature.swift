@@ -19,7 +19,7 @@ struct ChargeStartFeature: View {
 	@ObservedObject var router: Router
 
 	var body: some View {
-		VStack(spacing: Size.XXXL.size) {
+		VStack(spacing: .size(.XXXL)) {
 			Spacer()
 			header
 			requestInformation
@@ -35,7 +35,7 @@ struct ChargeStartFeature: View {
 		.animation(.default, value: showSuccessBanner)
 		.safeAreaInset(edge: .bottom) {
 			FooterView {
-				VStack(spacing: Size.L.size) {
+				VStack(spacing: .size(.L)) {
 					startSlider
 				}
 			}
@@ -70,7 +70,7 @@ struct ChargeStartFeature: View {
 	}
 
 	@ViewBuilder private var successBanner: some View {
-		HStack(spacing: Size.M.size) {
+		HStack(spacing: .size(.M)) {
 			Image(.checkmarkCircle)
 			Text("Authorization successful", bundle: .elvahCharge)
 				.typography(.copy(size: .small), weight: .bold)
@@ -109,7 +109,7 @@ struct ChargeStartFeature: View {
 	}
 
 	@ViewBuilder private var requestInformation: some View {
-		VStack(spacing: Size.M.size) {
+		VStack(spacing: .size(.M)) {
 			ChargePointIdentifierView(point: request.signedOffer.chargePoint)
 			Button("Is the charge point locked?", bundle: .elvahCharge) {
 				router.startSessionInfo = .init(chargePoint: request.signedOffer.chargePoint)

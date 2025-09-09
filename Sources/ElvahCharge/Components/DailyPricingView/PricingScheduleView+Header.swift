@@ -18,7 +18,7 @@ package extension PricingScheduleView {
 		}
 
 		package var body: some View {
-			VStack(alignment: .leading, spacing: Size.XXS.size) {
+			VStack(alignment: .leading, spacing: .size(.XXS)) {
 				Text(title)
 					.typography(.title(size: .small), weight: .bold)
 					.foregroundStyle(.primaryContent)

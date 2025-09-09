@@ -30,7 +30,7 @@ struct ChargeSessionStoppedComponent: View {
 
 	@ViewBuilder private var content: some View {
 		ScrollView {
-			VStack(spacing: Size.XL.size) {
+			VStack(spacing: .size(.XL)) {
 				CPOLogo(url: chargeSessionContext?.organisationDetails.logoUrl)
 				ActivityInfoComponent(state: .success, title: nil, message: nil)
 				CustomSectionStack {
@@ -56,7 +56,7 @@ struct ChargeSessionStoppedComponent: View {
 
 	@ViewBuilder private func siteInformation(title: String, address: Site.Address) -> some View {
 		CustomSection {
-			VStack(alignment: .leading, spacing: Size.XXS.size) {
+			VStack(alignment: .leading, spacing: .size(.XXS)) {
 				Text(title)
 					.typography(.title(size: .small), weight: .bold)
 				Text(address.formatted())
@@ -76,7 +76,7 @@ struct ChargeSessionStoppedComponent: View {
 
 	@ViewBuilder private var paymentSummaryLoadingSection: some View {
 		CustomSection {
-			VStack(alignment: .trailing, spacing: Size.XS.size) {
+			VStack(alignment: .trailing, spacing: .size(.XS)) {
 				AdaptiveHStack { isHorizontalStack in
 					Text("Payment Summary", bundle: .elvahCharge)
 						.foregroundStyle(.secondaryContent)
@@ -113,7 +113,7 @@ struct ChargeSessionStoppedComponent: View {
 
 	@ViewBuilder private func chargeAmountSection(consumedKWh: KilowattHours) -> some View {
 		CustomSection {
-			VStack(alignment: .leading, spacing: Size.XS.size) {
+			VStack(alignment: .leading, spacing: .size(.XS)) {
 				Text("kWh charged", bundle: .elvahCharge)
 					.foregroundStyle(.secondaryContent)
 					.typography(.copy(size: .small))
@@ -126,7 +126,7 @@ struct ChargeSessionStoppedComponent: View {
 
 	@ViewBuilder private func chargeDurationSection(duration: Duration) -> some View {
 		CustomSection {
-			VStack(alignment: .leading, spacing: Size.XS.size) {
+			VStack(alignment: .leading, spacing: .size(.XS)) {
 				Text("Charging duration", bundle: .elvahCharge)
 					.foregroundStyle(.secondaryContent)
 					.typography(.copy(size: .small))
@@ -139,7 +139,7 @@ struct ChargeSessionStoppedComponent: View {
 
 	@ViewBuilder private func totalCostSection(totalCost: Currency) -> some View {
 		CustomSection {
-			VStack(alignment: .trailing, spacing: Size.XS.size) {
+			VStack(alignment: .trailing, spacing: .size(.XS)) {
 				AdaptiveHStack { isHorizontalStack in
 					Text("Total", bundle: .elvahCharge)
 						.foregroundStyle(.secondaryContent)

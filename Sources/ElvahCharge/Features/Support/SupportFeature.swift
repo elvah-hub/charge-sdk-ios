@@ -71,7 +71,7 @@ struct SupportFeature: View {
 		CPOLogo(url: chargeSessionContext?.organisationDetails.logoUrl)
 		Image(.helpSupport)
 		if let companyName = chargeSessionContext?.organisationDetails.companyName {
-			VStack(spacing: Size.XS.size) {
+			VStack(spacing: .size(.XS)) {
 				Text("Need help or want to give us feedback?", bundle: .elvahCharge)
 					.typography(.title(size: .small), weight: .bold)
 					.foregroundStyle(.primaryContent)

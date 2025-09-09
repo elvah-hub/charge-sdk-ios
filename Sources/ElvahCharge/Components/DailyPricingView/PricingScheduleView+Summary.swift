@@ -30,7 +30,7 @@ package extension PricingScheduleView {
 			TimelineView(.periodic(from: .now, by: 60)) { context in
 				let reference = displayReference(for: context.date)
 
-				VStack(alignment: .leading, spacing: Size.S.size) {
+				VStack(alignment: .leading, spacing: .size(.S)) {
 					headerRow()
 					priceRow(reference: reference)
 					availabilityRow(reference: reference)
@@ -44,8 +44,8 @@ package extension PricingScheduleView {
 		}
 
 		@ViewBuilder private func headerRow() -> some View {
-			AdaptiveHStack(horizontalAlignment: .leading, verticalAlignment: .center, spacing: Size.XXS.size) { isHorizontal in
-				HStack(spacing: Size.XXS.size) {
+			AdaptiveHStack(horizontalAlignment: .leading, verticalAlignment: .center, spacing: .size(.XXS)) { isHorizontal in
+				HStack(spacing: .size(.XXS)) {
 					Text("Live Pricing", bundle: .elvahCharge)
 						.typography(.copy(size: .medium), weight: .bold)
 						.foregroundStyle(.secondaryContent)
@@ -57,7 +57,7 @@ package extension PricingScheduleView {
 				Button {
 					showOtherPricesSheet = true
 				} label: {
-					HStack(spacing: Size.XXXS.size) {
+					HStack(spacing: .size(.XXXS)) {
 						Text("CCS, Very fast (350 kW)")
 							.typography(.copy(size: .medium))
 							.foregroundStyle(.primaryContent)
@@ -74,8 +74,8 @@ package extension PricingScheduleView {
 			let price = PricingComputation.currentPrice(at: reference, in: dataset)
 			let discounted = PricingComputation.isDiscounted(at: reference, in: dataset)
 
-			VStack(alignment: .leading, spacing: Size.XXS.size) {
-				AdaptiveHStack(horizontalAlignment: .leading, verticalAlignment: .center, spacing: Size.XXS.size) {
+			VStack(alignment: .leading, spacing: .size(.XXS)) {
+				AdaptiveHStack(horizontalAlignment: .leading, verticalAlignment: .center, spacing: .size(.XXS)) {
 					Text("\(Currency(price).formatted()) /kWh", bundle: .elvahCharge)
 						.typography(.copy(size: .xLarge), weight: .bold)
 						.monospacedDigit()
@@ -102,7 +102,7 @@ package extension PricingScheduleView {
 			AdaptiveHStack(
 				horizontalAlignment: .leading,
 				verticalAlignment: .center,
-				spacing: Size.S.size,
+				spacing: .size(.S),
 				breakPoint: .xxLarge
 			) {
 				if let moment = selectedMoment,

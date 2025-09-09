@@ -79,7 +79,7 @@ package struct ChargeOfferDetailFeature: View {
 
 	@ViewBuilder private var content: some View {
 		ScrollView {
-			VStack(alignment: .leading, spacing: Size.L.size) {
+			VStack(alignment: .leading, spacing: .size(.L)) {
 				if associatedSite != nil {
 					siteContent
 				}
@@ -132,7 +132,7 @@ package struct ChargeOfferDetailFeature: View {
 			Button {
 				router.showRouteOptions = true
 			} label: {
-				HStack(spacing: Size.XXS.size) {
+				HStack(spacing: .size(.XXS)) {
 					Text(address.formatted())
 						.underline()
 						.typography(.copy(size: .medium))

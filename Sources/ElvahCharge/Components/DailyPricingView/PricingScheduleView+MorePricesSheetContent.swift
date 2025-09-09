@@ -20,9 +20,9 @@ package extension PricingScheduleView {
 		}
 
 		@ViewBuilder private var content: some View {
-			VStack(alignment: .leading, spacing: Size.S.size) {
-				HStack(spacing: Size.S.size) {
-					HStack(spacing: Size.XXS.size) {
+			VStack(alignment: .leading, spacing: .size(.S)) {
+				HStack(spacing: .size(.S)) {
+					HStack(spacing: .size(.XXS)) {
 						Image(.bolt)
 						Text("22 kW", bundle: .elvahCharge)
 					}
@@ -39,8 +39,8 @@ package extension PricingScheduleView {
 
 				Divider()
 
-				HStack(spacing: Size.S.size) {
-					HStack(spacing: Size.XXS.size) {
+				HStack(spacing: .size(.S)) {
+					HStack(spacing: .size(.XXS)) {
 						Image(.bolt)
 						Text("50 kW", bundle: .elvahCharge)
 					}

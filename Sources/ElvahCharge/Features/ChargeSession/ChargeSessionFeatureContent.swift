@@ -28,7 +28,7 @@ extension ChargeSessionFeature {
 						offer: chargeSessionContext.signedOffer.offer
 					)
 				} else {
-					VStack(spacing: Size.XL.size) {
+					VStack(spacing: .size(.XL)) {
 						header
 						page
 					}
@@ -60,7 +60,7 @@ extension ChargeSessionFeature {
 		}
 
 		@ViewBuilder private var footer: some View {
-			VStack(spacing: Size.L.size) {
+			VStack(spacing: .size(.L)) {
 				if showProgressBar {
 					progressBar
 				}
@@ -130,8 +130,8 @@ extension ChargeSessionFeature {
 			case .sessionLoading,
 			     .unauthorized,
 			     .unknownError,
-					 .startRequested,
-					 .startRejected,
+			     .startRequested,
+			     .startRejected,
 			     .started,
 			     .stopRequested,
 			     .stopRejected,

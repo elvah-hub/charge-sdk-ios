@@ -20,7 +20,7 @@ struct AuthenticationExpiredFeature: View {
 			.frame(maxHeight: .infinity)
 			.padding(.horizontal)
 			VStack {
-				VStack(spacing: Size.M.size) {
+				VStack(spacing: .size(.M)) {
 					Button("Understood", bundle: .elvahCharge) {
 						navigationRoot.path = .init()
 					}

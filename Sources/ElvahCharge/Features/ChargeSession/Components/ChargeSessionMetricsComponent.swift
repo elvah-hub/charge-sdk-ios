@@ -15,7 +15,7 @@ struct ChargeSessionMetricsComponent: View {
 
 	var body: some View {
 		ZStack(alignment: .bottom) {
-			VStack(spacing: Size.XXL.size) {
+			VStack(spacing: .size(.XXL)) {
 				consumption
 				duration
 			}
@@ -27,7 +27,7 @@ struct ChargeSessionMetricsComponent: View {
 
 	@ViewBuilder private var consumption: some View {
 		if session.hasConsumption, let formattedConsumedKWh = session.formattedConsumedKWh {
-			VStack(spacing: Size.XXS.size) {
+			VStack(spacing: .size(.XXS)) {
 				Text(formattedConsumedKWh)
 					.contentTransition(.numericText(countsDown: false))
 					.typography(.title(size: .xLarge), weight: .bold)
@@ -42,7 +42,7 @@ struct ChargeSessionMetricsComponent: View {
 	}
 
 	@ViewBuilder private var duration: some View {
-		VStack(spacing: Size.XXS.size) {
+		VStack(spacing: .size(.XXS)) {
 			TimelineView(.periodic(from: .now, by: 1)) { context in
 				var elapsedSeconds: Duration {
 					if let chargeSessionContext {

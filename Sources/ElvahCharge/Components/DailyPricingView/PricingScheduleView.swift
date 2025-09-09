@@ -41,7 +41,7 @@ package struct PricingScheduleView: View {
 	}
 
 	package var body: some View {
-		VStack(spacing: Size.L.size) {
+		VStack(spacing: .size(.L)) {
 			// Header with operator name and address
 			if isOperatorDetailsHidden == false,
 			   let operatorName = schedule.chargeSite.operatorName,
@@ -55,7 +55,7 @@ package struct PricingScheduleView: View {
 					.animation(.default, value: selectedMoment)
 			}
 
-			VStack(spacing: Size.M.size) {
+			VStack(spacing: .size(.M)) {
 				TabView(selection: $selectedDay) {
 					ForEach(chartEntries) { entry in
 						PriceChart(data: entry.dataset, selectedMoment: $selectedMoment)

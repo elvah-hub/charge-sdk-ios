@@ -13,7 +13,7 @@ struct AdaptiveLabeledContentStyle: LabeledContentStyle {
 
 	func makeBody(configuration: Configuration) -> some View {
 		if dynamicTypeSize >= breakPoint {
-			VStack(alignment: .leading, spacing: Size.XS.size) {
+			VStack(alignment: .leading, spacing: .size(.XS)) {
 				configuration.label
 				configuration.content
 			}

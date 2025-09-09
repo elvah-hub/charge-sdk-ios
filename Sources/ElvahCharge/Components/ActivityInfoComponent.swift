@@ -18,14 +18,14 @@ struct ActivityInfoComponent: View {
 	}
 
 	var body: some View {
-		VStack(spacing: Size.XL.size) {
+		VStack(spacing: .size(.XL)) {
 			Color.clear.frame(width: radius, height: radius)
 				.overlay(stateIcon)
 				.background(fillCircle)
 				.overlay(backgroundCircleStroke)
 				.overlay(circleStroke)
 				.onAppear(perform: startRotationAnimation)
-			VStack(spacing: Size.XS.size) {
+			VStack(spacing: .size(.XS)) {
 				if let title {
 					Text(title, bundle: .elvahCharge)
 						.typography(.title(size: .small), weight: .bold)
@@ -219,7 +219,7 @@ private struct PreviewData: View {
 	@State private var showTitle = true
 	@State private var showMessage = true
 	var body: some View {
-		VStack(spacing: Size.XL.size) {
+		VStack(spacing: .size(.XL)) {
 			Picker(selection: $state) {
 				Text(verbatim: "Loading")
 					.tag(ActivityInfoComponent.ActivityState.animating(iconSystemName: nil))

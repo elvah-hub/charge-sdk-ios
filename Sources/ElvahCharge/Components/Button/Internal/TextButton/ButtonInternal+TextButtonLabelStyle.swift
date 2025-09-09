@@ -8,7 +8,7 @@ extension ButtonInternal {
 		@Environment(\.invertedButtonLabel) private var invertedButtonLabel
 
 		func makeBody(configuration: Configuration) -> some View {
-			HStack(alignment: .center, spacing: Size.XS.size) {
+			HStack(alignment: .center, spacing: .size(.XS)) {
 				if invertedButtonLabel {
 					title(with: configuration)
 					configuration.icon
