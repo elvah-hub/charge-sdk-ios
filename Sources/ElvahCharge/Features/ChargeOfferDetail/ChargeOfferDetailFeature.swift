@@ -20,9 +20,22 @@ package struct ChargeOfferDetailFeature: View {
 	@Loadable<Double?> private var routeDistanceToStation
 	@Process private var paymentInitiation
 
-	package init(offers: [ChargeOffer], router: ChargeOfferDetailFeature.Router) {
+	/// Whether to hide operator details in the header.
+	private var isOperatorDetailsHidden = false
+
+	/// Whether to hide the discount banner above the charge points list.
+	private var isDiscountBannerHidden = false
+
+	package init(
+		offers: [ChargeOffer],
+		router: ChargeOfferDetailFeature.Router,
+		hideOperatorDetails: Bool = false,
+		hideDiscountBanner: Bool = false
+	) {
 		_offers = Loadable(wrappedValue: .loaded(offers))
 		self.router = router
+		isOperatorDetailsHidden = hideOperatorDetails
+		isDiscountBannerHidden = hideDiscountBanner
 	}
 
 	package var body: some View {
@@ -101,10 +114,9 @@ package struct ChargeOfferDetailFeature: View {
 		case .error:
 			EmptyView()
 		case let .loaded(site):
-			if let operatorName = site.operatorName, let address = site.address {
+			if isOperatorDetailsHidden == false, let operatorName = site.operatorName, let address = site.address {
 				header(title: operatorName, address: address)
 			}
-			// Removed separate Route button; the address is now interactive
 		}
 	}
 
@@ -113,6 +125,7 @@ package struct ChargeOfferDetailFeature: View {
 			offers: offers,
 			offersSectionOrigin: $scrollPosition,
 			processingOffer: processingOffer,
+			isDiscountBannerHidden: isDiscountBannerHidden,
 			offerAction: { offer in
 				handleChargePointTap(for: offer)
 			},

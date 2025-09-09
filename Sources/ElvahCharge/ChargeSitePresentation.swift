@@ -11,14 +11,17 @@ public extension View {
 	/// one of its adjacent methods.
 	/// - Important: This modifier requires iOS 16.0 or later. On earlier versions, it does nothing to
 	/// the wrapped view.
-	/// - Parameter chargeSite: The binding to a ``ChargeSite`` object.
+	/// - Parameters:
+	///   - chargeSite: The binding to a ``ChargeSite`` object.
+	///   - options: Presentation configuration options. Default is empty set.
 	/// - Returns: A view that presents a charge site detail view using the given ``ChargeSite``
 	/// object.
 	@ViewBuilder func chargePresentation(
-		site chargeSite: Binding<ChargeSite?>
+		site chargeSite: Binding<ChargeSite?>,
+		options: ChargePresentationOptions = []
 	) -> some View {
 		if #available(iOS 16.0, *) {
-			modifier(PresentationViewModifier(chargeSite: chargeSite))
+			modifier(PresentationViewModifier(chargeSite: chargeSite, options: options))
 		} else {
 			self
 		}
@@ -30,13 +33,15 @@ public extension View {
 @available(iOS 16.0, *)
 private struct PresentationViewModifier: ViewModifier {
 	@Binding var chargeSite: ChargeSite?
+	var options: ChargePresentationOptions = []
 
 	func body(content: Content) -> some View {
 		content
 			.fullScreenCover(item: $chargeSite) { chargeSite in
 				ChargeOfferDetailRootFeature(
 					site: chargeSite.site,
-					offers: chargeSite.offers
+					offers: chargeSite.offers,
+					options: options
 				)
 			}
 	}

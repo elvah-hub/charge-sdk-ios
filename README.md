@@ -285,6 +285,23 @@ struct DemoView: View {
 > [!NOTE]
 > All presentation modifiers require iOS 16 or later and will do nothing on earlier versions.
 
+#### Presentation Options
+
+You can configure what is shown in the offer detail presentation using `ChargePresentationOptions`. These options are available on the site and offers presentation modifiers via the `options:` parameter. The default is an empty set, which means nothing is hidden.
+
+- `.hideOperatorDetails`: Hides the operator name and address header.
+- `.hideDiscountBanner`: Hides the promotional discount banner above the charge points list. The current-session banner remains visible.
+
+Examples:
+
+```swift
+// Hide operator details when presenting a single site
+.chargePresentation(site: $selectedSite, options: .hideOperatorDetails)
+
+// Hide both operator details and the discount banner for a list of offers
+.chargePresentation(offers: $chargeOfferList, options: [.hideOperatorDetails, .hideDiscountBanner])
+```
+
 ## Compatibility
 
 You can integrate the SDK into projects that support iOS 15 and above. However, the `ChargeBanner` view requires an iOS 16 (or newer) runtime to function.

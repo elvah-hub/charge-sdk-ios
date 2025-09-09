@@ -34,14 +34,17 @@ public extension View {
 	/// is provided.
 	/// - Important: This modifier requires iOS 16.0 or later. On earlier versions, it does nothing to
 	/// the wrapped view.
-	/// - Parameter chargeOfferList: The binding to a ``ChargeOfferList`` object.
+	/// - Parameters:
+	///   - chargeOfferList: The binding to a ``ChargeOfferList`` object.
+	///   - options: Presentation configuration options. Default is empty set.
 	/// - Returns: A view that presents a charge offer detail view using the given
 	/// ``ChargeOfferList``.
 	@ViewBuilder func chargePresentation(
-		offers chargeOfferList: Binding<ChargeOfferList?>
+		offers chargeOfferList: Binding<ChargeOfferList?>,
+		options: ChargePresentationOptions = []
 	) -> some View {
 		if #available(iOS 16.0, *) {
-			modifier(OffersPresentationViewModifier(chargeOfferList: chargeOfferList))
+			modifier(OffersPresentationViewModifier(chargeOfferList: chargeOfferList, options: options))
 		} else {
 			self
 		}
@@ -66,12 +69,17 @@ private struct PresentationViewModifier: ViewModifier {
 @available(iOS 16.0, *)
 private struct OffersPresentationViewModifier: ViewModifier {
 	@Binding var chargeOfferList: ChargeOfferList?
+	var options: ChargePresentationOptions = []
 
 	func body(content: Content) -> some View {
 		content
 			.fullScreenCover(item: $chargeOfferList) { offerList in
-				ChargeOfferDetailRootFeature(site: offerList.commonSite, offers: offerList.offers)
-					.withEnvironmentObjects()
+				ChargeOfferDetailRootFeature(
+					site: offerList.commonSite,
+					offers: offerList.offers,
+					options: options
+				)
+				.withEnvironmentObjects()
 			}
 	}
 }

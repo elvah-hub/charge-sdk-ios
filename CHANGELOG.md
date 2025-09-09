@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [0.4.0]
 
+### Additions
+- Added configuration options to the charge presentation modifiers that allow you to customize the appearance of the site details page:
+
+	```swift
+	// Hide operator details when presenting a single site
+	.chargePresentation(site: $selectedSite, options: .hideOperatorDetails)
+
+	// Hide both operator details and the discount banner for a list of offers
+	.chargePresentation(offers: $chargeOfferList, options: [.hideOperatorDetails, .hideDiscountBanner])
+	```
+
 ### Bug Fixes
 - Fixed a bug where charge points in the charge offer detail screen would not be tappable when no charge site was provided
 

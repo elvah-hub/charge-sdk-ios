@@ -15,6 +15,7 @@ extension ChargeOfferDetailFeature {
 		@Binding private var offersSectionOrigin: CGPoint
 		private var offers: LoadableState<[ChargeOffer]>
 		private var processingOffer: ChargeOffer?
+		private var isDiscountBannerHidden: Bool = false
 		private var offerAction: Action
 		private var chargeSessionAction: () -> Void
 
@@ -22,12 +23,14 @@ extension ChargeOfferDetailFeature {
 			offers: LoadableState<[ChargeOffer]>,
 			offersSectionOrigin: Binding<CGPoint>,
 			processingOffer: ChargeOffer?,
+			isDiscountBannerHidden: Bool = false,
 			offerAction: @escaping Action,
 			chargeSessionAction: @escaping () -> Void
 		) {
 			self.offers = offers
 			_offersSectionOrigin = offersSectionOrigin
 			self.processingOffer = processingOffer
+			self.isDiscountBannerHidden = isDiscountBannerHidden
 			self.offerAction = offerAction
 			self.chargeSessionAction = chargeSessionAction
 		}
@@ -42,8 +45,12 @@ extension ChargeOfferDetailFeature {
 						.padding(.horizontal, .M)
 						.padding(.vertical, .M)
 				case let .loaded(loadedOffers):
-					ChargeOfferDetailOfferBanner(offers: loadedOffers, chargeSessionAction: chargeSessionAction)
-						.padding(.horizontal, .M)
+					ChargeOfferDetailOfferBanner(
+						offers: loadedOffers,
+						chargeSessionAction: chargeSessionAction,
+						hideDiscountBanner: isDiscountBannerHidden
+					)
+					.padding(.horizontal, .M)
 					ChargePointListView(
 						offers: loadedOffers,
 						offersSectionOrigin: $offersSectionOrigin,
@@ -68,6 +75,9 @@ private struct ChargeOfferDetailOfferBanner: View {
 	/// Action to manage current charge session
 	var chargeSessionAction: () -> Void
 
+	/// Whether to hide the discount promo banner. The current-session banner remains visible.
+	var hideDiscountBanner: Bool = false
+
 	@Default(.chargeSessionContext) private var chargeSessionContext
 	@Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
@@ -88,7 +98,7 @@ private struct ChargeOfferDetailOfferBanner: View {
 			.typography(.copy(size: .medium), weight: .bold)
 			.foregroundStyle(.primaryContent)
 			.dynamicTypeSize(...(.accessibility1))
-		} else if offers.contains(where: { $0.isDiscounted }) {
+		} else if hideDiscountBanner == false, offers.contains(where: { $0.isDiscounted }) {
 			CustomSection {
 				HStack(spacing: .size(.S)) {
 					if dynamicTypeSize.isAccessibilitySize == false {
