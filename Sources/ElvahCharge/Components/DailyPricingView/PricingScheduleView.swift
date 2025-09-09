@@ -4,8 +4,8 @@ import SwiftUI
 
 /// Daily pricing composite view hosting a summary header and a three-day price chart pager.
 @available(iOS 16.0, *)
-package struct PricingScheduleViewComponent: View {
-	@ObservedObject private var router: PricingScheduleView.Router
+package struct PricingScheduleView: View {
+	@ObservedObject private var router: ChargeSiteScheduleView.Router
 
 	/// Currently selected day in the pager. Defaults to today if available.
 	@State private var selectedDay: PricingSchedule.RelativeDay = .today
@@ -22,7 +22,7 @@ package struct PricingScheduleViewComponent: View {
 	private var schedule: ChargeSiteSchedule
 
 	/// Create the component with precomputed chart entries.
-	package init(schedule: ChargeSiteSchedule, router: PricingScheduleView.Router) {
+	package init(schedule: ChargeSiteSchedule, router: ChargeSiteScheduleView.Router) {
 		self.schedule = schedule
 		self.router = router
 	}
@@ -106,6 +106,6 @@ package struct PricingScheduleViewComponent: View {
 @available(iOS 17.0, *)
 #Preview {
 	let schedule = ChargeSiteSchedule.mock
-	PricingScheduleView(schedule: schedule)
+	ChargeSiteScheduleView(schedule: schedule)
 		.withFontRegistration()
 }

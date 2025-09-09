@@ -4,7 +4,7 @@ import Charts
 import SwiftUI
 
 @available(iOS 16.0, *)
-package extension PricingScheduleViewComponent {
+package extension PricingScheduleView {
 	/// Single-day price chart using Swift Charts. Migrated from `DailyPriceChart`.
 	struct PriceChart: View {
 		/// Chart data representing the selected day.
@@ -254,7 +254,7 @@ package extension PricingScheduleViewComponent {
 
 @available(iOS 17.0, *)
 #Preview("PriceChart (Today)") {
-	PricingScheduleViewComponent.PriceChart(data: PricingSchedule.mock.chartData()[1], selectedMoment: .constant(nil))
+	PricingScheduleView.PriceChart(data: PricingSchedule.mock.chartData()[1], selectedMoment: .constant(nil))
 		.frame(height: 180)
 		.padding()
 		.withFontRegistration()

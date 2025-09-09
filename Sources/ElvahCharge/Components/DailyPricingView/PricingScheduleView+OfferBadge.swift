@@ -3,7 +3,7 @@
 import SwiftUI
 
 @available(iOS 16.0, *)
-package extension PricingScheduleViewComponent {
+package extension PricingScheduleView {
 	/// A compact badge indicating discount availability for the selected day.
 	struct OfferBadge: View {
 		@Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -136,9 +136,9 @@ package extension PricingScheduleViewComponent {
 	)
 
 	VStack(alignment: .leading, spacing: 12) {
-		PricingScheduleViewComponent.OfferBadge(state: .active(active))
-		PricingScheduleViewComponent.OfferBadge(state: .upcoming(upcoming))
-		PricingScheduleViewComponent.OfferBadge(state: .none)
+		PricingScheduleView.OfferBadge(state: .active(active))
+		PricingScheduleView.OfferBadge(state: .upcoming(upcoming))
+		PricingScheduleView.OfferBadge(state: .none)
 	}
 	.padding()
 	.withFontRegistration()

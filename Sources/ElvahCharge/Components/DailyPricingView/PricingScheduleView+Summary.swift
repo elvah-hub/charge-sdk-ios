@@ -3,7 +3,7 @@
 import SwiftUI
 
 @available(iOS 16.0, *)
-package extension PricingScheduleViewComponent {
+package extension PricingScheduleView {
 	/// Header view summarizing the current pricing state for the selected day.
 	struct Summary: View {
 		/// Controls presentation of the "More Prices" sheet.
@@ -201,7 +201,7 @@ package extension PricingScheduleViewComponent {
 @available(iOS 17.0, *)
 #Preview {
 	let data = PricingSchedule.mock.chartData()[1]
-	PricingScheduleViewComponent.Summary(dataset: data, selectedMoment: .constant(Date()))
+	PricingScheduleView.Summary(dataset: data, selectedMoment: .constant(Date()))
 		.padding()
 		.withFontRegistration()
 }

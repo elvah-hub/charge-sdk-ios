@@ -3,7 +3,7 @@
 import SwiftUI
 
 @available(iOS 16.0, *)
-package extension PricingScheduleViewComponent {
+package extension PricingScheduleView {
 	/// Lists additional prices for other charging speeds within the bottom sheet.
 	struct MorePricesSheetContent: View {
 		@Environment(\.dismiss) private var dismiss
@@ -62,7 +62,7 @@ package extension PricingScheduleViewComponent {
 
 @available(iOS 17.0, *)
 #Preview("MorePricesSheetContent") {
-	PricingScheduleViewComponent.MorePricesSheetContent()
+	PricingScheduleView.MorePricesSheetContent()
 		.padding()
 		.withFontRegistration()
 }

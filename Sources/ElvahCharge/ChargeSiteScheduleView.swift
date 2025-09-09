@@ -6,8 +6,8 @@ import SwiftUI
 	import Core
 #endif
 
-public struct PricingScheduleView: View {
-	@StateObject private var router = PricingScheduleView.Router()
+public struct ChargeSiteScheduleView: View {
+	@StateObject private var router = ChargeSiteScheduleView.Router()
 
 	/// The pricing schedule to visualize.
 	private var schedule: ChargeSiteSchedule
@@ -19,7 +19,7 @@ public struct PricingScheduleView: View {
 
 	public var body: some View {
 		if #available(iOS 16.0, *) {
-			PricingScheduleViewComponent(schedule: schedule, router: router)
+			PricingScheduleView(schedule: schedule, router: router)
 				.fullScreenCover(item: $router.chargeOfferDetail) { siteSchedule in
 					ChargeOfferDetailRootFeature(site: nil, offers: siteSchedule.chargeSite.offers)
 				}
@@ -30,7 +30,7 @@ public struct PricingScheduleView: View {
 	}
 }
 
-package extension PricingScheduleView {
+package extension ChargeSiteScheduleView {
 	final class Router: BaseRouter {
 		@Published var chargeOfferDetail: ChargeSiteSchedule?
 		@Published var showChargeSession = false
@@ -44,7 +44,7 @@ package extension PricingScheduleView {
 
 @available(iOS 17.0, *)
 #Preview {
-	PricingScheduleView(schedule: .mock)
+	ChargeSiteScheduleView(schedule: .mock)
 		.withFontRegistration()
 		.preferredColorScheme(.dark)
 }

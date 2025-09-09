@@ -3,7 +3,7 @@
 import Foundation
 
 @available(iOS 16.0, *)
-package extension PricingScheduleViewComponent {
+package extension PricingScheduleView {
 	/// Shared pricing/time computations.
 	enum PricingComputation {
 		/// Full day domain from midnight to midnight + 24h for consistent x-axis.
