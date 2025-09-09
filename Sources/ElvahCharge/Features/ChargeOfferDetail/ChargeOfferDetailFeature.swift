@@ -75,19 +75,6 @@ package struct ChargeOfferDetailFeature: View {
 			.fullScreenCover(isPresented: $router.showChargeEntry) {
 				ChargeEntryFeature()
 			}
-			.confirmationDialog("Open with", isPresented: $router.showRouteOptions) {
-				if let site = site.data {
-					Button("Apple Maps", bundle: .elvahCharge) {
-						site.openDirectionsInAppleMaps()
-					}
-					Button("Google Maps", bundle: .elvahCharge) {
-						site.openDirectionsInGoogleMaps()
-					}
-					Button("Back", role: .cancel, bundle: .elvahCharge) {
-						router.showRouteOptions = false
-					}
-				}
-			}
 	}
 
 	@ViewBuilder private var content: some View {
@@ -117,7 +104,7 @@ package struct ChargeOfferDetailFeature: View {
 			if let operatorName = site.operatorName, let address = site.address {
 				header(title: operatorName, address: address)
 			}
-			routeButton
+			// Removed separate Route button; the address is now interactive
 		}
 	}
 
@@ -142,23 +129,36 @@ package struct ChargeOfferDetailFeature: View {
 			Text(title)
 				.typography(.title(size: .small), weight: .bold)
 				.foregroundStyle(.primaryContent)
-			Text(address.formatted())
-				.typography(.copy(size: .medium))
-				.foregroundStyle(.secondaryContent)
-				.dynamicTypeSize(...(.accessibility2))
+			Button {
+				router.showRouteOptions = true
+			} label: {
+				HStack(spacing: Size.XXS.size) {
+					Text(address.formatted())
+						.underline()
+						.typography(.copy(size: .medium))
+						.foregroundStyle(.secondaryContent)
+					Image(.openInNew)
+						.foregroundStyle(.secondaryContent)
+				}
+			}
+			.buttonStyle(.plain)
+			.dynamicTypeSize(...(.accessibility2))
+			.confirmationDialog("Open with", isPresented: $router.showRouteOptions) {
+				if let site = site.data {
+					Button("Apple Maps", bundle: .elvahCharge) {
+						site.openDirectionsInAppleMaps()
+					}
+					Button("Google Maps", bundle: .elvahCharge) {
+						site.openDirectionsInGoogleMaps()
+					}
+					Button("Back", role: .cancel, bundle: .elvahCharge) {
+						router.showRouteOptions = false
+					}
+				}
+			}
 		}
 		.frame(maxWidth: .infinity, alignment: .leading)
 		.multilineTextAlignment(.leading)
-		.padding(.horizontal, 16)
-	}
-
-	@ViewBuilder private var routeButton: some View {
-		Button("Route", icon: .directions, bundle: .elvahCharge) {
-			router.showRouteOptions = true
-		}
-		.controlSize(.small)
-		.invertedButtonLabel()
-		.buttonStyle(.primary)
 		.padding(.horizontal, 16)
 	}
 
