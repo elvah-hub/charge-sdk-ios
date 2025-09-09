@@ -21,16 +21,31 @@ package struct PricingScheduleView: View {
 	/// The pricing schedule to visualize.
 	private var schedule: ChargeSiteSchedule
 
+	/// Whether to hide operator details in the header.
+	private var isOperatorDetailsHidden: Bool
+
+	/// Whether to hide the charge now button.
+	private var isChargeButtonHidden: Bool
+
 	/// Create the component with precomputed chart entries.
-	package init(schedule: ChargeSiteSchedule, router: ChargeSiteScheduleView.Router) {
+	package init(
+		schedule: ChargeSiteSchedule,
+		router: ChargeSiteScheduleView.Router,
+		isOperatorDetailsHidden: Bool = false,
+		isChargeButtonHidden: Bool = false
+	) {
 		self.schedule = schedule
 		self.router = router
+		self.isOperatorDetailsHidden = isOperatorDetailsHidden
+		self.isChargeButtonHidden = isChargeButtonHidden
 	}
 
 	package var body: some View {
 		VStack(spacing: Size.L.size) {
 			// Header with operator name and address
-			if let operatorName = schedule.chargeSite.operatorName, let address = schedule.chargeSite.address {
+			if isOperatorDetailsHidden == false,
+			   let operatorName = schedule.chargeSite.operatorName,
+			   let address = schedule.chargeSite.address {
 				Header(title: operatorName, address: address)
 			}
 
@@ -60,11 +75,13 @@ package struct PricingScheduleView: View {
 				}
 			}
 
-			Button("Charge now", icon: .bolt) {
-				router.chargeOfferDetail = schedule
+			if isChargeButtonHidden == false {
+				Button("Charge now", icon: .bolt) {
+					router.chargeOfferDetail = schedule
+				}
+				.buttonStyle(.primary)
+				.padding(.horizontal)
 			}
-			.buttonStyle(.primary)
-			.padding(.horizontal)
 		}
 		.onChange(of: selectedDay) { _ in
 			// Reset any specific time selection when switching days
