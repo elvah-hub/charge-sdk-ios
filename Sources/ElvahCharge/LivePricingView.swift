@@ -6,6 +6,44 @@ import SwiftUI
 	import Core
 #endif
 
+/// A drop‑in SwiftUI view that presents live charging prices for a charge site.
+///
+/// The view shows the current price per kWh, power details,
+/// and a time‑based price chart that highlights upcoming offer windows. An optional
+/// primary action allows users to start a charge from within the component,
+/// without any additional setup in your code.
+///
+/// ## Usage
+/// ```swift
+/// struct StationDetailScreen: View {
+/// 	var schedule: ChargeSiteSchedule
+///
+/// 	var body: some View {
+/// 		LivePricingView(schedule: schedule)
+/// 	}
+/// }
+/// ```
+///
+/// ## Getting a schedule
+/// ```swift
+/// // From a ChargeSite instance
+/// let schedule = try await chargeSite.pricingSchedule()
+///
+/// // Or using the static accessor on ChargeSiteSchedule
+/// let schedule = try await ChargeSiteSchedule.schedule(for: chargeSite)
+///
+/// // Completion‑based variant
+/// let observer = ChargeSiteSchedule.schedule(for: chargeSite) { result in
+///     // handle Result<ChargeSiteSchedule, Elvah.Error>
+/// }
+/// ```
+///
+/// Customization
+/// ```swift
+/// LivePricingView(schedule: schedule)
+/// 	.operatorDetailsHidden()   // hide operator + address header
+/// 	.chargeButtonHidden()      // hide "Charge now" button
+/// ```
 public struct LivePricingView: View {
 	@StateObject private var router = LivePricingView.Router()
 
@@ -18,7 +56,11 @@ public struct LivePricingView: View {
 	/// Whether to hide the charge button.
 	private var isChargeButtonHidden = false
 
-	/// Create a pricing schedule view.
+	/// Creates a live pricing view for a given pricing schedule.
+	/// - Note: On iOS versions earlier than 16, the view renders as an empty placeholder.
+	///
+	/// - Parameter schedule: The price timeline to display, including the
+	///   current price and upcoming price windows for the selected site.
 	public init(schedule: ChargeSiteSchedule) {
 		self.schedule = schedule
 	}
@@ -42,14 +84,34 @@ public struct LivePricingView: View {
 }
 
 public extension LivePricingView {
-	/// Hides the operator details header of the pricing schedule.
+	/// Hides the operator and address details shown in the schedule header.
+	///
+	/// Use this when the surrounding screen already provides that context.
+	/// - Parameter hide: Whether the header details should be hidden. Defaults to `true`.
+	/// - Returns: A copy of the view with the preference applied.
+	///
+	/// Example
+	/// ```swift
+	/// LivePricingView(schedule: schedule)
+	/// 	.operatorDetailsHidden()
+	/// ```
 	func operatorDetailsHidden(_ hide: Bool = true) -> LivePricingView {
 		var copy = self
 		copy.isOperatorDetailsHidden = hide
 		return copy
 	}
 
-	/// Hides the "Charge now" button beneath the schedule.
+	/// Hides the "Charge now" call‑to‑action displayed beneath the chart.
+	///
+	/// Use this when you provide your own primary action elsewhere on the screen.
+	/// - Parameter hide: Whether the charge button should be hidden. Defaults to `true`.
+	/// - Returns: A copy of the view with the preference applied.
+	///
+	/// Example
+	/// ```swift
+	/// LivePricingView(schedule: schedule)
+	/// 	.chargeButtonHidden()
+	/// ```
 	func chargeButtonHidden(_ hide: Bool = true) -> LivePricingView {
 		var copy = self
 		copy.isChargeButtonHidden = hide
