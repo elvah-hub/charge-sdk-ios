@@ -6,8 +6,8 @@ import SwiftUI
 	import Core
 #endif
 
-public struct ChargeSiteScheduleView: View {
-	@StateObject private var router = ChargeSiteScheduleView.Router()
+public struct LivePricingView: View {
+	@StateObject private var router = LivePricingView.Router()
 
 	/// The pricing schedule to visualize.
 	private var schedule: ChargeSiteSchedule
@@ -41,23 +41,23 @@ public struct ChargeSiteScheduleView: View {
 	}
 }
 
-public extension ChargeSiteScheduleView {
+public extension LivePricingView {
 	/// Hides the operator details header of the pricing schedule.
-	func operatorDetailsHidden(_ hide: Bool = true) -> ChargeSiteScheduleView {
+	func operatorDetailsHidden(_ hide: Bool = true) -> LivePricingView {
 		var copy = self
 		copy.isOperatorDetailsHidden = hide
 		return copy
 	}
 
 	/// Hides the "Charge now" button beneath the schedule.
-	func chargeButtonHidden(_ hide: Bool = true) -> ChargeSiteScheduleView {
+	func chargeButtonHidden(_ hide: Bool = true) -> LivePricingView {
 		var copy = self
 		copy.isChargeButtonHidden = hide
 		return copy
 	}
 }
 
-package extension ChargeSiteScheduleView {
+package extension LivePricingView {
 	final class Router: BaseRouter {
 		@Published var chargeOfferDetail: ChargeSiteSchedule?
 		@Published var showChargeSession = false
@@ -71,7 +71,7 @@ package extension ChargeSiteScheduleView {
 
 @available(iOS 17.0, *)
 #Preview {
-	ChargeSiteScheduleView(schedule: .mock)
+	LivePricingView(schedule: .mock)
 		.withFontRegistration()
 		.preferredColorScheme(.dark)
 }

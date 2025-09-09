@@ -3,7 +3,7 @@
 import Foundation
 
 /// A pricing schedule for a charge site including daily pricing and discounted time slots.
-public struct PricingSchedule: Codable, Hashable, Sendable {
+package struct PricingSchedule: Codable, Hashable, Sendable {
 	/// Daily pricing entries for yesterday, today and tomorrow.
 	package var dailyPricing: Days
 

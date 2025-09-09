@@ -2,7 +2,7 @@
 
 import SwiftUI
 
-public extension PricingSchedule {
+public extension ChargeSiteSchedule {
 	@MainActor fileprivate static var discoveryProvider: DiscoveryProvider {
 		if Elvah.configuration.environment.isSimulation {
 			return DiscoveryProvider.simulation
@@ -63,6 +63,6 @@ public extension ChargeSite {
 	///
 	/// You can also use ``PricingSchedule/schedule(for:)``.
 	func pricingSchedule() async throws -> ChargeSiteSchedule {
-		try await PricingSchedule.schedule(for: self)
+		try await ChargeSiteSchedule.schedule(for: self)
 	}
 }
