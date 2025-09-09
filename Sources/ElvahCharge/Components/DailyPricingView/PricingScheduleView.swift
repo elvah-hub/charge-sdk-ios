@@ -29,6 +29,11 @@ package struct PricingScheduleView: View {
 
 	package var body: some View {
 		VStack(spacing: Size.L.size) {
+			// Header with operator name and address
+			if let operatorName = schedule.chargeSite.operatorName, let address = schedule.chargeSite.address {
+				Header(title: operatorName, address: address)
+			}
+
 			if let current = chartEntries.first(where: { $0.day == selectedDay })?.dataset {
 				Summary(dataset: current, selectedMoment: $selectedMoment).padding(.horizontal)
 					.animation(.default, value: selectedDay)
@@ -58,8 +63,8 @@ package struct PricingScheduleView: View {
 			Button("Charge now", icon: .bolt) {
 				router.chargeOfferDetail = schedule
 			}
-				.buttonStyle(.primary)
-				.padding(.horizontal)
+			.buttonStyle(.primary)
+			.padding(.horizontal)
 		}
 		.onChange(of: selectedDay) { _ in
 			// Reset any specific time selection when switching days
