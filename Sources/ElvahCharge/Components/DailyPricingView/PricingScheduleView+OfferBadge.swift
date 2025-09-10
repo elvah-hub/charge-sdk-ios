@@ -88,7 +88,7 @@ package extension PricingScheduleView {
 			switch state {
 			case .active,
 			     .upcoming:
-				.brand
+				.fixedGreen
 			case .none:
 				.secondaryContent
 			}
@@ -99,7 +99,7 @@ package extension PricingScheduleView {
 			switch state {
 			case .active,
 			     .upcoming:
-				Color.brand.opacity(0.1)
+				Color.fixedGreen.opacity(0.1)
 			case .none:
 				Color.secondaryContent.opacity(0.15)
 			}
@@ -127,12 +127,12 @@ package extension PricingScheduleView {
 	let active = DailyPriceChartData.DiscountSpan(
 		startTime: start1,
 		endTime: end1,
-		price: Currency(0.48)
+		price: Currency(0.48),
 	)
 	let upcoming = DailyPriceChartData.DiscountSpan(
 		startTime: start2,
 		endTime: end2,
-		price: Currency(0.52)
+		price: Currency(0.52),
 	)
 
 	VStack(alignment: .leading, spacing: 12) {

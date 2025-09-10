@@ -79,7 +79,7 @@ package extension PricingScheduleView {
 					Text("\(Currency(price).formatted()) /kWh", bundle: .elvahCharge)
 						.typography(.copy(size: .xLarge), weight: .bold)
 						.monospacedDigit()
-						.foregroundStyle(discounted ? .brand : .primaryContent)
+						.foregroundStyle(discounted ? .fixedGreen : .primaryContent)
 						.contentTransition(.numericText())
 
 					if discounted {
@@ -103,7 +103,7 @@ package extension PricingScheduleView {
 				horizontalAlignment: .leading,
 				verticalAlignment: .center,
 				spacing: .size(.S),
-				breakPoint: .xxLarge
+				breakPoint: .xxLarge,
 			) {
 				if let moment = selectedMoment,
 				   let range = PricingComputation.segmentRange(containing: moment, in: dataset) {
