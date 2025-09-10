@@ -2,9 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.4.0]
+## [Upcoming]
 
 ### Additions
+- Added `LivePricingView` to present live charging prices for a specific site, including current price per kWh, power details, and a time‑based price chart. An optional primary action lets users start a charge directly from the component. Requires iOS 16 or later.
+
+	```swift
+	import ElvahCharge
+
+	struct StationDetailScreen: View {
+	  var schedule: ChargeSiteSchedule
+
+	  var body: some View {
+	    LivePricingView(schedule: schedule)
+	  }
+	}
+
+	// Customization
+	LivePricingView(schedule: schedule)
+	  .operatorDetailsHidden()   // hide operator + address header
+	  .chargeButtonHidden()      // hide "Charge now" button
+	```
+	
 - Added configuration options to the charge presentation modifiers that allow you to customize the appearance of the site details page:
 
 	```swift
@@ -14,6 +33,9 @@ All notable changes to this project will be documented in this file.
 	// Hide both operator details and the discount banner for a list of offers
 	.chargePresentation(offers: $chargeOfferList, options: [.hideOperatorDetails, .hideDiscountBanner])
 	```
+
+### Changes
+- Environment auto‑routing: `Elvah.Configuration` now determines the backend environment automatically from the provided API key. Keys starting with `evpk_test` route to integration; keys starting with `evpk_prod` route to production.
 
 ### Bug Fixes
 - Fixed a bug where charge points in the charge offer detail screen would not be tappable when no charge site was provided
