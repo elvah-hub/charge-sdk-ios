@@ -188,6 +188,48 @@ The `update` you receive from this stream is an `enum` with three cases:
 
 The SDK provides a set of functions to help you build custom UI elements that interact with the SDK's underlying data structures and APIs. You can use these to make the charging experience feel truly native to your app.
 
+### Live Pricing View
+
+Use `LivePricingView` to present live charging prices for a specific site, including the current price per kWh, power details, and a time‑based price chart that highlights upcoming offer windows. An optional primary action lets users start a charge directly from the component.
+
+```swift
+import ElvahCharge
+
+struct StationDetailScreen: View {
+  var schedule: ChargeSiteSchedule
+
+  var body: some View {
+    LivePricingView(schedule: schedule)
+  }
+}
+```
+
+#### Getting a schedule
+
+```swift
+// From a ChargeSite instance
+let schedule = try await chargeSite.pricingSchedule()
+
+// Or using the static accessor on ChargeSiteSchedule
+let schedule = try await ChargeSiteSchedule.schedule(for: chargeSite)
+
+// Completion‑based variant
+let observer = ChargeSiteSchedule.schedule(for: chargeSite) { result in
+  // handle Result<ChargeSiteSchedule, Elvah.Error>
+}
+```
+
+#### Customization
+
+```swift
+LivePricingView(schedule: schedule)
+  .operatorDetailsHidden()   // hide operator + address header
+  .chargeButtonHidden()      // hide "Charge now" button
+```
+
+> [!NOTE]
+> `LivePricingView` requires iOS 16 or later. On earlier versions, it renders as an empty placeholder and does not affect your layout.
+
 ### Charge Offers
 
 The primary interaction between your own components and the SDK happens through the `ChargeOffer` object. A charge offer is made up of information about the specific charge point it belongs to as well as details about the pricing that it includes.
