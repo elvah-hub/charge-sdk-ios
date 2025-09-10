@@ -92,6 +92,7 @@ package extension PricingSchedule {
 		let baseMidnight = calendar.startOfDay(for: now)
 		let entry: DayPricing?
 		let startOfDay: Date
+
 		switch day {
 		case .yesterday:
 			entry = dailyPricing.yesterday
@@ -149,12 +150,14 @@ package extension PricingSchedule {
 		// Compute baseline (non-discount) segments as the gaps across the full day.
 		var nonDiscount: [DailyPriceChartData.GapSpan] = []
 		var cursor = fullDay.lowerBound
-		for seg in discountSegments {
-			if cursor < seg.startTime {
-				nonDiscount.append(.init(startTime: cursor, endTime: seg.startTime))
+
+		for segment in discountSegments {
+			if cursor < segment.startTime {
+				nonDiscount.append(.init(startTime: cursor, endTime: segment.startTime))
 			}
-			cursor = max(cursor, seg.endTime)
+			cursor = max(cursor, segment.endTime)
 		}
+
 		if cursor < fullDay.upperBound {
 			nonDiscount.append(.init(startTime: cursor, endTime: fullDay.upperBound))
 		}
