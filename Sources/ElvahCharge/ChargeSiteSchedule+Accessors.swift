@@ -5,9 +5,9 @@ import SwiftUI
 public extension ChargeSiteSchedule {
 	@MainActor fileprivate static var discoveryProvider: DiscoveryProvider {
 		if Elvah.configuration.environment.isSimulation {
-			return DiscoveryProvider.simulation
+			DiscoveryProvider.simulation
 		} else {
-			return DiscoveryProvider.live
+			DiscoveryProvider.live
 		}
 	}
 
@@ -16,8 +16,13 @@ public extension ChargeSiteSchedule {
 	/// - Note: You can also use ``ChargeSite/pricingSchedule()``.
 	/// - Parameter chargeSite: The charge site to load the schedule for.
 	/// - Returns: The pricing schedule for the charge site.
+	///
+	/// Example
+	/// ```swift
+	/// let schedule = try await ChargeSiteSchedule.schedule(for: site)
+	/// ```
 	@MainActor static func schedule(
-		for chargeSite: ChargeSite
+		for chargeSite: ChargeSite,
 	) async throws(Elvah.Error) -> ChargeSiteSchedule {
 		do {
 			let schedule = try await discoveryProvider.pricingSchedule(siteId: chargeSite.id)
@@ -38,9 +43,16 @@ public extension ChargeSiteSchedule {
 	///   - chargeSite: The charge site to load the schedule for.
 	///   - completion: A closure called with the result of the operation.
 	/// - Returns: An observer you can use to cancel the operation.
+	///
+	/// Example
+	/// ```swift
+	/// let observer = ChargeSiteSchedule.schedule(for: site) { result in
+	///     // handle Result<ChargeSiteSchedule, Elvah.Error>
+	/// }
+	/// ```
 	@MainActor @discardableResult static func schedule(
 		for chargeSite: ChargeSite,
-		completion: @MainActor @escaping (_ result: Result<ChargeSiteSchedule, Elvah.Error>) -> Void
+		completion: @MainActor @escaping (_ result: Result<ChargeSiteSchedule, Elvah.Error>) -> Void,
 	) -> TaskObserver {
 		let task = Task {
 			do {
@@ -61,7 +73,12 @@ public extension ChargeSiteSchedule {
 public extension ChargeSite {
 	/// Loads the pricing schedule for this charge site.
 	///
-	/// You can also use ``PricingSchedule/schedule(for:)``.
+	/// You can also use ``ChargeSiteSchedule/schedule(for:)``.
+	///
+	/// Example
+	/// ```swift
+	/// let schedule = try await chargeSite.pricingSchedule()
+	/// ```
 	func pricingSchedule() async throws -> ChargeSiteSchedule {
 		try await ChargeSiteSchedule.schedule(for: self)
 	}

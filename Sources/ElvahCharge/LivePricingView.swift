@@ -24,7 +24,7 @@ import SwiftUI
 /// }
 /// ```
 ///
-/// ## Getting a schedule
+/// ## Getting a Schedule
 /// ```swift
 /// // From a ChargeSite instance
 /// let schedule = try await chargeSite.pricingSchedule()
@@ -38,7 +38,7 @@ import SwiftUI
 /// }
 /// ```
 ///
-/// Customization
+/// ## Customization
 /// ```swift
 /// LivePricingView(schedule: schedule)
 /// 	.operatorDetailsHidden()   // hide operator + address header
