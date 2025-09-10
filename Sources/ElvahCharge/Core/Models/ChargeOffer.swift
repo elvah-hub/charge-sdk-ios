@@ -38,7 +38,7 @@ public struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 		price: ChargePrice,
 		originalPrice: ChargePrice?,
 		type: OfferType,
-		site: Site
+		site: Site,
 	) {
 		self.chargePoint = chargePoint
 		self.price = price
@@ -122,7 +122,7 @@ package extension ChargeOffer {
 			price: ChargePrice.mock,
 			originalPrice: nil,
 			type: .standard,
-			site: .mock
+			site: .mock,
 		)
 	}
 
@@ -155,7 +155,7 @@ package extension ChargeOffer {
 			price: finalPrice,
 			originalPrice: originalPrice,
 			type: offerType,
-			site: .simulation
+			site: .simulation,
 		)
 	}
 
@@ -165,7 +165,7 @@ package extension ChargeOffer {
 			price: ChargePrice.mock,
 			originalPrice: ChargePrice.mock2,
 			type: .campaign(CampaignInfo(endDate: Date().addingTimeInterval(20))),
-			site: .mock
+			site: .mock,
 		)
 	}
 
@@ -175,7 +175,7 @@ package extension ChargeOffer {
 			price: ChargePrice.mock2,
 			originalPrice: ChargePrice.mock3,
 			type: .campaign(CampaignInfo(endDate: Date().addingTimeInterval(-10))),
-			site: .mock
+			site: .mock,
 		)
 	}
 
@@ -185,7 +185,7 @@ package extension ChargeOffer {
 			price: ChargePrice.mock3,
 			originalPrice: nil,
 			type: .standard, // .campaign(CampaignInfo(endDate: Date().addingTimeInterval(30))),
-			site: .mock
+			site: .mock,
 		)
 	}
 }
@@ -200,9 +200,13 @@ package extension [ChargeOffer] {
 	}
 
 	/// The largest common prefix across all offer EVSE identifiers.
-	///
-	/// Returns an empty string when the collection is empty or when no common prefix exists.
 	var largestCommonEvseIdPrefix: String {
-		map(\.evseId).largestCommonPrefix()
+		let evseIdentifiers = map(\.evseId)
+		let uniqueEvseIdentifiers = evseIdentifiers.unique()
+		guard uniqueEvseIdentifiers.count > 1 else {
+			// Only one unique EVSE id present; do not strip anything in the UI
+			return ""
+		}
+		return evseIdentifiers.largestCommonPrefix()
 	}
 }

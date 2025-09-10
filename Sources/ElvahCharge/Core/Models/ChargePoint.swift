@@ -47,7 +47,7 @@ public struct ChargePoint: Identifiable, Hashable, Codable, Sendable {
 		availabilityUpdatedAt: Date,
 		connectors: Set<ConnectorType>,
 		speed: Speed,
-		powerType: PowerType?
+		powerType: PowerType?,
 	) {
 		self.evseId = evseId
 		self.physicalReference = physicalReference
@@ -72,15 +72,15 @@ public extension ChargePoint {
 		private var comparisonValue: Int {
 			switch self {
 			case .unknown:
-				return 0
+				0
 			case .slow:
-				return 1
+				1
 			case .medium:
-				return 2
+				2
 			case .fast:
-				return 3
+				3
 			case .hyper:
-				return 4
+				4
 			}
 		}
 
@@ -124,7 +124,7 @@ public extension ChargePoint {
 
 	/// The maximum power formatted as a string with "kW" suffix.
 	@available(iOS 16.0, *) var maxPowerInKWFormatted: String {
-		return maxPowerInKw.formatted(.number.precision(.fractionLength(0))) + " kW"
+		maxPowerInKw.formatted(.number.precision(.fractionLength(0))) + " kW"
 	}
 
 	/// The last 4 characters of the EVSE identifier.
@@ -184,7 +184,7 @@ package extension ChargePoint {
 			availabilityUpdatedAt: Date().addingTimeInterval(-100_000),
 			connectors: [.chademo],
 			speed: .hyper,
-			powerType: .ac
+			powerType: .ac,
 		)
 	}
 
@@ -195,12 +195,11 @@ package extension ChargePoint {
 		let powers = [22.0, 50.0, 75.0, 150.0, 250.0, 350.0]
 		let maxPower = powers.randomElement()!
 
-		let speed: Speed
-		switch maxPower {
-		case 0 ..< 25: speed = .slow
-		case 25 ..< 75: speed = .medium
-		case 75 ..< 150: speed = .fast
-		default: speed = .hyper
+		let speed: Speed = switch maxPower {
+		case 0 ..< 25: .slow
+		case 25 ..< 75: .medium
+		case 75 ..< 150: .fast
+		default: .hyper
 		}
 
 		let powerType: PowerType = maxPower > 22 ? .dc : .ac
@@ -213,7 +212,7 @@ package extension ChargePoint {
 			availabilityUpdatedAt: Date().addingTimeInterval(-Double.random(in: 0 ... 86400)),
 			connectors: [.combo],
 			speed: speed,
-			powerType: powerType
+			powerType: powerType,
 		)
 	}
 
@@ -225,7 +224,7 @@ package extension ChargePoint {
 		availabilityUpdatedAt: Date().addingTimeInterval(-100_000),
 		connectors: [.chademo],
 		speed: .hyper,
-		powerType: .ac
+		powerType: .ac,
 	)
 
 	static let mockUnavailable = ChargePoint(
@@ -236,7 +235,7 @@ package extension ChargePoint {
 		availabilityUpdatedAt: Date().addingTimeInterval(-200_000),
 		connectors: [.combo],
 		speed: .hyper,
-		powerType: .dc
+		powerType: .dc,
 	)
 
 	static let mockOutOfService = ChargePoint(
@@ -247,7 +246,7 @@ package extension ChargePoint {
 		availabilityUpdatedAt: Date().addingTimeInterval(-300_000),
 		connectors: [.chademo],
 		speed: .hyper,
-		powerType: .dc
+		powerType: .dc,
 	)
 }
 
@@ -255,9 +254,13 @@ package extension ChargePoint {
 
 package extension [ChargePoint] {
 	/// The largest common prefix across all EVSE identifiers in the collection.
-	///
-	/// Returns an empty string when the collection is empty or when no common prefix exists.
 	var largestCommonEvseIdPrefix: String {
-		map(\.evseId).largestCommonPrefix()
+		let evseIdentifiers = map(\.evseId)
+		let uniqueEvseIdentifiers = evseIdentifiers.unique()
+		guard uniqueEvseIdentifiers.count > 1 else {
+			// Only one unique EVSE id present; do not strip anything in the UI
+			return ""
+		}
+		return evseIdentifiers.largestCommonPrefix()
 	}
 }

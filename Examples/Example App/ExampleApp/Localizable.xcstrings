@@ -41,10 +41,19 @@
     "Error loading offers" : {
 
     },
+    "Live Pricing" : {
+
+    },
     "Load Charge Offers" : {
 
     },
+    "Load Live Pricing" : {
+
+    },
     "Loading offers..." : {
+
+    },
+    "Loading schedule..." : {
 
     },
     "See how you can integrate charge offers into your app and offer charge deals to your users." : {
