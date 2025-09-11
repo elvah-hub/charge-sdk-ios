@@ -133,6 +133,9 @@ package extension PricingScheduleView {
 		/// block only (active if inside a discount, otherwise none). Without a selection,
 		/// it reflects the current reference time (active / upcoming / none).
 		private func currentBadgeState(reference: Date) -> OfferBadge.State {
+			let calendar = Calendar.current
+
+			// Reflect explicit selection when it falls within the day's domain
 			if let selected = selectedMoment, PricingComputation.fullDayDomain(for: dataset.day).contains(selected) {
 				if let active = dataset.discounts.first(where: { selected >= $0.startTime && selected < $0.endTime }) {
 					return .active(active)
@@ -140,10 +143,20 @@ package extension PricingScheduleView {
 				return .none
 			}
 
+			// For future days (tomorrow), show the first available offer of the day
+			// instead of evaluating at a noon reference, which could fall after
+			// the day's only offer window and incorrectly display "No offer available".
+			if calendar.isDateInTomorrow(dataset.day) {
+				if let firstOffer = dataset.discounts.first {
+					return .upcoming(firstOffer)
+				}
+				return .none
+			}
+
+			// Live evaluation for today based on the provided reference moment
 			if let active = dataset.discounts.first(where: { reference >= $0.startTime && reference < $0.endTime }) {
 				return .active(active)
 			}
-
 			if let next = dataset.discounts.first(where: { $0.startTime > reference }) {
 				return .upcoming(next)
 			}
