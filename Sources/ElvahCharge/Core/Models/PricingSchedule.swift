@@ -7,8 +7,12 @@ public struct PricingSchedule: Codable, Hashable, Sendable {
 	/// Daily pricing entries for yesterday, today and tomorrow.
 	package var dailyPricing: Days
 
-	package init(dailyPricing: Days) {
+	/// The standard price that applies outside of discounted time slots.
+	package var standardPrice: ChargePrice
+
+	package init(dailyPricing: Days, standardPrice: ChargePrice) {
 		self.dailyPricing = dailyPricing
+		self.standardPrice = standardPrice
 	}
 
 	/// Price trend direction compared to the previous day.
@@ -77,10 +81,10 @@ package extension PricingSchedule {
 							price: ChargePrice(
 								pricePerKWh: Currency(0.25),
 								baseFee: nil,
-								blockingFee: nil
-							)
+								blockingFee: nil,
+							),
 						),
-					]
+					],
 				),
 				today: DayPricing(
 					lowestPrice: .mock,
@@ -92,8 +96,8 @@ package extension PricingSchedule {
 							price: ChargePrice(
 								pricePerKWh: Currency(0.28),
 								baseFee: nil,
-								blockingFee: nil
-							)
+								blockingFee: nil,
+							),
 						),
 						DiscountSlot(
 							from: Time(timeString: "16:00:00")!,
@@ -101,10 +105,10 @@ package extension PricingSchedule {
 							price: ChargePrice(
 								pricePerKWh: Currency(0.21),
 								baseFee: nil,
-								blockingFee: nil
-							)
+								blockingFee: nil,
+							),
 						),
-					]
+					],
 				),
 				tomorrow: DayPricing(
 					lowestPrice: .mock,
@@ -116,12 +120,18 @@ package extension PricingSchedule {
 							price: ChargePrice(
 								pricePerKWh: Currency(0.28),
 								baseFee: nil,
-								blockingFee: nil
-							)
+								blockingFee: nil,
+							),
 						),
-					]
-				)
-			)
+					],
+				),
+			),
+
+			standardPrice: ChargePrice(
+				pricePerKWh: Currency(0.52),
+				baseFee: nil,
+				blockingFee: nil,
+			),
 		)
 	}
 }

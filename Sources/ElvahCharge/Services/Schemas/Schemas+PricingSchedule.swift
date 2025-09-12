@@ -4,7 +4,7 @@ import Foundation
 
 extension PricingSchedule {
 	static func parse(
-		_ response: PricingScheduleSchema
+		_ response: PricingScheduleSchema,
 	) throws(NetworkError.Client) -> PricingSchedule {
 		func parseSlots(_ slots: [PricingScheduleSchema.TimeSlotSchema]) throws(NetworkError.Client) -> [DiscountSlot] {
 			try slots.map { slot throws(NetworkError.Client) -> DiscountSlot in
@@ -19,13 +19,13 @@ extension PricingSchedule {
 				return try DiscountSlot(
 					from: from,
 					to: to,
-					price: ChargePrice.parse(slot.price)
+					price: ChargePrice.parse(slot.price),
 				)
 			}
 		}
 
 		func parseEntry(
-			_ entry: PricingScheduleSchema.DailyPriceEntry?
+			_ entry: PricingScheduleSchema.DailyPriceEntry?,
 		) throws(NetworkError.Client) -> DayPricing? {
 			guard let entry else {
 				return nil
@@ -50,17 +50,21 @@ extension PricingSchedule {
 		let daily = try Days(
 			yesterday: parseEntry(response.dailyPricing.yesterday),
 			today: parseEntry(response.dailyPricing.today),
-			tomorrow: parseEntry(response.dailyPricing.tomorrow)
+			tomorrow: parseEntry(response.dailyPricing.tomorrow),
 		)
 
+		let standardPrice = try ChargePrice.parse(response.standardPrice)
+
 		return PricingSchedule(
-			dailyPricing: daily
+			dailyPricing: daily,
+			standardPrice: standardPrice,
 		)
 	}
 }
 
 struct PricingScheduleSchema: Decodable {
 	var dailyPricing: DailyPricingSchema
+	var standardPrice: ChargePriceSchema
 
 	struct DailyPricingSchema: Decodable {
 		var yesterday: DailyPriceEntry?

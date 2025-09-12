@@ -15,8 +15,8 @@ package struct DailyPriceChartData: Hashable, Sendable, Codable {
 
 	/// Discounted pricing segments with explicit start/end times and a price.
 	package var discounts: [DiscountSpan]
-
 	/// Non-discount segments (baseline) covering the remaining parts of the day.
+	
 	package var gaps: [GapSpan]
 
 	/// A time range with a specific discounted price.
@@ -65,7 +65,7 @@ package extension PricingSchedule {
 	func chartData(
 		for days: [RelativeDay] = RelativeDay.allCases,
 		calendar: Calendar = .current,
-		timeZone: TimeZone = .current
+		timeZone: TimeZone = .current,
 	) -> [DailyPriceChartData] {
 		days.compactMap { day in
 			chartData(for: day, calendar: calendar, timeZone: timeZone)
@@ -82,7 +82,7 @@ package extension PricingSchedule {
 	func chartData(
 		for day: RelativeDay,
 		calendar: Calendar = .current,
-		timeZone: TimeZone = .current
+		timeZone: TimeZone = .current,
 	) -> DailyPriceChartData? {
 		var calendar = calendar
 		calendar.timeZone = timeZone
@@ -142,7 +142,7 @@ package extension PricingSchedule {
 				return DailyPriceChartData.DiscountSpan(
 					startTime: clippedStart,
 					endTime: clippedEnd,
-					price: slot.price.pricePerKWh
+					price: slot.price.pricePerKWh,
 				)
 			}
 			.sorted(by: { $0.startTime < $1.startTime })
@@ -162,12 +162,12 @@ package extension PricingSchedule {
 			nonDiscount.append(.init(startTime: cursor, endTime: fullDay.upperBound))
 		}
 
-		let basePrice = entry.lowestPrice.pricePerKWh
+		let basePrice = standardPrice.pricePerKWh
 		return DailyPriceChartData(
 			day: startOfDay,
 			basePrice: basePrice,
 			discounts: discountSegments,
-			gaps: nonDiscount
+			gaps: nonDiscount,
 		)
 	}
 }
