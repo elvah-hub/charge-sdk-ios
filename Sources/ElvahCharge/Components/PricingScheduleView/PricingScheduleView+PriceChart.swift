@@ -7,6 +7,8 @@ import SwiftUI
 package extension PricingScheduleView {
 	/// Single-day price chart using Swift Charts. Migrated from `DailyPriceChart`.
 	struct PriceChart: View {
+		@Environment(\.accessibilityDifferentiateWithoutColor) private var accessibilityDifferentiateWithoutColor
+		
 		/// Chart data representing the selected day.
 		package var dataset: DailyPriceChartData
 
@@ -121,6 +123,12 @@ package extension PricingScheduleView {
 				.foregroundStyle(.green.opacity(0.25))
 				.lineStyle(StrokeStyle(lineWidth: 1))
 				.opacity(opacityForMark(in: segment.startTime, to: segment.endTime))
+				.annotation(position: .overlay) {
+					if accessibilityDifferentiateWithoutColor {
+						Image(.discounting)
+							.grayscale(1)
+					}
+				}
 
 				RuleMark(
 					xStart: .value("Start", segment.startTime),
@@ -318,7 +326,6 @@ package extension PricingScheduleView {
 @available(iOS 17.0, *)
 #Preview("PriceChart (Today)") {
 	PricingScheduleView.PriceChart(dataset: PricingSchedule.mock.chartData()[1], selectedMoment: .constant(nil))
-		.frame(height: 180)
-		.padding()
+		.frame(height: 140)
 		.withFontRegistration()
 }

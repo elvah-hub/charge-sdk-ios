@@ -6,6 +6,8 @@ import SwiftUI
 package extension PricingScheduleView {
 	/// Header view summarizing the current pricing state for the selected day.
 	struct Summary: View {
+		@Environment(\.accessibilityDifferentiateWithoutColor) private var accessibilityDifferentiateWithoutColor
+
 		/// Controls presentation of the "More Prices" sheet.
 		@State private var showOtherPricesSheet: Bool = false
 
@@ -84,11 +86,17 @@ package extension PricingScheduleView {
 
 			VStack(alignment: .leading, spacing: .size(.XXS)) {
 				AdaptiveHStack(horizontalAlignment: .leading, verticalAlignment: .center, spacing: .size(.XXS)) {
-					Text("\(price.formatted()) /kWh", bundle: .elvahCharge)
-						.typography(.copy(size: .xLarge), weight: .bold)
-						.monospacedDigit()
-						.foregroundStyle(discounted ? .fixedGreen : .primaryContent)
-						.contentTransition(.numericText())
+					HStack {
+						if accessibilityDifferentiateWithoutColor {
+							Image(.discounting)
+								.grayscale(1)
+						}
+						Text("\(price.formatted()) /kWh", bundle: .elvahCharge)
+							.typography(.copy(size: .xLarge), weight: .bold)
+							.monospacedDigit()
+							.foregroundStyle(discounted ? .fixedGreen : .primaryContent)
+							.contentTransition(.numericText())
+					}
 
 					if discounted {
 						Text("\(dataset.basePrice.formatted()) /kWh", bundle: .elvahCharge)

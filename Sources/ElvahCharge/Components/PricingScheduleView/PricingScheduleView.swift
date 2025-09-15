@@ -5,6 +5,7 @@ import SwiftUI
 /// Daily pricing composite view hosting a summary header and a three-day price chart pager.
 @available(iOS 16.0, *)
 package struct PricingScheduleView: View {
+	@Environment(\.dynamicTypeSize) private var dynamicTypeSize
 	@ObservedObject private var router: LivePricingView.Router
 
 	/// Currently selected day in the pager. Defaults to today if available.
@@ -71,7 +72,7 @@ package struct PricingScheduleView: View {
 							.tag(entry.day)
 					}
 				}
-				.frame(height: 140)
+				.frame(height: dynamicTypeSize.isAccessibilitySize ? 200 : 140)
 				.tabViewStyle(.page(indexDisplayMode: .never))
 				.animation(.default, value: selectedDay)
 				.animation(.default, value: selectedMoment)
@@ -103,6 +104,7 @@ package struct PricingScheduleView: View {
 				selectedMoment = nil
 			}
 		}
+		.dynamicTypeSize(...(.accessibility1))
 	}
 
 	/// Segmented control to switch between available days.
@@ -139,4 +141,5 @@ package struct PricingScheduleView: View {
 	let schedule = ChargeSiteSchedule.mock
 	LivePricingView(schedule: schedule)
 		.withFontRegistration()
+		.preferredColorScheme(.dark)
 }

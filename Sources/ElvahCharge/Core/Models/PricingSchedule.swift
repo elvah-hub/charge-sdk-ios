@@ -101,7 +101,7 @@ package extension PricingSchedule {
 						),
 						DiscountSlot(
 							from: Time(timeString: "16:00:00")!,
-							to: Time(timeString: "20:00:00")!,
+							to: Time(timeString: "16:30:00")!,
 							price: ChargePrice(
 								pricePerKWh: Currency(0.21),
 								baseFee: nil,
