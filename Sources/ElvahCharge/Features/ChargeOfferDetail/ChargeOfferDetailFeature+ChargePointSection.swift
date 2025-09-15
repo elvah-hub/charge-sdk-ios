@@ -98,21 +98,6 @@ private struct ChargeOfferDetailOfferBanner: View {
 			.typography(.copy(size: .medium), weight: .bold)
 			.foregroundStyle(.primaryContent)
 			.dynamicTypeSize(...(.accessibility1))
-		} else if hideDiscountBanner == false, offers.contains(where: { $0.isDiscounted }) {
-			CustomSection {
-				HStack(spacing: .size(.S)) {
-					if dynamicTypeSize.isAccessibilitySize == false {
-						Image(.discounting)
-					}
-					Text(
-						"Start charging before the offer ends & get the full discount!",
-						bundle: .elvahCharge
-					)
-				}
-			}
-			.typography(.copy(size: .medium), weight: .bold)
-			.foregroundStyle(.primaryContent)
-			.dynamicTypeSize(...(.accessibility1))
 		}
 	}
 }

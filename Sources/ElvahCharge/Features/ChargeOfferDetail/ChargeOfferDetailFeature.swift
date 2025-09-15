@@ -30,7 +30,7 @@ package struct ChargeOfferDetailFeature: View {
 		offers: [ChargeOffer],
 		router: ChargeOfferDetailFeature.Router,
 		hideOperatorDetails: Bool = false,
-		hideDiscountBanner: Bool = false
+		hideDiscountBanner: Bool = false,
 	) {
 		_offers = Loadable(wrappedValue: .loaded(offers))
 		self.router = router
@@ -93,13 +93,18 @@ package struct ChargeOfferDetailFeature: View {
 	@ViewBuilder private var content: some View {
 		ScrollView {
 			VStack(alignment: .leading, spacing: .size(.L)) {
-				if associatedSite != nil {
-					siteContent
+				if let discountedOffer = activeDiscountedOffer {
+					discountBanner(offer: discountedOffer)
 				}
-				chargePointsContent
+				VStack(alignment: .leading, spacing: .size(.L)) {
+					if associatedSite != nil {
+						siteContent
+					}
+					chargePointsContent
+				}
+				.frame(maxWidth: .infinity, maxHeight: .infinity)
+				.padding(.bottom, .size(.M))
 			}
-			.frame(maxWidth: .infinity, maxHeight: .infinity)
-			.padding(.vertical, 16)
 		}
 		.scrollDismissesKeyboard(.interactively)
 		.coordinateSpace(name: "ScrollView")
@@ -120,21 +125,26 @@ package struct ChargeOfferDetailFeature: View {
 		}
 	}
 
-	@ViewBuilder private var chargePointsContent: some View {
-		ChargeOfferDetailFeature.ChargePointSection(
-			offers: offers,
-			offersSectionOrigin: $scrollPosition,
-			processingOffer: processingOffer,
-			isDiscountBannerHidden: isDiscountBannerHidden,
-			offerAction: { offer in
-				handleChargePointTap(for: offer)
-			},
-			chargeSessionAction: {
-				router.showChargeEntry = true
+	@ViewBuilder private func discountBanner(offer discountedOffer: ChargeOffer) -> some View {
+		TimelineView(.periodic(from: .now, by: 1)) { context in
+			HStack(spacing: .size(.XS)) {
+				Image(.localOffer)
+					.foregroundStyle(.brand)
+				OfferEndLabel(
+					offer: discountedOffer,
+					referenceDate: context.date,
+					prefix: "Offer available for ",
+					primaryColor: .brand,
+				)
+				.typography(.copy(size: .small), weight: .bold)
+				.foregroundStyle(.brand)
 			}
-		)
-		.disabled(paymentInitiation.isRunning)
-		.animation(.default, value: paymentInitiation)
+			.padding(.XS)
+			.frame(maxWidth: .infinity)
+			.multilineTextAlignment(.center)
+			.background(.success)
+			.transition(.move(edge: .top))
+		}
 	}
 
 	@ViewBuilder private func header(title: String, address: Site.Address) -> some View {
@@ -173,6 +183,32 @@ package struct ChargeOfferDetailFeature: View {
 		.frame(maxWidth: .infinity, alignment: .leading)
 		.multilineTextAlignment(.leading)
 		.padding(.horizontal, 16)
+	}
+
+	@ViewBuilder private var chargePointsContent: some View {
+		ChargeOfferDetailFeature.ChargePointSection(
+			offers: offers,
+			offersSectionOrigin: $scrollPosition,
+			processingOffer: processingOffer,
+			isDiscountBannerHidden: isDiscountBannerHidden,
+			offerAction: { offer in
+				handleChargePointTap(for: offer)
+			},
+			chargeSessionAction: {
+				router.showChargeEntry = true
+			},
+		)
+		.disabled(paymentInitiation.isRunning)
+		.animation(.default, value: paymentInitiation)
+	}
+
+	/// The first discounted offer that has not yet ended.
+	/// Used to drive the green header banner with the remaining availability time.
+	private var activeDiscountedOffer: ChargeOffer? {
+		guard case let .loaded(loadedOffers) = offers else {
+			return nil
+		}
+		return loadedOffers.first(where: { $0.isDiscounted && $0.isAvailable })
 	}
 
 	// MARK: - Actions
@@ -219,7 +255,7 @@ package struct ChargeOfferDetailFeature: View {
 			router.chargeRequest = ChargeRequest(
 				site: site,
 				signedOffer: signedOffer,
-				paymentContext: context
+				paymentContext: context,
 			)
 		}
 	}
@@ -250,7 +286,7 @@ package extension ChargeOfferDetailFeature {
 	NavigationStack {
 		ChargeOfferDetailFeature(
 			offers: [.mockAvailable, .mockUnavailable, .mockOutOfService],
-			router: .init()
+			router: .init(),
 		)
 		.siteInformation(.mock)
 	}
