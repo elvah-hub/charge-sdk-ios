@@ -110,6 +110,29 @@
         }
       }
     },
+    "%@ per kilowatt-hour" : {
+
+    },
+    "%@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$@"
+          }
+        }
+      }
+    },
+    "%@, discounted %@. Original Price: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, discounted %2$@. Original Price: %3$@"
+          }
+        }
+      }
+    },
     "%@/kWh" : {
       "comment" : "campaign_banner__original_price_text",
       "localizations" : {
@@ -1153,6 +1176,16 @@
         }
       }
     },
+    "From %@ to %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "From %1$@ to %2$@"
+          }
+        }
+      }
+    },
     "From %@/kWh" : {
       "comment" : "campaign_banner__current_price_text",
       "localizations" : {
@@ -1467,6 +1500,9 @@
         }
       }
     },
+    "No offer windows" : {
+
+    },
     "No results for %@" : {
 
     },
@@ -1492,6 +1528,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Occupé"
+          }
+        }
+      }
+    },
+    "Offer active, %@ per kWh, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Offer active, %1$@ per kWh, %2$@"
           }
         }
       }
@@ -1641,6 +1687,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "L'offre est terminée"
+          }
+        }
+      }
+    },
+    "Offer upcoming, %@ per kWh, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Offer upcoming, %1$@ per kWh, %2$@"
+          }
+        }
+      }
+    },
+    "Offer windows: %@" : {
+
+    },
+    "Offer windows: %@ and %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Offer windows: %1$@ and %2$@"
+          }
+        }
+      }
+    },
+    "Offer windows: %@, %@, and %lld more" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Offer windows: %1$@, %2$@, and %3$lld more"
           }
         }
       }
@@ -1998,6 +2077,16 @@
     },
     "Price" : {
 
+    },
+    "Price chart, %@, base price %@ per kWh" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Price chart, %1$@, base price %2$@ per kWh"
+          }
+        }
+      }
     },
     "Price Line" : {
 
@@ -2398,6 +2487,9 @@
           }
         }
       }
+    },
+    "Switch between days" : {
+
     },
     "Terms of Service & Charging" : {
       "comment" : "terms_privacy_template_1",

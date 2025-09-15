@@ -81,6 +81,7 @@ public struct LivePricingView: View {
 				isChargeButtonHidden: isChargeButtonHidden,
 				horizontalAreaPaddings: horizontalAreaPaddings,
 			)
+			.accessibilityElement(children: .contain)
 			.fullScreenCover(item: $router.chargeOfferDetail) { siteSchedule in
 				ChargeOfferDetailRootFeature(site: nil, offers: siteSchedule.chargeSite.offers)
 			}

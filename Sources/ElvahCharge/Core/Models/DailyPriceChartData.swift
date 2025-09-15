@@ -15,8 +15,8 @@ package struct DailyPriceChartData: Hashable, Sendable, Codable {
 
 	/// Discounted pricing segments with explicit start/end times and a price.
 	package var discounts: [DiscountSpan]
-	/// Non-discount segments (baseline) covering the remaining parts of the day.
 
+	/// Non-discount segments (baseline) covering the remaining parts of the day.
 	package var gaps: [GapSpan]
 
 	/// A time range with a specific discounted price.

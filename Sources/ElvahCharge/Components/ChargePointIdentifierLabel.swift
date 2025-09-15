@@ -33,7 +33,7 @@ struct ChargePointIdentifierLabel: View {
 					.padding(.horizontal, 8)
 					.typography(.copy(size: .small), weight: .bold)
 					.padding(.vertical, 4)
-					.background(.label, in: .rect(cornerRadius: 4))
+					.background(.labelSDK, in: .rect(cornerRadius: 4))
 			}
 		}
 		.foregroundStyle(.primaryContent)

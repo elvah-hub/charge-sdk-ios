@@ -22,6 +22,7 @@ package extension PricingScheduleView {
 				Text(title)
 					.typography(.title(size: .small), weight: .bold)
 					.foregroundStyle(.primaryContent)
+					.accessibilityAddTraits(.isHeader)
 				Text(address.formatted())
 					.typography(.copy(size: .medium))
 					.foregroundStyle(.secondaryContent)
@@ -29,6 +30,7 @@ package extension PricingScheduleView {
 			}
 			.frame(maxWidth: .infinity, alignment: .leading)
 			.multilineTextAlignment(.leading)
+			.accessibilityElement(children: .combine)
 		}
 	}
 }

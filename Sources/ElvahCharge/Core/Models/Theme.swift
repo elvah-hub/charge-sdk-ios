@@ -89,7 +89,7 @@ public extension Theme {
 		public var decorativeStroke: SwiftUI.Color
 		public var brandSecondary: SwiftUI.Color
 		public var container: SwiftUI.Color
-		public var label: SwiftUI.Color
+		public var labelSDK: SwiftUI.Color
 
 		/// Creates a new color theme.
 		///
@@ -121,7 +121,7 @@ public extension Theme {
 			self.decorativeStroke = decorativeStroke
 			self.brandSecondary = brandSecondary
 			self.container = container
-			self.label = label
+			self.labelSDK = label
 		}
 
 		public static let `default`: Color = .neutral
@@ -204,7 +204,7 @@ package extension ShapeStyle where Self == Color {
 		Elvah.configuration.theme.color.container
 	}
 
-	static var label: Color {
-		Elvah.configuration.theme.color.label
+	static var labelSDK: Color {
+		Elvah.configuration.theme.color.labelSDK
 	}
 }

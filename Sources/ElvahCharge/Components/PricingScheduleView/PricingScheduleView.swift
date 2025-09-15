@@ -65,7 +65,7 @@ package struct PricingScheduleView: View {
 			VStack(spacing: .size(.M)) {
 				TabView(selection: $selectedDay) {
 					ForEach(chartEntries) { entry in
-						PriceChart(data: entry.dataset, selectedMoment: $selectedMoment)
+						PriceChart(dataset: entry.dataset, selectedMoment: $selectedMoment)
 							.padding(.vertical, 4)
 							.frame(maxWidth: .infinity)
 							.tag(entry.day)
@@ -90,6 +90,7 @@ package struct PricingScheduleView: View {
 				.padding(.horizontal, horizontalAreaPaddings[.footer])
 			}
 		}
+		.accessibilityElement(children: .contain)
 		.onChange(of: selectedDay) { _ in
 			// Reset any specific time selection when switching days
 			selectedMoment = nil
@@ -117,6 +118,7 @@ package struct PricingScheduleView: View {
 			Text("Day", bundle: .elvahCharge)
 		}
 		.pickerStyle(.segmented)
+		.accessibilityHint(Text("Switch between days", bundle: .elvahCharge))
 	}
 
 	/// Returns a localized label for the given relative day.

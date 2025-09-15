@@ -8,14 +8,14 @@ package extension PricingScheduleView {
 	/// Single-day price chart using Swift Charts. Migrated from `DailyPriceChart`.
 	struct PriceChart: View {
 		/// Chart data representing the selected day.
-		package var data: DailyPriceChartData
+		package var dataset: DailyPriceChartData
 
 		/// Selected point in time within the chart, used to highlight a block.
 		/// Routed from the parent so summary and chart stay in sync.
 		@Binding package var selectedMoment: Date?
 
-		package init(data: DailyPriceChartData, selectedMoment: Binding<Date?>) {
-			self.data = data
+		package init(dataset: DailyPriceChartData, selectedMoment: Binding<Date?>) {
+			self.dataset = dataset
 			_selectedMoment = selectedMoment
 		}
 
@@ -27,7 +27,7 @@ package extension PricingScheduleView {
 					discountedSegments
 					discountBoundaries
 					if isToday {
-						currentTimeMarker(now: context.date)
+						currentTimeMarker(reference: context.date)
 					}
 				}
 				.animation(.default, value: context.date)
@@ -46,22 +46,25 @@ package extension PricingScheduleView {
 							)
 					}
 				}
+				.accessibilityElement(children: .ignore)
+				.accessibilityLabel(accessibilityChartLabelText)
+				.accessibilityValue(accessibilityChartValueText)
 			}
 			.chartXAxis {
 				if #available(iOS 17.0, *) {
-					AxisMarks(preset: .aligned, values: hourlyTicks(for: data.day)) { _ in
+					AxisMarks(preset: .aligned, values: hourlyTicks(for: dataset.day)) { _ in
 						AxisValueLabel(format: .dateTime.hour(.twoDigits(amPM: .omitted)))
 							.font(.caption.bold())
 					}
 				} else {
-					AxisMarks(values: axisHourlyTicks(for: data.day)) { _ in
+					AxisMarks(values: axisHourlyTicks(for: dataset.day)) { _ in
 						AxisValueLabel(format: .dateTime.hour(.twoDigits(amPM: .omitted)))
 							.font(.caption.bold())
 					}
 				}
 			}
 			.chartYAxis(.hidden)
-			.chartXScale(domain: PricingComputation.fullDayDomain(for: data.day))
+			.chartXScale(domain: dataset.day.fullDayRange)
 			.chartYScale(domain: yAxisDomain())
 		}
 
@@ -69,7 +72,7 @@ package extension PricingScheduleView {
 
 		/// Hour grid: solid at midnights, dotted every 4 hours otherwise.
 		private var hourGrid: some ChartContent {
-			ForEach(hourlyTicks(for: data.day), id: \.self) { tick in
+			ForEach(hourlyTicks(for: dataset.day), id: \.self) { tick in
 				if isMidnight(tick) {
 					RuleMark(x: .value("Hour", tick))
 						.foregroundStyle(.gray.opacity(0.3))
@@ -84,12 +87,12 @@ package extension PricingScheduleView {
 
 		/// Baseline band across non-discount ranges only (interrupted by green).
 		private var baselineBand: some ChartContent {
-			ForEach(data.gaps) { segment in
+			ForEach(dataset.gaps) { segment in
 				RectangleMark(
 					xStart: .value("Start", segment.startTime),
 					xEnd: .value("End", segment.endTime),
 					yStart: .value("Zero", 0.0),
-					yEnd: .value("Base", data.basePrice.amount),
+					yEnd: .value("Base", dataset.basePrice.amount),
 				)
 				.foregroundStyle(.gray.opacity(0.15))
 				.lineStyle(StrokeStyle(lineWidth: 1))
@@ -98,7 +101,7 @@ package extension PricingScheduleView {
 				RuleMark(
 					xStart: .value("Start", segment.startTime),
 					xEnd: .value("End", segment.endTime),
-					y: .value("Base Line", data.basePrice.amount),
+					y: .value("Base Line", dataset.basePrice.amount),
 				)
 				.foregroundStyle(.gray)
 				.lineStyle(StrokeStyle(lineWidth: 1))
@@ -108,7 +111,7 @@ package extension PricingScheduleView {
 
 		/// Discounted segments fill and price line overlay.
 		private var discountedSegments: some ChartContent {
-			ForEach(data.discounts) { segment in
+			ForEach(dataset.discounts) { segment in
 				RectangleMark(
 					xStart: .value("Start", segment.startTime),
 					xEnd: .value("End", segment.endTime),
@@ -132,10 +135,10 @@ package extension PricingScheduleView {
 
 		/// Solid vertical borders at discount edges from base down to discount price.
 		private var discountBoundaries: some ChartContent {
-			ForEach(data.discounts) { segment in
+			ForEach(dataset.discounts) { segment in
 				RuleMark(
 					x: .value("Boundary Start", segment.startTime),
-					yStart: .value("Base", data.basePrice.amount),
+					yStart: .value("Base", dataset.basePrice.amount),
 					yEnd: .value("Price", segment.price.amount),
 				)
 				.foregroundStyle(.gray)
@@ -144,7 +147,7 @@ package extension PricingScheduleView {
 
 				RuleMark(
 					x: .value("Boundary End", segment.endTime),
-					yStart: .value("Base", data.basePrice.amount),
+					yStart: .value("Base", dataset.basePrice.amount),
 					yEnd: .value("Price", segment.price.amount),
 				)
 				.foregroundStyle(.gray)
@@ -154,25 +157,25 @@ package extension PricingScheduleView {
 		}
 
 		@ChartContentBuilder
-		private func currentTimeMarker(now: Date) -> some ChartContent {
-			let price = PricingComputation.currentPrice(at: now, in: data)
-			let isDiscount = PricingComputation.isDiscounted(at: now, in: data)
+		private func currentTimeMarker(reference: Date) -> some ChartContent {
+			let price = dataset.price(at: reference)
+			let isDiscount = dataset.hasDiscount(at: reference)
 			let markerColor: Color = isDiscount ? .fixedGreen : .gray
 
 			RuleMark(
-				x: .value("Now", now),
+				x: .value("Now", reference),
 				yStart: .value("Zero", 0.0),
-				yEnd: .value("Current Price", price),
+				yEnd: .value("Current Price", price.amount),
 			)
 			.foregroundStyle(markerColor)
 			.lineStyle(StrokeStyle(lineWidth: 2))
 
-			PointMark(x: .value("Now", now), y: .value("Current Price", price))
+			PointMark(x: .value("Now", reference), y: .value("Current Price", price.amount))
 				.symbol(.circle)
 				.symbolSize(100)
 				.foregroundStyle(markerColor)
 
-			PointMark(x: .value("Now", now), y: .value("Current Price", price))
+			PointMark(x: .value("Now", reference), y: .value("Current Price", price.amount))
 				.symbol(.circle)
 				.symbolSize(30)
 				.foregroundStyle(.white)
@@ -184,15 +187,14 @@ package extension PricingScheduleView {
 		private func updateSelection(from location: CGPoint, proxy: ChartProxy, geometry: GeometryProxy) {
 			let origin = geometry[proxy.plotAreaFrame].origin
 			let plotLocation = CGPoint(x: location.x - origin.x, y: location.y - origin.y)
-			if let tapped: Date = proxy.value(atX: plotLocation.x, as: Date.self) {
-				// Toggle: tapping same block clears selection; otherwise select tapped moment.
-				if let current = selectedMoment,
-				   let currentRange = PricingComputation.segmentRange(containing: current, in: data),
-				   let tappedRange = PricingComputation.segmentRange(containing: tapped, in: data),
+			if let tappedDate: Date = proxy.value(atX: plotLocation.x, as: Date.self) {
+				if let currentMoment = selectedMoment,
+				   let currentRange = dataset.dateRangeOfSegment(containing: currentMoment),
+				   let tappedRange = dataset.dateRangeOfSegment(containing: tappedDate),
 				   currentRange == tappedRange {
 					selectedMoment = nil
 				} else {
-					selectedMoment = tapped
+					selectedMoment = tappedDate
 				}
 			}
 		}
@@ -202,8 +204,10 @@ package extension PricingScheduleView {
 			guard let selected = selectedMoment else {
 				return 1.0
 			}
+
 			// Only dim if the selection is inside this day's domain.
-			let domain = PricingComputation.fullDayDomain(for: data.day)
+			let domain = dataset.day.fullDayRange
+
 			guard domain.contains(selected) else {
 				return 1.0
 			}
@@ -212,12 +216,12 @@ package extension PricingScheduleView {
 
 		/// Y-axis domain from zero up to base price plus a small headroom.
 		private func yAxisDomain() -> ClosedRange<Double> {
-			let upper = data.basePrice.amount + 0.1
+			let upper = dataset.basePrice.amount + 0.1
 			return 0 ... max(upper, 0.2)
 		}
 
 		/// True if the chart represents today's date (used to show the time marker).
-		private var isToday: Bool { Calendar.current.isDate(Date(), inSameDayAs: data.day) }
+		private var isToday: Bool { Calendar.current.isDate(Date(), inSameDayAs: dataset.day) }
 
 		/// Returns true if the given `Date` is at the top of an hour equal to midnight.
 		private func isMidnight(_ date: Date) -> Bool {
@@ -249,12 +253,71 @@ package extension PricingScheduleView {
 				return tick
 			}
 		}
+
+		/// Accessibility label describing the chart.
+		private var accessibilityChartLabelText: Text {
+			Text(
+				"""
+				Price chart, \(Text(relativeDayLabel)), \
+				base price \(Text(dataset.basePrice.formatted())) per kWh
+				""",
+				bundle: .elvahCharge,
+			)
+		}
+
+		/// Accessibility value summarizing discount windows including price per offer.
+		private var accessibilityChartValueText: Text {
+			let discounts = dataset.discounts
+			guard discounts.isEmpty == false else {
+				return Text("No offer windows", bundle: .elvahCharge)
+			}
+
+			// Build fixed variations for better localization and reuse across platforms.
+			let firstDiscount = discounts[0]
+			let firstDiscountText = offerAccessibilityText(for: firstDiscount)
+
+			if discounts.count == 1 {
+				return Text("Offer windows: \(firstDiscountText)", bundle: .elvahCharge)
+			}
+
+			let secondDiscount = discounts[1]
+			let secondDiscountText = offerAccessibilityText(for: secondDiscount)
+
+			if discounts.count == 2 {
+				return Text("Offer windows: \(firstDiscountText) and \(secondDiscountText)", bundle: .elvahCharge)
+			}
+
+			let remainingCount = discounts.count - 2
+			return Text(
+				"Offer windows: \(firstDiscountText), \(secondDiscountText), and \(remainingCount) more",
+				bundle: .elvahCharge,
+			)
+		}
+
+		private func offerAccessibilityText(for discount: DailyPriceChartData.DiscountSpan) -> Text {
+			let priceText = Text("\(discount.price.formatted()) per kilowatt-hour", bundle: .elvahCharge)
+			return Text("\(priceText), \(discount.timeRangeAccessibilityText)")
+		}
+
+		/// Relative day label for accessibility.
+		private var relativeDayLabel: LocalizedStringKey {
+			let calendar = Calendar.current
+
+			if calendar.isDateInYesterday(dataset.day) {
+				return "Yesterday"
+			}
+			if calendar.isDateInTomorrow(dataset.day) {
+				return "Tomorrow"
+			}
+
+			return "Today"
+		}
 	}
 }
 
 @available(iOS 17.0, *)
 #Preview("PriceChart (Today)") {
-	PricingScheduleView.PriceChart(data: PricingSchedule.mock.chartData()[1], selectedMoment: .constant(nil))
+	PricingScheduleView.PriceChart(dataset: PricingSchedule.mock.chartData()[1], selectedMoment: .constant(nil))
 		.frame(height: 180)
 		.padding()
 		.withFontRegistration()

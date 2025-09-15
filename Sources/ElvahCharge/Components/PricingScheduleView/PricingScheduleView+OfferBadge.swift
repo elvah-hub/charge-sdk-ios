@@ -37,6 +37,8 @@ package extension PricingScheduleView {
 			.foregroundStyle(foreground)
 			.typography(.copy(size: .small), weight: .bold)
 			.transformEffect(.identity)
+			.accessibilityElement(children: .combine)
+			.accessibilityLabel(accessibilityLabelText)
 		}
 
 		private var backgroundShape: some Shape {
@@ -64,7 +66,7 @@ package extension PricingScheduleView {
 		@ViewBuilder private func adaptiveLabel(prefix: Text, span: DailyPriceChartData.DiscountSpan) -> some View {
 			AdaptiveHStack(horizontalAlignment: .leading, spacing: 4) {
 				prefix
-				timeRangeText(span).foregroundStyle(.primaryContent)
+				span.timeRangeText.foregroundStyle(.primaryContent)
 			}
 		}
 
@@ -105,11 +107,22 @@ package extension PricingScheduleView {
 			}
 		}
 
-		/// Helper to format the time range.
-		private func timeRangeText(_ span: DailyPriceChartData.DiscountSpan) -> Text {
-			let start = Text(span.startTime, format: .dateTime.hour().minute())
-			let end = Text(span.endTime, format: .dateTime.hour().minute())
-			return Text("\(start) → \(end)")
+		/// Accessibility label summarizing the badge state.
+		private var accessibilityLabelText: Text {
+			switch state {
+			case let .active(span):
+				Text(
+					"Offer active, \(Text(span.price.formatted())) per kWh, \(span.timeRangeAccessibilityText)",
+					bundle: .elvahCharge
+				)
+			case let .upcoming(span):
+				Text(
+					"Offer upcoming, \(Text(span.price.formatted())) per kWh, \(span.timeRangeAccessibilityText)",
+					bundle: .elvahCharge
+				)
+			case .none:
+				Text("No offer available", bundle: .elvahCharge)
+			}
 		}
 	}
 }

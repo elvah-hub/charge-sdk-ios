@@ -9,7 +9,7 @@ package extension PricingScheduleView {
 		/// Controls presentation of the "More Prices" sheet.
 		@State private var showOtherPricesSheet: Bool = false
 
-		/// The dataset that the drives the summary.
+		/// The dataset that the drives the summary for a specific day.
 		private var dataset: DailyPriceChartData
 
 		/// Selected moment binding to drive the summary instead of the current time.
@@ -37,6 +37,12 @@ package extension PricingScheduleView {
 				}
 				.frame(maxWidth: .infinity, alignment: .leading)
 				.animation(.default, value: context.date)
+				.accessibilityElement(children: .ignore)
+				.accessibilityLabel(Text("Live Pricing", bundle: .elvahCharge))
+				.accessibilityValue(accessibilityPriceValueText(reference: reference))
+				.accessibilityAction(named: Text("Show other prices", bundle: .elvahCharge)) {
+					showOtherPricesSheet = true
+				}
 			}
 			.sheet(isPresented: $showOtherPricesSheet) {
 				MorePricesSheetContent()
@@ -50,6 +56,7 @@ package extension PricingScheduleView {
 						.typography(.copy(size: .medium), weight: .bold)
 						.foregroundStyle(.secondaryContent)
 						.contentTransition(.interpolate)
+						.accessibilityAddTraits(.isHeader)
 				}
 				if isHorizontal {
 					Spacer()
@@ -62,6 +69,7 @@ package extension PricingScheduleView {
 							.typography(.copy(size: .medium))
 							.foregroundStyle(.primaryContent)
 						Image(.chevronSmallDown)
+							.accessibilityHidden(true)
 					}
 				}
 				.buttonStyle(.plain)
@@ -71,12 +79,12 @@ package extension PricingScheduleView {
 		}
 
 		@ViewBuilder private func priceRow(reference: Date) -> some View {
-			let price = PricingComputation.currentPrice(at: reference, in: dataset)
-			let discounted = PricingComputation.isDiscounted(at: reference, in: dataset)
+			let price = dataset.price(at: reference)
+			let discounted = dataset.hasDiscount(at: reference)
 
 			VStack(alignment: .leading, spacing: .size(.XXS)) {
 				AdaptiveHStack(horizontalAlignment: .leading, verticalAlignment: .center, spacing: .size(.XXS)) {
-					Text("\(Currency(price).formatted()) /kWh", bundle: .elvahCharge)
+					Text("\(price.formatted()) /kWh", bundle: .elvahCharge)
 						.typography(.copy(size: .xLarge), weight: .bold)
 						.monospacedDigit()
 						.foregroundStyle(discounted ? .fixedGreen : .primaryContent)
@@ -105,9 +113,8 @@ package extension PricingScheduleView {
 				spacing: .size(.S),
 				breakPoint: .xxLarge,
 			) {
-				if let moment = selectedMoment,
-				   let range = PricingComputation.segmentRange(containing: moment, in: dataset) {
-					Text("\(dayText) \(timeRangeText(range))", bundle: .elvahCharge)
+				if let moment = selectedMoment, let range = dataset.dateRangeOfSegment(containing: moment) {
+					Text("\(dayText) \(range.textRepresentation)", bundle: .elvahCharge)
 						.typography(.copy(size: .medium), weight: .bold)
 						.foregroundStyle(.secondaryContent)
 						.contentTransition(.numericText())
@@ -121,6 +128,7 @@ package extension PricingScheduleView {
 						.transition(.opacity.combined(with: .scale(scale: 0.8)))
 						.layoutPriority(1)
 				}
+
 				OfferBadge(state: currentBadgeState(reference: reference), showsTimeRange: selectedMoment == nil)
 					.lineLimit(1)
 					.opacity(isYesterday && selectedMoment == nil ? 0 : 1)
@@ -136,16 +144,14 @@ package extension PricingScheduleView {
 			let calendar = Calendar.current
 
 			// Reflect explicit selection when it falls within the day's domain
-			if let selected = selectedMoment, PricingComputation.fullDayDomain(for: dataset.day).contains(selected) {
-				if let active = dataset.discounts.first(where: { selected >= $0.startTime && selected < $0.endTime }) {
+			if let selected = selectedMoment, dataset.day.fullDayRange.contains(selected) {
+				if let active = dataset.discounts.activeSpan(at: reference) {
 					return .active(active)
 				}
 				return .none
 			}
 
 			// For future days (tomorrow), show the first available offer of the day
-			// instead of evaluating at a noon reference, which could fall after
-			// the day's only offer window and incorrectly display "No offer available".
 			if calendar.isDateInTomorrow(dataset.day) {
 				if let firstOffer = dataset.discounts.first {
 					return .upcoming(firstOffer)
@@ -154,13 +160,39 @@ package extension PricingScheduleView {
 			}
 
 			// Live evaluation for today based on the provided reference moment
-			if let active = dataset.discounts.first(where: { reference >= $0.startTime && reference < $0.endTime }) {
+			if let active = dataset.discounts.activeSpan(at: reference) {
 				return .active(active)
 			}
-			if let next = dataset.discounts.first(where: { $0.startTime > reference }) {
+
+			if let next = dataset.discounts.nextSpan(after: reference) {
 				return .upcoming(next)
 			}
+
 			return .none
+		}
+
+		// MARK: - Accessibility
+
+		private func accessibilityPriceValueText(reference: Date) -> Text {
+			let price = dataset.price(at: reference)
+			let discounted = dataset.hasDiscount(at: reference)
+
+			let priceText = Text("\(price.formatted()) per kilowatt-hour", bundle: .elvahCharge)
+			var basePriceText: Text?
+
+			if discounted {
+				basePriceText = Text("\(dataset.basePrice.formatted()) per kilowatt-hour", bundle: .elvahCharge)
+			}
+
+			if let basePriceText, let segmentRange = dataset.dateRangeOfSegment(containing: reference) {
+				return Text(
+					"""
+					\(priceText), discounted \(segmentRange.accessibilityTextRepresentation). Original Price: \(basePriceText)
+					""",
+					bundle: .elvahCharge
+				)
+			}
+			return priceText
 		}
 
 		// MARK: - Helpers
@@ -171,7 +203,7 @@ package extension PricingScheduleView {
 		/// the view behaves “live” for today (using `timelineNow`) and uses a stable noon
 		/// fallback for non-today days to avoid misleading midnight values.
 		private func displayReference(for timelineNow: Date) -> Date {
-			let domain = PricingComputation.fullDayDomain(for: dataset.day)
+			let domain = dataset.day.fullDayRange
 			let isSelectionInDay = selectedMoment.flatMap { domain.contains($0) } ?? false
 			let isToday = Calendar.current.isDateInToday(dataset.day)
 			let fallback = isToday ? timelineNow : noon(of: dataset.day)
