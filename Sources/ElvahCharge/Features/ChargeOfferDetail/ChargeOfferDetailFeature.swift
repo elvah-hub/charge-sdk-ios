@@ -20,6 +20,12 @@ package struct ChargeOfferDetailFeature: View {
 	@Loadable<Double?> private var routeDistanceToStation
 	@Process private var paymentInitiation
 
+	/// The charge offer that is used to determine the date at which the campaign ends, if there is one active.
+	///
+	/// While campaigns live inside each charge point, all charge points on a site share the same campaign end date,
+	/// so the detail view can just grab any offer and reads its campaign details.
+	@State private var discountedOfferRepresentative: ChargeOffer?
+
 	/// Whether to hide operator details in the header.
 	private var isOperatorDetailsHidden = false
 
@@ -54,6 +60,9 @@ package struct ChargeOfferDetailFeature: View {
 				}
 
 				await reloadData(for: associatedSite)
+			}
+			.task(id: loadedOfferIdentifiers) {
+				await updateDiscountBannerLifecycle()
 			}
 			.onChange(of: associatedSite) { associatedSite in
 				$reloadTaskId.new()
@@ -93,8 +102,8 @@ package struct ChargeOfferDetailFeature: View {
 	@ViewBuilder private var content: some View {
 		ScrollView {
 			VStack(alignment: .leading, spacing: .size(.L)) {
-				if let discountedOffer = activeDiscountedOffer {
-					discountBanner(offer: discountedOffer)
+				if let discountedOfferRepresentative {
+					discountBanner(for: discountedOfferRepresentative)
 				}
 				VStack(alignment: .leading, spacing: .size(.L)) {
 					if associatedSite != nil {
@@ -125,7 +134,7 @@ package struct ChargeOfferDetailFeature: View {
 		}
 	}
 
-	@ViewBuilder private func discountBanner(offer discountedOffer: ChargeOffer) -> some View {
+	@ViewBuilder private func discountBanner(for discountedOffer: ChargeOffer) -> some View {
 		TimelineView(.periodic(from: .now, by: 1)) { context in
 			HStack(spacing: .size(.XS)) {
 				Image(.localOffer)
@@ -202,13 +211,44 @@ package struct ChargeOfferDetailFeature: View {
 		.animation(.default, value: paymentInitiation)
 	}
 
-	/// The first discounted offer that has not yet ended.
-	/// Used to drive the green header banner with the remaining availability time.
-	private var activeDiscountedOffer: ChargeOffer? {
+	private func updateDiscountBannerLifecycle() async {
 		guard case let .loaded(loadedOffers) = offers else {
-			return nil
+			discountedOfferRepresentative = nil
+			return
 		}
-		return loadedOffers.first(where: { $0.isDiscounted && $0.isAvailable })
+
+		guard let discounted = loadedOffers.first(where: { $0.isDiscounted && $0.isAvailable }) else {
+			discountedOfferRepresentative = nil
+			return
+		}
+
+		discountedOfferRepresentative = discounted
+
+		guard let campaign = discounted.campaign else {
+			return
+		}
+
+		let remainingSeconds = campaign.endDate.timeIntervalSinceNow
+
+		guard remainingSeconds > 0 else {
+			discountedOfferRepresentative = nil
+			return
+		}
+
+		do {
+			try await Task.sleep(for: .seconds(remainingSeconds))
+			discountedOfferRepresentative = nil
+		} catch is CancellationError {} catch {
+			discountedOfferRepresentative = nil
+		}
+	}
+
+	/// Identifiers of the currently loaded offers used for change observation.
+	private var loadedOfferIdentifiers: [String] {
+		guard case let .loaded(loadedOffers) = offers else {
+			return []
+		}
+		return loadedOffers.map(\.id)
 	}
 
 	// MARK: - Actions
