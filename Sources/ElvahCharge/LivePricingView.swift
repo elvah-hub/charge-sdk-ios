@@ -56,6 +56,13 @@ public struct LivePricingView: View {
 	/// Whether to hide the charge button.
 	private var isChargeButtonHidden = false
 
+	/// Optional horizontal inset to apply to certain subcomponents.
+	///
+	/// When set, this value is passed down to internal components and used as
+	/// the horizontal padding for the header and the primary action button.
+	/// The chart remains edge‑to‑edge. If `nil`, the system default padding is used.
+	private var horizontalAreaPaddings: [ComponentArea: CGFloat] = [:]
+
 	/// Creates a live pricing view for a given pricing schedule.
 	/// - Note: On iOS versions earlier than 16, the view renders as an empty placeholder.
 	///
@@ -71,7 +78,8 @@ public struct LivePricingView: View {
 				schedule: schedule,
 				router: router,
 				isOperatorDetailsHidden: isOperatorDetailsHidden,
-				isChargeButtonHidden: isChargeButtonHidden
+				isChargeButtonHidden: isChargeButtonHidden,
+				horizontalAreaPaddings: horizontalAreaPaddings,
 			)
 			.fullScreenCover(item: $router.chargeOfferDetail) { siteSchedule in
 				ChargeOfferDetailRootFeature(site: nil, offers: siteSchedule.chargeSite.offers)
@@ -82,6 +90,21 @@ public struct LivePricingView: View {
 		}
 	}
 }
+
+public extension LivePricingView {
+	struct ComponentArea: OptionSet, Sendable, Hashable {
+		public let rawValue: Int
+		public static let header = ComponentArea(rawValue: 1 << 0)
+		public static let footer = ComponentArea(rawValue: 1 << 1)
+		public static let all: ComponentArea = [.header, .footer]
+
+		public init(rawValue: Int) {
+			self.rawValue = rawValue
+		}
+	}
+}
+
+// MARK: - View Modification
 
 public extension LivePricingView {
 	/// Hides the operator and address details shown in the schedule header.
@@ -115,6 +138,45 @@ public extension LivePricingView {
 	func chargeButtonHidden(_ hide: Bool = true) -> LivePricingView {
 		var copy = self
 		copy.isChargeButtonHidden = hide
+		return copy
+	}
+
+	/// Applies horizontal padding to specific areas within the component.
+	///
+	/// The padding is applied only to the provided areas (for example, the
+	/// header and the primary action). The price chart always renders
+	/// edge‑to‑edge and does not accept horizontal padding because it is a
+	/// scroll view.
+	///
+	/// - Important: Avoid adding a global horizontal padding to
+	///   `LivePricingView` itself, as that would also inset the chart and can
+	///   make the scrollable content appear visually cut off. Prefer this
+	///   targeted modifier instead.
+	///
+	/// - Parameters:
+	///   - value: The horizontal padding, in points. Pass `nil` to use the
+	///     system default.
+	///   - areas: The component areas that should receive the padding (for
+	///     example, `.header`, `.footer`, or `.all`).
+	/// - Returns: A copy of the view with the horizontal padding applied to the
+	///   specified areas.
+	///
+	/// Example
+	/// ```swift
+	/// LivePricingView(schedule: schedule)
+	///     .padding(16, for: [.header, .footer])
+	/// ```
+	func padding(_ value: CGFloat?, for areas: ComponentArea) -> LivePricingView {
+		var copy = self
+
+		if areas.contains(.header) {
+			copy.horizontalAreaPaddings[.header] = value
+		}
+
+		if areas.contains(.footer) {
+			copy.horizontalAreaPaddings[.footer] = value
+		}
+
 		return copy
 	}
 }

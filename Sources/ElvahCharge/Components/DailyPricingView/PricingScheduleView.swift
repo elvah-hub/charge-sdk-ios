@@ -27,17 +27,22 @@ package struct PricingScheduleView: View {
 	/// Whether to hide the charge now button.
 	private var isChargeButtonHidden: Bool
 
+	/// Optional horizontal inset for the summary and primary action button.
+	private var horizontalAreaPaddings: [LivePricingView.ComponentArea: CGFloat]
+
 	/// Create the component with precomputed chart entries.
 	package init(
 		schedule: ChargeSiteSchedule,
 		router: LivePricingView.Router,
 		isOperatorDetailsHidden: Bool = false,
-		isChargeButtonHidden: Bool = false
+		isChargeButtonHidden: Bool = false,
+		horizontalAreaPaddings: [LivePricingView.ComponentArea: CGFloat] = [:],
 	) {
 		self.schedule = schedule
 		self.router = router
 		self.isOperatorDetailsHidden = isOperatorDetailsHidden
 		self.isChargeButtonHidden = isChargeButtonHidden
+		self.horizontalAreaPaddings = horizontalAreaPaddings
 	}
 
 	package var body: some View {
@@ -47,10 +52,12 @@ package struct PricingScheduleView: View {
 			   let operatorName = schedule.chargeSite.operatorName,
 			   let address = schedule.chargeSite.address {
 				Header(title: operatorName, address: address)
+					.padding(.horizontal, horizontalAreaPaddings[.header])
 			}
 
 			if let current = chartEntries.first(where: { $0.day == selectedDay })?.dataset {
-				Summary(dataset: current, selectedMoment: $selectedMoment).padding(.horizontal)
+				Summary(dataset: current, selectedMoment: $selectedMoment)
+					.padding(.horizontal, horizontalAreaPaddings[.header])
 					.animation(.default, value: selectedDay)
 					.animation(.default, value: selectedMoment)
 			}
@@ -71,7 +78,7 @@ package struct PricingScheduleView: View {
 
 				if chartEntries.count >= 2 {
 					dayPicker(chartEntries: chartEntries, selection: $selectedDay)
-						.padding(.horizontal)
+						.padding(.horizontal, horizontalAreaPaddings[.footer])
 				}
 			}
 
@@ -80,7 +87,7 @@ package struct PricingScheduleView: View {
 					router.chargeOfferDetail = schedule
 				}
 				.buttonStyle(.primary)
-				.padding(.horizontal)
+				.padding(.horizontal, horizontalAreaPaddings[.footer])
 			}
 		}
 		.onChange(of: selectedDay) { _ in
@@ -100,7 +107,7 @@ package struct PricingScheduleView: View {
 	/// Segmented control to switch between available days.
 	private func dayPicker(
 		chartEntries: [PricingScheduleChartEntry],
-		selection: Binding<PricingSchedule.RelativeDay>
+		selection: Binding<PricingSchedule.RelativeDay>,
 	) -> some View {
 		Picker(selection: selection) {
 			ForEach(chartEntries) { entry in
@@ -116,11 +123,11 @@ package struct PricingScheduleView: View {
 	private func relativeDayLabel(for day: PricingSchedule.RelativeDay) -> LocalizedStringKey {
 		switch day {
 		case .yesterday:
-			return "Yesterday"
+			"Yesterday"
 		case .today:
-			return "Today"
+			"Today"
 		case .tomorrow:
-			return "Tomorrow"
+			"Tomorrow"
 		}
 	}
 }

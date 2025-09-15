@@ -29,7 +29,6 @@ package extension PricingScheduleView {
 			}
 			.frame(maxWidth: .infinity, alignment: .leading)
 			.multilineTextAlignment(.leading)
-			.padding(.horizontal)
 		}
 	}
 }
@@ -37,5 +36,6 @@ package extension PricingScheduleView {
 @available(iOS 17.0, *)
 #Preview {
 	PricingScheduleView.Header(title: "E-ON Drive", address: .init(locality: "Berlin", postalCode: "12683", streetAddress: ["Köpenicker Straße 145"]))
+		.padding(.horizontal)
 		.withFontRegistration()
 }
