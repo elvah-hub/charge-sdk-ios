@@ -252,16 +252,16 @@
         }
       }
     },
+    "00:23:25" : {
+
+    },
     "22 kW" : {
 
     },
+    "22.53 kWh" : {
+
+    },
     "50 kW" : {
-
-    },
-    "50%" : {
-
-    },
-    "75%" : {
 
     },
     "AC" : {
@@ -1284,13 +1284,7 @@
         }
       }
     },
-    "Hidden" : {
-
-    },
     "Hour" : {
-
-    },
-    "Indeterminate" : {
 
     },
     "Is the charge point locked?" : {
@@ -2129,9 +2123,6 @@
         }
       }
     },
-    "Progress" : {
-
-    },
     "Reaching out to the charger.\nPlease bear with us for a moment." : {
       "comment" : "charge_session__activation_loading__message",
       "localizations" : {
@@ -2486,9 +2477,6 @@
           }
         }
       }
-    },
-    "Success ✓" : {
-
     },
     "Support" : {
       "comment" : "support_button",
