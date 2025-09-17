@@ -87,7 +87,6 @@ public extension Theme {
 		public var primaryContent: SwiftUI.Color
 		public var secondaryContent: SwiftUI.Color
 		public var decorativeStroke: SwiftUI.Color
-		public var brandSecondary: SwiftUI.Color
 		public var container: SwiftUI.Color
 		public var labelSDK: SwiftUI.Color
 
@@ -107,7 +106,6 @@ public extension Theme {
 			primaryContent: SwiftUI.Color,
 			secondaryContent: SwiftUI.Color,
 			decorativeStroke: SwiftUI.Color,
-			brandSecondary: SwiftUI.Color,
 			container: SwiftUI.Color,
 			label: SwiftUI.Color,
 		) {
@@ -119,7 +117,6 @@ public extension Theme {
 			self.primaryContent = primaryContent
 			self.secondaryContent = secondaryContent
 			self.decorativeStroke = decorativeStroke
-			self.brandSecondary = brandSecondary
 			self.container = container
 			self.labelSDK = label
 		}
@@ -135,7 +132,6 @@ public extension Theme {
 			primaryContent: SwiftUI.Color("elvah_primaryContent", bundle: .core),
 			secondaryContent: SwiftUI.Color("elvah_secondaryContent", bundle: .core),
 			decorativeStroke: SwiftUI.Color("elvah_decorativeStroke", bundle: .core),
-			brandSecondary: SwiftUI.Color("elvah_brandSecondary", bundle: .core),
 			container: SwiftUI.Color("elvah_container", bundle: .core),
 			label: SwiftUI.Color("elvah_label", bundle: .core),
 		)
@@ -149,7 +145,6 @@ public extension Theme {
 			primaryContent: SwiftUI.Color("neutral_primaryContent", bundle: .core),
 			secondaryContent: SwiftUI.Color("neutral_secondaryContent", bundle: .core),
 			decorativeStroke: SwiftUI.Color("neutral_decorativeStroke", bundle: .core),
-			brandSecondary: SwiftUI.Color("neutral_brandSecondary", bundle: .core),
 			container: SwiftUI.Color("neutral_container", bundle: .core),
 			label: SwiftUI.Color("neutral_label", bundle: .core),
 		)
@@ -190,10 +185,6 @@ package extension ShapeStyle where Self == Color {
 
 	static var decorativeStroke: Color {
 		Elvah.configuration.theme.color.decorativeStroke
-	}
-
-	static var brandSecondary: Color {
-		Elvah.configuration.theme.color.brandSecondary
 	}
 
 	static var secondaryContent: Color {
