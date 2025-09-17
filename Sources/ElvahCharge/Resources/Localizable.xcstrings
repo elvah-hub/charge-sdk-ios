@@ -258,6 +258,12 @@
     "50 kW" : {
 
     },
+    "50%" : {
+
+    },
+    "75%" : {
+
+    },
     "AC" : {
       "comment" : "ac_label",
       "localizations" : {
@@ -1278,7 +1284,13 @@
         }
       }
     },
+    "Hidden" : {
+
+    },
     "Hour" : {
+
+    },
+    "Indeterminate" : {
 
     },
     "Is the charge point locked?" : {
@@ -1543,6 +1555,9 @@
       }
     },
     "Offer available" : {
+
+    },
+    "Offer available for " : {
 
     },
     "Offer available:" : {
@@ -2114,6 +2129,9 @@
         }
       }
     },
+    "Progress" : {
+
+    },
     "Reaching out to the charger.\nPlease bear with us for a moment." : {
       "comment" : "charge_session__activation_loading__message",
       "localizations" : {
@@ -2230,6 +2248,9 @@
         }
       }
     },
+    "Show other prices" : {
+
+    },
     "Sign in" : {
 
     },
@@ -2282,6 +2303,7 @@
     },
     "Start charging before the offer ends & get the full discount!" : {
       "comment" : "charging_discont_banner_label",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2464,6 +2486,9 @@
           }
         }
       }
+    },
+    "Success ✓" : {
+
     },
     "Support" : {
       "comment" : "support_button",
