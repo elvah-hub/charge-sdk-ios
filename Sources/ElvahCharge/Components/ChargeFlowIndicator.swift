@@ -2,32 +2,9 @@
 
 import SwiftUI
 
-// ChargeFlowIndicator(...) {
-// // content
-// }
-//
-// Problem: Whenever the content changes, I need to stop the animation, resize and then start the animation again, potentially with deterministic progress
-//
-// Canvas + TimelineView for better animation control? Start/Stop the animation might be simpler then and maybe also the morph into a checkmark
-// so content and then padding and then overlay with canvas and timeline view to animate the progress
-// how does the state management work for content changes?
-//
-
-// Maybe forget the morping. have multiple layers
-//
-// base layer,
-// indeterminate animating stroke layer
-// cover layer that grows over everything and covers the stroke as the circle grows for the determinate progress
-// on top the determinate stroke layer
-//
-// so, base size -> indeterminate
-// then increased size -> determinate progress
-//
-//
-
 @available(iOS 16.0, *)
 struct ChargeFlowIndicator<Content: View>: View {
-	@ScaledMetric private var strokeWidth: CGFloat = 12
+	@ScaledMetric private var strokeWidth: CGFloat = 14
 	@State private var rotation: Double = 0
 
 	var showOther: Bool
@@ -44,14 +21,28 @@ struct ChargeFlowIndicator<Content: View>: View {
 			.overlay(backgroundStroke)
 			.overlay(animatedStroke)
 //			.overlay(cover)
-			.overlay(backgroundStroke)
+//			.overlay(backgroundStroke)
 //			.overlay(staticStroke)
 			.background(.canvas, in: .circle)
 			.clipShape(.circle)
 //			.transformEffect(.identity)
 			.onAppear(perform: startRotationAnimation)
 			.onChange(of: showOther) { showOther in
-				rotation = showOther ? -90 : 360
+				var transaction = Transaction()
+				transaction.disablesAnimations = true
+
+				if showOther {
+					rotation = -90
+				} else {
+					withTransaction(transaction) {
+						rotation = -90
+					}
+					rotation = 270
+				}
+
+				// showOther = true: 360 -> 270
+				// showOther = false: 270 -> 630
+				// showOther = true:
 			}
 	}
 
@@ -63,7 +54,7 @@ struct ChargeFlowIndicator<Content: View>: View {
 	}
 
 	private var indicatorPadding: CGFloat {
-		Size.XL.size
+		Size.XXL.size
 	}
 
 	@ViewBuilder private var cover: some View {
@@ -86,7 +77,7 @@ struct ChargeFlowIndicator<Content: View>: View {
 
 	@ViewBuilder private var animatedStroke: some View {
 		Circle()
-			.trim(from: 0, to: 0.25)
+			.trim(from: 0, to: showOther ? 0.31 : 0.25)
 			.stroke(.brand, style: strokeStyle)
 			.padding(strokeWidth / 2)
 			.rotationTracking(rotation: rotation)
@@ -94,7 +85,6 @@ struct ChargeFlowIndicator<Content: View>: View {
 				showOther ? .bouncy : .linear(duration: 1.6).repeatForever(autoreverses: false),
 				value: rotation,
 			)
-//			.opacity(showOther ? 0 : 1)
 	}
 
 	@ViewBuilder private var staticStroke: some View {
@@ -136,9 +126,9 @@ private struct RotationTrackingModifier: ViewModifier, @MainActor Animatable {
 	func body(content: Content) -> some View {
 		content
 			.rotationEffect(.degrees(rotation))
-			.onChange(of: rotation) { rotation in
-				print(rotation)
-			}
+//			.onChange(of: rotation) { rotation in
+//				print(rotation)
+//			}
 	}
 }
 
@@ -185,19 +175,22 @@ private struct SquareContentLayout: Layout {
 #Preview {
 	@Previewable @State var showOther = false
 	ChargeFlowIndicator(showOther: showOther) {
-		if showOther {
-			VStack {
-				Text("22.53 kWh")
-					.typography(.title(size: .medium))
-				Text("00:23:25")
-					.typography(.copy(size: .medium))
-			}
-		} else {
+		VStack {
 			Image(.bolt)
 				.resizable()
 				.aspectRatio(contentMode: .fit)
+				.foregroundStyle(.brand)
+				.frame(width: showOther ? 20 : 35, height: showOther ? 20 : 35)
+				.transformEffect(.identity)
+			if showOther {
+				VStack {
+					Text("22.53 kWh")
+						.typography(.title(size: .medium))
+					Text("00:23:25")
+						.typography(.copy(size: .medium))
+				}
 				.transition(.scale.combined(with: .opacity))
-				.frame(width: showOther ? 80 : 40, height: showOther ? 80 : 40)
+			}
 		}
 	}
 	.frame(maxWidth: .infinity, maxHeight: .infinity)
