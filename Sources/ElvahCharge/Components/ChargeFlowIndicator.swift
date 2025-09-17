@@ -51,7 +51,7 @@ struct ChargeFlowIndicator<Content: View>: View {
 //			.transformEffect(.identity)
 			.onAppear(perform: startRotationAnimation)
 			.onChange(of: showOther) { showOther in
-				rotation = showOther ? -0.5 * .pi : 2 * .pi
+				rotation = showOther ? -90 : 360
 			}
 	}
 
@@ -89,10 +89,10 @@ struct ChargeFlowIndicator<Content: View>: View {
 			.trim(from: 0, to: 0.25)
 			.stroke(.brand, style: strokeStyle)
 			.padding(strokeWidth / 2)
-			.rotationEffect(.radians(rotation))
+			.rotationTracking(rotation: rotation)
 			.animation(
 				showOther ? .bouncy : .linear(duration: 1.6).repeatForever(autoreverses: false),
-				value: rotation
+				value: rotation,
 			)
 //			.opacity(showOther ? 0 : 1)
 	}
@@ -111,8 +111,34 @@ struct ChargeFlowIndicator<Content: View>: View {
 	private func startRotationAnimation() {
 //		rotation = 0
 //		withAnimation(.linear(duration: 1.6).repeatForever(autoreverses: false)) {
-			rotation = 2 * .pi
+		rotation = 360
 //		}
+	}
+}
+
+@available(iOS 16.0, *)
+private extension View {
+	func rotationTracking(rotation: Double) -> some View {
+		modifier(RotationTrackingModifier(rotation: rotation))
+	}
+}
+
+@available(iOS 16.0, *)
+private struct RotationTrackingModifier: ViewModifier, @MainActor Animatable {
+	/// The rotation in degrees.
+	var rotation: Double
+
+	var animatableData: Double {
+		get { rotation }
+		set { rotation = newValue }
+	}
+
+	func body(content: Content) -> some View {
+		content
+			.rotationEffect(.degrees(rotation))
+			.onChange(of: rotation) { rotation in
+				print(rotation)
+			}
 	}
 }
 
