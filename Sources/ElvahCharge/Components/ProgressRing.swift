@@ -4,8 +4,8 @@ import SwiftUI
 
 @available(iOS 16.0, *)
 struct ProgressRing: ViewModifier {
-	@ScaledMetric private var strokeWidth: CGFloat = 14
 	@State private var rotation: Double = 0
+	@State private var spinInstance = UUID()
 
 	private var mode: ProgressRing.Mode
 
@@ -16,27 +16,8 @@ struct ProgressRing: ViewModifier {
 	func body(content: Content) -> some View {
 		squareContentView(content: content)
 			.padding(indicatorPadding)
-			.overlay(backgroundStroke)
-			.overlay(animatedStroke)
+			.overlay(overlayContent)
 			.background(.canvas, in: .circle)
-			.clipShape(.circle)
-			.onAppear {
-				switch mode {
-				case .indeterminate:
-					rotation = 360
-				case .determinate:
-					setRotationImmediately(to: -90)
-				}
-			}
-			.onChange(of: mode) { mode in
-				switch mode {
-				case .indeterminate:
-					setRotationImmediately(to: -90)
-					rotation = 270
-				case .determinate:
-					rotation = -90
-				}
-			}
 	}
 
 	@ViewBuilder private func squareContentView(content: Content) -> some View {
@@ -46,29 +27,63 @@ struct ProgressRing: ViewModifier {
 	}
 
 	private var indicatorPadding: CGFloat {
-		Size.XXL.size
+		mode.showsAnimatedStroke ? Size.XL.size : Size.M.size
+	}
+
+	private var strokeWidth: CGFloat {
+		mode.showsAnimatedStroke ? 14 : 0
 	}
 
 	private var strokeStyle: StrokeStyle {
 		StrokeStyle(lineWidth: strokeWidth, lineCap: .round, lineJoin: .round)
 	}
 
+	@ViewBuilder private var overlayContent: some View {
+		ZStack {
+			backgroundStroke
+			animatedStroke
+		}
+	}
+
 	@ViewBuilder private var backgroundStroke: some View {
 		Circle()
-			.stroke(.brand.opacity(0.25), style: strokeStyle)
-			.padding(strokeWidth / 2)
+			.fill(mode.trackColor)
+			.mask {
+				Circle()
+					.overlay {
+						Circle()
+							.padding(strokeWidth)
+							.frame(width: mode.showsAnimatedStroke ? nil : 0, height: mode.showsAnimatedStroke ? nil : 0)
+							.blendMode(.destinationOut)
+					}
+			}
 	}
 
 	@ViewBuilder private var animatedStroke: some View {
-		Circle()
-			.trim(from: 0, to: mode.strokeTrimEnd)
-			.stroke(.brand, style: strokeStyle)
-			.padding(strokeWidth / 2)
-			.rotationEffect(.degrees(rotation))
-			.animation(mode.animation, value: rotation)
+		TimelineView(.animation) { context in
+			Circle()
+				.trim(from: 0, to: mode.strokeTrimEnd)
+				.stroke(mode.foregroundColor, style: strokeStyle)
+				.padding(mode.showsAnimatedStroke ? strokeWidth / 2 : 0)
+				.rotationEffect(.degrees(rotationAngle(at: context.date)))
+				.opacity(mode.showsAnimatedStroke ? 1 : 0)
+		}
 	}
 
 	// MARK: - Helpers
+
+	private func rotationAngle(at date: Date) -> Double {
+		switch mode {
+		case .indeterminate,
+		     .completed,
+		     .failed:
+			let period: TimeInterval = 1.5 // seconds per revolution
+			let time = date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: period)
+			return -90 + (time / period) * 360
+		case .determinate:
+			return -90
+		}
+	}
 
 	private func setRotationImmediately(to newValue: Double) {
 		var transaction = Transaction()
@@ -76,6 +91,16 @@ struct ProgressRing: ViewModifier {
 		withTransaction(transaction) {
 			rotation = newValue
 		}
+	}
+
+	private func startSpin() {
+		spinInstance = UUID()
+		setRotationImmediately(to: -90)
+		rotation = 270 // 360° delta from -90 → continuous spin
+	}
+
+	private func stopSpin() {
+		setRotationImmediately(to: -90)
 	}
 }
 
@@ -96,12 +121,18 @@ extension ProgressRing {
 		/// Progress with a specific completion fraction between 0.0 and 1.0.
 		case determinate(fraction: Double)
 
-		var animation: Animation {
+		case completed
+
+		case failed
+
+		var showsAnimatedStroke: Bool {
 			switch self {
-			case .indeterminate:
-				.linear(duration: 1.5).repeatForever(autoreverses: false)
-			case .determinate:
-				.snappy
+			case .indeterminate,
+			     .determinate:
+				true
+			case .completed,
+			     .failed:
+				false
 			}
 		}
 
@@ -110,7 +141,34 @@ extension ProgressRing {
 			case .indeterminate:
 				0.25
 			case let .determinate(fraction):
-				fraction
+				max(0.0, min(1.0, fraction))
+			case .completed,
+			     .failed:
+				0.25
+			}
+		}
+
+		var foregroundColor: Color {
+			switch self {
+			case .indeterminate,
+			     .determinate:
+				.brand
+			case .completed:
+				.success
+			case .failed:
+				.red
+			}
+		}
+
+		var trackColor: Color {
+			switch self {
+			case .indeterminate,
+			     .determinate:
+				.brand.opacity(0.25)
+			case .completed:
+				.brand.opacity(0.25)
+			case .failed:
+				.red.opacity(0.25)
 			}
 		}
 	}
@@ -118,31 +176,72 @@ extension ProgressRing {
 
 @available(iOS 18.0, *)
 #Preview {
-	@Previewable @State var showOther = false
-	VStack {
-		Image(.bolt)
-			.resizable()
-			.aspectRatio(contentMode: .fit)
-			.foregroundStyle(.brand)
-			.frame(width: showOther ? 20 : 35, height: showOther ? 20 : 35)
-			.transformEffect(.identity)
-		if showOther {
-			VStack {
-				Text("22.53 kWh")
-					.typography(.title(size: .medium))
-				Text("00:23:25")
-					.typography(.copy(size: .medium))
+	@Previewable @State var selectedMode: ProgressRing.Mode = .indeterminate
+	@Previewable @State var progress = 0.7
+
+	VStack(spacing: 40) {
+		Spacer()
+
+		VStack {
+			var iconSize: Double {
+				if case .determinate = selectedMode {
+					return 25
+				}
+				return 30
 			}
-			.transition(.scale.combined(with: .opacity))
+
+			Image(.bolt)
+				.resizable()
+				.aspectRatio(contentMode: .fit)
+				.foregroundStyle(selectedMode == .failed ? .red : .brand)
+				.frame(width: iconSize, height: iconSize)
+
+			if case .determinate = selectedMode {
+				VStack {
+					Text("22.53 kWh")
+						.typography(.title(size: .medium))
+					Text("00:23:25")
+						.typography(.copy(size: .medium))
+				}
+				.transition(.opacity.combined(with: .scale))
+			}
 		}
+		.progressRing(selectedMode)
+
+		Spacer()
+
+		// Controls
+		VStack(spacing: 20) {
+			// Progress Slider (only visible for determinate mode)
+			if case .determinate = selectedMode {
+				VStack {
+					Text("Progress: \(Int(progress * 100))%")
+						.typography(.copy(size: .medium))
+
+					Slider(value: $progress, in: 0 ... 1, step: 0.05)
+						.onChange(of: progress) { newValue in
+							selectedMode = .determinate(fraction: newValue)
+						}
+				}
+				.transition(.opacity.combined(with: .scale))
+				.frame(maxWidth: 250)
+			}
+
+			// Mode Selector
+			Picker("Progress Mode", selection: $selectedMode) {
+				Text("Loading").tag(ProgressRing.Mode.indeterminate)
+				Text("Progress").tag(ProgressRing.Mode.determinate(fraction: progress))
+				Text("Done").tag(ProgressRing.Mode.completed)
+				Text("Error").tag(ProgressRing.Mode.failed)
+			}
+			.pickerStyle(.segmented)
+		}
+		.padding()
 	}
-	.progressRing(showOther ? .determinate(fraction: 0.7) : .indeterminate)
 	.frame(maxWidth: .infinity, maxHeight: .infinity)
 	.background(.canvas)
-	.animation(.bouncy, value: showOther)
-	.onTapGesture {
-		showOther.toggle()
-	}
+	.animation(.smooth, value: selectedMode)
+	.animation(.smooth, value: progress)
 	.preferredColorScheme(.dark)
 	.withFontRegistration()
 }
