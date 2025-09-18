@@ -5,7 +5,7 @@ PUBLIC "-//W3C//DTD SVG 1.1//EN"
      <!--Created with SF Symbol Generator (v1.0.0)-->
 
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="3300" height="2200">
-<!--glyph: "checkmark.medium", point size: 100.0-->
+<!--glyph: "bolt.medium", point size: 100.0-->
 <style>.SFSymbolsPreviewWireframe {fill:none;opacity:1.0;stroke:black;stroke-width:0.5}
 </style>
 <g id="Notes">
@@ -37,7 +37,7 @@ PUBLIC "-//W3C//DTD SVG 1.1//EN"
 <text style="stroke:none;fill:black;font-family:sans-serif;font-size:13;" transform="matrix(1 0 0 1 1289 1989)">design is preserved when submitting to Xcode.</text>
 <text id="template-version" style="stroke:none;fill:black;font-family:sans-serif;font-size:13;text-anchor:end;" transform="matrix(1 0 0 1 3036 1933)">Template v.5.0</text>
 <text style="stroke:none;fill:black;font-family:sans-serif;font-size:13;text-anchor:end;" transform="matrix(1 0 0 1 3036 1951)">Requires Xcode 15 or greater</text>
-<text id="descriptive-name" style="stroke:none;fill:black;font-family:sans-serif;font-size:13;text-anchor:end;" transform="matrix(1 0 0 1 3036 1969)">Generated from checkmark</text>
+<text id="descriptive-name" style="stroke:none;fill:black;font-family:sans-serif;font-size:13;text-anchor:end;" transform="matrix(1 0 0 1 3036 1969)">Generated from bolt</text>
 <text style="stroke:none;fill:black;font-family:sans-serif;font-size:13;text-anchor:end;" transform="matrix(1 0 0 1 3036 1987)">Typeset at 100.0 points</text>
 <text style="stroke:none;fill:black;font-family:sans-serif;font-size:13;" transform="matrix(1 0 0 1 263 726)">Small</text>
 <text style="stroke:none;fill:black;font-family:sans-serif;font-size:13;" transform="matrix(1 0 0 1 263 1156)">Medium</text>
@@ -59,34 +59,34 @@ PUBLIC "-//W3C//DTD SVG 1.1//EN"
 </g>
 <line id="Baseline-L" style="fill:none;stroke:#27AAE1;opacity:1;stroke-width:0.5;" x1="263" x2="3036" y1="1556" y2="1556"/>
 <line id="Capline-L" style="fill:none;stroke:#27AAE1;opacity:1;stroke-width:0.5;" x1="263" x2="3036" y1="1485.54" y2="1485.54"/>
-<line id="left-margin-Ultralight-S" style="fill:none;stroke:#00AEEF;stroke-width:0.5;opacity:1.0;" x1="500.3865018942442" x2="500.3865018942442" y1="600.785" y2="720.121"/>
-<line id="right-margin-Ultralight-S" style="fill:none;stroke:#00AEEF;stroke-width:0.5;opacity:1.0;" x1="619.0354981057559" x2="619.0354981057559" y1="600.785" y2="720.121"/>
-<line id="left-margin-Regular-S" style="fill:none;stroke:#00AEEF;stroke-width:0.5;opacity:1.0;" x1="1390.5155018942442" x2="1390.5155018942442" y1="600.785" y2="720.121"/>
-<line id="right-margin-Regular-S" style="fill:none;stroke:#00AEEF;stroke-width:0.5;opacity:1.0;" x1="1509.1644981057557" x2="1509.1644981057557" y1="600.785" y2="720.121"/>
-<line id="left-margin-Black-S" style="fill:none;stroke:#00AEEF;stroke-width:0.5;opacity:1.0;" x1="2874.075501894244" x2="2874.075501894244" y1="600.785" y2="720.121"/>
-<line id="right-margin-Black-S" style="fill:none;stroke:#00AEEF;stroke-width:0.5;opacity:1.0;" x1="2992.724498105756" x2="2992.724498105756" y1="600.785" y2="720.121"/>
+<line id="left-margin-Ultralight-S" style="fill:none;stroke:#00AEEF;stroke-width:0.5;opacity:1.0;" x1="531.2992352941177" x2="531.2992352941177" y1="600.785" y2="720.121"/>
+<line id="right-margin-Ultralight-S" style="fill:none;stroke:#00AEEF;stroke-width:0.5;opacity:1.0;" x1="588.1227647058823" x2="588.1227647058823" y1="600.785" y2="720.121"/>
+<line id="left-margin-Regular-S" style="fill:none;stroke:#00AEEF;stroke-width:0.5;opacity:1.0;" x1="1421.4282352941175" x2="1421.4282352941175" y1="600.785" y2="720.121"/>
+<line id="right-margin-Regular-S" style="fill:none;stroke:#00AEEF;stroke-width:0.5;opacity:1.0;" x1="1478.2517647058824" x2="1478.2517647058824" y1="600.785" y2="720.121"/>
+<line id="left-margin-Black-S" style="fill:none;stroke:#00AEEF;stroke-width:0.5;opacity:1.0;" x1="2904.9882352941177" x2="2904.9882352941177" y1="600.785" y2="720.121"/>
+<line id="right-margin-Black-S" style="fill:none;stroke:#00AEEF;stroke-width:0.5;opacity:1.0;" x1="2961.8117647058825" x2="2961.8117647058825" y1="600.785" y2="720.121"/>
 </g>
 <g id="Symbols">
-<g id="Ultralight-S" transform="matrix(1 0 0 1 500.3865018942442 614.7705)">
-<svg width="120" height="93" viewBox="0 0 120 93" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="checkmark">
-<path id="Vector 4 (Stroke)" d="M98.5975 3.95615C103.365 -0.717221 111.019 -0.641387 115.693 4.12616C120.367 8.89403 120.291 16.5479 115.523 21.222L42.8188 92.5002L4.12656 54.5635C-0.641325 49.8892 -0.717818 42.2356 3.95654 37.4677C8.63072 32.7001 16.2844 32.624 21.0524 37.2977L42.8188 58.6391L98.5975 3.95615Z" fill="black"/>
+<g id="Ultralight-S" transform="matrix(1 0 0 1 531.2992352941177 614.7705)">
+<svg width="57" height="92" viewBox="0 0 57 92" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="bolt">
+<path id="Vector" d="M23.3422 92H18.2913L23.3422 56.2223H5.66383C2.73424 56.2223 2.78475 54.5867 3.74444 52.849C4.70411 51.111 3.997 52.44 4.098 52.2357C10.6138 40.5823 20.4127 23.2044 33.4442 0H38.4953L33.4442 35.7778H51.1226C53.5975 35.7778 53.9513 37.4644 53.4967 38.3843L53.1429 39.151C33.2422 74.3667 23.3422 92 23.3422 92Z" fill="black"/>
 </g>
 </svg>
 
 </g>
-<g id="Regular-S" transform="matrix(1 0 0 1 1390.5155018942442 614.7705)">
-<svg width="120" height="93" viewBox="0 0 120 93" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="checkmark">
-<path id="Vector 4 (Stroke)" d="M98.5975 3.95615C103.365 -0.717221 111.019 -0.641387 115.693 4.12616C120.367 8.89403 120.291 16.5479 115.523 21.222L42.8188 92.5002L4.12656 54.5635C-0.641325 49.8892 -0.717818 42.2356 3.95654 37.4677C8.63072 32.7001 16.2844 32.624 21.0524 37.2977L42.8188 58.6391L98.5975 3.95615Z" fill="black"/>
+<g id="Regular-S" transform="matrix(1 0 0 1 1421.4282352941175 614.7705)">
+<svg width="57" height="92" viewBox="0 0 57 92" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="bolt">
+<path id="Vector" d="M23.3422 92H18.2913L23.3422 56.2223H5.66383C2.73424 56.2223 2.78475 54.5867 3.74444 52.849C4.70411 51.111 3.997 52.44 4.098 52.2357C10.6138 40.5823 20.4127 23.2044 33.4442 0H38.4953L33.4442 35.7778H51.1226C53.5975 35.7778 53.9513 37.4644 53.4967 38.3843L53.1429 39.151C33.2422 74.3667 23.3422 92 23.3422 92Z" fill="black"/>
 </g>
 </svg>
 
 </g>
-<g id="Black-S" transform="matrix(1 0 0 1 2874.075501894244 614.7705)">
-<svg width="120" height="93" viewBox="0 0 120 93" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="checkmark">
-<path id="Vector 4 (Stroke)" d="M98.5975 3.95615C103.365 -0.717221 111.019 -0.641387 115.693 4.12616C120.367 8.89403 120.291 16.5479 115.523 21.222L42.8188 92.5002L4.12656 54.5635C-0.641325 49.8892 -0.717818 42.2356 3.95654 37.4677C8.63072 32.7001 16.2844 32.624 21.0524 37.2977L42.8188 58.6391L98.5975 3.95615Z" fill="black"/>
+<g id="Black-S" transform="matrix(1 0 0 1 2904.9882352941177 614.7705)">
+<svg width="57" height="92" viewBox="0 0 57 92" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="bolt">
+<path id="Vector" d="M23.3422 92H18.2913L23.3422 56.2223H5.66383C2.73424 56.2223 2.78475 54.5867 3.74444 52.849C4.70411 51.111 3.997 52.44 4.098 52.2357C10.6138 40.5823 20.4127 23.2044 33.4442 0H38.4953L33.4442 35.7778H51.1226C53.5975 35.7778 53.9513 37.4644 53.4967 38.3843L53.1429 39.151C33.2422 74.3667 23.3422 92 23.3422 92Z" fill="black"/>
 </g>
 </svg>
 

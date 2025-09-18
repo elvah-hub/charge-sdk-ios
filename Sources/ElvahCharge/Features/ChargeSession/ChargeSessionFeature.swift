@@ -17,7 +17,7 @@ struct ChargeSessionFeature: View {
 	@TaskIdentifier private var sessionObservationId
 
 	@State private var session: ChargeSession?
-	@State private var status: Status = .sessionLoading
+	@State private var status: SessionStatus = .sessionLoading
 	@State private var progress: Double = 0
 	@State private var attempts = 1
 
@@ -48,7 +48,7 @@ struct ChargeSessionFeature: View {
 					}
 					.confirmationDialog(
 						"End charge session",
-						isPresented: $router.showEndSessionConfirmation
+						isPresented: $router.showEndSessionConfirmation,
 					) {
 						Button("End charge session", bundle: .elvahCharge) {
 							navigationRoot.dismiss()
@@ -93,7 +93,7 @@ struct ChargeSessionFeature: View {
 			status: status,
 			progress: progress,
 			attempts: attempts,
-			router: router
+			router: router,
 		) { action in
 			switch action {
 			case .abort:
@@ -121,7 +121,7 @@ struct ChargeSessionFeature: View {
 		}
 	}
 
-	private func makeStatus(session: ChargeSession?) -> Status {
+	private func makeStatus(session: ChargeSession?) -> SessionStatus {
 		guard let session else {
 			return .sessionLoading
 		}
@@ -192,7 +192,7 @@ struct ChargeSessionFeature: View {
 
 @available(iOS 16.0, *)
 extension ChargeSessionFeature {
-	enum Status: Hashable {
+	enum SessionStatus: Hashable {
 		case sessionLoading
 		case startRequested
 		case startRejected
@@ -203,6 +203,37 @@ extension ChargeSessionFeature {
 		case stopped(session: ChargeSession)
 		case unauthorized
 		case unknownError
+
+		var isCharging: Bool {
+			switch self {
+			case .charging:
+				true
+			default:
+				false
+			}
+		}
+	}
+
+	struct ContentState: Equatable {
+		var progressRingMode: ProgressRing.Mode
+		var title: Text?
+		var message: Text?
+
+		init(
+			progressRingMode: ProgressRing.Mode,
+			title: LocalizedStringKey? = nil,
+			message: LocalizedStringKey? = nil,
+		) {
+			self.progressRingMode = progressRingMode
+
+			if let title {
+				self.title = Text(title)
+			}
+
+			if let message {
+				self.message = Text(message)
+			}
+		}
 	}
 }
 
@@ -244,7 +275,7 @@ extension ChargeSessionFeature {
 			organisationDetails: .mock,
 			authentication: .mock,
 			paymentId: "",
-			startedAt: Date()
+			startedAt: Date(),
 		)
 	}
 	.withMockEnvironmentObjects()

@@ -16,7 +16,7 @@ package struct PaymentContext: Hashable, Sendable, Codable {
 		paymentIntentId: String,
 		accountId: String,
 		authorizationAmount: Currency,
-		organisationDetails: OrganisationDetails
+		organisationDetails: OrganisationDetails,
 	) {
 		self.clientSecret = clientSecret
 		self.paymentId = paymentId
@@ -40,7 +40,7 @@ package extension PaymentContext {
 			logoUrl: URL?,
 			privacyUrl: URL?,
 			termsOfConditionUrl: URL?,
-			supportMethods: [SupportMethod]
+			supportMethods: [SupportMethod],
 		) {
 			self.companyName = companyName
 			self.logoUrl = logoUrl
@@ -63,7 +63,7 @@ package extension PaymentContext {
 			paymentIntentId: UUID().uuidString,
 			accountId: "simulated account id",
 			authorizationAmount: 0.42,
-			organisationDetails: .simulation
+			organisationDetails: .simulation,
 		)
 	}
 
@@ -74,7 +74,7 @@ package extension PaymentContext {
 			paymentIntentId: "",
 			accountId: "",
 			authorizationAmount: 0.42,
-			organisationDetails: .mock
+			organisationDetails: .mock,
 		)
 	}
 }
@@ -83,20 +83,20 @@ package extension PaymentContext.OrganisationDetails {
 	static var simulation: PaymentContext.OrganisationDetails {
 		PaymentContext.OrganisationDetails(
 			companyName: "Beispiel GmbH",
-			logoUrl: URL(string: "https://placehold.co/600x.png"),
+			logoUrl: URL(string: "https://placehold.co/600x300.png"),
 			privacyUrl: URL(string: "hhttps://policies.google.com/privacy?hl=en-DE&fg=1"),
 			termsOfConditionUrl: URL(string: "https://policies.google.com/terms?hl=en-DE&fg=1"),
-			supportMethods: [.email("tech-support@elvah.de")]
+			supportMethods: [.email("tech-support@elvah.de")],
 		)
 	}
 
 	static var mock: PaymentContext.OrganisationDetails {
 		PaymentContext.OrganisationDetails(
 			companyName: "Mock company",
-			logoUrl: URL(string: "https://placehold.co/600x.png"),
+			logoUrl: URL(string: "https://placehold.co/600x300.png"),
 			privacyUrl: URL(string: "https://www.elvah.de/"),
 			termsOfConditionUrl: URL(string: "https://www.elvah.de/"),
-			supportMethods: [.email("tech-support@elvah.de")]
+			supportMethods: [.email("tech-support@elvah.de")],
 		)
 	}
 }

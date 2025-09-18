@@ -3,74 +3,77 @@
 import SwiftUI
 
 @available(iOS 16.0, *)
-extension ChargeSessionFeature.Status {
-	var activityInfoData: ActivityInfoData? {
+extension ChargeSessionFeature.SessionStatus {
+	var contentState: ChargeSessionFeature.ContentState? {
 		switch self {
 		case .sessionLoading:
-			return ActivityInfoData(
-				state: .animating(iconSystemName: nil),
+			ChargeSessionFeature.ContentState(
+				progressRingMode: .indeterminate,
 				title: "Restoring session",
-				message: "Attempting to restore charge session."
+				message: "Attempting to restore charge session.",
 			)
 
 		case .unauthorized:
-			return ActivityInfoData(
-				state: .error,
+			ChargeSessionFeature.ContentState(
+				progressRingMode: .failed,
 				title: "Payment expired",
-				message: "Unfortunately, the time between payment and session start was too long. We need you to authorize a new deposit on your payment method."
+				message: "Unfortunately, the time between payment and session start was too long. We need you to authorize a new deposit on your payment method.",
 			)
 
 		case .unknownError:
-			return ActivityInfoData(
-				state: .error,
+			ChargeSessionFeature.ContentState(
+				progressRingMode: .failed,
 				title: "Server error",
-				message: "An unexpected error has occurred. Please try again or contact our support."
+				message: "An unexpected error has occurred. Please try again or contact our support.",
 			)
 
 		case .startRequested:
-			return ActivityInfoData(
-				state: .animating(iconSystemName: nil),
+			ChargeSessionFeature.ContentState(
+				progressRingMode: .indeterminate,
 				title: "Preparing",
-				message: "Reaching out to the charger.\nPlease bear with us for a moment."
+				message: "Reaching out to the charger.\nPlease bear with us for a moment.",
 			)
 
 		case .startRejected:
-			return ActivityInfoData(
-				state: .error,
+			ChargeSessionFeature.ContentState(
+				progressRingMode: .failed,
 				title: "The charge point reported an error",
-				message: "Unfortunately, the charging session could not be started at this charge point. Please try again later or use another charge point."
+				message: "Unfortunately, the charging session could not be started at this charge point. Please try again later or use another charge point.",
 			)
 
 		case .started:
-			return ActivityInfoData(
-				state: .animating(iconSystemName: nil),
+			ChargeSessionFeature.ContentState(
+				progressRingMode: .indeterminate,
 				title: "Starting",
-				message: "Charger is awake!\nStarting session with the charger."
+				message: "Charger is awake!\nStarting session with the charger.",
 			)
 
 		case .charging:
-			return ActivityInfoData(
-				state: .animating(iconSystemName: nil),
+			ChargeSessionFeature.ContentState(
+				progressRingMode: .indeterminate,
 				title: nil,
-				message: nil
+				message: nil,
 			)
 
 		case .stopRequested:
-			return ActivityInfoData(
-				state: .animating(iconSystemName: nil),
-				title: "Stopping",
-				message: "We are connecting to the station to end the charging session."
+			ChargeSessionFeature.ContentState(
+				progressRingMode: .indeterminate,
+				title: "Stopping the charging session",
+				message: "We are connecting to the station to end the charging session.",
 			)
 
 		case .stopRejected:
-			return ActivityInfoData(
-				state: .error,
+			ChargeSessionFeature.ContentState(
+				progressRingMode: .failed,
 				title: "Please end charging manually",
-				message: "Please stop charging manually by removing the charging cable first from your car and then from the charging station.\n\nWe will analyze the problem and try to solve it together with the operator of the charging station."
+				message: "Please stop charging manually by removing the charging cable first from your car and then from the charging station.\n\nWe will analyze the problem and try to solve it together with the operator of the charging station.",
 			)
 
 		case .stopped:
-			return nil
+			ChargeSessionFeature.ContentState(
+				progressRingMode: .completed,
+				title: "Charging session stopped",
+			)
 		}
 	}
 }

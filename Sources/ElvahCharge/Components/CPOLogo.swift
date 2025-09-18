@@ -14,25 +14,29 @@ struct CPOLogo: View {
 	}
 
 	var body: some View {
-		ZStack {
-			if let image = image {
+		VStack {
+			Text("Charging is provided in partnership with")
+				.typography(.copy(size: .small))
+				.foregroundStyle(.secondaryContent)
+			if let image {
 				Image(uiImage: image)
 					.resizable()
 					.aspectRatio(contentMode: .fit)
+					.frame(height: 50)
 			} else if isLoading {
 				ZStack {
 					RoundedRectangle(cornerRadius: 10)
 						.fill(.container)
-						.aspectRatio(1, contentMode: .fit)
+						.aspectRatio(2, contentMode: .fit)
 					ProgressView()
 						.progressViewStyle(.inlineActivity)
 				}
+				.frame(height: 50)
 			} else {
 				fallback
+					.frame(height: 50)
 			}
 		}
-		.frame(height: 60)
-		.padding(.M)
 		.task {
 			defer { isLoading = false }
 
@@ -59,6 +63,6 @@ struct CPOLogo: View {
 
 @available(iOS 16.0, *)
 #Preview {
-	CPOLogo(url: URL(string: "https://placehold.co/600x.png"))
+	CPOLogo(url: URL(string: "https://placehold.co/600x300.png"))
 		.preferredColorScheme(.dark)
 }

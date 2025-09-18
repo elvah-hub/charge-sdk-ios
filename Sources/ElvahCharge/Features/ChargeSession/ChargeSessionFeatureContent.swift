@@ -13,7 +13,9 @@ extension ChargeSessionFeature {
 		@Environment(\.navigationRoot) private var navigationRoot
 		@Namespace private var namespace
 
-		let status: Status
+		@Loadable<PaymentSummary> private var paymentSummary
+
+		let status: SessionStatus
 		let progress: Double
 		let attempts: Int
 		@ObservedObject var router: Router
@@ -21,50 +23,90 @@ extension ChargeSessionFeature {
 
 		var body: some View {
 			VStack {
+				activityIndicator
+					.frame(maxHeight: .infinity)
 				if case let .stopped(session) = status, let chargeSessionContext {
 					ChargeSessionStoppedComponent(
 						session: session,
 						site: chargeSessionContext.site,
-						offer: chargeSessionContext.signedOffer.offer
+						offer: chargeSessionContext.signedOffer.offer,
+						paymentSummary: $paymentSummary,
 					)
-				} else {
-					VStack(spacing: .size(.XL)) {
-						header
-						page
-					}
-					.frame(maxHeight: .infinity)
 				}
 				footer
 			}
+			.animation(.smooth, value: status)
+			.animation(.smooth, value: paymentSummary)
+			.frame(maxWidth: .infinity)
 		}
 
-		@ViewBuilder private var header: some View {
-			CPOLogo(url: chargeSessionContext?.organisationDetails.logoUrl)
-		}
-
-		@ViewBuilder private var page: some View {
-			if case .stopped = status {} else {
-				activityIndicator
+		@ViewBuilder private func icon(for contentState: ChargeSessionFeature.SessionStatus) -> some View {
+			switch contentState {
+			case .started:
+				Image(.checkmark)
+			case .charging:
+				Image(.bolt)
+			case .stopRequested:
+				Image(.boltSlash)
+			case .stopped:
+				Image(.checkmark)
+			default:
+				Image(.bolt)
 			}
+		}
 
-			Group {
-				switch status {
-				case let .charging(session: session):
-					ChargeSessionMetricsComponent(status: status, session: session)
-				default:
-					EmptyView()
+		@ViewBuilder private var activityIndicator: some View {
+			if let contentState = status.contentState {
+				VStack(spacing: .size(.L)) {
+					VStack(spacing: .size(.XS)) {
+						if #available(iOS 17.0, *) {
+							icon(for: status)
+								.typography(status.isCharging ? .copy(size: .small) : .title(size: .medium))
+								.contentTransition(.symbolEffect)
+								.foregroundStyle(.brand)
+						} else {
+							icon(for: status)
+								.typography(status.isCharging ? .copy(size: .small) : .title(size: .medium))
+								.foregroundStyle(.brand)
+						}
+						if case let .charging(session) = status {
+							ChargeSessionMetricsComponent(status: status, session: session)
+								.transition(.opacity.combined(with: .scale))
+						}
+					}
+					.progressRing(contentState.progressRingMode)
+
+					VStack(spacing: .size(.S)) {
+						if let title = contentState.title {
+							title
+								.typography(.title(size: .medium), weight: .bold)
+								.foregroundStyle(.primaryContent)
+								.contentTransition(.interpolate)
+								.fixedSize(horizontal: false, vertical: true)
+								.frame(maxWidth: .infinity)
+								.transition(.opacity.combined(with: .scale(scale: 1.2)))
+						}
+
+						if let message = contentState.message {
+							message
+								.typography(.copy(size: .medium))
+								.foregroundStyle(.secondaryContent)
+								.contentTransition(.interpolate)
+								.fixedSize(horizontal: false, vertical: true)
+								.frame(maxWidth: .infinity)
+								.transition(.opacity.combined(with: .scale(scale: 1.2)))
+						}
+					}
+					.frame(maxWidth: 300)
 				}
+				.padding(.horizontal, .M)
+				.multilineTextAlignment(.center)
+				.transformEffect(.identity)
 			}
-			.foregroundStyle(.primaryContent)
-			.transition(.opacity)
 		}
 
 		@ViewBuilder private var footer: some View {
-			VStack(spacing: .size(.L)) {
-				if showProgressBar {
-					progressBar
-				}
-
+			VStack(spacing: .size(.M)) {
 				ButtonStack {
 					switch status {
 					case .sessionLoading:
@@ -100,13 +142,13 @@ extension ChargeSessionFeature {
 						.buttonStyle(.primary)
 					}
 
-					if case .stopped = status {} else {
+					VStack(spacing: .size(.XXS)) {
+						CPOLogo(url: chargeSessionContext?.organisationDetails.logoUrl)
 						supportButton
 					}
 				}
 			}
-			.padding(.M)
-			.animation(.default, value: status)
+			.padding(.horizontal, .M)
 		}
 
 		@ViewBuilder private var tryAgainButton: some View {
@@ -125,48 +167,18 @@ extension ChargeSessionFeature {
 			.transition(.scale(scale: 1)) // Prevents fade animation
 		}
 
-		@ViewBuilder private var activityIndicator: some View {
-			switch status {
-			case .sessionLoading,
-			     .unauthorized,
-			     .unknownError,
-			     .startRequested,
-			     .startRejected,
-			     .started,
-			     .stopRequested,
-			     .stopRejected,
-			     .stopped:
-				if let data = status.activityInfoData {
-					ActivityInfoComponent(state: data.state, title: data.title, message: data.message)
-						.padding(.horizontal)
-						.animation(.bouncy(extraBounce: 0.2), value: status)
-						.alignmentGuide(VerticalAlignment.top) { dimension in
-							-50
-						}
-				}
-			case .charging:
-				EmptyView()
-			}
-		}
-
-		@ViewBuilder private var progressBar: some View {
-			ProgressView(value: progress, total: 1)
-				.progressViewStyle(.charge)
-				.padding(.horizontal, .XL)
-		}
-
 		// MARK: - Helpers
 
 		private var showProgressBar: Bool {
 			switch status {
 			case .startRequested:
-				return true
+				true
 			case .started:
-				return true
+				true
 			case .charging:
-				return false
+				false
 			default:
-				return false
+				false
 			}
 		}
 	}
@@ -186,13 +198,14 @@ extension ChargeSessionFeature.Content {
 #Preview {
 	NavigationStack {
 		ChargeSessionFeature.Content(
-			status: .unauthorized,
+			status: .stopped(session: .mock(status: .stopped)),
 			progress: 0.5,
 			attempts: 1,
-			router: .init()
+			router: .init(),
 		) { _ in }
 			.frame(maxHeight: .infinity, alignment: .bottom)
 	}
 	.preferredColorScheme(.dark)
 	.withFontRegistration()
+	.withMockEnvironmentObjects()
 }

@@ -17,7 +17,6 @@ struct ProgressRing: ViewModifier {
 		squareContentView(content: content)
 			.padding(indicatorPadding)
 			.overlay(overlayContent)
-			.background(.canvas, in: .circle)
 	}
 
 	@ViewBuilder private func squareContentView(content: Content) -> some View {
@@ -239,7 +238,6 @@ extension ProgressRing {
 		.padding()
 	}
 	.frame(maxWidth: .infinity, maxHeight: .infinity)
-	.background(.canvas)
 	.animation(.smooth, value: selectedMode)
 	.animation(.smooth, value: progress)
 	.preferredColorScheme(.dark)

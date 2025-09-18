@@ -767,6 +767,9 @@
         }
       }
     },
+    "Charging is provided in partnership with" : {
+
+    },
     "Charging session is active" : {
       "comment" : "charging_session_active_title",
       "extractionState" : "stale",
@@ -790,6 +793,9 @@
           }
         }
       }
+    },
+    "Charging session stopped" : {
+
     },
     "Charging…" : {
       "comment" : "charging_label",
@@ -1065,6 +1071,9 @@
         }
       }
     },
+    "Error" : {
+
+    },
     "Error…" : {
       "comment" : "error_label",
       "extractionState" : "stale",
@@ -1334,6 +1343,9 @@
         }
       }
     },
+    "kWh" : {
+
+    },
     "kWh charged" : {
       "comment" : "kilowatts_charged_label",
       "localizations" : {
@@ -1361,6 +1373,9 @@
 
     },
     "Live Pricing" : {
+
+    },
+    "Loading" : {
 
     },
     "Loading data…" : {
@@ -2123,6 +2138,15 @@
         }
       }
     },
+    "Progress" : {
+
+    },
+    "Progress Mode" : {
+
+    },
+    "Progress: %lld%%" : {
+
+    },
     "Reaching out to the charger.\nPlease bear with us for a moment." : {
       "comment" : "charge_session__activation_loading__message",
       "localizations" : {
@@ -2433,6 +2457,7 @@
     },
     "Stopping" : {
       "comment" : "charge_session__stop_requested__title",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2453,6 +2478,9 @@
           }
         }
       }
+    },
+    "Stopping the charging session" : {
+
     },
     "Stopping the charging station" : {
       "comment" : "stop_charging_session_label",

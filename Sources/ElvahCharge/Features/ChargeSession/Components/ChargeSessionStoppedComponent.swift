@@ -13,44 +13,35 @@ struct ChargeSessionStoppedComponent: View {
 	@Default(.chargeSessionContext) private var chargeSessionContext
 
 	@TaskIdentifier private var paymentSummaryTaskId
-	@Loadable<PaymentSummary> private var paymentSummary
 
 	var session: ChargeSession
 	var site: Site
 	var offer: ChargeOffer
+	@Loadable<PaymentSummary>.Binding var paymentSummary: LoadableState<PaymentSummary>
 
 	var body: some View {
-		if #available(iOS 16.4, *) {
-			content
-				.scrollBounceBehavior(.basedOnSize)
-		} else {
-			content
-		}
+		content
 	}
 
 	@ViewBuilder private var content: some View {
-		ScrollView {
-			VStack(spacing: .size(.XL)) {
-				CPOLogo(url: chargeSessionContext?.organisationDetails.logoUrl)
-				ActivityInfoComponent(state: .success, title: nil, message: nil)
-				CustomSectionStack {
-					if let operatorName = site.operatorName, let address = site.address {
-						siteInformation(title: operatorName, address: address)
-					}
-
-					if let paymentSummary = paymentSummary.data {
-						paymentSummarySection(paymentSummary: paymentSummary)
-					} else {
-						paymentSummaryLoadingSection
-					}
+		VStack(spacing: .size(.XL)) {
+			CustomSectionStack {
+				if let operatorName = site.operatorName, let address = site.address {
+					siteInformation(title: operatorName, address: address)
 				}
-				.padding(.horizontal, .M)
+
+				if let paymentSummary = paymentSummary.data {
+					paymentSummarySection(paymentSummary: paymentSummary)
+				} else {
+					paymentSummaryLoadingSection
+				}
 			}
-			.foregroundStyle(.primaryContent)
-			.animation(.default, value: paymentSummary)
-			.task(id: paymentSummaryTaskId) {
-				await reloadPaymentSummary()
-			}
+			.padding(.horizontal, .M)
+		}
+		.foregroundStyle(.primaryContent)
+		.animation(.default, value: paymentSummary)
+		.task(id: paymentSummaryTaskId) {
+			await reloadPaymentSummary()
 		}
 	}
 
@@ -102,7 +93,7 @@ struct ChargeSessionStoppedComponent: View {
 		let endedAt = paymentSummary.sessionEndedAt
 		let duration = Duration.seconds(endedAt.timeIntervalSince(startedAt))
 		CustomSectionStack(
-			axis: dynamicTypeSize.isAccessibilitySize ? .vertical : .horizontal
+			axis: dynamicTypeSize.isAccessibilitySize ? .vertical : .horizontal,
 		) {
 			chargeAmountSection(consumedKWh: paymentSummary.consumedKWh)
 			chargeDurationSection(duration: duration)
@@ -176,7 +167,7 @@ struct ChargeSessionStoppedComponent: View {
 						"""
 						Cannot fetch payment summary:  \(error.localizedDescription). \
 						Trying again in 2 seconds.
-						"""
+						""",
 					)
 				}
 
@@ -191,19 +182,21 @@ struct ChargeSessionStoppedComponent: View {
 	// MARK: - Helpers
 
 	private var timerString: String {
-		return Duration.seconds(session.duration).formatted(.units())
+		Duration.seconds(session.duration).formatted(.units())
 	}
 }
 
 @available(iOS 17.0, *)
 #Preview {
 	@Previewable @State var session: ChargeSession = .mock(status: .charging)
+	@Previewable @Loadable<PaymentSummary> var paymentSummary
 	ZStack {
 		Color.canvas.ignoresSafeArea()
 		ChargeSessionStoppedComponent(
 			session: session,
 			site: .mock,
-			offer: .mockAvailable
+			offer: .mockAvailable,
+			paymentSummary: $paymentSummary,
 		)
 	}
 	.preferredColorScheme(.dark)

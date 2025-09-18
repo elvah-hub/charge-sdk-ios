@@ -10,33 +10,31 @@ import SwiftUI
 struct ChargeSessionMetricsComponent: View {
 	@Default(.chargeSessionContext) private var chargeSessionContext
 
-	let status: ChargeSessionFeature.Status
+	let status: ChargeSessionFeature.SessionStatus
 	let session: ChargeSession
 
 	var body: some View {
 		ZStack(alignment: .bottom) {
-			VStack(spacing: .size(.XXL)) {
+			VStack(spacing: .size(.XXS)) {
 				consumption
 				duration
 			}
-			.transformEffect(.identity)
 		}
 		.dynamicTypeSize(...(.accessibility1))
-		.padding(.vertical, .M)
 	}
 
 	@ViewBuilder private var consumption: some View {
 		if session.hasConsumption, let formattedConsumedKWh = session.formattedConsumedKWh {
 			VStack(spacing: .size(.XXS)) {
-				Text(formattedConsumedKWh)
-					.contentTransition(.numericText(countsDown: false))
-					.typography(.title(size: .xLarge), weight: .bold)
-					.monospacedDigit()
-					.foregroundStyle(.primaryContent)
-				Text("kWh charged", bundle: .elvahCharge)
-					.typography(.copy(size: .medium))
-					.foregroundStyle(.secondaryContent)
-					.multilineTextAlignment(.center)
+				HStack(alignment: .firstTextBaseline) {
+					Text(formattedConsumedKWh)
+						.contentTransition(.numericText(countsDown: false))
+						.typography(.title(size: .medium), weight: .bold)
+					Text("kWh")
+						.typography(.copy(size: .large))
+				}
+				.monospacedDigit()
+				.foregroundStyle(.primaryContent)
 			}
 		}
 	}
@@ -52,21 +50,17 @@ struct ChargeSessionMetricsComponent: View {
 				}
 
 				Text(elapsedSeconds.formatted(.units()))
-					.typography(.title(size: .medium), weight: .bold)
+					.typography(.copy(size: .medium))
 					.monospacedDigit()
-					.foregroundStyle(.primaryContent)
+					.foregroundStyle(.secondaryContent)
 			}
-			Text("Charging duration", bundle: .elvahCharge)
-				.typography(.copy(size: .medium))
-				.foregroundStyle(.secondaryContent)
-				.multilineTextAlignment(.center)
 		}
 	}
 
 	// MARK: - Helpers
 
 	private var timerString: String {
-		return Duration.seconds(session.duration).formatted(.units())
+		Duration.seconds(session.duration).formatted(.units())
 	}
 }
 
@@ -75,8 +69,9 @@ struct ChargeSessionMetricsComponent: View {
 	@Previewable @State var session: ChargeSession = .mock(status: .charging)
 	ChargeSessionMetricsComponent(
 		status: .charging(session: session),
-		session: session
+		session: session,
 	)
+	.progressRing()
 	.preferredColorScheme(.dark)
 	.withFontRegistration()
 }
