@@ -16,7 +16,7 @@ public struct ChargeSession: Codable, Hashable, Sendable {
 		evseId: String,
 		status: Status? = nil,
 		consumption: KilowattHours = 0,
-		duration: TimeInterval = 0
+		duration: TimeInterval = 0,
 	) {
 		self.evseId = evseId
 		self.status = status
@@ -47,13 +47,14 @@ public struct ChargeSession: Codable, Hashable, Sendable {
 package extension ChargeSession {
 	static func mock(
 		status: ChargeSession.Status,
-		evseId: String = ChargePoint.mockAvailable.evseId
+		consumption: KilowattHours = 120,
+		evseId: String = ChargePoint.mockAvailable.evseId,
 	) -> ChargeSession {
 		.init(
 			evseId: evseId,
 			status: status,
-			consumption: 120,
-			duration: 100
+			consumption: consumption,
+			duration: 100,
 		)
 	}
 }

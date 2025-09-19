@@ -5,7 +5,6 @@ import SwiftUI
 @available(iOS 16.0, *)
 struct ProgressRing: ViewModifier {
 	@State private var rotation: Double = 0
-	@State private var spinInstance = UUID()
 
 	private var mode: ProgressRing.Mode
 
@@ -26,7 +25,7 @@ struct ProgressRing: ViewModifier {
 	}
 
 	private var indicatorPadding: CGFloat {
-		mode.showsAnimatedStroke ? Size.XL.size : Size.M.size
+		mode.showsAnimatedStroke ? 36 : 18
 	}
 
 	private var strokeWidth: CGFloat {
@@ -93,9 +92,8 @@ struct ProgressRing: ViewModifier {
 	}
 
 	private func startSpin() {
-		spinInstance = UUID()
 		setRotationImmediately(to: -90)
-		rotation = 270 // 360° delta from -90 → continuous spin
+		rotation = 270
 	}
 
 	private func stopSpin() {
@@ -120,8 +118,10 @@ extension ProgressRing {
 		/// Progress with a specific completion fraction between 0.0 and 1.0.
 		case determinate(fraction: Double)
 
+		/// Progress completed successfully.
 		case completed
 
+		/// Progress failed with an error.
 		case failed
 
 		var showsAnimatedStroke: Bool {

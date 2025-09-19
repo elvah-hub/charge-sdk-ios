@@ -212,6 +212,27 @@ extension ChargeSessionFeature {
 				false
 			}
 		}
+
+		var isError: Bool {
+			switch self {
+			case .startRejected,
+			     .stopRejected,
+			     .unauthorized,
+			     .unknownError:
+				true
+			default:
+				false
+			}
+		}
+
+		var hasConsumption: Bool {
+			switch self {
+			case let .charging(session):
+				session.hasConsumption
+			default:
+				false
+			}
+		}
 	}
 
 	struct ContentState: Equatable {
@@ -227,11 +248,11 @@ extension ChargeSessionFeature {
 			self.progressRingMode = progressRingMode
 
 			if let title {
-				self.title = Text(title)
+				self.title = Text(title, bundle: .elvahCharge)
 			}
 
 			if let message {
-				self.message = Text(message)
+				self.message = Text(message, bundle: .elvahCharge)
 			}
 		}
 	}

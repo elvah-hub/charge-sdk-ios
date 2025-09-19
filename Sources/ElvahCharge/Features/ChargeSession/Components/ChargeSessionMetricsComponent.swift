@@ -14,11 +14,9 @@ struct ChargeSessionMetricsComponent: View {
 	let session: ChargeSession
 
 	var body: some View {
-		ZStack(alignment: .bottom) {
-			VStack(spacing: .size(.XXS)) {
-				consumption
-				duration
-			}
+		VStack(spacing: .size(.XXS)) {
+			consumption
+			duration
 		}
 		.dynamicTypeSize(...(.accessibility1))
 	}
@@ -36,6 +34,7 @@ struct ChargeSessionMetricsComponent: View {
 				.monospacedDigit()
 				.foregroundStyle(.primaryContent)
 			}
+			.transition(.opacity.combined(with: .scale))
 		}
 	}
 

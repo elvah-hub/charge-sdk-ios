@@ -10,6 +10,7 @@ import SwiftUI
 extension ChargeSessionFeature {
 	struct Content: View {
 		@Default(.chargeSessionContext) private var chargeSessionContext
+		@Environment(\.dynamicTypeSize) private var dynamicTypeSize
 		@Environment(\.navigationRoot) private var navigationRoot
 		@Namespace private var namespace
 
@@ -22,7 +23,23 @@ extension ChargeSessionFeature {
 		let onAction: (_ action: Action) -> Void
 
 		var body: some View {
-			VStack {
+			VStack(spacing: .size(.M)) {
+				if dynamicTypeSize.isAccessibilitySize {
+					ScrollView {
+						content
+					}
+				} else {
+					content
+				}
+				footer
+			}
+			.animation(.snappy, value: status)
+			.animation(.snappy, value: paymentSummary)
+			.frame(maxWidth: .infinity)
+		}
+
+		@ViewBuilder private var content: some View {
+			VStack(spacing: .size(.M)) {
 				activityIndicator
 					.frame(maxHeight: .infinity)
 				if case let .stopped(session) = status, let chargeSessionContext {
@@ -33,25 +50,6 @@ extension ChargeSessionFeature {
 						paymentSummary: $paymentSummary,
 					)
 				}
-				footer
-			}
-			.animation(.smooth, value: status)
-			.animation(.smooth, value: paymentSummary)
-			.frame(maxWidth: .infinity)
-		}
-
-		@ViewBuilder private func icon(for contentState: ChargeSessionFeature.SessionStatus) -> some View {
-			switch contentState {
-			case .started:
-				Image(.checkmark)
-			case .charging:
-				Image(.bolt)
-			case .stopRequested:
-				Image(.boltSlash)
-			case .stopped:
-				Image(.checkmark)
-			default:
-				Image(.bolt)
 			}
 		}
 
@@ -59,16 +57,13 @@ extension ChargeSessionFeature {
 			if let contentState = status.contentState {
 				VStack(spacing: .size(.L)) {
 					VStack(spacing: .size(.XS)) {
-						if #available(iOS 17.0, *) {
-							icon(for: status)
-								.typography(status.isCharging ? .copy(size: .small) : .title(size: .medium))
-								.contentTransition(.symbolEffect)
-								.foregroundStyle(.brand)
-						} else {
-							icon(for: status)
-								.typography(status.isCharging ? .copy(size: .small) : .title(size: .medium))
-								.foregroundStyle(.brand)
-						}
+						let iconSize = status.isCharging && status.hasConsumption ? 20.0 : 35
+
+						icon(for: status)
+							.frame(width: iconSize, height: iconSize)
+							.transition(.opacity.combined(with: .scale))
+							.foregroundStyle(status.isError ? .red : .brand)
+
 						if case let .charging(session) = status {
 							ChargeSessionMetricsComponent(status: status, session: session)
 								.transition(.opacity.combined(with: .scale))
@@ -78,30 +73,59 @@ extension ChargeSessionFeature {
 
 					VStack(spacing: .size(.S)) {
 						if let title = contentState.title {
-							title
-								.typography(.title(size: .medium), weight: .bold)
-								.foregroundStyle(.primaryContent)
-								.contentTransition(.interpolate)
-								.fixedSize(horizontal: false, vertical: true)
-								.frame(maxWidth: .infinity)
-								.transition(.opacity.combined(with: .scale(scale: 1.2)))
+							ViewThatFits(in: .vertical) {
+								title.typography(.title(size: .medium), weight: .bold)
+								title.typography(.copy(size: .medium), weight: .bold)
+							}
+							.foregroundStyle(.primaryContent)
+							.frame(maxWidth: .infinity)
+							.contentTransition(.interpolate)
+							.transition(.opacity.combined(with: .offset(y: 40)).combined(with: .scale(scale: 1.2)))
 						}
 
 						if let message = contentState.message {
-							message
-								.typography(.copy(size: .medium))
-								.foregroundStyle(.secondaryContent)
-								.contentTransition(.interpolate)
-								.fixedSize(horizontal: false, vertical: true)
-								.frame(maxWidth: .infinity)
-								.transition(.opacity.combined(with: .scale(scale: 1.2)))
+							ViewThatFits(in: .vertical) {
+								message.typography(.copy(size: .medium))
+								message.typography(.copy(size: .small))
+							}
+							.foregroundStyle(.secondaryContent)
+							.frame(maxWidth: .infinity)
+							.contentTransition(.interpolate)
+							.transition(.opacity.combined(with: .offset(y: 40)).combined(with: .scale(scale: 1.2)))
 						}
 					}
 					.frame(maxWidth: 300)
 				}
-				.padding(.horizontal, .M)
-				.multilineTextAlignment(.center)
 				.transformEffect(.identity)
+				.padding(.M)
+				.multilineTextAlignment(.center)
+			}
+		}
+
+		@ViewBuilder private func icon(for contentState: ChargeSessionFeature.SessionStatus) -> some View {
+			switch contentState {
+			case .started,
+			     .stopped:
+				Image(.checkmark)
+					.resizable()
+					.aspectRatio(contentMode: .fit)
+			case .charging,
+			     .sessionLoading,
+			     .startRequested:
+				Image(.bolt)
+					.resizable()
+					.aspectRatio(contentMode: .fit)
+			case .stopRequested,
+			     .startRejected,
+			     .stopRejected,
+			     .unknownError:
+				Image(.boltSlash)
+					.resizable()
+					.aspectRatio(contentMode: .fit)
+			case .unauthorized:
+				Image(systemName: "lock.fill")
+					.resizable()
+					.aspectRatio(contentMode: .fit)
 			}
 		}
 
@@ -194,16 +218,41 @@ extension ChargeSessionFeature.Content {
 	}
 }
 
-@available(iOS 16.0, *)
+@available(iOS 26.0, *)
 #Preview {
+	@Previewable @State var status: ChargeSessionFeature.SessionStatus = .stopped(session: .mock(status: .stopped))
+
 	NavigationStack {
-		ChargeSessionFeature.Content(
-			status: .stopped(session: .mock(status: .stopped)),
-			progress: 0.5,
-			attempts: 1,
-			router: .init(),
-		) { _ in }
-			.frame(maxHeight: .infinity, alignment: .bottom)
+		VStack {
+			ChargeSessionFeature.Content(
+				status: status,
+				progress: 0.5,
+				attempts: 1,
+				router: .init(),
+			) { _ in }
+				.frame(maxHeight: .infinity, alignment: .bottom)
+			Picker(selection: $status) {
+				Text(verbatim: "Started").tag(ChargeSessionFeature.SessionStatus.started)
+				Text(verbatim: "Charging 0 kWh")
+					.tag(ChargeSessionFeature.SessionStatus.charging(session: .mock(status: .started, consumption: 0)))
+				Text(verbatim: "Charging, 10 kWh")
+					.tag(ChargeSessionFeature.SessionStatus.charging(session: .mock(status: .started, consumption: 10)))
+				Text(verbatim: "Stopped").tag(ChargeSessionFeature.SessionStatus.stopped(session: .mock(status: .stopped)))
+				Text(verbatim: "Stop Failed").tag(ChargeSessionFeature.SessionStatus.stopRejected)
+			} label: {
+				Text(verbatim: "")
+			}
+		}
+	}
+	.onAppear {
+		Defaults[.chargeSessionContext] = ChargeSessionContext(
+			site: .mock,
+			signedOffer: .mockAvailable,
+			organisationDetails: .mock,
+			authentication: .mock,
+			paymentId: "",
+			startedAt: Date(),
+		)
 	}
 	.preferredColorScheme(.dark)
 	.withFontRegistration()
