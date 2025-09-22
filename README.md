@@ -30,7 +30,7 @@ The SDK supports integration into projects targeting iOS 15 or later and require
 Add the following line to the dependencies in your `Package.swift` file:
 
 ```swift
-.package(url: "https://github.com/elvah-hub/charge-sdk-ios", from: "0.2.0")
+.package(url: "https://github.com/elvah-hub/charge-sdk-ios", from: "0.4.0")
 ```
 
 Alternatively, if you want to add the package to your Xcode project, go to `File` > `Add Packages...` 

@@ -8,8 +8,8 @@ package extension PricingScheduleView {
 	struct Summary: View {
 		@Environment(\.accessibilityDifferentiateWithoutColor) private var accessibilityDifferentiateWithoutColor
 
-		/// Controls presentation of the "More Prices" sheet.
-		@State private var showOtherPricesSheet: Bool = false
+		/// Access to router to trigger navigation and sheet presentation.
+		@ObservedObject private var router: LivePricingView.Router
 
 		/// The dataset that the drives the summary for a specific day.
 		private var dataset: DailyPriceChartData
@@ -17,14 +17,20 @@ package extension PricingScheduleView {
 		/// Selected moment binding to drive the summary instead of the current time.
 		@Binding private var selectedMoment: Date?
 
-		package init(dataset: DailyPriceChartData, selectedMoment: Binding<Date?>) {
+		package init(
+			dataset: DailyPriceChartData,
+			router: LivePricingView.Router,
+			selectedMoment: Binding<Date?>,
+		) {
 			self.dataset = dataset
+			_router = ObservedObject(wrappedValue: router)
 			_selectedMoment = selectedMoment
 		}
 
 		/// Convenience init for previews/tests.
 		package init(dataset: DailyPriceChartData) {
 			self.dataset = dataset
+			_router = ObservedObject(wrappedValue: LivePricingView.Router())
 			_selectedMoment = .constant(nil)
 		}
 
@@ -43,11 +49,8 @@ package extension PricingScheduleView {
 				.accessibilityLabel(Text("Live Pricing", bundle: .elvahCharge))
 				.accessibilityValue(accessibilityPriceValueText(reference: reference))
 				.accessibilityAction(named: Text("Show other prices", bundle: .elvahCharge)) {
-					showOtherPricesSheet = true
+					router.isShowingOtherPricesSheet = true
 				}
-			}
-			.sheet(isPresented: $showOtherPricesSheet) {
-				MorePricesSheetContent()
 			}
 		}
 
@@ -64,7 +67,7 @@ package extension PricingScheduleView {
 					Spacer()
 				}
 				Button {
-					showOtherPricesSheet = true
+					router.isShowingOtherPricesSheet = true
 				} label: {
 					HStack(spacing: .size(.XXXS)) {
 						Text("CCS, Very fast (350 kW)")
@@ -197,7 +200,7 @@ package extension PricingScheduleView {
 					"""
 					\(priceText), discounted \(segmentRange.accessibilityTextRepresentation). Original Price: \(basePriceText)
 					""",
-					bundle: .elvahCharge
+					bundle: .elvahCharge,
 				)
 			}
 			return priceText
@@ -254,7 +257,11 @@ package extension PricingScheduleView {
 @available(iOS 17.0, *)
 #Preview {
 	let data = PricingSchedule.mock.chartData()[1]
-	PricingScheduleView.Summary(dataset: data, selectedMoment: .constant(Date()))
-		.padding()
-		.withFontRegistration()
+	PricingScheduleView.Summary(
+		dataset: data,
+		router: LivePricingView.Router(),
+		selectedMoment: .constant(Date()),
+	)
+	.padding()
+	.withFontRegistration()
 }

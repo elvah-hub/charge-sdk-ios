@@ -57,10 +57,14 @@ package struct PricingScheduleView: View {
 			}
 
 			if let current = chartEntries.first(where: { $0.day == selectedDay })?.dataset {
-				Summary(dataset: current, selectedMoment: $selectedMoment)
-					.padding(.horizontal, horizontalAreaPaddings[.header])
-					.animation(.default, value: selectedDay)
-					.animation(.default, value: selectedMoment)
+				Summary(
+					dataset: current,
+					router: router,
+					selectedMoment: $selectedMoment,
+				)
+				.padding(.horizontal, horizontalAreaPaddings[.header])
+				.animation(.default, value: selectedDay)
+				.animation(.default, value: selectedMoment)
 			}
 
 			VStack(spacing: .size(.M)) {

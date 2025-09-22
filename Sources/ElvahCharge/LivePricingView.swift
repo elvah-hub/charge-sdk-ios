@@ -85,6 +85,10 @@ public struct LivePricingView: View {
 			.fullScreenCover(item: $router.chargeOfferDetail) { siteSchedule in
 				ChargeOfferDetailRootFeature(site: nil, offers: siteSchedule.chargeSite.offers)
 			}
+			.sheet(isPresented: $router.isShowingOtherPricesSheet) {
+				// TODO: Pass charge offers
+				PricingScheduleView.MorePricesSheetContent()
+			}
 			.withEnvironmentObjects()
 		} else {
 			EmptyView()
@@ -186,10 +190,12 @@ package extension LivePricingView {
 	final class Router: BaseRouter {
 		@Published var chargeOfferDetail: ChargeSiteSchedule?
 		@Published var showChargeSession = false
+		@Published var isShowingOtherPricesSheet = false
 
 		package func reset() {
 			chargeOfferDetail = nil
 			showChargeSession = false
+			isShowingOtherPricesSheet = false
 		}
 	}
 }
