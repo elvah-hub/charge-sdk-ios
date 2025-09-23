@@ -494,6 +494,9 @@
     "Base Line" : {
 
     },
+    "Base Pricing" : {
+
+    },
     "Boundary End" : {
 
     },
@@ -1790,9 +1793,6 @@
           }
         }
       }
-    },
-    "Other charge points" : {
-
     },
     "Our Terms of Service and Charging as well as our Privacy Policy apply" : {
       "comment" : "terms_and_conditions_text",
