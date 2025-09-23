@@ -86,8 +86,7 @@ public struct LivePricingView: View {
 				ChargeOfferDetailRootFeature(site: nil, offers: siteSchedule.chargeSite.offers)
 			}
 			.sheet(isPresented: $router.isShowingOtherPricesSheet) {
-				// TODO: Pass charge offers
-				PricingScheduleView.MorePricesSheetContent()
+				PricingScheduleView.MorePricesSheetContent(chargeSite: schedule.chargeSite)
 			}
 			.withEnvironmentObjects()
 		} else {
