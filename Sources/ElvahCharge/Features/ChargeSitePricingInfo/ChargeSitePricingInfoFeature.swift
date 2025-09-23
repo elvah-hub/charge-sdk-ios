@@ -53,11 +53,12 @@ package struct ChargeSitePricingInfoFeature: View {
 
 	private func pricingRow(for group: PowerPricingGroup) -> some View {
 		HStack(spacing: .size(.S)) {
-			HStack(spacing: .size(.XXS)) {
+			HStack(spacing: .size(.XS)) {
 				Image(.bolt)
+					.typography(.copy(size: .medium))
 				Text(group.maxPowerDisplay)
 			}
-			.typography(.copy(size: .large), weight: .regular)
+			.typography(.copy(size: .large))
 			.foregroundStyle(.primaryContent)
 
 			Spacer(minLength: 0)
@@ -76,9 +77,7 @@ package struct ChargeSitePricingInfoFeature: View {
 			.map { key, value in
 				PowerPricingGroup(maxPowerInKw: key, offers: value)
 			}
-			.sorted { lhs, rhs in
-				lhs.maxPowerInKw < rhs.maxPowerInKw
-			}
+			.sorted()
 	}
 }
 
@@ -91,7 +90,7 @@ package extension ChargeSitePricingInfoFeature {
 
 @available(iOS 16.0, *)
 private extension ChargeSitePricingInfoFeature {
-	struct PowerPricingGroup: Identifiable, Equatable {
+	struct PowerPricingGroup: Identifiable, Equatable, Comparable {
 		var id: Double { maxPowerInKw }
 		var maxPowerInKw: Double
 		var offers: [ChargeOffer]
@@ -102,6 +101,13 @@ private extension ChargeSitePricingInfoFeature {
 
 		var displayedPrice: Currency? {
 			offers.lazy.map(\.price.pricePerKWh).min()
+		}
+
+		static func < (
+			lhs: ChargeSitePricingInfoFeature.PowerPricingGroup,
+			rhs: ChargeSitePricingInfoFeature.PowerPricingGroup
+		) -> Bool {
+			lhs.maxPowerInKw > rhs.maxPowerInKw
 		}
 	}
 }
