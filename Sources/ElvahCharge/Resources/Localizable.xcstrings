@@ -255,13 +255,7 @@
     "00:23:25" : {
 
     },
-    "22 kW" : {
-
-    },
     "22.53 kWh" : {
-
-    },
-    "50 kW" : {
 
     },
     "AC" : {
@@ -1447,6 +1441,9 @@
           }
         }
       }
+    },
+    "No additional charge points available" : {
+
     },
     "No charge points available" : {
       "comment" : "no_charge_points_available",
