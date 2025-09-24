@@ -9,52 +9,53 @@ struct ChargeEntryActivityView: View {
 	var state: ChargeEntryFeature.ViewState
 
 	var body: some View {
-		let data = activityInfoData
-		ActivityInfoComponent(state: data.state, title: data.title, message: data.message)
-			.frame(maxWidth: .infinity, maxHeight: .infinity)
-			.toolbar {
-				ToolbarItem(placement: .topBarLeading) {
-					CloseButton {
-						navigationRoot.dismiss()
-					}
+		VStack(spacing: .size(.M)) {
+			Group {
+				if #available(iOS 17.0, *) {
+					Image(state == .loading ? .bolt : .boltSlash)
+						.contentTransition(.symbolEffect)
+						.geometryGroup()
+				} else {
+					Image(state == .loading ? .bolt : .boltSlash)
 				}
 			}
-	}
-
-	// MARK: - Helpers
-
-	private var activityInfoData: ActivityInfoData {
-		switch state {
-		case .loading:
-			ActivityInfoData(
-				state: .animating,
-				title: nil,
-				message: nil
-			)
-		case .missingChargeContext:
-			ActivityInfoData(
-				state: .outlined(iconSystemName: "xmark"),
-				title: nil,
-				message: nil
-			)
+			.font(.themed(size: 40))
+			.progressRing(state == .loading ? .indeterminate : .completed)
+			if state == .missingChargeContext {
+				Text("No Charge Session", bundle: .elvahCharge)
+					.typography(.copy(size: .large), weight: .bold)
+					.fixedSize(horizontal: false, vertical: true)
+					.transition(.opacity.combined(with: .offset(y: 25)))
+			}
 		}
-	}
-}
-
-// MARK: - Helpers
-
-@available(iOS 16.0, *)
-private extension ChargeEntryActivityView {
-	struct ActivityInfoData {
-		var state: ActivityInfoComponent.ActivityState
-		var title: LocalizedStringKey?
-		var message: LocalizedStringKey?
+		.frame(maxWidth: .infinity, maxHeight: .infinity)
+		.toolbar {
+			ToolbarItem(placement: .topBarLeading) {
+				CloseButton {
+					navigationRoot.dismiss()
+				}
+			}
+		}
 	}
 }
 
 @available(iOS 17.0, *)
 #Preview {
-	ChargeEntryActivityView(state: .loading)
-		.preferredColorScheme(.dark)
-		.withFontRegistration()
+	@Previewable @State var previewState: ChargeEntryFeature.ViewState = .loading
+
+	VStack(spacing: 24) {
+		ChargeEntryActivityView(state: previewState)
+			.frame(height: 320)
+		Picker(selection: $previewState) {
+			Text(verbatim: "Loading").tag(ChargeEntryFeature.ViewState.loading)
+			Text(verbatim: "Missing Charge Context").tag(ChargeEntryFeature.ViewState.missingChargeContext)
+		} label: {
+			Text(verbatim: "Charge Entry View State")
+		}
+		.pickerStyle(.segmented)
+	}
+	.padding()
+	.preferredColorScheme(.dark)
+	.withFontRegistration()
+	.animation(.default, value: previewState)
 }

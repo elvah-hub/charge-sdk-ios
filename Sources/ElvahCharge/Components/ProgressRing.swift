@@ -15,7 +15,7 @@ struct ProgressRing: ViewModifier {
 	func body(content: Content) -> some View {
 		squareContentView(content: content)
 			.padding(indicatorPadding)
-			.overlay(overlayContent)
+			.background(overlayContent)
 	}
 
 	@ViewBuilder private func squareContentView(content: Content) -> some View {
@@ -197,9 +197,9 @@ extension ProgressRing {
 
 			if case .determinate = selectedMode {
 				VStack {
-					Text("22.53 kWh")
+					Text(verbatim: "22.53 kWh")
 						.typography(.title(size: .medium))
-					Text("00:23:25")
+					Text(verbatim: "00:23:25")
 						.typography(.copy(size: .medium))
 				}
 				.transition(.opacity.combined(with: .scale))
@@ -214,7 +214,7 @@ extension ProgressRing {
 			// Progress Slider (only visible for determinate mode)
 			if case .determinate = selectedMode {
 				VStack {
-					Text("Progress: \(Int(progress * 100))%")
+					Text(verbatim: "Progress: \(Int(progress * 100))%")
 						.typography(.copy(size: .medium))
 
 					Slider(value: $progress, in: 0 ... 1, step: 0.05)
@@ -227,11 +227,13 @@ extension ProgressRing {
 			}
 
 			// Mode Selector
-			Picker("Progress Mode", selection: $selectedMode) {
-				Text("Loading").tag(ProgressRing.Mode.indeterminate)
-				Text("Progress").tag(ProgressRing.Mode.determinate(fraction: progress))
-				Text("Done").tag(ProgressRing.Mode.completed)
-				Text("Error").tag(ProgressRing.Mode.failed)
+			Picker(selection: $selectedMode) {
+				Text(verbatim: "Loading").tag(ProgressRing.Mode.indeterminate)
+				Text(verbatim: "Progress").tag(ProgressRing.Mode.determinate(fraction: progress))
+				Text(verbatim: "Done").tag(ProgressRing.Mode.completed)
+				Text(verbatim: "Error").tag(ProgressRing.Mode.failed)
+			} label: {
+				Text(verbatim: "Progress Mode")
 			}
 			.pickerStyle(.segmented)
 		}

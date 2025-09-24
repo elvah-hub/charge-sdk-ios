@@ -304,7 +304,7 @@ package extension PricingScheduleView {
 
 		private func offerAccessibilityText(for discount: DailyPriceChartData.DiscountSpan) -> Text {
 			let priceText = Text("\(discount.price.formatted()) per kilowatt-hour", bundle: .elvahCharge)
-			return Text("\(priceText), \(discount.timeRangeAccessibilityText)")
+			return Text(verbatim: "\(priceText), \(discount.timeRangeAccessibilityText)")
 		}
 
 		/// Relative day label for accessibility.

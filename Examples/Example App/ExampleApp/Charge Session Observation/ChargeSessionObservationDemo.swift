@@ -16,7 +16,7 @@ struct ChargeSessionObservationDemo: View {
         Button("Show Charge Session") {
           showChargeSession = true
         }
-        .disabled(isChargeSessionActive == false)
+//        .disabled(isChargeSessionActive == false)
       }
     }
     .navigationTitle("Session Observation")

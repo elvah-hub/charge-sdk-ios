@@ -77,19 +77,6 @@
         }
       }
     },
-    "%@ /kWh" : {
-
-    },
-    "%@ %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ %2$@"
-          }
-        }
-      }
-    },
     "%@ • %@" : {
       "localizations" : {
         "en" : {
@@ -112,16 +99,6 @@
     },
     "%@ per kilowatt-hour" : {
 
-    },
-    "%@, %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@, %2$@"
-          }
-        }
-      }
     },
     "%@, discounted %@. Original Price: %@" : {
       "localizations" : {
@@ -251,12 +228,6 @@
           }
         }
       }
-    },
-    "00:23:25" : {
-
-    },
-    "22.53 kWh" : {
-
     },
     "AC" : {
       "comment" : "ac_label",
@@ -820,9 +791,6 @@
     "Check your search input and try again" : {
 
     },
-    "Checking for current price.\nWe're almost there!" : {
-
-    },
     "Clear filters" : {
 
     },
@@ -1067,9 +1035,6 @@
           }
         }
       }
-    },
-    "Error" : {
-
     },
     "Error…" : {
       "comment" : "error_label",
@@ -1370,9 +1335,6 @@
 
     },
     "Live Pricing" : {
-
-    },
-    "Loading" : {
 
     },
     "Loading data…" : {
@@ -2134,15 +2096,6 @@
           }
         }
       }
-    },
-    "Progress" : {
-
-    },
-    "Progress Mode" : {
-
-    },
-    "Progress: %lld%%" : {
-
     },
     "Reaching out to the charger.\nPlease bear with us for a moment." : {
       "comment" : "charge_session__activation_loading__message",

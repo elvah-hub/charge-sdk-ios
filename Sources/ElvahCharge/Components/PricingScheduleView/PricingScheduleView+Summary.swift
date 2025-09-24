@@ -94,7 +94,7 @@ package extension PricingScheduleView {
 							Image(.discounting)
 								.grayscale(1)
 						}
-						Text("\(price.formatted()) /kWh", bundle: .elvahCharge)
+						Text("\(price.formatted())/kWh", bundle: .elvahCharge)
 							.typography(.copy(size: .xLarge), weight: .bold)
 							.monospacedDigit()
 							.foregroundStyle(discounted ? .fixedGreen : .primaryContent)
@@ -102,7 +102,7 @@ package extension PricingScheduleView {
 					}
 
 					if discounted {
-						Text("\(dataset.basePrice.formatted()) /kWh", bundle: .elvahCharge)
+						Text("\(dataset.basePrice.formatted())/kWh", bundle: .elvahCharge)
 							.typography(.copy(size: .medium), weight: .regular)
 							.monospacedDigit()
 							.strikethrough(true, pattern: .solid)
@@ -125,7 +125,7 @@ package extension PricingScheduleView {
 				breakPoint: .xxLarge,
 			) {
 				if let moment = selectedMoment, let range = dataset.dateRangeOfSegment(containing: moment) {
-					Text("\(dayText) \(range.textRepresentation)", bundle: .elvahCharge)
+					Text(verbatim: "\(dayText) \(range.textRepresentation)")
 						.typography(.copy(size: .medium), weight: .bold)
 						.foregroundStyle(.secondaryContent)
 						.contentTransition(.numericText())

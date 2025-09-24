@@ -64,7 +64,7 @@ package struct ChargeSitePricingInfoFeature: View {
 			Spacer(minLength: 0)
 
 			if let price = group.displayedPrice {
-				Text("\(price.formatted()) /kWh", bundle: .elvahCharge)
+				Text("\(price.formatted())/kWh", bundle: .elvahCharge)
 					.typography(.copy(size: .large), weight: .bold)
 					.monospacedDigit()
 					.foregroundStyle(.primaryContent)
@@ -73,7 +73,8 @@ package struct ChargeSitePricingInfoFeature: View {
 	}
 
 	private var groupedChargeOffers: [PowerPricingGroup] {
-		Dictionary(grouping: chargeSite.offers, by: { $0.chargePoint.maxPowerInKw })
+		let chargeOffersWithoutDiscount = chargeSite.offers.filter { $0.isDiscounted == false }
+		return Dictionary(grouping: chargeOffersWithoutDiscount, by: { $0.chargePoint.maxPowerInKw })
 			.map { key, value in
 				PowerPricingGroup(maxPowerInKw: key, offers: value)
 			}

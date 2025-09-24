@@ -46,11 +46,7 @@ package struct ChargeEntryFeature: View {
 				} else if let chargeRequest {
 					ChargePaymentFeature(request: chargeRequest, router: router.paymentRouter)
 				} else {
-					if state == .missingChargeContext {
-						MissingChargeContextView()
-					} else {
-						ChargeEntryActivityView(state: state)
-					}
+					ChargeEntryActivityView(state: state)
 				}
 			}
 		}
