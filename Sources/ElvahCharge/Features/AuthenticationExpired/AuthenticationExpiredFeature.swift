@@ -9,17 +9,36 @@ struct AuthenticationExpiredFeature: View {
 
 	var body: some View {
 		VStack {
-			ActivityInfoComponent(
-				state: .error,
-				title: "Payment expired",
-				message: """
-				Unfortunately, the time between payment and session start was too long. \
-				We need you to authorize a new deposit on your payment method.
-				"""
-			)
-			.frame(maxHeight: .infinity)
-			.padding(.horizontal)
-			VStack {
+			Spacer()
+			VStack(spacing: .size(.M)) {
+				Image(systemName: "exclamationmark")
+					.foregroundStyle(.red)
+					.font(.themed(size: 40))
+					.progressRing(.failed)
+				VStack(spacing: .size(.XS)) {
+					Text("Payment expired", bundle: .elvahCharge)
+						.typography(.title(size: .medium), weight: .bold)
+						.foregroundStyle(.primaryContent)
+						.frame(maxWidth: .infinity)
+						.fixedSize(horizontal: false, vertical: true)
+					Text(
+						"""
+						Unfortunately, the time between payment and session start was too long. \
+						We need you to authorize a new deposit on your payment method.
+						""",
+						bundle: .elvahCharge
+					)
+					.dynamicTypeSize(...(.accessibility1))
+					.typography(.copy(size: .medium))
+					.foregroundStyle(.secondaryContent)
+					.frame(maxWidth: .infinity)
+					.fixedSize(horizontal: false, vertical: true)
+				}
+				.padding(.horizontal)
+				.frame(maxWidth: .infinity)
+			}
+			Spacer()
+			ButtonStack {
 				VStack(spacing: .size(.M)) {
 					Button("Understood", bundle: .elvahCharge) {
 						navigationRoot.path = .init()
@@ -34,10 +53,10 @@ struct AuthenticationExpiredFeature: View {
 			}
 			.padding(.horizontal, .M)
 		}
+		.multilineTextAlignment(.center)
+		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.navigationBarBackButtonHidden()
-		.background {
-			Color.canvas.ignoresSafeArea()
-		}
+		.background(Color.canvas)
 		.toolbar {
 			ToolbarItem(placement: .topBarLeading) {
 				CloseButton {
@@ -75,4 +94,5 @@ extension AuthenticationExpiredFeature {
 	AuthenticationExpiredFeature(router: router)
 		.withMockEnvironmentObjects()
 		.withFontRegistration()
+		.preferredColorScheme(.dark)
 }

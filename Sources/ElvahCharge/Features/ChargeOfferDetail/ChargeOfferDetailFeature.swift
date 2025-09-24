@@ -123,7 +123,8 @@ package struct ChargeOfferDetailFeature: View {
 		switch site {
 		case .absent,
 		     .loading:
-			ActivityInfoComponent(state: .animating, title: nil, message: nil)
+			EmptyView()
+				.progressRing()
 				.frame(maxWidth: .infinity)
 		case .error:
 			EmptyView()

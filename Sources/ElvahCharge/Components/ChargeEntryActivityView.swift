@@ -21,6 +21,7 @@ struct ChargeEntryActivityView: View {
 			}
 			.font(.themed(size: 40))
 			.progressRing(state == .loading ? .indeterminate : .completed)
+			.progressRingTint(state == .loading ? .secondary : .primary)
 			if state == .missingChargeContext {
 				Text("No Charge Session", bundle: .elvahCharge)
 					.typography(.copy(size: .large), weight: .bold)

@@ -4,6 +4,7 @@ import SwiftUI
 
 @available(iOS 16.0, *)
 struct ProgressRing: ViewModifier {
+	@Environment(\.progressRingTint) private var progressRingTint
 	@State private var rotation: Double = 0
 
 	private var mode: ProgressRing.Mode
@@ -14,6 +15,7 @@ struct ProgressRing: ViewModifier {
 
 	func body(content: Content) -> some View {
 		squareContentView(content: content)
+			.tint(progressRingTint)
 			.padding(indicatorPadding)
 			.background(overlayContent)
 	}
@@ -45,7 +47,8 @@ struct ProgressRing: ViewModifier {
 
 	@ViewBuilder private var backgroundStroke: some View {
 		Circle()
-			.fill(mode.trackColor)
+			.fill(progressRingTint ?? mode.trackColor)
+			.opacity(0.25)
 			.mask {
 				Circle()
 					.overlay {
@@ -61,7 +64,7 @@ struct ProgressRing: ViewModifier {
 		TimelineView(.animation) { context in
 			Circle()
 				.trim(from: 0, to: mode.strokeTrimEnd)
-				.stroke(mode.foregroundColor, style: strokeStyle)
+				.stroke(progressRingTint ?? mode.foregroundColor, style: strokeStyle)
 				.padding(mode.showsAnimatedStroke ? strokeWidth / 2 : 0)
 				.rotationEffect(.degrees(rotationAngle(at: context.date)))
 				.opacity(mode.showsAnimatedStroke ? 1 : 0)
@@ -163,11 +166,11 @@ extension ProgressRing {
 			switch self {
 			case .indeterminate,
 			     .determinate:
-				.brand.opacity(0.25)
+				.brand
 			case .completed:
-				.brand.opacity(0.25)
+				.brand
 			case .failed:
-				.red.opacity(0.25)
+				.red
 			}
 		}
 	}
