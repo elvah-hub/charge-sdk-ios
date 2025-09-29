@@ -12,16 +12,16 @@ extension ButtonInternal {
 					Text(verbatim: "Regular").foregroundStyle(.primaryContent)
 					HStack(alignment: .top) {
 						VStack {
-							Button("Later", icon: .share) {}
-							Button("Later", icon: .share) {}.loading(true)
-							Button("Later", icon: .share) {}.disabled(true)
-							Button("Later", icon: .share) {}.redacted(reason: .placeholder)
+							Button(Text(verbatim: "Later"), icon: .share) {}
+							Button(Text(verbatim: "Later"), icon: .share) {}.loading(true)
+							Button(Text(verbatim: "Later"), icon: .share) {}.disabled(true)
+							Button(Text(verbatim: "Later"), icon: .share) {}.redacted(reason: .placeholder)
 						}
 						VStack {
-							Button("Later", icon: .share) {}
-							Button("Later", icon: .share) {}.loading(true)
-							Button("Later", icon: .share) {}.disabled(true)
-							Button("Later", icon: .share) {}.redacted(reason: .placeholder)
+							Button(Text(verbatim: "Later"), icon: .share) {}
+							Button(Text(verbatim: "Later"), icon: .share) {}.loading(true)
+							Button(Text(verbatim: "Later"), icon: .share) {}.disabled(true)
+							Button(Text(verbatim: "Later"), icon: .share) {}.redacted(reason: .placeholder)
 						}
 						.compactControl()
 					}
@@ -29,16 +29,16 @@ extension ButtonInternal {
 					Text(verbatim: "Small").foregroundStyle(.primaryContent)
 					HStack(alignment: .top) {
 						VStack {
-							Button("Later", icon: .share) {}
-							Button("Later", icon: .share) {}.loading(true)
-							Button("Later", icon: .share) {}.disabled(true)
-							Button("Later", icon: .share) {}.redacted(reason: .placeholder)
+							Button(Text(verbatim: "Later"), icon: .share) {}
+							Button(Text(verbatim: "Later"), icon: .share) {}.loading(true)
+							Button(Text(verbatim: "Later"), icon: .share) {}.disabled(true)
+							Button(Text(verbatim: "Later"), icon: .share) {}.redacted(reason: .placeholder)
 						}
 						VStack {
-							Button("Later", icon: .share) {}
-							Button("Later", icon: .share) {}.loading(true)
-							Button("Later", icon: .share) {}.disabled(true)
-							Button("Later", icon: .share) {}.redacted(reason: .placeholder)
+							Button(Text(verbatim: "Later"), icon: .share) {}
+							Button(Text(verbatim: "Later"), icon: .share) {}.loading(true)
+							Button(Text(verbatim: "Later"), icon: .share) {}.disabled(true)
+							Button(Text(verbatim: "Later"), icon: .share) {}.redacted(reason: .placeholder)
 						}
 						.compactControl()
 					}
@@ -47,16 +47,16 @@ extension ButtonInternal {
 					Text(verbatim: "No Icon").foregroundStyle(.primaryContent)
 					HStack(alignment: .top) {
 						VStack {
-							Button("Later") {}
-							Button("Later") {}.loading(true)
-							Button("Later") {}.disabled(true)
-							Button("Later") {}.redacted(reason: .placeholder)
+							Button(Text(verbatim: "Later")) {}
+							Button(Text(verbatim: "Later")) {}.loading(true)
+							Button(Text(verbatim: "Later")) {}.disabled(true)
+							Button(Text(verbatim: "Later")) {}.redacted(reason: .placeholder)
 						}
 						VStack {
-							Button("Later") {}
-							Button("Later") {}.loading(true)
-							Button("Later") {}.disabled(true)
-							Button("Later") {}.redacted(reason: .placeholder)
+							Button(Text(verbatim: "Later")) {}
+							Button(Text(verbatim: "Later")) {}.loading(true)
+							Button(Text(verbatim: "Later")) {}.disabled(true)
+							Button(Text(verbatim: "Later")) {}.redacted(reason: .placeholder)
 						}
 						.compactControl()
 					}
@@ -64,16 +64,16 @@ extension ButtonInternal {
 					Text(verbatim: "No Icon - Small").foregroundStyle(.primaryContent)
 					HStack(alignment: .top) {
 						VStack {
-							Button("Later") {}
-							Button("Later") {}.loading(true)
-							Button("Later") {}.disabled(true)
-							Button("Later") {}.redacted(reason: .placeholder)
+							Button(Text(verbatim: "Later")) {}
+							Button(Text(verbatim: "Later")) {}.loading(true)
+							Button(Text(verbatim: "Later")) {}.disabled(true)
+							Button(Text(verbatim: "Later")) {}.redacted(reason: .placeholder)
 						}
 						VStack {
-							Button("Later") {}
-							Button("Later") {}.loading(true)
-							Button("Later") {}.disabled(true)
-							Button("Later") {}.redacted(reason: .placeholder)
+							Button(Text(verbatim: "Later")) {}
+							Button(Text(verbatim: "Later")) {}.loading(true)
+							Button(Text(verbatim: "Later")) {}.disabled(true)
+							Button(Text(verbatim: "Later")) {}.redacted(reason: .placeholder)
 						}
 						.compactControl()
 					}
@@ -82,16 +82,16 @@ extension ButtonInternal {
 					Text(verbatim: "Inverted").foregroundStyle(.primaryContent)
 					HStack(alignment: .top) {
 						VStack {
-							Button("Later", icon: .share) {}
-							Button("Later", icon: .share) {}.loading(true)
-							Button("Later", icon: .share) {}.disabled(true)
-							Button("Later", icon: .share) {}.redacted(reason: .placeholder)
+							Button(Text(verbatim: "Later"), icon: .share) {}
+							Button(Text(verbatim: "Later"), icon: .share) {}.loading(true)
+							Button(Text(verbatim: "Later"), icon: .share) {}.disabled(true)
+							Button(Text(verbatim: "Later"), icon: .share) {}.redacted(reason: .placeholder)
 						}
 						VStack {
-							Button("Later", icon: .share) {}
-							Button("Later", icon: .share) {}.loading(true)
-							Button("Later", icon: .share) {}.disabled(true)
-							Button("Later", icon: .share) {}.redacted(reason: .placeholder)
+							Button(Text(verbatim: "Later"), icon: .share) {}
+							Button(Text(verbatim: "Later"), icon: .share) {}.loading(true)
+							Button(Text(verbatim: "Later"), icon: .share) {}.disabled(true)
+							Button(Text(verbatim: "Later"), icon: .share) {}.redacted(reason: .placeholder)
 						}
 						.compactControl()
 					}

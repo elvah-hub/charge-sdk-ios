@@ -28,7 +28,7 @@ struct ChargeSessionMetricsComponent: View {
 					Text(formattedConsumedKWh)
 						.contentTransition(.numericText(countsDown: false))
 						.typography(.title(size: .medium), weight: .bold)
-					Text("kWh")
+					Text(verbatim: "kWh")
 						.typography(.copy(size: .large))
 				}
 				.monospacedDigit()

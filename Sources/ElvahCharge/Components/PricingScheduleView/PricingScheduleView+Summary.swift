@@ -125,7 +125,7 @@ package extension PricingScheduleView {
 				breakPoint: .xxLarge,
 			) {
 				if let moment = selectedMoment, let range = dataset.dateRangeOfSegment(containing: moment) {
-					Text(verbatim: "\(dayText) \(range.textRepresentation)")
+					Text("\(dayText) \(range.textRepresentation)")
 						.typography(.copy(size: .medium), weight: .bold)
 						.foregroundStyle(.secondaryContent)
 						.contentTransition(.numericText())

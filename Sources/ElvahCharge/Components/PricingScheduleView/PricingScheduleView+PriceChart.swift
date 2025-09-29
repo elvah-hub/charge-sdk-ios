@@ -76,11 +76,11 @@ package extension PricingScheduleView {
 		private var hourGrid: some ChartContent {
 			ForEach(hourlyTicks(for: dataset.day), id: \.self) { tick in
 				if isMidnight(tick) {
-					RuleMark(x: .value(Text("Hour", bundle: .elvahCharge), tick))
+					RuleMark(x: .value(Text(verbatim: "Hour"), tick))
 						.foregroundStyle(.gray.opacity(0.3))
 						.lineStyle(StrokeStyle(lineWidth: 1))
 				} else {
-					RuleMark(x: .value(Text("Hour", bundle: .elvahCharge), tick))
+					RuleMark(x: .value(Text(verbatim: "Hour"), tick))
 						.foregroundStyle(.gray.opacity(0.3))
 						.lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 2]))
 				}
@@ -91,19 +91,19 @@ package extension PricingScheduleView {
 		private var baselineBand: some ChartContent {
 			ForEach(dataset.gaps) { segment in
 				RectangleMark(
-					xStart: .value(Text("Start", bundle: .elvahCharge), segment.startTime),
-					xEnd: .value(Text("End", bundle: .elvahCharge), segment.endTime),
-					yStart: .value(Text("Zero", bundle: .elvahCharge), 0.0),
-					yEnd: .value(Text("Base", bundle: .elvahCharge), dataset.basePrice.amount)
+					xStart: .value(Text(verbatim: "Start"), segment.startTime),
+					xEnd: .value(Text(verbatim: "End"), segment.endTime),
+					yStart: .value(Text(verbatim: "Zero"), 0.0),
+					yEnd: .value(Text(verbatim: "Base"), dataset.basePrice.amount)
 				)
 				.foregroundStyle(.gray.opacity(0.15))
 				.lineStyle(StrokeStyle(lineWidth: 1))
 				.opacity(opacityForMark(in: segment.startTime, to: segment.endTime))
 
 				RuleMark(
-					xStart: .value(Text("Start", bundle: .elvahCharge), segment.startTime),
-					xEnd: .value(Text("End", bundle: .elvahCharge), segment.endTime),
-					y: .value(Text("Base Line", bundle: .elvahCharge), dataset.basePrice.amount)
+					xStart: .value(Text(verbatim: "Start"), segment.startTime),
+					xEnd: .value(Text(verbatim: "End"), segment.endTime),
+					y: .value(Text(verbatim: "Base Line"), dataset.basePrice.amount)
 				)
 				.foregroundStyle(.gray)
 				.lineStyle(StrokeStyle(lineWidth: 1))
@@ -115,10 +115,10 @@ package extension PricingScheduleView {
 		private var discountedSegments: some ChartContent {
 			ForEach(dataset.discounts) { segment in
 				RectangleMark(
-					xStart: .value(Text("Start", bundle: .elvahCharge), segment.startTime),
-					xEnd: .value(Text("End", bundle: .elvahCharge), segment.endTime),
-					yStart: .value(Text("Zero", bundle: .elvahCharge), 0.0),
-					yEnd: .value(Text("Price", bundle: .elvahCharge), segment.price.amount)
+					xStart: .value(Text(verbatim: "Start"), segment.startTime),
+					xEnd: .value(Text(verbatim: "End"), segment.endTime),
+					yStart: .value(Text(verbatim: "Zero"), 0.0),
+					yEnd: .value(Text(verbatim: "Price"), segment.price.amount)
 				)
 				.foregroundStyle(.green.opacity(0.25))
 				.lineStyle(StrokeStyle(lineWidth: 1))
@@ -131,9 +131,9 @@ package extension PricingScheduleView {
 				}
 
 				RuleMark(
-					xStart: .value(Text("Start", bundle: .elvahCharge), segment.startTime),
-					xEnd: .value(Text("End", bundle: .elvahCharge), segment.endTime),
-					y: .value(Text("Price Line", bundle: .elvahCharge), segment.price.amount)
+					xStart: .value(Text(verbatim: "Start"), segment.startTime),
+					xEnd: .value(Text(verbatim: "End"), segment.endTime),
+					y: .value(Text(verbatim: "Price Line"), segment.price.amount)
 				)
 				.foregroundStyle(.fixedGreen)
 				.lineStyle(StrokeStyle(lineWidth: 1))
@@ -145,18 +145,18 @@ package extension PricingScheduleView {
 		private var discountBoundaries: some ChartContent {
 			ForEach(dataset.discounts) { segment in
 				RuleMark(
-					x: .value(Text("Boundary Start", bundle: .elvahCharge), segment.startTime),
-					yStart: .value(Text("Base", bundle: .elvahCharge), dataset.basePrice.amount),
-					yEnd: .value(Text("Price", bundle: .elvahCharge), segment.price.amount)
+					x: .value(Text(verbatim: "Boundary Start"), segment.startTime),
+					yStart: .value(Text(verbatim: "Base"), dataset.basePrice.amount),
+					yEnd: .value(Text(verbatim: "Price"), segment.price.amount)
 				)
 				.foregroundStyle(.gray)
 				.lineStyle(StrokeStyle(lineWidth: 1))
 				.opacity(selectedMoment == nil ? 1 : 0.25)
 
 				RuleMark(
-					x: .value(Text("Boundary End", bundle: .elvahCharge), segment.endTime),
-					yStart: .value(Text("Base", bundle: .elvahCharge), dataset.basePrice.amount),
-					yEnd: .value(Text("Price", bundle: .elvahCharge), segment.price.amount)
+					x: .value(Text(verbatim: "Boundary End"), segment.endTime),
+					yStart: .value(Text(verbatim: "Base"), dataset.basePrice.amount),
+					yEnd: .value(Text(verbatim: "Price"), segment.price.amount)
 				)
 				.foregroundStyle(.gray)
 				.lineStyle(StrokeStyle(lineWidth: 1))
@@ -171,19 +171,19 @@ package extension PricingScheduleView {
 			let markerColor: Color = isDiscount ? .fixedGreen : .gray
 
 			RuleMark(
-				x: .value(Text("Now", bundle: .elvahCharge), reference),
-				yStart: .value(Text("Zero", bundle: .elvahCharge), 0.0),
-				yEnd: .value(Text("Current Price", bundle: .elvahCharge), price.amount)
+				x: .value(Text(verbatim: "Now"), reference),
+				yStart: .value(Text(verbatim: "Zero"), 0.0),
+				yEnd: .value(Text(verbatim: "Current Price"), price.amount)
 			)
 			.foregroundStyle(markerColor)
 			.lineStyle(StrokeStyle(lineWidth: 2))
 
-			PointMark(x: .value(Text("Now", bundle: .elvahCharge), reference), y: .value(Text("Current Price", bundle: .elvahCharge), price.amount))
+			PointMark(x: .value(Text(verbatim: "Now"), reference), y: .value(Text(verbatim: "Current Price"), price.amount))
 				.symbol(.circle)
 				.symbolSize(100)
 				.foregroundStyle(markerColor)
 
-			PointMark(x: .value(Text("Now", bundle: .elvahCharge), reference), y: .value(Text("Current Price", bundle: .elvahCharge), price.amount))
+			PointMark(x: .value(Text(verbatim: "Now"), reference), y: .value(Text(verbatim: "Current Price"), price.amount))
 				.symbol(.circle)
 				.symbolSize(30)
 				.foregroundStyle(.white)
@@ -267,7 +267,7 @@ package extension PricingScheduleView {
 			Text(
 				"""
 				Price chart, \(Text(relativeDayLabel)), \
-				base price \(Text(dataset.basePrice.formatted())) per kWh
+				base price \(Text(dataset.basePrice.formatted())) per kilowatt-hour
 				""",
 				bundle: .elvahCharge
 			)

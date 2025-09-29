@@ -32,7 +32,7 @@ package struct ChargeSitePricingInfoFeature: View {
 		let groups = groupedChargeOffers
 
 		if groups.isEmpty {
-			Text("No additional charge points available", bundle: .elvahCharge)
+			Text("No charge points available", bundle: .elvahCharge)
 				.typography(.copy(size: .medium), weight: .regular)
 				.foregroundStyle(.secondaryContent)
 				.frame(maxWidth: .infinity, alignment: .leading)

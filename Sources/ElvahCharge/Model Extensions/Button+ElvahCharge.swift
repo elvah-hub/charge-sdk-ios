@@ -16,6 +16,17 @@ extension Button {
 	}
 
 	@MainActor init(
+		_ title: Text,
+		role: ButtonRole? = nil,
+		bundle: Bundle? = nil,
+		action: @escaping () -> Void
+	) where Label == Text {
+		self.init(role: role, action: action) {
+			title
+		}
+	}
+
+	@MainActor init(
 		_ title: LocalizedStringKey,
 		icon: ImageResource,
 		bundle: Bundle? = nil,
@@ -25,6 +36,18 @@ extension Button {
 			ButtonFoundationLabel(title: Text(title, bundle: bundle), icon: Image(icon))
 		}
 	}
+
+	@MainActor init(
+		_ title: Text,
+		icon: ImageResource,
+		bundle: Bundle? = nil,
+		action: @escaping () -> Void
+	) where Label == ButtonFoundationLabel<Text> {
+		self.init(action: action) {
+			ButtonFoundationLabel(title: title, icon: Image(icon))
+		}
+	}
+
 
 	@MainActor init<Title: View>(
 		icon: ImageResource,

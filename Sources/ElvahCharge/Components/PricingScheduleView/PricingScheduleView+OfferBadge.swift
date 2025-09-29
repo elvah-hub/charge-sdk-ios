@@ -54,7 +54,10 @@ package extension PricingScheduleView {
 			case let .active(span),
 			     let .upcoming(span):
 				if showsTimeRange {
-					adaptiveLabel(prefix: Text("Offer available:", bundle: .elvahCharge), span: span)
+					adaptiveLabel(
+						prefix: Text("Offer available", bundle: .elvahCharge),
+						span: span
+					)
 				} else {
 					Text("Offer available", bundle: .elvahCharge)
 				}
@@ -112,12 +115,12 @@ package extension PricingScheduleView {
 			switch state {
 			case let .active(span):
 				Text(
-					"Offer active, \(Text(span.price.formatted())) per kWh, \(span.timeRangeAccessibilityText)",
+					"Offer active, \(Text(span.price.formatted())) per kilowatt-hour, \(span.timeRangeAccessibilityText)",
 					bundle: .elvahCharge
 				)
 			case let .upcoming(span):
 				Text(
-					"Offer upcoming, \(Text(span.price.formatted())) per kWh, \(span.timeRangeAccessibilityText)",
+					"Offer upcoming, \(Text(span.price.formatted())) per kilowatt-hour, \(span.timeRangeAccessibilityText)",
 					bundle: .elvahCharge
 				)
 			case .none:

@@ -121,10 +121,10 @@ package struct PricingScheduleView: View {
 				Text(relativeDayLabel(for: entry.day)).tag(entry.day)
 			}
 		} label: {
-			Text("Day", bundle: .elvahCharge)
+			EmptyView()
 		}
+		.labelsHidden()
 		.pickerStyle(.segmented)
-		.accessibilityHint(Text("Switch between days", bundle: .elvahCharge))
 	}
 
 	/// Returns a localized label for the given relative day.
