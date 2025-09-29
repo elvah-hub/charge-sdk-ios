@@ -83,7 +83,11 @@ public struct LivePricingView: View {
 			)
 			.accessibilityElement(children: .contain)
 			.fullScreenCover(item: $router.chargeOfferDetail) { siteSchedule in
-				ChargeOfferDetailRootFeature(site: nil, offers: siteSchedule.chargeSite.offers)
+				ChargeOfferDetailRootFeature(
+					site: nil,
+					offers: siteSchedule.chargeSite.offers,
+					pricingSchedule: siteSchedule.pricingSchedule,
+				)
 			}
 			.sheet(isPresented: $router.isShowingOtherPricesSheet) {
 				ChargeSitePricingInfoFeature(chargeSite: schedule.chargeSite)

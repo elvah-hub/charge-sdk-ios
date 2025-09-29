@@ -10,6 +10,7 @@ package struct ChargeOfferDetailFeature: View {
 	@EnvironmentObject private var chargeProvider: ChargeProvider
 	@EnvironmentObject private var chargeSettlementProvider: ChargeSettlementProvider
 
+	private var pricingSchedule: PricingSchedule?
 	private var associatedSite: Site?
 
 	@State private var processingOffer: ChargeOffer?
@@ -35,11 +36,13 @@ package struct ChargeOfferDetailFeature: View {
 	package init(
 		offers: [ChargeOffer],
 		router: ChargeOfferDetailFeature.Router,
+		pricingSchedule: PricingSchedule? = nil,
 		hideOperatorDetails: Bool = false,
 		hideDiscountBanner: Bool = false,
 	) {
 		_offers = Loadable(wrappedValue: .loaded(offers))
 		self.router = router
+		self.pricingSchedule = pricingSchedule
 		isOperatorDetailsHidden = hideOperatorDetails
 		isDiscountBannerHidden = hideDiscountBanner
 	}
