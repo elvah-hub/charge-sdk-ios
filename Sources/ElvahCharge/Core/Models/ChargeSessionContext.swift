@@ -45,7 +45,7 @@ package struct ChargeSessionContext: Codable, Hashable, Sendable {
 			organisationDetails: request.paymentContext.organisationDetails,
 			authentication: request.authentication,
 			paymentId: request.paymentContext.paymentId,
-			startedAt: Date() // TODO: Replace with date from backend, once available
+			startedAt: Date()
 		)
 	}
 
