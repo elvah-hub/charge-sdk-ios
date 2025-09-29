@@ -324,6 +324,8 @@ private struct ChargePointRowButton: View {
 				}
 
 				HStack(alignment: .firstTextBaseline) {
+					Text(chargePoint.availability.localizedTitle)
+						.foregroundStyle(chargePoint.availability.color)
 					Spacer()
 					if let connectorTitle {
 						Text("\(connectorTitle) • \(chargePoint.maxPowerInKWFormatted)")
@@ -337,9 +339,6 @@ private struct ChargePointRowButton: View {
 			.withChevron()
 			.padding(.M)
 		}
-		.opacity(offer.isAvailable && chargeSessionContext == nil ? 1 : 0.5)
-		.disabled(offer.isAvailable == false || chargeSessionContext != nil)
-		.animation(.default, value: offer.isAvailable)
 	}
 
 	/// Builds the display text for the EVSE id or physical reference.

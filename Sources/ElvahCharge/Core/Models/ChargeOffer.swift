@@ -75,10 +75,8 @@ public struct ChargeOffer: Codable, Hashable, Identifiable, Sendable {
 	}
 
 	/// Returns `true` the offer is discounted.
-	///
-	/// This is equivalent to checking if ``ChargeOffer/originalPrice`` is not `nil`.
 	package var isDiscounted: Bool {
-		originalPrice != nil
+		originalPrice != nil && isAvailable
 	}
 }
 
