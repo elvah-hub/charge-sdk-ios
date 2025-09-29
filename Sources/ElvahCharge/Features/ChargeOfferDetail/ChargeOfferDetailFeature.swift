@@ -152,7 +152,7 @@ package struct ChargeOfferDetailFeature: View {
 			.padding(.XS)
 			.frame(maxWidth: .infinity)
 			.multilineTextAlignment(.center)
-			.background(.success)
+			.background(.brand.opacity(0.2))
 			.transition(.move(edge: .top))
 		}
 	}

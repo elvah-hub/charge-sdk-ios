@@ -36,6 +36,7 @@ extension ChargeOffer {
 }
 
 struct ChargeOfferSchema: Decodable {
+	var availability: String
 	var evseId: String
 	var powerSpecification: PowerSpecificationSchema?
 	var offer: OfferSchema

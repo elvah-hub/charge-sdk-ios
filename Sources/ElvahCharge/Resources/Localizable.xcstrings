@@ -1004,9 +1004,6 @@
         }
       }
     },
-    "Hour" : {
-
-    },
     "Is the charge point locked?" : {
       "comment" : "is_charging_label",
       "localizations" : {
@@ -1102,7 +1099,7 @@
         }
       }
     },
-    "No additional charge points available" : {
+    "No charge points available" : {
 
     },
     "No Charge Session" : {

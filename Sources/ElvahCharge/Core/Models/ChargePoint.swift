@@ -103,9 +103,10 @@ public extension ChargePoint {
 
 	/// The charge point's availability.
 	enum Availability: String, Hashable, Codable, Sendable {
-		case available
-		case unavailable
-		case outOfService
+		case available = "AVAILABLE"
+		case unavailable = "UNAVAILABLE"
+		case outOfService = "OUT_OF_SERVICE"
+		case unknown = "UNKNOWN"
 	}
 }
 

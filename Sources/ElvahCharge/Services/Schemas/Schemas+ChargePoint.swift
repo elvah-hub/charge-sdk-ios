@@ -15,7 +15,7 @@ extension ChargePoint {
 			evseId: response.evseId,
 			physicalReference: nil,
 			maxPowerInKw: response.powerSpecification?.maxPowerInKW ?? 0,
-			availability: .available, // TODO: Missing
+			availability: Availability(rawValue: response.availability) ?? .unknown,
 			availabilityUpdatedAt: Date.now, // TODO: Missing
 			connectors: [], // TODO: Missing
 			speed: .unknown, // TODO: Missing
