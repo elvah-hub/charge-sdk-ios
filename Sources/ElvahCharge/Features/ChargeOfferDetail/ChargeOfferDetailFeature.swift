@@ -10,9 +10,9 @@ package struct ChargeOfferDetailFeature: View {
 	@EnvironmentObject private var chargeProvider: ChargeProvider
 	@EnvironmentObject private var chargeSettlementProvider: ChargeSettlementProvider
 
-	private var pricingSchedule: PricingSchedule?
 	private var associatedSite: Site?
 
+	@Loadable<PricingSchedule> private var pricingSchedule
 	@State private var processingOffer: ChargeOffer?
 	@State private var scrollPosition = CGPoint.zero
 	@TaskIdentifier private var reloadTaskId
@@ -21,11 +21,11 @@ package struct ChargeOfferDetailFeature: View {
 	@Loadable<Double?> private var routeDistanceToStation
 	@Process private var paymentInitiation
 
-	/// The charge offer that is used to determine the date at which the campaign ends, if there is one active.
+	/// The currently active discount slot from the pricing schedule, if one is active.
 	///
-	/// While campaigns live inside each charge point, all charge points on a site share the same campaign end date,
-	/// so the detail view can just grab any offer and reads its campaign details.
-	@State private var discountedOfferRepresentative: ChargeOffer?
+	/// This is determined from the pricing schedule's time slots rather than campaign metadata,
+	/// providing accurate discount period tracking based on actual pricing rules.
+	@State private var currentDiscountSlot: PricingSchedule.DiscountSlot?
 
 	/// Whether to hide operator details in the header.
 	private var isOperatorDetailsHidden = false
@@ -38,19 +38,22 @@ package struct ChargeOfferDetailFeature: View {
 		router: ChargeOfferDetailFeature.Router,
 		pricingSchedule: PricingSchedule? = nil,
 		hideOperatorDetails: Bool = false,
-		hideDiscountBanner: Bool = false,
+		hideDiscountBanner: Bool = false
 	) {
 		_offers = Loadable(wrappedValue: .loaded(offers))
 		self.router = router
-		self.pricingSchedule = pricingSchedule
 		isOperatorDetailsHidden = hideOperatorDetails
 		isDiscountBannerHidden = hideDiscountBanner
+
+		if let pricingSchedule {
+			_pricingSchedule = Loadable(wrappedValue: .loaded(pricingSchedule))
+		} else {
+			_pricingSchedule = Loadable(wrappedValue: .absent)
+		}
 	}
 
 	package var body: some View {
 		content
-			.animation(.default, value: site)
-			.animation(.default, value: routeDistanceToStation)
 			.foregroundStyle(.primaryContent)
 			.navigationBarTitleDisplayMode(.inline)
 			.task {
@@ -64,7 +67,7 @@ package struct ChargeOfferDetailFeature: View {
 
 				await reloadData(for: associatedSite)
 			}
-			.task(id: loadedOfferIdentifiers) {
+			.task(id: pricingSchedule) {
 				await updateDiscountBannerLifecycle()
 			}
 			.onChange(of: associatedSite) { associatedSite in
@@ -100,13 +103,16 @@ package struct ChargeOfferDetailFeature: View {
 			.fullScreenCover(isPresented: $router.showChargeEntry) {
 				ChargeEntryFeature()
 			}
+			.animation(.default, value: site)
+			.animation(.default, value: routeDistanceToStation)
+			.animation(.default, value: pricingSchedule)
 	}
 
 	@ViewBuilder private var content: some View {
 		ScrollView {
 			VStack(alignment: .leading, spacing: .size(.L)) {
-				if let discountedOfferRepresentative {
-					discountBanner(for: discountedOfferRepresentative)
+				if let currentDiscountSlot {
+					discountBanner(for: currentDiscountSlot)
 				}
 				VStack(alignment: .leading, spacing: .size(.L)) {
 					if associatedSite != nil {
@@ -138,25 +144,25 @@ package struct ChargeOfferDetailFeature: View {
 		}
 	}
 
-	@ViewBuilder private func discountBanner(for discountedOffer: ChargeOffer) -> some View {
+	@ViewBuilder private func discountBanner(for discountSlot: PricingSchedule.DiscountSlot) -> some View {
 		TimelineView(.periodic(from: .now, by: 1)) { context in
-			HStack(spacing: .size(.XS)) {
-				Image(.localOffer)
-					.foregroundStyle(.brand)
-				OfferEndLabel(
-					offer: discountedOffer,
-					referenceDate: context.date,
-					prefix: "Offer available for ",
-					primaryColor: .brand,
-				)
-				.typography(.copy(size: .small), weight: .bold)
-				.foregroundStyle(.brand)
+			if let endDate = discountSlot.to.date(on: context.date) {
+				let remainingSeconds = endDate.timeIntervalSince(context.date)
+				if remainingSeconds > 0 {
+					HStack(spacing: .size(.XS)) {
+						Image(.localOffer)
+							.foregroundStyle(.brand)
+						Text("Offer available for \(formatRemainingTime(remainingSeconds))")
+							.typography(.copy(size: .small), weight: .bold)
+							.foregroundStyle(.brand)
+					}
+					.padding(.XS)
+					.frame(maxWidth: .infinity)
+					.multilineTextAlignment(.center)
+					.background(.brand.opacity(0.2))
+					.transition(.move(edge: .top))
+				}
 			}
-			.padding(.XS)
-			.frame(maxWidth: .infinity)
-			.multilineTextAlignment(.center)
-			.background(.brand.opacity(0.2))
-			.transition(.move(edge: .top))
 		}
 	}
 
@@ -209,50 +215,57 @@ package struct ChargeOfferDetailFeature: View {
 			},
 			chargeSessionAction: {
 				router.showChargeEntry = true
-			},
+			}
 		)
 		.disabled(paymentInitiation.isRunning)
 		.animation(.default, value: paymentInitiation)
 	}
 
+	private func formatRemainingTime(_ seconds: TimeInterval) -> String {
+		let hours = Int(seconds) / 3600
+		let minutes = (Int(seconds) % 3600) / 60
+		let secs = Int(seconds) % 60
+
+		if hours > 0 {
+			return String(localized: "\(hours)h \(minutes)m", bundle: .elvahCharge)
+		} else if minutes > 0 {
+			return String(localized: "\(minutes)m \(secs)s", bundle: .elvahCharge)
+		} else {
+			return String(localized: "\(secs)s", bundle: .elvahCharge)
+		}
+	}
+
 	private func updateDiscountBannerLifecycle() async {
-		guard case let .loaded(loadedOffers) = offers else {
-			discountedOfferRepresentative = nil
+		guard let pricingSchedule = pricingSchedule.data, let todayPricing = pricingSchedule.dailyPricing.today else {
+			currentDiscountSlot = nil
 			return
 		}
 
-		guard let discounted = loadedOffers.first(where: { $0.isDiscounted && $0.isAvailable }) else {
-			discountedOfferRepresentative = nil
+		let now = Date()
+		guard let activeSlot = todayPricing.activeDiscount(at: now) else {
+			currentDiscountSlot = nil
 			return
 		}
 
-		discountedOfferRepresentative = discounted
+		currentDiscountSlot = activeSlot
 
-		guard let campaign = discounted.campaign else {
+		guard let endDate = activeSlot.to.date(on: now) else {
 			return
 		}
 
-		let remainingSeconds = campaign.endDate.timeIntervalSinceNow
+		let remainingSeconds = endDate.timeIntervalSince(now)
 
 		guard remainingSeconds > 0 else {
-			discountedOfferRepresentative = nil
+			currentDiscountSlot = nil
 			return
 		}
 
 		do {
 			try await Task.sleep(for: .seconds(remainingSeconds))
-			discountedOfferRepresentative = nil
+			currentDiscountSlot = nil
 		} catch is CancellationError {} catch {
-			discountedOfferRepresentative = nil
+			currentDiscountSlot = nil
 		}
-	}
-
-	/// Identifiers of the currently loaded offers used for change observation.
-	private var loadedOfferIdentifiers: [String] {
-		guard case let .loaded(loadedOffers) = offers else {
-			return []
-		}
-		return loadedOffers.map(\.id)
 	}
 
 	// MARK: - Actions
@@ -272,8 +285,23 @@ package struct ChargeOfferDetailFeature: View {
 		return copy
 	}
 
+	@MainActor
 	private func reloadData(for associatedSite: Site) async {
-		site = .loaded(associatedSite)
+		await withTaskGroup(of: Void.self) { group in
+			group.addTask {
+				await $site.load {
+					// TODO: Add actual refresh logic once available
+					associatedSite
+				}
+			}
+
+			group.addTask {
+				try? await Task.sleep(for: .seconds(2))
+				await $pricingSchedule.load {
+					try await discoveryProvider.pricingSchedule(siteId: associatedSite.id)
+				}
+			}
+		}
 	}
 
 	private func reloadContinuously() async {
@@ -299,7 +327,7 @@ package struct ChargeOfferDetailFeature: View {
 			router.chargeRequest = ChargeRequest(
 				site: site,
 				signedOffer: signedOffer,
-				paymentContext: context,
+				paymentContext: context
 			)
 		}
 	}
@@ -330,7 +358,8 @@ package extension ChargeOfferDetailFeature {
 	NavigationStack {
 		ChargeOfferDetailFeature(
 			offers: [.mockAvailable, .mockUnavailable, .mockOutOfService],
-			router: .init(),
+			router: .init()
+//			pricingSchedule: .mock,
 		)
 		.siteInformation(.mock)
 	}

@@ -119,6 +119,29 @@
         }
       }
     },
+    "%lldh %lldm" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lldh %2$lldm"
+          }
+        }
+      }
+    },
+    "%lldm %llds" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lldm %2$llds"
+          }
+        }
+      }
+    },
+    "%llds" : {
+
+    },
     "AC" : {
       "comment" : "ac_label",
       "localizations" : {
@@ -1196,7 +1219,7 @@
     "Offer available" : {
 
     },
-    "Offer available for " : {
+    "Offer available for %@" : {
 
     },
     "Offer ends in " : {

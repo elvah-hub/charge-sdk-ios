@@ -44,6 +44,19 @@ public struct PricingSchedule: Codable, Hashable, Sendable {
 
 		/// Discounted time slots for this specific day.
 		package var discounts: [DiscountSlot]
+
+		/// Returns the active discount slot at the given reference date, or nil if none is active.
+		/// - Parameter referenceDate: The date to check for an active discount slot
+		/// - Returns: The active discount slot, or nil if no discount is currently active
+		package func activeDiscount(at referenceDate: Date) -> DiscountSlot? {
+			guard let currentTime = Time(date: referenceDate) else {
+				return nil
+			}
+
+			return discounts.first { slot in
+				currentTime >= slot.from && currentTime < slot.to
+			}
+		}
 	}
 
 	/// A discounted time slot in a day.
@@ -74,7 +87,6 @@ package extension PricingSchedule {
 					lowestPrice: .mock,
 					trend: .stable,
 					discounts: [
-						// Morning short discount
 						DiscountSlot(
 							from: Time(timeString: "08:00:00")!,
 							to: Time(timeString: "12:00:00")!,
@@ -91,7 +103,7 @@ package extension PricingSchedule {
 					trend: nil,
 					discounts: [
 						DiscountSlot(
-							from: Time(timeString: "10:00:00")!,
+							from: Time(timeString: "8:00:00")!,
 							to: Time(timeString: "15:00:00")!,
 							price: ChargePrice(
 								pricePerKWh: Currency(0.28),
