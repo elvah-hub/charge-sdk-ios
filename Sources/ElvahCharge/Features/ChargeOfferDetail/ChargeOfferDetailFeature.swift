@@ -47,13 +47,21 @@ package struct ChargeOfferDetailFeature: View {
 
 		if let pricingSchedule {
 			_pricingSchedule = Loadable(wrappedValue: .loaded(pricingSchedule))
+
+			if let activeDiscount = pricingSchedule.activeDiscount(at: Date()) {
+				_currentDiscountSlot = State(initialValue: activeDiscount)
+			}
 		} else {
-			_pricingSchedule = Loadable(wrappedValue: .absent)
+			_pricingSchedule = Loadable(wrappedValue: .loading)
+			_currentDiscountSlot = State(initialValue: nil)
 		}
 	}
 
 	package var body: some View {
 		content
+			.animation(.default, value: site)
+			.animation(.default, value: routeDistanceToStation)
+			.animation(.default, value: pricingSchedule)
 			.foregroundStyle(.primaryContent)
 			.navigationBarTitleDisplayMode(.inline)
 			.task {
@@ -67,14 +75,14 @@ package struct ChargeOfferDetailFeature: View {
 
 				await reloadData(for: associatedSite)
 			}
-			.task(id: pricingSchedule) {
-				await updateDiscountBannerLifecycle()
+			.onActiveDiscountSlotChange(in: pricingSchedule.data) {
+				currentDiscountSlot = $0
 			}
 			.onChange(of: associatedSite) { associatedSite in
-				$reloadTaskId.new()
 				if let associatedSite {
 					site = .loaded(associatedSite)
 				}
+				$reloadTaskId.new()
 			}
 			.toolbar {
 				ToolbarItem(placement: .principal) {
@@ -103,9 +111,6 @@ package struct ChargeOfferDetailFeature: View {
 			.fullScreenCover(isPresented: $router.showChargeEntry) {
 				ChargeEntryFeature()
 			}
-			.animation(.default, value: site)
-			.animation(.default, value: routeDistanceToStation)
-			.animation(.default, value: pricingSchedule)
 	}
 
 	@ViewBuilder private var content: some View {
@@ -235,39 +240,6 @@ package struct ChargeOfferDetailFeature: View {
 		}
 	}
 
-	private func updateDiscountBannerLifecycle() async {
-		guard let pricingSchedule = pricingSchedule.data, let todayPricing = pricingSchedule.dailyPricing.today else {
-			currentDiscountSlot = nil
-			return
-		}
-
-		let now = Date()
-		guard let activeSlot = todayPricing.activeDiscount(at: now) else {
-			currentDiscountSlot = nil
-			return
-		}
-
-		currentDiscountSlot = activeSlot
-
-		guard let endDate = activeSlot.to.date(on: now) else {
-			return
-		}
-
-		let remainingSeconds = endDate.timeIntervalSince(now)
-
-		guard remainingSeconds > 0 else {
-			currentDiscountSlot = nil
-			return
-		}
-
-		do {
-			try await Task.sleep(for: .seconds(remainingSeconds))
-			currentDiscountSlot = nil
-		} catch is CancellationError {} catch {
-			currentDiscountSlot = nil
-		}
-	}
-
 	// MARK: - Actions
 
 	/// Returns a copy of the view with the given site associated for displaying site-specific
@@ -296,7 +268,6 @@ package struct ChargeOfferDetailFeature: View {
 			}
 
 			group.addTask {
-				try? await Task.sleep(for: .seconds(2))
 				await $pricingSchedule.load {
 					try await discoveryProvider.pricingSchedule(siteId: associatedSite.id)
 				}
@@ -358,8 +329,8 @@ package extension ChargeOfferDetailFeature {
 	NavigationStack {
 		ChargeOfferDetailFeature(
 			offers: [.mockAvailable, .mockUnavailable, .mockOutOfService],
-			router: .init()
-//			pricingSchedule: .mock,
+			router: .init(),
+			pricingSchedule: .mock
 		)
 		.siteInformation(.mock)
 	}

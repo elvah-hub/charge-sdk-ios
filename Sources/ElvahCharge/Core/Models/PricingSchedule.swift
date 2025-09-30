@@ -15,6 +15,32 @@ public struct PricingSchedule: Codable, Hashable, Sendable {
 		self.standardPrice = standardPrice
 	}
 
+	/// Returns the active discount slot at the given reference date, or nil if none is active.
+	/// - Parameter referenceDate: The date to check for an active discount slot
+	/// - Returns: The active discount slot, or nil if no discount is currently active
+	package func activeDiscount(at referenceDate: Date) -> DiscountSlot? {
+		var dayPricing: DayPricing? {
+			if Calendar.current.isDateInYesterday(referenceDate) {
+				return dailyPricing.yesterday
+			}
+			if Calendar.current.isDateInToday(referenceDate) {
+				return dailyPricing.today
+			}
+			if Calendar.current.isDateInTomorrow(referenceDate) {
+				return dailyPricing.tomorrow
+			}
+			return nil
+		}
+
+		guard let dayPricing, let currentTime = Time(date: referenceDate) else {
+			return nil
+		}
+
+		return dayPricing.discounts.first { slot in
+			currentTime >= slot.from && currentTime < slot.to
+		}
+	}
+
 	/// Price trend direction compared to the previous day.
 	package enum PriceTrend: String, Codable, Hashable, Sendable {
 		case up = "UP"
@@ -44,19 +70,6 @@ public struct PricingSchedule: Codable, Hashable, Sendable {
 
 		/// Discounted time slots for this specific day.
 		package var discounts: [DiscountSlot]
-
-		/// Returns the active discount slot at the given reference date, or nil if none is active.
-		/// - Parameter referenceDate: The date to check for an active discount slot
-		/// - Returns: The active discount slot, or nil if no discount is currently active
-		package func activeDiscount(at referenceDate: Date) -> DiscountSlot? {
-			guard let currentTime = Time(date: referenceDate) else {
-				return nil
-			}
-
-			return discounts.first { slot in
-				currentTime >= slot.from && currentTime < slot.to
-			}
-		}
 	}
 
 	/// A discounted time slot in a day.

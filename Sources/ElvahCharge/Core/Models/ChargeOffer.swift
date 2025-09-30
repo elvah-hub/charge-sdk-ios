@@ -189,6 +189,10 @@ package extension ChargeOffer {
 }
 
 package extension [ChargeOffer] {
+	var hasDiscounts: Bool {
+		contains(where: \.isDiscounted)
+	}
+
 	var cheapestOffer: ChargeOffer? {
 		sorted(using: KeyPathComparator(\.price.pricePerKWh)).first
 	}
