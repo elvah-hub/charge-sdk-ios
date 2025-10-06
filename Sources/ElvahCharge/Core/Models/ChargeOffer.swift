@@ -203,12 +203,6 @@ package extension [ChargeOffer] {
 
 	/// The largest common prefix across all offer EVSE identifiers.
 	var largestCommonEvseIdPrefix: String {
-		let evseIdentifiers = map(\.evseId)
-		let uniqueEvseIdentifiers = evseIdentifiers.unique()
-		guard uniqueEvseIdentifiers.count > 1 else {
-			// Only one unique EVSE id present; do not strip anything in the UI
-			return ""
-		}
-		return evseIdentifiers.largestCommonPrefix()
+		map(\.chargePoint).largestCommonEvseIdPrefix
 	}
 }

@@ -18,7 +18,7 @@ struct AdaptiveLabeledContentStyle: LabeledContentStyle {
 				configuration.content
 			}
 		} else {
-			HStack {
+			HStack(alignment: .firstTextBaseline) {
 				configuration.label
 				Spacer()
 				configuration.content

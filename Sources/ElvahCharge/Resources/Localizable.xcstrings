@@ -165,6 +165,9 @@
         }
       }
     },
+    "Activation fee" : {
+
+    },
     "Ad-hoc" : {
       "comment" : "campaign_banncampaign_banner__ad_hocer__ad_hoc",
       "localizations" : {
@@ -187,6 +190,9 @@
           }
         }
       }
+    },
+    "Additional costs" : {
+
     },
     "An error occurred" : {
       "comment" : "generic_error__title",
@@ -373,6 +379,9 @@
       }
     },
     "Base Pricing" : {
+
+    },
+    "Blocking fee" : {
 
     },
     "Call" : {

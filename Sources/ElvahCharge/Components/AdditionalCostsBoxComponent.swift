@@ -3,9 +3,8 @@
 import SwiftUI
 
 @available(iOS 16.0, *)
-struct AdhocCostsBoxComponent: View {
-	let offer: ChargeOffer
-	let onAction: (_ action: Action) -> Void
+struct AdditionalCostsBoxComponent: View {
+	var offer: ChargeOffer
 
 	var body: some View {
 		VStack(spacing: .size(.M)) {
@@ -51,16 +50,20 @@ struct AdhocCostsBoxComponent: View {
 					}
 					if let blockingFee = offer.price.blockingFee {
 						LabeledContent {
-							HStack(spacing: 0) {
-								Text(blockingFee.pricePerMinute.formatted())
-								Text(verbatim: "/min")
+							if let maxAmount = blockingFee.maxAmount {
+								Text("\(blockingFee.pricePerMinute.formatted())/min (max \(maxAmount.formatted()))")
+									.typography(.copy(size: .medium), weight: .bold)
+							} else {
+								Text("\(blockingFee.pricePerMinute.formatted())/min")
+									.typography(.copy(size: .medium), weight: .bold)
 							}
-							.typography(.copy(size: .medium), weight: .bold)
 						} label: {
 							Text("Blocking fee", bundle: .elvahCharge)
 								.typography(.copy(size: .medium), weight: .bold)
 						}
 						.labeledContentStyle(.adaptiveLayout)
+						.multilineTextAlignment(.trailing)
+						blockingFeeConditions(for: blockingFee)
 					}
 				}
 			}
@@ -69,21 +72,32 @@ struct AdhocCostsBoxComponent: View {
 		.foregroundStyle(.primaryContent)
 	}
 
+	@ViewBuilder private func blockingFeeConditions(for blockingFee: ChargePrice.BlockingFee) -> some View {
+		VStack(alignment: .leading, spacing: .size(.S)) {
+			if let startsAfterMinute = blockingFee.startsAfterMinute {
+				Text("When your car stays connected after \(startsAfterMinute) min")
+			}
+			if let timeSlots = blockingFee.timeSlots {
+				ForEach(timeSlots) { timeSlot in
+					Text("• between \(timeSlot.startsAt.localizedTimeString) and \(timeSlot.endsAt.localizedTimeString)")
+				}
+			}
+		}
+		.typography(.copy(size: .medium))
+		.foregroundStyle(.secondaryContent)
+		.frame(maxWidth: .infinity, alignment: .leading)
+	}
+
 	private var showDivider: Bool {
 		offer.price.baseFee != nil && offer.price.blockingFee != nil
 	}
 }
 
 @available(iOS 16.0, *)
-extension AdhocCostsBoxComponent {
-	enum Action {}
-}
-
-@available(iOS 16.0, *)
 #Preview {
 	ScrollView {
 		VStack(spacing: 10) {
-			AdhocCostsBoxComponent(offer: .mockAvailable) { _ in }
+			AdditionalCostsBoxComponent(offer: .mockAvailable)
 		}
 		.padding(.horizontal)
 	}

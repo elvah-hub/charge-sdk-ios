@@ -37,9 +37,52 @@ public extension ChargePrice {
 		/// The grace period in minutes before blocking fees begin to apply.
 		public var startsAfterMinute: Int?
 
-		package init(of pricePerMinute: Currency, startingAfter startsAfterMinute: Int? = nil) {
+		/// The maximum blocking fee amount that can be charged.
+		public var maxAmount: Currency?
+
+		/// Specific time periods when blocking fees apply.
+		public var timeSlots: [TimeSlot]?
+
+		package init(
+			of pricePerMinute: Currency,
+			startingAfter startsAfterMinute: Int? = nil,
+			maxAmount: Currency? = nil,
+			timeSlots: [TimeSlot]? = nil
+		) {
 			self.pricePerMinute = pricePerMinute
 			self.startsAfterMinute = startsAfterMinute
+			self.maxAmount = maxAmount
+			self.timeSlots = timeSlots
+		}
+
+		/// A time period during which blocking fees are active.
+		///
+		/// - Note: The times are in the timezone of the site.
+		public struct TimeSlot: Identifiable, Hashable, Codable, Sendable {
+			public var id: String {
+				startsAt.localizedTimeString + "-" + endsAt.localizedTimeString
+			}
+
+			/// The start time of the blocking fee period.
+			public var startsAt: Time
+			/// The end time of the blocking fee period.
+			public var endsAt: Time
+
+			package init(startsAt: Time, endsAt: Time) {
+				self.startsAt = startsAt
+				self.endsAt = endsAt
+			}
+
+			/// Creates a time slot from string representations of start and end times.
+			package init?(startsAt: String?, endsAt: String?) {
+				guard let startsAt, let startTime = Time(timeString: startsAt),
+				      let endsAt, let endTime = Time(timeString: endsAt) else {
+					return nil
+				}
+
+				self.startsAt = startTime
+				self.endsAt = endTime
+			}
 		}
 	}
 }
@@ -49,7 +92,14 @@ package extension ChargePrice {
 		ChargePrice(
 			pricePerKWh: Currency(0.42),
 			baseFee: Currency(1.42),
-			blockingFee: ChargePrice.BlockingFee(of: Currency(0.42), startingAfter: 10)
+			blockingFee: ChargePrice.BlockingFee(
+				of: Currency(0.42),
+				startingAfter: 10,
+				maxAmount: 12.0,
+				timeSlots: [
+					.init(startsAt: Time(hour: 8, minute: 0)!, endsAt: Time(hour: 12, minute: 0)!),
+				]
+			)
 		)
 	}
 
@@ -57,7 +107,14 @@ package extension ChargePrice {
 		ChargePrice(
 			pricePerKWh: Currency(0.53),
 			baseFee: Currency(1.12),
-			blockingFee: ChargePrice.BlockingFee(of: Currency(0.62), startingAfter: 0)
+			blockingFee: ChargePrice.BlockingFee(
+				of: Currency(0.62),
+				startingAfter: 0,
+				maxAmount: 6.0,
+				timeSlots: [
+					.init(startsAt: Time(hour: 18, minute: 0)!, endsAt: Time(hour: 21, minute: 0)!),
+				]
+			)
 		)
 	}
 
@@ -65,7 +122,14 @@ package extension ChargePrice {
 		ChargePrice(
 			pricePerKWh: Currency(0.71),
 			baseFee: Currency(1.62),
-			blockingFee: ChargePrice.BlockingFee(of: Currency(0.12), startingAfter: 20)
+			blockingFee: ChargePrice.BlockingFee(
+				of: Currency(0.12),
+				startingAfter: 20,
+				maxAmount: 42.0,
+				timeSlots: [
+					.init(startsAt: Time(hour: 14, minute: 30)!, endsAt: Time(hour: 18, minute: 30)!),
+				]
+			)
 		)
 	}
 

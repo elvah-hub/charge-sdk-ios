@@ -9,9 +9,27 @@ extension ChargePrice {
 				return nil
 			}
 
+			var maxAmount: Currency? {
+				guard let maxAmount = blockingFee.maxAmount else {
+					return nil
+				}
+				
+				return Currency(maxAmount, identifier: response.currency)
+			}
+
+			var timeSlots: [BlockingFee.TimeSlot]? {
+				guard let timeSlots = blockingFee.timeSlots else {
+					return nil
+				}
+
+				return timeSlots.map { ($0.startTime, $0.endTime) }.compactMap(BlockingFee.TimeSlot.init)
+			}
+
 			return ChargePrice.BlockingFee(
 				of: Currency(blockingFee.pricePerMinute, identifier: response.currency),
-				startingAfter: response.blockingFee?.startsAfterMinutes
+				startingAfter: response.blockingFee?.startsAfterMinutes,
+				maxAmount: maxAmount,
+				timeSlots: timeSlots
 			)
 		}
 
@@ -39,5 +57,12 @@ struct ChargePriceSchema: Decodable {
 	struct BlockingFeeSchema: Decodable {
 		var pricePerMinute: Double
 		var startsAfterMinutes: Int?
+		var maxAmount: Double?
+		var timeSlots: [TimeSlotSchema]?
+	}
+
+	struct TimeSlotSchema: Decodable {
+		var startTime: String
+		var endTime: String
 	}
 }

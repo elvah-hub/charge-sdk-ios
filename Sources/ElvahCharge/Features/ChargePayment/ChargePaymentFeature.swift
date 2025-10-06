@@ -24,15 +24,10 @@ struct ChargePaymentFeature: View {
 	var body: some View {
 		ScrollView {
 			VStack(spacing: 8) {
-				CPOLogo(url: request.paymentContext.organisationDetails.logoUrl)
 				Text(request.signedOffer.chargePoint.evseId)
 					.typography(.title(size: .small), weight: .bold)
 					.foregroundStyle(.primaryContent)
 					.multilineTextAlignment(.center)
-
-				Text(verbatim: "\(request.signedOffer.chargePoint.maxPowerInKw.formatted()) kW")
-					.typography(.copy(size: .small))
-					.foregroundStyle(.secondaryContent)
 			}
 			.padding(40)
 			costInformation
@@ -97,27 +92,10 @@ struct ChargePaymentFeature: View {
 
 	@ViewBuilder private var costInformation: some View {
 		CustomSectionStack {
-			AdhocCostsBoxComponent(offer: request.signedOffer.offer) { action in }
-			if request.signedOffer.offer.isDiscounted {
-				offerEndLabel
-			}
+			AdditionalCostsBoxComponent(offer: request.signedOffer.offer)
 		}
 		.padding(16)
 		.frame(maxWidth: .infinity, alignment: .leading)
-	}
-
-	@ViewBuilder private var offerEndLabel: some View {
-		TimelineView(.periodic(from: .now, by: 1)) { context in
-			OfferEndLabel(
-				offer: request.signedOffer.offer,
-				referenceDate: context.date,
-				prefix: "Offer ends in ",
-				primaryColor: .primaryContent,
-				highlightColor: .brand
-			)
-			.typography(.copy(size: .medium), weight: .bold)
-			.multilineTextAlignment(.center)
-		}
 	}
 
 	@ViewBuilder private var footer: some View {
@@ -156,6 +134,7 @@ struct ChargePaymentFeature: View {
 					.dynamicTypeSize(...(.xxxLarge))
 				}
 				.disabled(request.paymentContext.organisationDetails.hasLegalUrls == false)
+				CPOLogo(url: request.paymentContext.organisationDetails.logoUrl)
 			}
 		}
 	}
