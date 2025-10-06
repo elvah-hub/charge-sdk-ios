@@ -12,7 +12,6 @@ package struct ChargeOfferDetailFeature: View {
 
 	private var associatedSite: Site?
 
-	@Loadable<PricingSchedule> private var pricingSchedule
 	@State private var processingOffer: ChargeOffer?
 	@State private var scrollPosition = CGPoint.zero
 	@TaskIdentifier private var reloadTaskId
@@ -20,12 +19,6 @@ package struct ChargeOfferDetailFeature: View {
 	@Loadable<[ChargeOffer]> private var offers
 	@Loadable<Double?> private var routeDistanceToStation
 	@Process private var paymentInitiation
-
-	/// The currently active discount slot from the pricing schedule, if one is active.
-	///
-	/// This is determined from the pricing schedule's time slots rather than campaign metadata,
-	/// providing accurate discount period tracking based on actual pricing rules.
-	@State private var currentDiscountSlot: PricingSchedule.DiscountSlot?
 
 	/// Whether to hide operator details in the header.
 	private var isOperatorDetailsHidden = false
@@ -44,24 +37,12 @@ package struct ChargeOfferDetailFeature: View {
 		self.router = router
 		isOperatorDetailsHidden = hideOperatorDetails
 		isDiscountBannerHidden = hideDiscountBanner
-
-		if let pricingSchedule {
-			_pricingSchedule = Loadable(wrappedValue: .loaded(pricingSchedule))
-
-			if let activeDiscount = pricingSchedule.activeDiscount(at: Date()) {
-				_currentDiscountSlot = State(initialValue: activeDiscount)
-			}
-		} else {
-			_pricingSchedule = Loadable(wrappedValue: .loading)
-			_currentDiscountSlot = State(initialValue: nil)
-		}
 	}
 
 	package var body: some View {
 		content
 			.animation(.default, value: site)
 			.animation(.default, value: routeDistanceToStation)
-			.animation(.default, value: pricingSchedule)
 			.foregroundStyle(.primaryContent)
 			.navigationBarTitleDisplayMode(.inline)
 			.task {
@@ -74,9 +55,6 @@ package struct ChargeOfferDetailFeature: View {
 				}
 
 				await reloadData(for: associatedSite)
-			}
-			.onActiveDiscountSlotChange(in: pricingSchedule.data) {
-				currentDiscountSlot = $0
 			}
 			.onChange(of: associatedSite) { associatedSite in
 				if let associatedSite {
@@ -116,9 +94,6 @@ package struct ChargeOfferDetailFeature: View {
 	@ViewBuilder private var content: some View {
 		ScrollView {
 			VStack(alignment: .leading, spacing: .size(.L)) {
-				if let currentDiscountSlot {
-					discountBanner(for: currentDiscountSlot)
-				}
 				VStack(alignment: .leading, spacing: .size(.L)) {
 					if associatedSite != nil {
 						siteContent
@@ -145,28 +120,6 @@ package struct ChargeOfferDetailFeature: View {
 		case let .loaded(site):
 			if isOperatorDetailsHidden == false, let operatorName = site.operatorName, let address = site.address {
 				header(title: operatorName, address: address)
-			}
-		}
-	}
-
-	@ViewBuilder private func discountBanner(for discountSlot: PricingSchedule.DiscountSlot) -> some View {
-		TimelineView(.periodic(from: .now, by: 1)) { context in
-			if let endDate = discountSlot.to.date(on: context.date) {
-				let remainingSeconds = endDate.timeIntervalSince(context.date)
-				if remainingSeconds > 0 {
-					HStack(spacing: .size(.XS)) {
-						Image(.localOffer)
-							.foregroundStyle(.brand)
-						Text("Offer available for \(formatRemainingTime(remainingSeconds))")
-							.typography(.copy(size: .small), weight: .bold)
-							.foregroundStyle(.brand)
-					}
-					.padding(.XS)
-					.frame(maxWidth: .infinity)
-					.multilineTextAlignment(.center)
-					.background(.brand.opacity(0.2))
-					.transition(.move(edge: .top))
-				}
 			}
 		}
 	}
@@ -259,19 +212,9 @@ package struct ChargeOfferDetailFeature: View {
 
 	@MainActor
 	private func reloadData(for associatedSite: Site) async {
-		await withTaskGroup(of: Void.self) { group in
-			group.addTask {
-				await $site.load {
-					// TODO: Add actual refresh logic once available
-					associatedSite
-				}
-			}
-
-			group.addTask {
-				await $pricingSchedule.load {
-					try await discoveryProvider.pricingSchedule(siteId: associatedSite.id)
-				}
-			}
+		await $site.load {
+			// TODO: Add actual refresh logic once available
+			associatedSite
 		}
 	}
 

@@ -1219,9 +1219,6 @@
     "Offer available" : {
 
     },
-    "Offer available for %@" : {
-
-    },
     "Offer ends in " : {
       "comment" : "offer_ends_in",
       "localizations" : {
