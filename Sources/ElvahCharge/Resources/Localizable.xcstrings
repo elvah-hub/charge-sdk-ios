@@ -119,6 +119,19 @@
         }
       }
     },
+    "%@/min" : {
+
+    },
+    "%@/min (max %@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@/min (max %2$@)"
+          }
+        }
+      }
+    },
     "%lldh %lldm" : {
       "localizations" : {
         "en" : {
@@ -141,6 +154,16 @@
     },
     "%llds" : {
 
+    },
+    "• between %@ and %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "• between %1$@ and %2$@"
+          }
+        }
+      }
     },
     "AC" : {
       "comment" : "ac_label",
@@ -2159,6 +2182,9 @@
           }
         }
       }
+    },
+    "When your car stays connected after %lld min" : {
+
     },
     "Yesterday" : {
 

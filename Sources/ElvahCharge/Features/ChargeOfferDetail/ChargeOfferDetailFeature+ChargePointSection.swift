@@ -117,7 +117,6 @@ private struct ChargePointListView: View {
 	var offerAction: (_ offer: ChargeOffer) -> Void
 
 	@State private var searchText: String = ""
-	@State private var largestCommonPrefix: String = ""
 	@FocusState private var isSearchFieldFocused: Bool
 
 	var body: some View {
@@ -133,7 +132,6 @@ private struct ChargePointListView: View {
 							ForEach(filteredOffers) { offer in
 								ChargePointRowButton(
 									offer: offer,
-									largestCommonPrefix: largestCommonPrefix,
 									offerAction: offerAction
 								)
 								.overlay {
@@ -162,12 +160,6 @@ private struct ChargePointListView: View {
 				.scrollPositionReader($offersSectionOrigin, in: "ScrollView")
 		}
 		.frame(maxWidth: .infinity)
-		.onAppear {
-			largestCommonPrefix = offers.largestCommonEvseIdPrefix
-		}
-		.onChange(of: offers.map(\.id)) { _ in
-			largestCommonPrefix = offers.largestCommonEvseIdPrefix
-		}
 	}
 
 	/// Returns `true` if the search text is not empty (after trimming whitespace)
@@ -183,7 +175,7 @@ private struct ChargePointListView: View {
 		}
 
 		func matches(_ value: String?) -> Bool {
-			guard let value = value, value.isEmpty == false else {
+			guard let value, value.isEmpty == false else {
 				return false
 			}
 			return value.localizedCaseInsensitiveContains(needle)
@@ -276,13 +268,12 @@ private struct ChargePointRowButton: View {
 	@Default(.chargeSessionContext) private var chargeSessionContext
 
 	var offer: ChargeOffer
-	var largestCommonPrefix: String
 	var offerAction: (_ offer: ChargeOffer) -> Void
 
 	var body: some View {
 		let chargePoint = offer.chargePoint
 		Button { offerAction(offer) } label: {
-			let evseDisplayText: String = displayText(for: chargePoint, largestCommonPrefix: largestCommonPrefix)
+			let evseDisplayText: String = displayText(for: chargePoint)
 
 			let evseIdLabel = Text(verbatim: evseDisplayText)
 				.typography(.copy(size: .medium), weight: .bold)
@@ -342,12 +333,9 @@ private struct ChargePointRowButton: View {
 	}
 
 	/// Builds the display text for the EVSE id or physical reference.
-	private func displayText(for chargePoint: ChargePoint, largestCommonPrefix: String) -> String {
+	private func displayText(for chargePoint: ChargePoint) -> String {
 		if let physicalReference = chargePoint.physicalReference, physicalReference.isEmpty == false {
 			return physicalReference
-		}
-		if chargePoint.evseId.hasPrefix(largestCommonPrefix) {
-			return String(chargePoint.evseId.dropFirst(largestCommonPrefix.count))
 		}
 		return chargePoint.evseId
 	}

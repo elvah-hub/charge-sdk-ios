@@ -4,7 +4,24 @@ extension ChargeSite {
 	static func parse(_ response: SiteOfferSchema) throws(NetworkError.Client) -> ChargeSite {
 		do {
 			let site = try Site.parse(response)
-			let offers = try response.evses.map { try ChargeOffer.parse($0, in: site) }
+			var offers = try response.evses.map { try ChargeOffer.parse($0, in: site) }
+
+			// Set the physical reference for each of the site's charge points
+			let chargePoints = offers.map(\.chargePoint)
+			let uniqueEvseIdentifiers = Set(chargePoints.map(\.evseId))
+			let largestCommonPrefix = chargePoints.largestCommonEvseIdPrefix
+			if largestCommonPrefix.isEmpty == false {
+				for index in offers.indices {
+					guard uniqueEvseIdentifiers.count > 1 else {
+						offers[index].chargePoint.physicalReference = nil
+						continue
+					}
+					
+					let evseIdentifier = offers[index].chargePoint.evseId
+					let trimmedIdentifier = String(evseIdentifier.dropFirst(largestCommonPrefix.count))
+					offers[index].chargePoint.physicalReference = trimmedIdentifier.isEmpty ? nil : trimmedIdentifier
+				}
+			}
 			return ChargeSite(site: site, offers: offers)
 		} catch {
 			throw .parsing(.field("site"))
