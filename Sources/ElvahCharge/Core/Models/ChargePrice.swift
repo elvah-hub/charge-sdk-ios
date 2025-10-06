@@ -22,6 +22,10 @@ public struct ChargePrice: Hashable, Sendable, Codable {
 		self.baseFee = baseFee
 		self.blockingFee = blockingFee
 	}
+
+	public var hasAdditionalCost: Bool {
+		baseFee != nil || blockingFee != nil
+	}
 }
 
 public extension ChargePrice {

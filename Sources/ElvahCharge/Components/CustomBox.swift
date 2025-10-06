@@ -11,11 +11,11 @@ package struct CustomBox<Content: View>: View {
 	}
 
 	package var body: some View {
-		VStack(alignment: .leading, spacing: 12) {
+		VStack(alignment: .leading, spacing: .size(.M)) {
 			content
 		}
-		.padding(.horizontal, 8)
-		.padding(.vertical, 8)
+		.padding(.horizontal, .S)
+		.padding(.vertical, .M)
 		.background {
 			RoundedRectangle(cornerRadius: 8)
 				.foregroundStyle(.container)
