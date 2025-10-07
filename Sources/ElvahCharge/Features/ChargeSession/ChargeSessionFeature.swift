@@ -40,28 +40,31 @@ struct ChargeSessionFeature: View {
 					StyledNavigationTitle("Charge Session", bundle: .elvahCharge)
 				}
 				ToolbarItem(placement: .topBarTrailing) {
-					Button {
-						router.showEndSessionConfirmation = true
-					} label: {
-						Image(.close)
-							.foregroundStyle(.primaryContent)
-					}
-					.confirmationDialog(
-						"End charge session",
-						isPresented: $router.showEndSessionConfirmation,
-					) {
-						Button("End charge session", bundle: .elvahCharge) {
+					Menu {
+						Button {
+							router.showSupport = true
+						} label: {
+							Label {
+								Text("Contact support", bundle: .elvahCharge)
+							} icon: {
+								Image(.agent)
+							}
+						}
+						Button("Stop charging", systemImage: "xmark", role: .destructive) {
 							navigationRoot.dismiss()
 							chargeSessionContext = nil
 						}
-						Button("Cancel", role: .destructive, bundle: .elvahCharge) {
-							router.showEndSessionConfirmation = false
-						}
+					} label: {
+						Image(systemName: "ellipsis")
+							.foregroundStyle(.primaryContent)
 					}
 				}
 			}
 			.sheet(isPresented: $router.showSupport) {
 				SupportFeature(router: router.supportRouter)
+			}
+			.sheet(item: $router.additionalCostsInfo) { offer in
+				AdditionalCostsBottomSheet(offer: offer)
 			}
 			.genericErrorBottomSheet(isPresented: $router.showGenericError)
 			.onChange(of: process) { process in
@@ -263,15 +266,15 @@ extension ChargeSessionFeature {
 	final class Router: BaseRouter {
 		@Published var path: NavigationPath = .init()
 		@Published var showSupport = false
-		@Published var showEndSessionConfirmation = false
+		@Published var additionalCostsInfo: ChargeOffer?
 		@Published var showGenericError = false
 
 		let supportRouter: SupportFeature.Router = .init()
 
 		func dismissPresentation() {
 			showSupport = false
-			showEndSessionConfirmation = false
 			showGenericError = false
+			additionalCostsInfo = nil
 		}
 
 		func reset() {

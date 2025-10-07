@@ -83,7 +83,7 @@ package extension PaymentContext.OrganisationDetails {
 	static var simulation: PaymentContext.OrganisationDetails {
 		PaymentContext.OrganisationDetails(
 			companyName: "Beispiel GmbH",
-			logoUrl: URL(string: "https://placehold.co/600x300.png"),
+			logoUrl: URL(string: "https://i.postimg.cc/50rbSVTY/probably-Connected-Logo.png"),
 			privacyUrl: URL(string: "hhttps://policies.google.com/privacy?hl=en-DE&fg=1"),
 			termsOfConditionUrl: URL(string: "https://policies.google.com/terms?hl=en-DE&fg=1"),
 			supportMethods: [.email("tech-support@elvah.de")],
@@ -93,7 +93,7 @@ package extension PaymentContext.OrganisationDetails {
 	static var mock: PaymentContext.OrganisationDetails {
 		PaymentContext.OrganisationDetails(
 			companyName: "Mock company",
-			logoUrl: URL(string: "https://placehold.co/600x300.png"),
+			logoUrl: URL(string: "https://i.postimg.cc/50rbSVTY/probably-Connected-Logo.png"),
 			privacyUrl: URL(string: "https://www.elvah.de/"),
 			termsOfConditionUrl: URL(string: "https://www.elvah.de/"),
 			supportMethods: [.email("tech-support@elvah.de")],

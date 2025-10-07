@@ -127,8 +127,8 @@ package extension ChargeOffer {
 	/// Creates a simulated charge offer with the specific evseId and randomized properties.
 	/// - Parameter evseId: The evse ids for the charge point
 	/// - Returns: A ChargeOffer with randomized pricing and potentially campaign status
-	static func simulation(evseId: String) -> ChargeOffer {
-		let chargePoint = ChargePoint.simulation(evseId: evseId)
+	static func simulation(evseId: String, largestCommonPrefix: String? = nil) -> ChargeOffer {
+		let chargePoint = ChargePoint.simulation(evseId: evseId, largestCommonPrefix: largestCommonPrefix)
 		let basePrice = ChargePrice.randomizedPrice()
 
 		// Randomly determine if this should be a campaign offer (30% chance)

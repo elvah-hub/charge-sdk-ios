@@ -217,6 +217,12 @@
     "Additional costs" : {
 
     },
+    "Additional Costs" : {
+
+    },
+    "Additional costs apply at this charge point." : {
+
+    },
     "An error occurred" : {
       "comment" : "generic_error__title",
       "localizations" : {
@@ -683,6 +689,7 @@
     },
     "Connect your electric vehicle now and start the charging process." : {
       "comment" : "connect_vehicle",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -703,6 +710,12 @@
           }
         }
       }
+    },
+    "Connect your electric vehicle on the charging point and start the charging process." : {
+
+    },
+    "Contact support" : {
+
     },
     "Contact Web Support Agent" : {
       "comment" : "contact_support_agent",
@@ -821,6 +834,7 @@
     },
     "End charge session" : {
       "comment" : "charge_session__error__end_session",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1104,6 +1118,9 @@
           }
         }
       }
+    },
+    "Learn more" : {
+
     },
     "Live Pricing" : {
 
@@ -1708,9 +1725,6 @@
         }
       }
     },
-    "Show other prices" : {
-
-    },
     "Start" : {
       "comment" : "start_label",
       "localizations" : {
@@ -1733,6 +1747,9 @@
           }
         }
       }
+    },
+    "Start charging now" : {
+
     },
     "Start charging process" : {
       "comment" : "start_charging_process",

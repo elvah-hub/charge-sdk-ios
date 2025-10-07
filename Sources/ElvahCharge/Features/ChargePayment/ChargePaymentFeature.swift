@@ -23,14 +23,11 @@ struct ChargePaymentFeature: View {
 
 	var body: some View {
 		ScrollView {
-			VStack(spacing: 8) {
-				Text(request.signedOffer.chargePoint.evseId)
-					.typography(.title(size: .small), weight: .bold)
-					.foregroundStyle(.primaryContent)
-					.multilineTextAlignment(.center)
+			VStack(spacing: .size(.S)) {
+				EvseIdBox(for: request.signedOffer)
+					.padding(.vertical, .L)
+				costInformation
 			}
-			.padding(40)
-			costInformation
 		}
 		.background(.canvas)
 		.scrollContentBackground(.hidden)
@@ -42,7 +39,7 @@ struct ChargePaymentFeature: View {
 		.toolbarBackground(.canvas, for: .navigationBar)
 		.toolbar {
 			ToolbarItem(placement: .principal) {
-				StyledNavigationTitle(request.signedOffer.chargePoint.evseId)
+				StyledNavigationTitle("Charge now")
 			}
 			ToolbarItem(placement: .topBarLeading) {
 				CloseButton {
@@ -51,7 +48,7 @@ struct ChargePaymentFeature: View {
 			}
 		}
 		.navigationDestination(for: Router.Destination.self) { [
-			chargeStartRouter = router.chargeStartRouter
+			chargeStartRouter = router.chargeStartRouter,
 		] destination in
 			switch destination {
 			case let .chargeStart(request):
@@ -65,26 +62,8 @@ struct ChargePaymentFeature: View {
 			onCompletion: { result in
 				paymentSheetContinuation?.resume(returning: result)
 				paymentSheetContinuation = nil
-			}
+			},
 		)
-		.confirmationDialog(
-			"Terms of Service and Charging",
-			isPresented: $router.showLegalLinkOptions
-		) {
-			Button("Terms of Service and Charging", bundle: .elvahCharge) {
-				if let url = request.paymentContext.organisationDetails.termsOfConditionUrl {
-					UIApplication.shared.open(url)
-				}
-			}
-			Button("Privacy Policy", bundle: .elvahCharge) {
-				if let url = request.paymentContext.organisationDetails.privacyUrl {
-					UIApplication.shared.open(url)
-				}
-			}
-			Button("Cancel", role: .cancel, bundle: .elvahCharge) {
-				router.showLegalLinkOptions = false
-			}
-		}
 		.sheet(isPresented: $router.showOfferUnavailableSheet) {
 			OfferEndedBottomSheet()
 		}
@@ -100,7 +79,7 @@ struct ChargePaymentFeature: View {
 
 	@ViewBuilder private var footer: some View {
 		FooterView {
-			VStack(spacing: .size(.L)) {
+			VStack(spacing: .size(.M)) {
 				Button {
 					if request.signedOffer.isAvailable {
 						$payment.run {
@@ -125,7 +104,7 @@ struct ChargePaymentFeature: View {
 					let companyName = request.paymentContext.organisationDetails.companyName ?? "CPO"
 					Text(
 						"'\(companyName)' \(terms) as well as our \(privacyPolicy) apply",
-						bundle: .elvahCharge
+						bundle: .elvahCharge,
 					)
 					.typography(.copy(size: .small))
 					.foregroundStyle(.secondaryContent)
@@ -134,6 +113,24 @@ struct ChargePaymentFeature: View {
 					.dynamicTypeSize(...(.xxxLarge))
 				}
 				.disabled(request.paymentContext.organisationDetails.hasLegalUrls == false)
+				.confirmationDialog(
+					"Terms of Service and Charging",
+					isPresented: $router.showLegalLinkOptions,
+				) {
+					Button("Terms of Service and Charging", bundle: .elvahCharge) {
+						if let url = request.paymentContext.organisationDetails.termsOfConditionUrl {
+							UIApplication.shared.open(url)
+						}
+					}
+					Button("Privacy Policy", bundle: .elvahCharge) {
+						if let url = request.paymentContext.organisationDetails.privacyUrl {
+							UIApplication.shared.open(url)
+						}
+					}
+					Button("Cancel", role: .cancel, bundle: .elvahCharge) {
+						router.showLegalLinkOptions = false
+					}
+				}
 				CPOLogo(url: request.paymentContext.organisationDetails.logoUrl)
 			}
 		}
@@ -154,7 +151,7 @@ struct ChargePaymentFeature: View {
 				// Show Stripe's payment sheet and wait for the result
 				paymentSheet = PaymentSheet.from(clientSecret: paymentContext.clientSecret)
 				stripePaymentResult = await withCheckedContinuation { continuation in
-					self.paymentSheetContinuation = continuation
+					paymentSheetContinuation = continuation
 					router.showPaymentSheet = true
 				}
 			}
@@ -162,14 +159,16 @@ struct ChargePaymentFeature: View {
 			switch stripePaymentResult {
 			case .completed:
 				let authentication = try await chargeSettlementProvider.authorize(
-					paymentId: paymentContext.paymentId
+					paymentId: paymentContext.paymentId,
 				)
 
 				// Navigate to the charge start screen with the updated charge request and authentication
 				let authenticatedRequest = AuthenticatedChargeRequest(
 					request,
-					authentication: authentication
+					authentication: authentication,
 				)
+
+				router.chargeStartRouter.reset()
 				navigationRoot.path.append(Router.Destination.chargeStart(request: authenticatedRequest))
 			case .canceled:
 				break

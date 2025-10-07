@@ -202,11 +202,6 @@ package struct ChargeOfferDetailFeature: View {
 	package func siteInformation(_ site: Site?) -> some View {
 		var copy = self
 		copy.associatedSite = site
-		if let site {
-			copy._site = .init(wrappedValue: .loaded(site))
-		} else {
-			copy._site = .init(wrappedValue: .absent)
-		}
 		return copy
 	}
 

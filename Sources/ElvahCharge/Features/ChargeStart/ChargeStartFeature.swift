@@ -19,7 +19,7 @@ struct ChargeStartFeature: View {
 	@ObservedObject var router: Router
 
 	var body: some View {
-		VStack(spacing: .size(.XXXL)) {
+		VStack(spacing: .size(.XL)) {
 			Spacer()
 			header
 			requestInformation
@@ -35,8 +35,9 @@ struct ChargeStartFeature: View {
 		.animation(.default, value: showSuccessBanner)
 		.safeAreaInset(edge: .bottom) {
 			FooterView {
-				VStack(spacing: .size(.L)) {
+				VStack(spacing: .size(.M)) {
 					startSlider
+					CPOLogo(url: request.paymentContext.organisationDetails.logoUrl)
 				}
 			}
 		}
@@ -60,12 +61,12 @@ struct ChargeStartFeature: View {
 			}
 		}
 		.genericErrorBottomSheet(isPresented: $router.showGenericError)
-		.sheet(item: $router.startSessionInfo) { info in
-			StartChargeInfoComponent(chargePoint: info.chargePoint)
-		}
 		.task {
 			try? await Task.sleep(for: .seconds(3))
 			showSuccessBanner = false
+		}
+		.sheet(item: $router.startSessionInfo) { info in
+			StartChargeInfoComponent(chargePoint: info.chargePoint)
 		}
 	}
 
@@ -84,24 +85,26 @@ struct ChargeStartFeature: View {
 		}
 		.padding(.S)
 		.frame(maxWidth: .infinity)
-		.foregroundStyle(.onSuccess)
-		.background(.success, in: .rect(cornerRadius: 12))
+		.foregroundStyle(.onBrand)
+		.background(.brand, in: .rect(cornerRadius: 12))
 		.padding(.horizontal, .S)
 		.dynamicTypeSize(...(.accessibility1))
 	}
 
 	@ViewBuilder private var header: some View {
-		VStack(spacing: 20) {
-			CPOLogo(url: request.paymentContext.organisationDetails.logoUrl)
+		VStack(spacing: .size(.S)) {
+			Text("Start charging now", bundle: .elvahCharge)
+				.typography(.title(size: .medium), weight: .bold)
+				.fixedSize(horizontal: false, vertical: true)
 			Text(
-				"Connect your electric vehicle now and start the charging process.",
+				"Connect your electric vehicle on the charging point and start the charging process.",
 				bundle: .elvahCharge
 			)
-			.typography(.title(size: .small), weight: .bold)
+			.typography(.copy(size: .medium))
 			.fixedSize(horizontal: false, vertical: true)
-			.foregroundStyle(.primaryContent)
-			.padding(.horizontal, .XL)
 		}
+		.foregroundStyle(.primaryContent)
+		.padding(.horizontal, .XL)
 		.frame(maxWidth: .infinity)
 		.dynamicTypeSize(...(.xxxLarge))
 		.multilineTextAlignment(.center)
@@ -109,8 +112,8 @@ struct ChargeStartFeature: View {
 	}
 
 	@ViewBuilder private var requestInformation: some View {
-		VStack(spacing: .size(.M)) {
-			ChargePointIdentifierView(point: request.signedOffer.chargePoint)
+		VStack(spacing: .size(.S)) {
+			EvseIdBox(for: request.signedOffer)
 			Button("Is the charge point locked?", bundle: .elvahCharge) {
 				router.startSessionInfo = .init(chargePoint: request.signedOffer.chargePoint)
 			}

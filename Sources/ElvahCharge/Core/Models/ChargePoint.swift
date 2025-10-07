@@ -192,7 +192,7 @@ package extension ChargePoint {
 	/// Creates a simulated charge point with the specified evseId and randomized properties.
 	/// - Parameter evseId: The evse id for the charge point
 	/// - Returns: A charge point with realistic but varied specifications
-	static func simulation(evseId: String) -> ChargePoint {
+	static func simulation(evseId: String, largestCommonPrefix: String? = nil) -> ChargePoint {
 		let powers = [22.0, 50.0, 75.0, 150.0, 250.0, 350.0]
 		let maxPower = powers.randomElement()!
 
@@ -205,9 +205,16 @@ package extension ChargePoint {
 
 		let powerType: PowerType = maxPower > 22 ? .dc : .ac
 
+		var physicalReference: String? {
+			if let largestCommonPrefix, largestCommonPrefix.isEmpty == false {
+				return String(evseId.dropFirst(largestCommonPrefix.count))
+			}
+			return nil
+		}
+
 		return ChargePoint(
 			evseId: evseId,
-			physicalReference: nil,
+			physicalReference: physicalReference,
 			maxPowerInKw: maxPower,
 			availability: .available,
 			availabilityUpdatedAt: Date().addingTimeInterval(-Double.random(in: 0 ... 86400)),
@@ -219,7 +226,7 @@ package extension ChargePoint {
 
 	static let mockAvailable = ChargePoint(
 		evseId: "DE*SIM*1234",
-		physicalReference: nil,
+		physicalReference: "1234",
 		maxPowerInKw: 150,
 		availability: .available,
 		availabilityUpdatedAt: Date().addingTimeInterval(-100_000),
@@ -230,7 +237,7 @@ package extension ChargePoint {
 
 	static let mockUnavailable = ChargePoint(
 		evseId: "DE*SIM*1235",
-		physicalReference: nil,
+		physicalReference: "1235",
 		maxPowerInKw: 20,
 		availability: .unavailable,
 		availabilityUpdatedAt: Date().addingTimeInterval(-200_000),
@@ -241,7 +248,7 @@ package extension ChargePoint {
 
 	static let mockOutOfService = ChargePoint(
 		evseId: "DE*SIM*1236",
-		physicalReference: nil,
+		physicalReference: "1236",
 		maxPowerInKw: 350,
 		availability: .outOfService,
 		availabilityUpdatedAt: Date().addingTimeInterval(-300_000),

@@ -64,6 +64,6 @@ struct CPOLogo: View {
 
 @available(iOS 16.0, *)
 #Preview {
-	CPOLogo(url: URL(string: "https://placehold.co/600x300.png"))
+	CPOLogo(url: URL(string: "https://i.postimg.cc/50rbSVTY/probably-Connected-Logo.png"))
 		.preferredColorScheme(.dark)
 }

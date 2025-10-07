@@ -48,7 +48,7 @@ package extension PricingScheduleView {
 				.accessibilityElement(children: .ignore)
 				.accessibilityLabel(Text("Live Pricing", bundle: .elvahCharge))
 				.accessibilityValue(accessibilityPriceValueText(reference: reference))
-				.accessibilityAction(named: Text("Show other prices", bundle: .elvahCharge)) {
+				.accessibilityAction {
 					router.isShowingOtherPricesSheet = true
 				}
 			}
@@ -264,4 +264,5 @@ package extension PricingScheduleView {
 	)
 	.padding()
 	.withFontRegistration()
+	.preferredColorScheme(.dark)
 }

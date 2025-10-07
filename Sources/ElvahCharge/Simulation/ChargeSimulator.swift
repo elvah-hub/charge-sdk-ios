@@ -612,7 +612,8 @@ public extension ChargeSimulator {
 				.custom { _, evseIds, _ in
 					if let evseIds = evseIds, !evseIds.isEmpty {
 						// Create one charge offer per evseId with randomized properties
-						let offers = evseIds.map { ChargeOffer.simulation(evseId: $0) }
+						let largestCommonPrefix = evseIds.largestCommonPrefix()
+						let offers = evseIds.map { ChargeOffer.simulation(evseId: $0, largestCommonPrefix: largestCommonPrefix) }
 						return [ChargeSite(site: .simulation, offers: offers)]
 					} else {
 						// Fallback to single offer for backward compatibility

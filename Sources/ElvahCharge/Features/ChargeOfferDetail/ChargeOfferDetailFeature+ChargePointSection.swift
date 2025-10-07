@@ -37,6 +37,8 @@ extension ChargeOfferDetailFeature {
 
 		var body: some View {
 			VStack(alignment: .leading, spacing: .size(.M)) {
+				// When this view has a height of 0, it message with the 2-part background and the toolbar
+				Color.clear.frame(height: 1)
 				switch offers {
 				case .absent,
 				     .loading,

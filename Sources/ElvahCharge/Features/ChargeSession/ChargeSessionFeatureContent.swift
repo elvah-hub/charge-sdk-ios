@@ -149,6 +149,9 @@ extension ChargeSessionFeature {
 					case .started:
 						EmptyView()
 					case .charging:
+						if let chargeSessionContext, chargeSessionContext.signedOffer.price.hasAdditionalCost {
+							additionalCostsDisclaimerBox(offer: chargeSessionContext.signedOffer.offer)
+						}
 						Button("Stop charging", bundle: .elvahCharge) {
 							onAction(.stop)
 						}
@@ -168,11 +171,39 @@ extension ChargeSessionFeature {
 
 					VStack(spacing: .size(.XXS)) {
 						CPOLogo(url: chargeSessionContext?.organisationDetails.logoUrl)
-						supportButton
 					}
 				}
 			}
 			.padding(.horizontal, .M)
+		}
+
+		@ViewBuilder private func additionalCostsDisclaimerBox(offer: ChargeOffer) -> some View {
+			Button {
+				router.additionalCostsInfo = offer
+			} label: {
+				CustomBox {
+					HStack(alignment: .top, spacing: .size(.XS)) {
+						Image(.monetizationOn)
+							.foregroundStyle(.primaryContent)
+							.offset(y: -4)
+							.hiddenForLargeDynamicTypeSize()
+						VStack(alignment: .leading, spacing: .size(.XXS)) {
+							Text("Additional costs apply at this charge point.")
+								.typography(.copy(size: .medium))
+								.foregroundStyle(.secondaryContent)
+								.fixedSize(horizontal: false, vertical: true)
+								.dynamicTypeSize(...(.xxxLarge))
+							Text("Learn more")
+								.typography(.copy(size: .medium), weight: .bold)
+								.underline()
+								.fixedSize(horizontal: false, vertical: true)
+								.dynamicTypeSize(...(.xxLarge))
+						}
+						.frame(maxWidth: .infinity, alignment: .leading)
+					}
+				}
+			}
+			.buttonStyle(.plain)
 		}
 
 		@ViewBuilder private var tryAgainButton: some View {
@@ -180,15 +211,6 @@ extension ChargeSessionFeature {
 				onAction(.resetSessionObservation)
 			}
 			.buttonStyle(.primary)
-		}
-
-		@ViewBuilder private var supportButton: some View {
-			Button("Support", bundle: .elvahCharge) {
-				router.showSupport = true
-			}
-			.buttonStyle(.textPrimary)
-			.matchedGeometryEffect(id: 0, in: namespace)
-			.transition(.scale(scale: 1)) // Prevents fade animation
 		}
 
 		// MARK: - Helpers
@@ -220,7 +242,7 @@ extension ChargeSessionFeature.Content {
 
 @available(iOS 26.0, *)
 #Preview {
-	@Previewable @State var status: ChargeSessionFeature.SessionStatus = .stopped(session: .mock(status: .stopped))
+	@Previewable @State var status: ChargeSessionFeature.SessionStatus = .charging(session: .mock(status: .started, consumption: 10))
 
 	NavigationStack {
 		VStack {

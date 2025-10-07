@@ -22,35 +22,38 @@ struct SupportFeature: View {
 					.padding(.L)
 				}
 				FooterView {
-					if let supportMethods = chargeSessionContext?.organisationDetails.supportMethods {
-						ButtonStack {
-							ForEach(supportMethods.sorted().filter(\.isPhoneOrUrl)) { supportMethod in
-								switch supportMethod {
-								case let .phone(number):
-									phoneButton(for: number)
-								case let .website(url):
-									urlButton(for: url)
-								default:
-									EmptyView()
+					VStack(spacing: .size(.M)) {
+						if let supportMethods = chargeSessionContext?.organisationDetails.supportMethods {
+							ButtonStack {
+								ForEach(supportMethods.sorted().filter(\.isPhoneOrUrl)) { supportMethod in
+									switch supportMethod {
+									case let .phone(number):
+										phoneButton(for: number)
+									case let .website(url):
+										urlButton(for: url)
+									default:
+										EmptyView()
+									}
 								}
-							}
 
-							let emailAndWhatsAppMethods = supportMethods.sorted().filter(\.isEmailOrWhatsApp)
-							if emailAndWhatsAppMethods.isEmpty == false {
-								ButtonStack(axis: .horizontal) {
-									ForEach(emailAndWhatsAppMethods) { supportMethod in
-										switch supportMethod {
-										case let .email(email):
-											mailButton(for: email)
-										case let .whatsApp(number):
-											whatsAppButton(for: number)
-										default:
-											EmptyView()
+								let emailAndWhatsAppMethods = supportMethods.sorted().filter(\.isEmailOrWhatsApp)
+								if emailAndWhatsAppMethods.isEmpty == false {
+									ButtonStack(axis: .horizontal) {
+										ForEach(emailAndWhatsAppMethods) { supportMethod in
+											switch supportMethod {
+											case let .email(email):
+												mailButton(for: email)
+											case let .whatsApp(number):
+												whatsAppButton(for: number)
+											default:
+												EmptyView()
+											}
 										}
 									}
 								}
 							}
 						}
+						CPOLogo(url: chargeSessionContext?.organisationDetails.logoUrl)
 					}
 				}
 			}
@@ -68,10 +71,9 @@ struct SupportFeature: View {
 	}
 
 	@ViewBuilder private var content: some View {
-		CPOLogo(url: chargeSessionContext?.organisationDetails.logoUrl)
 		Image(.helpSupport)
 		if let companyName = chargeSessionContext?.organisationDetails.companyName {
-			VStack(spacing: .size(.XS)) {
+			VStack(spacing: .size(.M)) {
 				Text("Need help or want to give us feedback?", bundle: .elvahCharge)
 					.typography(.title(size: .small), weight: .bold)
 					.foregroundStyle(.primaryContent)

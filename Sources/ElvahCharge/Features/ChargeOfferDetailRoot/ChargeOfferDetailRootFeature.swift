@@ -25,8 +25,6 @@ package struct ChargeOfferDetailRootFeature: View {
 		self.options = options
 	}
 
-	@State private var show = false
-
 	package var body: some View {
 		NavigationStack(path: $router.path) {
 			ChargeOfferDetailFeature(
