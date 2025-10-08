@@ -4,76 +4,76 @@ import SwiftUI
 
 @available(iOS 16.0, *)
 extension ChargeSessionFeature.SessionStatus {
-	var contentState: ChargeSessionFeature.ContentState? {
-		switch self {
-		case .sessionLoading:
-			ChargeSessionFeature.ContentState(
-				progressRingMode: .indeterminate,
-				title: "Restoring session",
-				message: "Attempting to restore charge session.",
-			)
+  var contentState: ChargeSessionFeature.ContentState? {
+    switch self {
+    case .sessionLoading:
+      ChargeSessionFeature.ContentState(
+        progressRingMode: .indeterminate,
+        title: "Restoring session",
+        message: "Attempting to restore charge session.",
+      )
 
-		case .unauthorized:
-			ChargeSessionFeature.ContentState(
-				progressRingMode: .failed,
-				title: "Payment expired",
-				message: "Unfortunately, the time between payment and session start was too long. We need you to authorize a new deposit on your payment method.",
-			)
+    case .unauthorized:
+      ChargeSessionFeature.ContentState(
+        progressRingMode: .failed,
+        title: "Payment expired",
+        message: "Unfortunately, the time between payment and session start was too long. We need you to authorize a new deposit on your payment method.",
+      )
 
-		case .unknownError:
-			ChargeSessionFeature.ContentState(
-				progressRingMode: .failed,
-				title: "Server error",
-				message: "An unexpected error has occurred. Please try again or contact our support.",
-			)
+    case .unknownError:
+      ChargeSessionFeature.ContentState(
+        progressRingMode: .failed,
+        title: "Server error",
+        message: "An unexpected error has occurred. Please try again or contact our support.",
+      )
 
-		case .startRequested:
-			ChargeSessionFeature.ContentState(
-				progressRingMode: .indeterminate,
-				title: "Preparing",
-				message: "Reaching out to the charger.\nPlease bear with us for a moment.",
-			)
+    case .startRequested:
+      ChargeSessionFeature.ContentState(
+        progressRingMode: .indeterminate,
+        title: "Preparing",
+        message: "Reaching out to the charger.\nPlease bear with us for a moment.",
+      )
 
-		case .startRejected:
-			ChargeSessionFeature.ContentState(
-				progressRingMode: .failed,
-				title: "The charge point reported an error",
-				message: "Unfortunately, the charging session could not be started at this charge point. Please try again later or use another charge point.",
-			)
+    case .startRejected:
+      ChargeSessionFeature.ContentState(
+        progressRingMode: .failed,
+        title: "The charge point reported an error",
+        message: "Unfortunately, the charging session could not be started at this charge point. Please try again later or use another charge point.",
+      )
 
-		case .started:
-			ChargeSessionFeature.ContentState(
-				progressRingMode: .indeterminate,
-				title: "Starting",
-				message: "Charger is awake!\nStarting session with the charger.",
-			)
+    case .started:
+      ChargeSessionFeature.ContentState(
+        progressRingMode: .indeterminate,
+        title: "Starting",
+        message: "Charger is awake!\nStarting session with the charger.",
+      )
 
-		case .charging:
-			ChargeSessionFeature.ContentState(
-				progressRingMode: .indeterminate,
-				title: nil,
-				message: nil,
-			)
+    case .charging:
+      ChargeSessionFeature.ContentState(
+        progressRingMode: .indeterminate,
+        title: nil,
+        message: nil,
+      )
 
-		case .stopRequested:
-			ChargeSessionFeature.ContentState(
-				progressRingMode: .indeterminate,
-				title: "Stopping the charging session",
-				message: "We are connecting to the station to end the charging session.",
-			)
+    case .stopRequested:
+      ChargeSessionFeature.ContentState(
+        progressRingMode: .indeterminate,
+        title: "Stopping the charging session",
+        message: "We are connecting to the station to end the charging session.",
+      )
 
-		case .stopRejected:
-			ChargeSessionFeature.ContentState(
-				progressRingMode: .failed,
-				title: "Please end charging manually",
-				message: "Please stop charging manually by removing the charging cable first from your car and then from the charging station.\n\nWe will analyze the problem and try to solve it together with the operator of the charging station.",
-			)
+    case .stopRejected:
+      ChargeSessionFeature.ContentState(
+        progressRingMode: .failed,
+        title: "Please end charging manually",
+        message: "Please stop charging manually by removing the charging cable first from your car and then from the charging station.\n\nWe will analyze the problem and try to solve it together with the operator of the charging station.",
+      )
 
-		case .stopped:
-			ChargeSessionFeature.ContentState(
-				progressRingMode: .completed,
-				title: "Charging session stopped",
-			)
-		}
-	}
+    case .stopped:
+      ChargeSessionFeature.ContentState(
+        progressRingMode: .completed,
+        title: "Charging session stopped",
+      )
+    }
+  }
 }

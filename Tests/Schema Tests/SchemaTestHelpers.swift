@@ -9,7 +9,7 @@ extension Tag {
 }
 
 /// Shared helper functions for schema parsing tests
-struct SchemaTestHelpers {
+enum SchemaTestHelpers {
   /// Creates a decoder configured for testing JSON schema parsing
   static func createDecoder() -> JSONDecoder {
     let decoder = JSONDecoder()
@@ -24,10 +24,10 @@ struct SchemaTestHelpers {
   }
 
   /// Helper to verify that parsing throws a NetworkError.Client.parsing error
-  static func expectParsingError<T, Root, Value>(
-    _ expression: @autoclosure () throws -> T,
-    expectedKeyPath: KeyPath<Root, Value>,
-    in object: Root
+  static func expectParsingError<Root>(
+    _ expression: @autoclosure () throws -> some Any,
+    expectedKeyPath: KeyPath<Root, some Any>,
+    in object: Root,
   ) throws {
     var caught: NetworkError.Client.ParsingError?
 

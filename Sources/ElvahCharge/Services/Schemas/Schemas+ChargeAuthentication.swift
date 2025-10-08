@@ -3,20 +3,20 @@
 import Foundation
 
 extension ChargeAuthentication {
-	static func parse(
-		_ response: ChargeAuthenticationSchema
-	) throws(NetworkError.Client) -> ChargeAuthentication {
-		ChargeAuthentication(
-			token: response.data.chargeIdentityToken,
-			expiryDate: nil
-		)
-	}
+  static func parse(
+    _ response: ChargeAuthenticationSchema,
+  ) throws(NetworkError.Client) -> ChargeAuthentication {
+    ChargeAuthentication(
+      token: response.data.chargeIdentityToken,
+      expiryDate: nil,
+    )
+  }
 }
 
 struct ChargeAuthenticationSchema: Decodable {
-	let data: Data
+  let data: Data
 
-	struct Data: Decodable {
-		let chargeIdentityToken: String
-	}
+  struct Data: Decodable {
+    let chargeIdentityToken: String
+  }
 }

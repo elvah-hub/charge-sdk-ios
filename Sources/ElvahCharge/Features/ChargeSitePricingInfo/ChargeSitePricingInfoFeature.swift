@@ -5,117 +5,117 @@ import SwiftUI
 /// Displays grouped pricing information for all charge points at a site.
 @available(iOS 16.0, *)
 package struct ChargeSitePricingInfoFeature: View {
-	@Environment(\.dismiss) private var dismiss
-	@StateObject private var router = ChargeSitePricingInfoFeature.Router()
+  @Environment(\.dismiss) private var dismiss
+  @StateObject private var router = ChargeSitePricingInfoFeature.Router()
 
-	var chargeSite: ChargeSite
+  var chargeSite: ChargeSite
 
-	package init(chargeSite: ChargeSite) {
-		self.chargeSite = chargeSite
-	}
+  package init(chargeSite: ChargeSite) {
+    self.chargeSite = chargeSite
+  }
 
-	package var body: some View {
-		BottomSheetComponent(title: "Base Pricing") {
-			content
-		} footer: {
-			Button("Close", bundle: .elvahCharge) {
-				dismiss()
-			}
-			.buttonStyle(.primary)
-		}
-		.onDisappear {
-			router.reset()
-		}
-	}
+  package var body: some View {
+    BottomSheetComponent(title: "Base Pricing") {
+      content
+    } footer: {
+      Button("Close", bundle: .elvahCharge) {
+        dismiss()
+      }
+      .buttonStyle(.primary)
+    }
+    .onDisappear {
+      router.reset()
+    }
+  }
 
-	@ViewBuilder private var content: some View {
-		let groups = groupedChargeOffers
+  @ViewBuilder private var content: some View {
+    let groups = groupedChargeOffers
 
-		if groups.isEmpty {
-			Text("No charge points available", bundle: .elvahCharge)
-				.typography(.copy(size: .medium), weight: .regular)
-				.foregroundStyle(.secondaryContent)
-				.frame(maxWidth: .infinity, alignment: .leading)
-				.padding(.horizontal, .S)
-		} else {
-			VStack(alignment: .leading, spacing: .size(.S)) {
-				ForEach(groups) { group in
-					pricingRow(for: group)
+    if groups.isEmpty {
+      Text("No charge points available", bundle: .elvahCharge)
+        .typography(.copy(size: .medium), weight: .regular)
+        .foregroundStyle(.secondaryContent)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, .S)
+    } else {
+      VStack(alignment: .leading, spacing: .size(.S)) {
+        ForEach(groups) { group in
+          pricingRow(for: group)
 
-					if group != groups.last {
-						Divider()
-					}
-				}
-			}
-			.padding(.horizontal, .S)
-		}
-	}
+          if group != groups.last {
+            Divider()
+          }
+        }
+      }
+      .padding(.horizontal, .S)
+    }
+  }
 
-	private func pricingRow(for group: PowerPricingGroup) -> some View {
-		HStack(spacing: .size(.S)) {
-			HStack(spacing: .size(.XS)) {
-				Image(.bolt)
-					.typography(.copy(size: .medium))
-				Text(group.maxPowerDisplay)
-			}
-			.typography(.copy(size: .large))
-			.foregroundStyle(.primaryContent)
+  private func pricingRow(for group: PowerPricingGroup) -> some View {
+    HStack(spacing: .size(.S)) {
+      HStack(spacing: .size(.XS)) {
+        Image(.bolt)
+          .typography(.copy(size: .medium))
+        Text(group.maxPowerDisplay)
+      }
+      .typography(.copy(size: .large))
+      .foregroundStyle(.primaryContent)
 
-			Spacer(minLength: 0)
+      Spacer(minLength: 0)
 
-			if let price = group.displayedPrice {
-				Text("\(price.formatted())/kWh", bundle: .elvahCharge)
-					.typography(.copy(size: .large), weight: .bold)
-					.monospacedDigit()
-					.foregroundStyle(.primaryContent)
-			}
-		}
-	}
+      if let price = group.displayedPrice {
+        Text("\(price.formatted())/kWh", bundle: .elvahCharge)
+          .typography(.copy(size: .large), weight: .bold)
+          .monospacedDigit()
+          .foregroundStyle(.primaryContent)
+      }
+    }
+  }
 
-	private var groupedChargeOffers: [PowerPricingGroup] {
-		let chargeOffersWithoutDiscount = chargeSite.offers.filter { $0.isDiscounted == false }
-		return Dictionary(grouping: chargeOffersWithoutDiscount, by: { $0.chargePoint.maxPowerInKw })
-			.map { key, value in
-				PowerPricingGroup(maxPowerInKw: key, offers: value)
-			}
-			.sorted()
-	}
+  private var groupedChargeOffers: [PowerPricingGroup] {
+    let chargeOffersWithoutDiscount = chargeSite.offers.filter { $0.isDiscounted == false }
+    return Dictionary(grouping: chargeOffersWithoutDiscount, by: { $0.chargePoint.maxPowerInKw })
+      .map { key, value in
+        PowerPricingGroup(maxPowerInKw: key, offers: value)
+      }
+      .sorted()
+  }
 }
 
 @available(iOS 16.0, *)
 package extension ChargeSitePricingInfoFeature {
-	final class Router: BaseRouter {
-		package func reset() {}
-	}
+  final class Router: BaseRouter {
+    package func reset() {}
+  }
 }
 
 @available(iOS 16.0, *)
 private extension ChargeSitePricingInfoFeature {
-	struct PowerPricingGroup: Identifiable, Equatable, Comparable {
-		var id: Double { maxPowerInKw }
-		var maxPowerInKw: Double
-		var offers: [ChargeOffer]
+  struct PowerPricingGroup: Identifiable, Equatable, Comparable {
+    var id: Double { maxPowerInKw }
+    var maxPowerInKw: Double
+    var offers: [ChargeOffer]
 
-		var maxPowerDisplay: String {
-			offers.first?.chargePoint.maxPowerInKWFormatted ?? maxPowerInKw.formatted(.number.precision(.fractionLength(0))) + " kW"
-		}
+    var maxPowerDisplay: String {
+      offers.first?.chargePoint.maxPowerInKWFormatted ?? maxPowerInKw.formatted(.number.precision(.fractionLength(0))) + " kW"
+    }
 
-		var displayedPrice: Currency? {
-			offers.lazy.map(\.price.pricePerKWh).min()
-		}
+    var displayedPrice: Currency? {
+      offers.lazy.map(\.price.pricePerKWh).min()
+    }
 
-		static func < (
-			lhs: ChargeSitePricingInfoFeature.PowerPricingGroup,
-			rhs: ChargeSitePricingInfoFeature.PowerPricingGroup
-		) -> Bool {
-			lhs.maxPowerInKw > rhs.maxPowerInKw
-		}
-	}
+    static func < (
+      lhs: ChargeSitePricingInfoFeature.PowerPricingGroup,
+      rhs: ChargeSitePricingInfoFeature.PowerPricingGroup
+    ) -> Bool {
+      lhs.maxPowerInKw > rhs.maxPowerInKw
+    }
+  }
 }
 
 @available(iOS 17.0, *)
 #Preview("ChargeSitePricingInfoFeature") {
-	ChargeSitePricingInfoFeature(chargeSite: .mock)
-		.withFontRegistration()
-		.preferredColorScheme(.dark)
+  ChargeSitePricingInfoFeature(chargeSite: .mock)
+    .withFontRegistration()
+    .preferredColorScheme(.dark)
 }

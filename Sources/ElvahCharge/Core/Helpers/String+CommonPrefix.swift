@@ -2,21 +2,21 @@
 
 import Foundation
 
-package extension Collection where Element == String {
-	/// Largest common prefix across all strings (case-sensitive).
-	func largestCommonPrefix() -> String {
-		guard let first = first else {
-			return ""
-		}
+package extension Collection<String> {
+  /// Largest common prefix across all strings (case-sensitive).
+  func largestCommonPrefix() -> String {
+    guard let first else {
+      return ""
+    }
 
-		var prefix = first
+    var prefix = first
 
-		for string in dropFirst() {
-			prefix = prefix.commonPrefix(with: string)
-			if prefix.isEmpty {
-				break
-			}
-		}
-		return prefix
-	}
+    for string in dropFirst() {
+      prefix = prefix.commonPrefix(with: string)
+      if prefix.isEmpty {
+        break
+      }
+    }
+    return prefix
+  }
 }

@@ -1,4 +1,4 @@
-// Copyright elvah. All rights reserved.
+// Copyright © elvah. All rights reserved.
 
 import ElvahCharge
 import SwiftUI

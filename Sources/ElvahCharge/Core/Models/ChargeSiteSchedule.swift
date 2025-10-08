@@ -25,45 +25,45 @@ import SwiftUI
 /// ```
 @dynamicMemberLookup
 public struct ChargeSiteSchedule: Codable, Hashable, Identifiable, Sendable {
-	public var id: String {
-		chargeSite.id
-	}
+  public var id: String {
+    chargeSite.id
+  }
 
-	/// The site this schedule belongs to.
-	public var chargeSite: ChargeSite
+  /// The site this schedule belongs to.
+  public var chargeSite: ChargeSite
 
-	/// The resolved price timeline for the site.
-	package var pricingSchedule: PricingSchedule
+  /// The resolved price timeline for the site.
+  package var pricingSchedule: PricingSchedule
 
-	/// Prepared data points for ``LivePricingView``.
-	package var chartEntries: [PricingScheduleChartEntry]
+  /// Prepared data points for ``LivePricingView``.
+  package var chartEntries: [PricingScheduleChartEntry]
 
-	package init(chargeSite: ChargeSite, pricingSchedule: PricingSchedule) {
-		self.chargeSite = chargeSite
-		self.pricingSchedule = pricingSchedule
-		self.chartEntries = pricingSchedule.chartEntries()
-	}
+  package init(chargeSite: ChargeSite, pricingSchedule: PricingSchedule) {
+    self.chargeSite = chargeSite
+    self.pricingSchedule = pricingSchedule
+    self.chartEntries = pricingSchedule.chartEntries()
+  }
 
-	public subscript<V>(dynamicMember keyPath: KeyPath<PricingSchedule, V>) -> V {
-		pricingSchedule[keyPath: keyPath]
-	}
+  public subscript<V>(dynamicMember keyPath: KeyPath<PricingSchedule, V>) -> V {
+    pricingSchedule[keyPath: keyPath]
+  }
 
-	public subscript<V>(dynamicMember keyPath: WritableKeyPath<PricingSchedule, V>) -> V {
-		get { pricingSchedule[keyPath: keyPath] }
-		set { pricingSchedule[keyPath: keyPath] = newValue }
-	}
+  public subscript<V>(dynamicMember keyPath: WritableKeyPath<PricingSchedule, V>) -> V {
+    get { pricingSchedule[keyPath: keyPath] }
+    set { pricingSchedule[keyPath: keyPath] = newValue }
+  }
 
-	package var dailyPricing: PricingSchedule.Days {
-		get { pricingSchedule.dailyPricing }
-		set { pricingSchedule.dailyPricing = newValue }
-	}
+  package var dailyPricing: PricingSchedule.Days {
+    get { pricingSchedule.dailyPricing }
+    set { pricingSchedule.dailyPricing = newValue }
+  }
 }
 
 // MARK: - Mock Data
 
 package extension ChargeSiteSchedule {
-	/// A representative schedule for previews and tests.
-	static var mock: ChargeSiteSchedule {
-		ChargeSiteSchedule(chargeSite: .mock, pricingSchedule: .mock)
-	}
+  /// A representative schedule for previews and tests.
+  static var mock: ChargeSiteSchedule {
+    ChargeSiteSchedule(chargeSite: .mock, pricingSchedule: .mock)
+  }
 }

@@ -1,4 +1,4 @@
-// Copyright elvah. All rights reserved.
+// Copyright © elvah. All rights reserved.
 
 import Foundation
 
@@ -19,7 +19,7 @@ public extension ChargeSimulator.RequestHandlers {
       onSessionPolling: { context in
         switch context.currentStatus {
         case .startRequested:
-					if context.secondsSinceLastStatusChange > 8 {
+          if context.secondsSinceLastStatusChange > 8 {
             return .started
           }
         case .startRejected:
@@ -47,7 +47,7 @@ public extension ChargeSimulator.RequestHandlers {
         }
 
         return nil
-      }
+      },
     )
   }
 }

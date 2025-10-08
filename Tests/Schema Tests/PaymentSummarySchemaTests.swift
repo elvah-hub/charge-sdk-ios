@@ -58,9 +58,9 @@ struct PaymentSummarySchemaTests {
 
     // Then: A parsing error is thrown for sessionStartedAt
     try SchemaTestHelpers.expectParsingError(
-      try PaymentSummary.parse(schema),
+      PaymentSummary.parse(schema),
       expectedKeyPath: \PaymentSummarySchema.sessionStartedAt,
-      in: schema
+      in: schema,
     )
   }
 }

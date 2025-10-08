@@ -4,9 +4,9 @@ import Foundation
 
 /// The display variant of a ``ChargeBanner`` view.
 public enum ChargeBannerVariant {
-	/// A large ``ChargeBanner`` variant.
-	case large
+  /// A large ``ChargeBanner`` variant.
+  case large
 
-	/// A compact ``ChargeBanner`` variant.
-	case compact
+  /// A compact ``ChargeBanner`` variant.
+  case compact
 }

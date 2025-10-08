@@ -6,5 +6,5 @@ import SwiftUI
 
 @MainActor
 package protocol BaseRouter: ObservableObject {
-	func reset()
+  func reset()
 }
