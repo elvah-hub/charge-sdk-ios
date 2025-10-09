@@ -29,13 +29,13 @@ public struct Theme: Hashable, Sendable {
     color: Color = .default,
     font: CoreFont = .default,
     regularWeight: Font.Weight = .regular,
-    boldWeight: Font.Weight = .bold,
+    boldWeight: Font.Weight = .bold
   ) {
     self.color = color
     typography = Typography(
       font: font,
       regularWeight: regularWeight,
-      boldWeight: boldWeight,
+      boldWeight: boldWeight
     )
   }
 
@@ -55,7 +55,7 @@ public extension Theme {
     public init(
       font: CoreFont = .default,
       regularWeight: Font.Weight = .regular,
-      boldWeight: Font.Weight = .bold,
+      boldWeight: Font.Weight = .bold
     ) {
       self.regularWeight = regularWeight
       self.boldWeight = boldWeight
@@ -67,22 +67,26 @@ public extension Theme {
     public static let elvah: Typography = .init(
       font: .default,
       regularWeight: .medium,
-      boldWeight: .semibold,
+      boldWeight: .semibold
     )
 
     public static let neutral: Typography = .init(
       font: .default,
       regularWeight: .regular,
-      boldWeight: .bold,
+      boldWeight: .bold
     )
   }
 
   /// A structure representing color information for a theme.
   struct Color: Hashable, Sendable {
     public var brand: SwiftUI.Color
+    public var brandLight: SwiftUI.Color
     public var success: SwiftUI.Color
     public var onSuccess: SwiftUI.Color
+    public var error: SwiftUI.Color
+    public var onError: SwiftUI.Color
     public var canvas: SwiftUI.Color
+    public var secondaryCanvas: SwiftUI.Color
     public var onBrand: SwiftUI.Color
     public var primaryContent: SwiftUI.Color
     public var secondaryContent: SwiftUI.Color
@@ -99,20 +103,28 @@ public extension Theme {
     /// dark enough to allow white text to be readable on it.
     public init(
       brand: SwiftUI.Color,
+      brandLight: SwiftUI.Color,
       success: SwiftUI.Color,
       onSuccess: SwiftUI.Color,
+      error: SwiftUI.Color,
+      onError: SwiftUI.Color,
       canvas: SwiftUI.Color,
+      secondaryCanvas: SwiftUI.Color,
       onBrand: SwiftUI.Color,
       primaryContent: SwiftUI.Color,
       secondaryContent: SwiftUI.Color,
       decorativeStroke: SwiftUI.Color,
       container: SwiftUI.Color,
-      label: SwiftUI.Color,
+      label: SwiftUI.Color
     ) {
       self.brand = brand
+      self.brandLight = brandLight
       self.success = success
       self.onSuccess = onSuccess
+      self.error = error
+      self.onError = onError
       self.canvas = canvas
+      self.secondaryCanvas = secondaryCanvas
       self.onBrand = onBrand
       self.primaryContent = primaryContent
       self.secondaryContent = secondaryContent
@@ -125,28 +137,36 @@ public extension Theme {
 
     @_spi(Debug) public static let elvah: Color = .init(
       brand: SwiftUI.Color("elvah_brand", bundle: .core),
+      brandLight: SwiftUI.Color("elvah_brandLight", bundle: .core),
       success: SwiftUI.Color("elvah_success", bundle: .core),
       onSuccess: SwiftUI.Color("elvah_onSuccess", bundle: .core),
+      error: SwiftUI.Color("elvah_error", bundle: .core),
+      onError: SwiftUI.Color("elvah_onError", bundle: .core),
       canvas: SwiftUI.Color("elvah_canvas", bundle: .core),
+      secondaryCanvas: SwiftUI.Color("elvah_canvas2", bundle: .core),
       onBrand: SwiftUI.Color("elvah_onBrand", bundle: .core),
       primaryContent: SwiftUI.Color("elvah_primaryContent", bundle: .core),
       secondaryContent: SwiftUI.Color("elvah_secondaryContent", bundle: .core),
       decorativeStroke: SwiftUI.Color("elvah_decorativeStroke", bundle: .core),
       container: SwiftUI.Color("elvah_container", bundle: .core),
-      label: SwiftUI.Color("elvah_label", bundle: .core),
+      label: SwiftUI.Color("elvah_label", bundle: .core)
     )
 
     public static let neutral: Color = .init(
       brand: SwiftUI.Color("neutral_brand", bundle: .core),
+      brandLight: SwiftUI.Color("neutral_brandLight", bundle: .core),
       success: SwiftUI.Color("neutral_success", bundle: .core),
       onSuccess: SwiftUI.Color("neutral_onSuccess", bundle: .core),
+      error: SwiftUI.Color("neutral_error", bundle: .core),
+      onError: SwiftUI.Color("neutral_onError", bundle: .core),
       canvas: SwiftUI.Color("neutral_canvas", bundle: .core),
+      secondaryCanvas: SwiftUI.Color("neutral_canvas2", bundle: .core),
       onBrand: SwiftUI.Color("neutral_onBrand", bundle: .core),
       primaryContent: SwiftUI.Color("neutral_primaryContent", bundle: .core),
       secondaryContent: SwiftUI.Color("neutral_secondaryContent", bundle: .core),
       decorativeStroke: SwiftUI.Color("neutral_decorativeStroke", bundle: .core),
       container: SwiftUI.Color("neutral_container", bundle: .core),
-      label: SwiftUI.Color("neutral_label", bundle: .core),
+      label: SwiftUI.Color("neutral_label", bundle: .core)
     )
   }
 }
@@ -162,6 +182,10 @@ package extension ShapeStyle where Self == Color {
     Elvah.configuration.theme.color.brand
   }
 
+  static var brandLight: Color {
+    Elvah.configuration.theme.color.brandLight
+  }
+
   static var success: Color {
     Elvah.configuration.theme.color.success
   }
@@ -170,8 +194,20 @@ package extension ShapeStyle where Self == Color {
     Elvah.configuration.theme.color.onSuccess
   }
 
+  static var error: Color {
+    Elvah.configuration.theme.color.error
+  }
+
+  static var onError: Color {
+    Elvah.configuration.theme.color.onError
+  }
+
   static var canvas: Color {
     Elvah.configuration.theme.color.canvas
+  }
+
+  static var secondaryCanvas: Color {
+    Elvah.configuration.theme.color.secondaryCanvas
   }
 
   static var onBrand: Color {
