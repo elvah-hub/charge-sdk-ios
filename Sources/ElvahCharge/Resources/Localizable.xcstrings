@@ -32,6 +32,7 @@
     },
     "/kWh" : {
       "comment" : "kwh_label",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -484,9 +485,6 @@
           }
         }
       }
-    },
-    "CCS, Very fast (350 kW)" : {
-
     },
     "Charge" : {
       "comment" : "charge_label",

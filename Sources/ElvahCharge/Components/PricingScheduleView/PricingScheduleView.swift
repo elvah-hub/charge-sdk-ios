@@ -59,9 +59,9 @@ package struct PricingScheduleView: View {
       if let current = chartEntries.first(where: { $0.day == selectedDay })?.dataset {
         Summary(
           dataset: current,
+          schedule: schedule,
           router: router,
           selectedMoment: $selectedMoment,
-          prevalentPowerTypeMaxPowerInKw: schedule.prevalentPowerTypeMaxPowerInKw,
         )
         .padding(.horizontal, horizontalAreaPaddings[.header])
         .animation(.default, value: selectedDay)

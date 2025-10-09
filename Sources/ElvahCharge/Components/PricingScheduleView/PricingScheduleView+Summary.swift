@@ -11,31 +11,31 @@ package extension PricingScheduleView {
     /// Access to router to trigger navigation and sheet presentation.
     @ObservedObject private var router: LivePricingView.Router
 
+    /// Associated schedule to derive display metadata.
+    private var schedule: ChargeSiteSchedule
+
     /// The dataset that the drives the summary for a specific day.
     private var dataset: DailyPriceChartData
-
-    /// Maximum power in kilowatts for the site’s prevalent power type.
-    private var prevalentPowerTypeMaxPowerInKw: Double?
 
     /// Selected moment binding to drive the summary instead of the current time.
     @Binding private var selectedMoment: Date?
 
     package init(
       dataset: DailyPriceChartData,
+      schedule: ChargeSiteSchedule,
       router: LivePricingView.Router,
-      selectedMoment: Binding<Date?>,
-      prevalentPowerTypeMaxPowerInKw: Double?,
+      selectedMoment: Binding<Date?>
     ) {
+      self.schedule = schedule
       self.dataset = dataset
-      self.prevalentPowerTypeMaxPowerInKw = prevalentPowerTypeMaxPowerInKw
       _router = ObservedObject(wrappedValue: router)
       _selectedMoment = selectedMoment
     }
 
     /// Convenience init for previews/tests.
     package init(dataset: DailyPriceChartData) {
+      schedule = .mock
       self.dataset = dataset
-      prevalentPowerTypeMaxPowerInKw = nil
       _router = ObservedObject(wrappedValue: LivePricingView.Router())
       _selectedMoment = .constant(nil)
     }
@@ -55,6 +55,9 @@ package extension PricingScheduleView {
         .accessibilityLabel(Text("Live Pricing", bundle: .elvahCharge))
         .accessibilityValue(accessibilityPriceValueText(reference: reference))
         .accessibilityAction {
+          guard hasMultiplePowerTypes else {
+            return
+          }
           router.isShowingOtherPricesSheet = true
         }
       }
@@ -76,18 +79,21 @@ package extension PricingScheduleView {
           router.isShowingOtherPricesSheet = true
         } label: {
           HStack(spacing: .size(.XXXS)) {
-            if let kilowatts = prevalentPowerTypeMaxPowerInKw {
-              Text(kilowatts.formatted())
-              .typography(.copy(size: .medium))
-              .foregroundStyle(.primaryContent)
+            if let kilowatts = schedule.prevalentPowerTypeMaxPowerInKw {
+              Text("\(kilowatts.formatted()) kW")
+                .typography(.copy(size: .medium))
+                .foregroundStyle(.primaryContent)
             }
-            Image(.chevronSmallDown)
-              .accessibilityHidden(true)
+            if hasMultiplePowerTypes {
+              Image(.chevronSmallDown)
+                .accessibilityHidden(true)
+            }
           }
         }
         .buttonStyle(.plain)
         .foregroundStyle(.secondaryContent)
         .typography(.copy(size: .small), weight: .regular)
+        .disabled(hasMultiplePowerTypes == false)
       }
     }
 
@@ -130,7 +136,7 @@ package extension PricingScheduleView {
         horizontalAlignment: .leading,
         verticalAlignment: .center,
         spacing: .size(.S),
-        breakPoint: .xxLarge,
+        breakPoint: .xxLarge
       ) {
         if let moment = selectedMoment, let range = dataset.dateRangeOfSegment(containing: moment) {
           Text("\(dayText) \(range.textRepresentation)")
@@ -208,7 +214,7 @@ package extension PricingScheduleView {
           """
           \(priceText), discounted \(segmentRange.accessibilityTextRepresentation). Original Price: \(basePriceText)
           """,
-          bundle: .elvahCharge,
+          bundle: .elvahCharge
         )
       }
       return priceText
@@ -259,6 +265,10 @@ package extension PricingScheduleView {
     private func noon(of day: Date) -> Date {
       Calendar.current.date(byAdding: .hour, value: 12, to: day) ?? day
     }
+
+    private var hasMultiplePowerTypes: Bool {
+      schedule.chargeSite.availableMaxPowerInKw.count > 1
+    }
   }
 }
 
@@ -267,9 +277,9 @@ package extension PricingScheduleView {
   let data = PricingSchedule.mock.chartData()[1]
   PricingScheduleView.Summary(
     dataset: data,
+    schedule: .mock,
     router: LivePricingView.Router(),
-    selectedMoment: .constant(Date()),
-    prevalentPowerTypeMaxPowerInKw: 350,
+    selectedMoment: .constant(Date())
   )
   .padding()
   .withFontRegistration()

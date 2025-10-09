@@ -232,7 +232,7 @@ package extension ChargePoint {
     availabilityUpdatedAt: Date().addingTimeInterval(-100_000),
     connectors: [.chademo],
     speed: .hyper,
-    powerType: .ac,
+    powerType: .dc,
   )
 
   static let mockUnavailable = ChargePoint(
