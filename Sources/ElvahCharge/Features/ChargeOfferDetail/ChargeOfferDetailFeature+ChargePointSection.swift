@@ -338,10 +338,10 @@ private struct ChargePointRowButton: View {
     switch availability {
     case .available:
       baseLabel
-        .foregroundStyle(.onBrand)
+        .foregroundStyle(.primaryContent)
         .padding(.horizontal, .XS)
         .padding(.vertical, .XXS)
-        .background(.brand, in: .rect(cornerRadius: 4))
+        .background(.brandLight, in: .rect(cornerRadius: 4))
     case .unavailable:
       baseLabel
         .foregroundStyle(.primaryContent)

@@ -85,8 +85,8 @@ struct ChargeStartFeature: View {
     }
     .padding(.S)
     .frame(maxWidth: .infinity)
-    .foregroundStyle(.onBrand)
-    .background(.brand, in: .rect(cornerRadius: 12))
+    .foregroundStyle(.onSuccess)
+    .background(.success, in: .rect(cornerRadius: 12))
     .padding(.horizontal, .S)
     .dynamicTypeSize(...(.accessibility1))
   }

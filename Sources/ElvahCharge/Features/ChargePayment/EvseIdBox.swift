@@ -18,12 +18,12 @@ struct EvseIdBox: View {
     VStack(spacing: 8) {
       Text(signedOffer.chargePoint.physicalReference ?? signedOffer.chargePoint.evseId)
         .typography(.title(size: .medium), weight: .bold)
+        .foregroundStyle(.primaryContent)
         .padding(.horizontal, .M)
         .padding(.vertical, .S)
         .background {
           RoundedRectangle(cornerRadius: 8)
-            .foregroundStyle(.brand)
-            .opacity(0.2)
+            .foregroundStyle(.brandLight)
             .overlay(alignment: .leading) {
               Image(.plugBackground)
                 .foregroundStyle(.brand)
@@ -45,4 +45,5 @@ struct EvseIdBox: View {
   EvseIdBox(for: .mockAvailable)
     .padding()
     .withFontRegistration()
+    .preferredColorScheme(.dark)
 }
