@@ -277,13 +277,6 @@ private struct ChargePointRowButton: View {
     Button { offerAction(offer) } label: {
       let evseDisplayText: String = displayText(for: chargePoint)
 
-      let evseIdLabel = Text(verbatim: evseDisplayText)
-        .typography(.copy(size: .medium), weight: .bold)
-        .foregroundStyle(.onBrand)
-        .padding(.horizontal, .XS)
-        .padding(.vertical, .XXS)
-        .background(.brand, in: .rect(cornerRadius: 4))
-
       let priceLabel = Text(offer.price.pricePerKWh.formatted())
 
       let originalPriceLabel: Text? = {
@@ -297,7 +290,7 @@ private struct ChargePointRowButton: View {
 
       VStack(alignment: .leading, spacing: .size(.XXS)) {
         HStack(alignment: .firstTextBaseline) {
-          evseIdLabel
+          evseIdLabel(for: chargePoint.availability, text: evseDisplayText)
           Spacer()
           if offer.isDiscounted, let original = originalPriceLabel {
             HStack(spacing: .size(.XS)) {
@@ -331,6 +324,43 @@ private struct ChargePointRowButton: View {
       }
       .withChevron()
       .padding(.M)
+    }
+  }
+
+  @ViewBuilder
+  private func evseIdLabel(
+    for availability: ChargePoint.Availability,
+    text: String,
+  ) -> some View {
+    let baseLabel = Text(verbatim: text)
+      .typography(.copy(size: .medium), weight: .bold)
+
+    switch availability {
+    case .available:
+      baseLabel
+        .foregroundStyle(.onBrand)
+        .padding(.horizontal, .XS)
+        .padding(.vertical, .XXS)
+        .background(.brand, in: .rect(cornerRadius: 4))
+    case .unavailable:
+      baseLabel
+        .foregroundStyle(.primaryContent)
+        .padding(.horizontal, .XS)
+        .padding(.vertical, .XXS)
+        .background(.decorativeStroke, in: .rect(cornerRadius: 4))
+    case .outOfService:
+      baseLabel
+        .foregroundStyle(.primaryContent)
+        .padding(.horizontal, .XS)
+        .padding(.vertical, .XXS)
+        .background(.decorativeStroke, in: .rect(cornerRadius: 4))
+        .opacity(0.2)
+    case .unknown:
+      baseLabel
+        .foregroundStyle(.secondaryContent)
+        .padding(.horizontal, .XS)
+        .padding(.vertical, .XXS)
+        .opacity(0.2)
     }
   }
 
@@ -407,20 +437,6 @@ private struct ChargePointActivityContentView: View {
       return .error
     }
     return .animating
-  }
-}
-
-@available(iOS 16.0, *)
-private struct AvailabilityPill: View {
-  var chargePoint: ChargePoint
-
-  var body: some View {
-    Text(chargePoint.localizedAvailability)
-      .typography(.copy(size: .small), weight: .bold)
-      .foregroundStyle(chargePoint.availabilityForegroundColor)
-      .padding(.horizontal, 8)
-      .padding(.vertical, 4)
-      .background(chargePoint.availabilityBackgroundColor, in: .capsule)
   }
 }
 
