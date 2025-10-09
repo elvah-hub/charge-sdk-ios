@@ -23,6 +23,16 @@ public struct ChargeSite: Codable, Hashable, Identifiable, Sendable {
     self.offers = offers
   }
 
+  /// The distinct maximum power levels (in kW) that the site's charge points can deliver.
+  public var availableMaxPowerInKw: [Int] {
+    let distinctValues = Set(
+      offers.map { offer in
+        Int(offer.chargePoint.maxPowerInKw)
+      },
+    )
+    return distinctValues.sorted()
+  }
+
   public subscript<V>(dynamicMember keyPath: KeyPath<Site, V>) -> V {
     site[keyPath: keyPath]
   }
