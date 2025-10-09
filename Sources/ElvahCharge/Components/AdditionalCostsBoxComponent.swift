@@ -20,7 +20,7 @@ struct AdditionalCostsBoxComponent: View {
             HStack(spacing: 0) {
               Text(verbatim: "\(offer.price.pricePerKWh.formatted())")
                 .typography(.bold)
-              Text("/kWh")
+              Text(verbatim: "/kWh")
                 .foregroundStyle(.secondaryContent)
             }
           }
@@ -33,7 +33,7 @@ struct AdditionalCostsBoxComponent: View {
       }
       if offer.price.hasAdditionalCost {
         CustomBox {
-          Text("Additional costs")
+          Text("Additional costs", bundle: .elvahCharge)
             .typography(.copy(size: .large), weight: .bold)
           if let baseFee = offer.price.baseFee {
             LabeledContent {
@@ -51,10 +51,13 @@ struct AdditionalCostsBoxComponent: View {
           if let blockingFee = offer.price.blockingFee {
             LabeledContent {
               if let maxAmount = blockingFee.maxAmount {
-                Text("\(blockingFee.pricePerMinute.formatted())/min (max \(maxAmount.formatted()))")
-                  .typography(.copy(size: .medium), weight: .bold)
+                Text(
+                  "\(blockingFee.pricePerMinute.formatted())/min (max \(maxAmount.formatted()))",
+                  bundle: .elvahCharge,
+                )
+                .typography(.copy(size: .medium), weight: .bold)
               } else {
-                Text("\(blockingFee.pricePerMinute.formatted())/min")
+                Text("\(blockingFee.pricePerMinute.formatted())/min", bundle: .elvahCharge)
                   .typography(.copy(size: .medium), weight: .bold)
               }
             } label: {
@@ -75,11 +78,14 @@ struct AdditionalCostsBoxComponent: View {
   @ViewBuilder private func blockingFeeConditions(for blockingFee: ChargePrice.BlockingFee) -> some View {
     VStack(alignment: .leading, spacing: .size(.S)) {
       if let startsAfterMinute = blockingFee.startsAfterMinute {
-        Text("When your car stays connected after \(startsAfterMinute) min")
+        Text("Blocking fees starts after \(startsAfterMinute) min of connection", bundle: .elvahCharge)
       }
       if let timeSlots = blockingFee.timeSlots {
         ForEach(timeSlots) { timeSlot in
-          Text("• between \(timeSlot.startsAt.localizedTimeString) and \(timeSlot.endsAt.localizedTimeString)")
+          Text(
+            "• between \(timeSlot.startsAt.localizedTimeString) and \(timeSlot.endsAt.localizedTimeString)",
+            bundle: .elvahCharge,
+          )
         }
       }
     }

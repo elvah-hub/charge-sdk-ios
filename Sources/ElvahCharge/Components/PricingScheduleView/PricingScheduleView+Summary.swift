@@ -14,6 +14,9 @@ package extension PricingScheduleView {
     /// The dataset that the drives the summary for a specific day.
     private var dataset: DailyPriceChartData
 
+    /// Maximum power in kilowatts for the site’s prevalent power type.
+    private var prevalentPowerTypeMaxPowerInKw: Double?
+
     /// Selected moment binding to drive the summary instead of the current time.
     @Binding private var selectedMoment: Date?
 
@@ -21,8 +24,10 @@ package extension PricingScheduleView {
       dataset: DailyPriceChartData,
       router: LivePricingView.Router,
       selectedMoment: Binding<Date?>,
+      prevalentPowerTypeMaxPowerInKw: Double?,
     ) {
       self.dataset = dataset
+      self.prevalentPowerTypeMaxPowerInKw = prevalentPowerTypeMaxPowerInKw
       _router = ObservedObject(wrappedValue: router)
       _selectedMoment = selectedMoment
     }
@@ -30,6 +35,7 @@ package extension PricingScheduleView {
     /// Convenience init for previews/tests.
     package init(dataset: DailyPriceChartData) {
       self.dataset = dataset
+      prevalentPowerTypeMaxPowerInKw = nil
       _router = ObservedObject(wrappedValue: LivePricingView.Router())
       _selectedMoment = .constant(nil)
     }
@@ -70,9 +76,11 @@ package extension PricingScheduleView {
           router.isShowingOtherPricesSheet = true
         } label: {
           HStack(spacing: .size(.XXXS)) {
-            Text("CCS, Very fast (350 kW)")
+            if let kilowatts = prevalentPowerTypeMaxPowerInKw {
+              Text(kilowatts.formatted())
               .typography(.copy(size: .medium))
               .foregroundStyle(.primaryContent)
+            }
             Image(.chevronSmallDown)
               .accessibilityHidden(true)
           }
@@ -261,6 +269,7 @@ package extension PricingScheduleView {
     dataset: data,
     router: LivePricingView.Router(),
     selectedMoment: .constant(Date()),
+    prevalentPowerTypeMaxPowerInKw: 350,
   )
   .padding()
   .withFontRegistration()

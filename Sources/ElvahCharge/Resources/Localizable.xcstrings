@@ -413,6 +413,9 @@
     "Blocking fee" : {
 
     },
+    "Blocking fees starts after %lld min of connection" : {
+
+    },
     "Call" : {
       "comment" : "call",
       "localizations" : {
@@ -687,30 +690,6 @@
         }
       }
     },
-    "Connect your electric vehicle now and start the charging process." : {
-      "comment" : "connect_vehicle",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bitte verbinde dein Elektroauto mit der Ladestation und starte den Ladevorgang."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connect your electric vehicle now and start the charging process."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connectez votre véhicule électrique maintenant et lancez la recharge."
-          }
-        }
-      }
-    },
     "Connect your electric vehicle on the charging point and start the charging process." : {
 
     },
@@ -828,30 +807,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Email"
-          }
-        }
-      }
-    },
-    "End charge session" : {
-      "comment" : "charge_session__error__end_session",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ladevorgang beenden"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "End charge session"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Terminer la session"
           }
         }
       }
@@ -2199,9 +2154,6 @@
           }
         }
       }
-    },
-    "When your car stays connected after %lld min" : {
-
     },
     "Yesterday" : {
 

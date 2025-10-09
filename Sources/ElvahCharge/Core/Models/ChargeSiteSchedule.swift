@@ -57,6 +57,13 @@ public struct ChargeSiteSchedule: Codable, Hashable, Identifiable, Sendable {
     get { pricingSchedule.dailyPricing }
     set { pricingSchedule.dailyPricing = newValue }
   }
+
+  /// Maximum power in kilowatts for the prevalent power type found on the site, if available.
+  package var prevalentPowerTypeMaxPowerInKw: Double? {
+    chargeSite.offers.first { offer in
+      offer.chargePoint.powerType == chargeSite.prevalentPowerType
+    }?.chargePoint.maxPowerInKw
+  }
 }
 
 // MARK: - Mock Data

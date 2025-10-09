@@ -16,7 +16,7 @@ public struct ChargeSite: Codable, Hashable, Identifiable, Sendable {
   package var site: Site
 
   /// The underlying site's charge offers.
-  package var offers: [ChargeOffer]
+  public var offers: [ChargeOffer]
 
   package init(site: Site, offers: [ChargeOffer]) {
     self.site = site

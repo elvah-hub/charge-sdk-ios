@@ -61,6 +61,7 @@ package struct PricingScheduleView: View {
           dataset: current,
           router: router,
           selectedMoment: $selectedMoment,
+          prevalentPowerTypeMaxPowerInKw: schedule.prevalentPowerTypeMaxPowerInKw,
         )
         .padding(.horizontal, horizontalAreaPaddings[.header])
         .animation(.default, value: selectedDay)
