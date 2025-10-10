@@ -55,7 +55,7 @@ struct ChargeSessionStoppedComponent: View {
           .foregroundStyle(.secondaryContent)
       }
       AdaptiveHStack { isHorizontalStack in
-        Text("EVSE ID:", bundle: .elvahCharge)
+        Text("Evse Id:", bundle: .elvahCharge)
         if isHorizontalStack {
           Spacer()
         }
