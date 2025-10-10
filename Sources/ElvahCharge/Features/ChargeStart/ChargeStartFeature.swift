@@ -47,6 +47,22 @@ struct ChargeStartFeature: View {
           navigationRoot.dismiss()
         }
       }
+      ToolbarItem(placement: .topBarTrailing) {
+        Menu {
+          Button {
+            router.showSupport = true
+          } label: {
+            Label {
+              Text("Contact support", bundle: .elvahCharge)
+            } icon: {
+              Image(.agent)
+            }
+          }
+        } label: {
+          Image(systemName: "ellipsis")
+            .foregroundStyle(.primaryContent)
+        }
+      }
     }
     .navigationBarBackButtonHidden()
     .navigationDestination(for: Router.Destination.self) { [
@@ -55,7 +71,10 @@ struct ChargeStartFeature: View {
     ] destination in
       switch destination {
       case .chargeAuthenticationExpired:
-        AuthenticationExpiredFeature(router: authenticationExpiredFeatureRouter)
+        AuthenticationExpiredFeature(
+          router: authenticationExpiredFeatureRouter,
+          organisationDetails: request.paymentContext.organisationDetails,
+        )
       case .chargeSession:
         ChargeSessionFeature(router: chargeSessionRouter)
       }
@@ -64,6 +83,12 @@ struct ChargeStartFeature: View {
     .task {
       try? await Task.sleep(for: .seconds(3))
       showSuccessBanner = false
+    }
+    .sheet(isPresented: $router.showSupport) {
+      SupportFeature(
+        router: router.supportRouter,
+        organisationDetails: request.paymentContext.organisationDetails,
+      )
     }
     .sheet(item: $router.startSessionInfo) { info in
       StartChargeInfoComponent(chargePoint: info.chargePoint)
@@ -164,7 +189,7 @@ extension ChargeStartFeature {
     @Published var startSessionInfo: StartSessionInfo?
     @Published var showSupport = false
 
-    let supportSheetRouter = SupportFeature.Router()
+    let supportRouter: SupportFeature.Router = .init()
     let chargeSessionRouter = ChargeSessionFeature.Router()
     let authenticationExpiredFeatureRouter = AuthenticationExpiredFeature.Router()
 
@@ -176,6 +201,7 @@ extension ChargeStartFeature {
 
     func reset() {
       chargeSessionRouter.reset()
+      supportRouter.reset()
       dismissPresentation()
     }
   }

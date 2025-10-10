@@ -61,7 +61,12 @@ struct ChargeSessionFeature: View {
         }
       }
       .sheet(isPresented: $router.showSupport) {
-        SupportFeature(router: router.supportRouter)
+        if let organisationDetails = chargeSessionContext?.organisationDetails {
+          SupportFeature(
+            router: router.supportRouter,
+            organisationDetails: organisationDetails,
+          )
+        }
       }
       .sheet(item: $router.additionalCostsInfo) { offer in
         AdditionalCostsBottomSheet(offer: offer)

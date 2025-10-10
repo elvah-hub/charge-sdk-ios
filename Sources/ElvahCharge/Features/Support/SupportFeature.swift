@@ -1,16 +1,14 @@
 // Copyright © elvah. All rights reserved.
 
-import Defaults
-import MessageUI
 import SwiftUI
+import UIKit
 
 @available(iOS 16.0, *)
 struct SupportFeature: View {
   @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-  @Environment(\.dismiss) private var dismiss
   @Environment(\.openURL) private var openURL
   @ObservedObject var router: SupportFeature.Router
-  @Default(.chargeSessionContext) private var chargeSessionContext
+  var organisationDetails: PaymentContext.OrganisationDetails
 
   var body: some View {
     NavigationStack {
@@ -23,7 +21,8 @@ struct SupportFeature: View {
         }
         FooterView {
           VStack(spacing: .size(.M)) {
-            if let supportMethods = chargeSessionContext?.organisationDetails.supportMethods {
+            let supportMethods = organisationDetails.supportMethods
+            if supportMethods.isEmpty == false {
               ButtonStack {
                 ForEach(supportMethods.sorted().filter(\.isPhoneOrUrl)) { supportMethod in
                   switch supportMethod {
@@ -53,7 +52,7 @@ struct SupportFeature: View {
                 }
               }
             }
-            CPOLogo(url: chargeSessionContext?.organisationDetails.logoUrl)
+            CPOLogo(url: organisationDetails.logoUrl)
           }
         }
       }
@@ -72,7 +71,7 @@ struct SupportFeature: View {
 
   @ViewBuilder private var content: some View {
     Image(.helpSupport)
-    if let companyName = chargeSessionContext?.organisationDetails.companyName {
+    if let companyName = organisationDetails.companyName {
       VStack(spacing: .size(.M)) {
         Text("Need help or want to give us feedback?", bundle: .elvahCharge)
           .typography(.title(size: .small), weight: .bold)
@@ -175,17 +174,7 @@ extension SupportFeature {
 
 @available(iOS 16.0, *)
 #Preview {
-  SupportFeature(router: .init())
+  SupportFeature(router: .init(), organisationDetails: .mock)
     .withFontRegistration()
     .preferredColorScheme(.dark)
-    .onAppear {
-      Defaults[.chargeSessionContext] = .init(
-        site: .mock,
-        signedOffer: .mockAvailable,
-        organisationDetails: .mock,
-        authentication: .mock,
-        paymentId: "",
-        startedAt: .now,
-      )
-    }
 }

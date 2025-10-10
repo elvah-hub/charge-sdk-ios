@@ -6,6 +6,7 @@ import SwiftUI
 struct AuthenticationExpiredFeature: View {
   @Environment(\.navigationRoot) private var navigationRoot
   @ObservedObject var router: Router
+  var organisationDetails: PaymentContext.OrganisationDetails
 
   var body: some View {
     VStack {
@@ -65,7 +66,10 @@ struct AuthenticationExpiredFeature: View {
       }
     }
     .sheet(isPresented: $router.showSupport) {
-      SupportFeature(router: router.supportRouter)
+      SupportFeature(
+        router: router.supportRouter,
+        organisationDetails: organisationDetails,
+      )
     }
   }
 }
@@ -91,7 +95,7 @@ extension AuthenticationExpiredFeature {
 @available(iOS 17.0, *)
 #Preview {
   @Previewable @StateObject var router = AuthenticationExpiredFeature.Router()
-  AuthenticationExpiredFeature(router: router)
+  AuthenticationExpiredFeature(router: router, organisationDetails: .mock)
     .withMockEnvironmentObjects()
     .withFontRegistration()
     .preferredColorScheme(.dark)

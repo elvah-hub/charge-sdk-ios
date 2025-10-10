@@ -46,6 +46,22 @@ struct ChargePaymentFeature: View {
           navigationRoot.dismiss()
         }
       }
+      ToolbarItem(placement: .topBarTrailing) {
+        Menu {
+          Button {
+            router.showSupport = true
+          } label: {
+            Label {
+              Text("Contact support", bundle: .elvahCharge)
+            } icon: {
+              Image(.agent)
+            }
+          }
+        } label: {
+          Image(systemName: "ellipsis")
+            .foregroundStyle(.primaryContent)
+        }
+      }
     }
     .navigationDestination(for: Router.Destination.self) { [
       chargeStartRouter = router.chargeStartRouter,
@@ -66,6 +82,12 @@ struct ChargePaymentFeature: View {
     )
     .sheet(isPresented: $router.showOfferUnavailableSheet) {
       OfferEndedBottomSheet()
+    }
+    .sheet(isPresented: $router.showSupport) {
+      SupportFeature(
+        router: router.supportRouter,
+        organisationDetails: request.paymentContext.organisationDetails,
+      )
     }
   }
 
@@ -207,8 +229,9 @@ extension ChargePaymentFeature {
     @Published var showPaymentSheet = false
     @Published var showGenericError = false
     @Published var showOfferUnavailableSheet = false
+    @Published var showSupport = false
 
-    let supportSheetRouter = SupportFeature.Router()
+    let supportRouter: SupportFeature.Router = .init()
     let chargeStartRouter = ChargeStartFeature.Router()
 
     func dismissPresentation() {
@@ -216,11 +239,12 @@ extension ChargePaymentFeature {
       showPaymentSheet = false
       showGenericError = false
       showOfferUnavailableSheet = false
+      showSupport = false
     }
 
     func reset() {
       dismissPresentation()
-      supportSheetRouter.reset()
+      supportRouter.reset()
       chargeStartRouter.reset()
     }
   }
