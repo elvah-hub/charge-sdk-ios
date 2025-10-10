@@ -43,10 +43,13 @@ package struct ChargeEntryFeature: View {
         Color.canvas.ignoresSafeArea()
         if showChargeSession {
           ChargeSessionFeature(router: router.chargeSessionRouter)
+            .transition(.scale(scale: 1.1))
         } else if let chargeRequest {
           ChargePaymentFeature(request: chargeRequest, router: router.paymentRouter)
+            .transition(.scale(scale: 1.1))
         } else {
           ChargeEntryActivityView(state: state)
+            .transition(.scale(scale: 1.1))
         }
       }
     }

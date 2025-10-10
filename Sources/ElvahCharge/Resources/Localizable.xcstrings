@@ -858,8 +858,12 @@
         }
       }
     },
+    "Evse Id:" : {
+
+    },
     "EVSE ID:" : {
       "comment" : "code_label",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

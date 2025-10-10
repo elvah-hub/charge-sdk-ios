@@ -28,6 +28,7 @@ struct ChargeOfferResolutionFeature: View {
         ChargeEntryFeature(chargeRequest: chargeRequest)
       }
     }
+    
     .task(id: signingId) {
       await signOffer()
     }
@@ -37,6 +38,7 @@ struct ChargeOfferResolutionFeature: View {
     NavigationStack {
       ActivityInfoComponent(state: .animating, title: nil, message: nil)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.canvas)
         .toolbar {
           ToolbarItem(placement: .topBarLeading) {
             CloseButton()
@@ -49,6 +51,7 @@ struct ChargeOfferResolutionFeature: View {
     NavigationStack {
       ErrorView()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.canvas)
         .toolbar {
           ToolbarItem(placement: .topBarLeading) {
             CloseButton()

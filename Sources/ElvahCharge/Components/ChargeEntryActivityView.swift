@@ -30,6 +30,8 @@ struct ChargeEntryActivityView: View {
       }
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(.canvas)
+    .scrollContentBackground(.hidden)
     .toolbar {
       ToolbarItem(placement: .topBarLeading) {
         CloseButton {
