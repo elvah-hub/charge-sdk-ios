@@ -65,7 +65,7 @@ package extension PricingSchedule {
   func chartData(
     for days: [RelativeDay] = RelativeDay.allCases,
     calendar: Calendar = .current,
-    timeZone: TimeZone = .current,
+    timeZone: TimeZone = .current
   ) -> [DailyPriceChartData] {
     days.compactMap { day in
       chartData(for: day, calendar: calendar, timeZone: timeZone)
@@ -82,7 +82,7 @@ package extension PricingSchedule {
   func chartData(
     for day: RelativeDay,
     calendar: Calendar = .current,
-    timeZone: TimeZone = .current,
+    timeZone: TimeZone = .current
   ) -> DailyPriceChartData? {
     var calendar = calendar
     calendar.timeZone = timeZone
@@ -112,9 +112,16 @@ package extension PricingSchedule {
     let endOfDay = calendar.date(byAdding: .hour, value: 24, to: startOfDay) ?? startOfDay
     let fullDay = startOfDay ... endOfDay
 
+    let basePrice = standardPrice.pricePerKWh
+
+    // Ignore slots that match the standard price since they do not represent real discounts.
+    let discountSlotsWithActualDiscount = entry.discounts.filter {
+      $0.price.pricePerKWh != basePrice
+    }
+
     // Map discounted time slots to concrete date segments, handling overnight spans
     // and clipping to the selected day.
-    let discountSegments: [DailyPriceChartData.DiscountSpan] = entry.discounts
+    let discountSegments: [DailyPriceChartData.DiscountSpan] = discountSlotsWithActualDiscount
       .compactMap { slot in
         var fromTime = slot.from
         var toTime = slot.to
@@ -142,7 +149,7 @@ package extension PricingSchedule {
         return DailyPriceChartData.DiscountSpan(
           startTime: clippedStart,
           endTime: clippedEnd,
-          price: slot.price.pricePerKWh,
+          price: slot.price.pricePerKWh
         )
       }
       .sorted(by: { $0.startTime < $1.startTime })
@@ -162,12 +169,11 @@ package extension PricingSchedule {
       nonDiscount.append(.init(startTime: cursor, endTime: fullDay.upperBound))
     }
 
-    let basePrice = standardPrice.pricePerKWh
     return DailyPriceChartData(
       day: startOfDay,
       basePrice: basePrice,
       discounts: discountSegments,
-      gaps: nonDiscount,
+      gaps: nonDiscount
     )
   }
 }
