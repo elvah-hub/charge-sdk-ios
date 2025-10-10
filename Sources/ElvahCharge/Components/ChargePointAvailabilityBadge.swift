@@ -27,7 +27,7 @@ struct ChargePointAvailabilityBadge: View {
     if availableNumberOfChargePoints > 0 {
       .onSuccess
     } else {
-      .red
+      .onError
     }
   }
 
@@ -35,7 +35,7 @@ struct ChargePointAvailabilityBadge: View {
     if availableNumberOfChargePoints > 0 {
       .success
     } else {
-      .red.opacity(0.1)
+      .error
     }
   }
 

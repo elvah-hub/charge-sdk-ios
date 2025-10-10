@@ -60,7 +60,7 @@ private struct PresentationViewModifier: ViewModifier {
   func body(content: Content) -> some View {
     content
       .fullScreenCover(item: $chargeOffer) { chargeOffer in
-        ChargeOfferResolutionFeature(chargeOffer: chargeOffer)
+        ChargeEntryFeature(chargeOffer: chargeOffer)
           .withEnvironmentObjects()
       }
   }

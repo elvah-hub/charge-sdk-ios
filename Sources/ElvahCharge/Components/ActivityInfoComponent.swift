@@ -62,7 +62,7 @@ struct ActivityInfoComponent: View {
       .trim(from: 0, to: backgroundCircleTrimEnd)
       .stroke(
         state == .error
-          ? AnyShapeStyle(.red)
+          ? AnyShapeStyle(.error)
           : AnyShapeStyle(.decorativeStroke),
         style: strokeStyle,
       )
@@ -103,7 +103,7 @@ struct ActivityInfoComponent: View {
       }
     case .error:
       image(for: "exclamationmark")
-        .foregroundStyle(.red)
+        .foregroundStyle(.error)
     case .success:
       image(for: "checkmark")
         .foregroundStyle(.onBrand)

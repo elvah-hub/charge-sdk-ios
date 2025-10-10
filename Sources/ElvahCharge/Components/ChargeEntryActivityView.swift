@@ -10,24 +10,11 @@ struct ChargeEntryActivityView: View {
 
   var body: some View {
     VStack(spacing: .size(.M)) {
-      Group {
-        if #available(iOS 17.0, *) {
-          Image(state == .loading ? .bolt : .boltSlash)
-            .contentTransition(.symbolEffect)
-            .geometryGroup()
-        } else {
-          Image(state == .loading ? .bolt : .boltSlash)
-        }
-      }
-      .font(.themed(size: 40))
-      .progressRing(state == .loading ? .indeterminate : .completed)
-      .progressRingTint(state == .loading ? .secondary : .primary)
-      if state == .missingChargeContext {
-        Text("No Charge Session", bundle: .elvahCharge)
-          .typography(.copy(size: .large), weight: .bold)
-          .fixedSize(horizontal: false, vertical: true)
-          .transition(.opacity.combined(with: .offset(y: 25)))
-      }
+      iconView
+        .font(.themed(size: 40))
+        .progressRing(progressMode)
+        .progressRingTint(progressTint)
+      messageView
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background(.canvas)
@@ -38,6 +25,68 @@ struct ChargeEntryActivityView: View {
           navigationRoot.dismiss()
         }
       }
+    }
+  }
+
+  @ViewBuilder private var iconView: some View {
+    if #available(iOS 17.0, *) {
+      Image(iconResource)
+        .contentTransition(.symbolEffect)
+        .geometryGroup()
+    } else {
+      Image(iconResource)
+    }
+  }
+
+  @ViewBuilder private var messageView: some View {
+    switch state {
+    case .loading:
+      EmptyView()
+    case .missingChargeContext:
+      Text("No Charge Session", bundle: .elvahCharge)
+        .typography(.copy(size: .large), weight: .bold)
+        .fixedSize(horizontal: false, vertical: true)
+        .transition(.opacity.combined(with: .offset(y: 25)))
+    case .error:
+      VStack(spacing: .size(.S)) {
+        Text("An error occurred", bundle: .elvahCharge)
+          .typography(.copy(size: .large), weight: .bold)
+          .fixedSize(horizontal: false, vertical: true)
+      }
+      .multilineTextAlignment(.center)
+      .transition(.opacity.combined(with: .offset(y: 25)))
+    }
+  }
+
+  private var iconResource: ImageResource {
+    switch state {
+    case .loading:
+      .bolt
+    case .missingChargeContext,
+         .error:
+      .boltSlash
+    }
+  }
+
+  private var progressMode: ProgressRing.Mode {
+    switch state {
+    case .loading:
+      .indeterminate
+    case .missingChargeContext:
+      .completed
+    case .error:
+      .failed
+    }
+  }
+
+  private var progressTint: Color? {
+    switch state {
+    case .loading:
+      .secondary
+    case .missingChargeContext:
+      .primary
+    case .error:
+      .error
     }
   }
 }
@@ -52,6 +101,7 @@ struct ChargeEntryActivityView: View {
     Picker(selection: $previewState) {
       Text(verbatim: "Loading").tag(ChargeEntryFeature.ViewState.loading)
       Text(verbatim: "Missing Charge Context").tag(ChargeEntryFeature.ViewState.missingChargeContext)
+      Text(verbatim: "Error").tag(ChargeEntryFeature.ViewState.error)
     } label: {
       Text(verbatim: "Charge Entry View State")
     }

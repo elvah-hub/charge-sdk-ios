@@ -9,7 +9,7 @@ struct ErrorView: View {
   var body: some View {
     VStack(spacing: .size(.M)) {
       Image(.boltSlash)
-        .foregroundStyle(.red)
+        .foregroundStyle(.onError)
         .font(.themed(size: 40))
         .progressRing(.failed)
       VStack(spacing: .size(.XS)) {

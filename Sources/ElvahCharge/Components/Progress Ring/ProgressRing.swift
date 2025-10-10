@@ -158,7 +158,7 @@ extension ProgressRing {
       case .completed:
         .success
       case .failed:
-        .red
+        .onError
       }
     }
 
@@ -170,7 +170,7 @@ extension ProgressRing {
       case .completed:
         .brand
       case .failed:
-        .red
+        .error
       }
     }
   }
