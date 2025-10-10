@@ -540,6 +540,7 @@
     },
     "Charge Session" : {
       "comment" : "charge_session__title",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1130,6 +1131,9 @@
           }
         }
       }
+    },
+    "Need help?" : {
+
     },
     "No charge points available" : {
 
@@ -2113,6 +2117,9 @@
           }
         }
       }
+    },
+    "We're here if you face issues during charging." : {
+
     },
     "Web Support" : {
       "comment" : "contact_support_agent_short",

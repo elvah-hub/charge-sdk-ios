@@ -15,6 +15,8 @@ extension ChargeSessionFeature {
     @Namespace private var namespace
 
     @Loadable<PaymentSummary> private var paymentSummary
+    @Process private var helpBoxDelayProcess
+    @State private var showHelpBox = false
 
     let status: SessionStatus
     let progress: Double
@@ -35,7 +37,20 @@ extension ChargeSessionFeature {
       }
       .animation(.snappy, value: status)
       .animation(.snappy, value: paymentSummary)
+      .animation(.snappy, value: showHelpBox)
       .frame(maxWidth: .infinity)
+      .onChange(of: status) { status in
+        guard [.startRequested, .stopRequested].contains(status) else {
+          showHelpBox = false
+          $helpBoxDelayProcess.reset()
+          return
+        }
+
+        $helpBoxDelayProcess.run {
+          try await Task.sleep(for: .seconds(5))
+          showHelpBox = true
+        }
+      }
     }
 
     @ViewBuilder private var content: some View {
@@ -47,7 +62,7 @@ extension ChargeSessionFeature {
             session: session,
             site: chargeSessionContext.site,
             offer: chargeSessionContext.signedOffer.offer,
-            paymentSummary: $paymentSummary,
+            paymentSummary: $paymentSummary
           )
         }
       }
@@ -130,7 +145,31 @@ extension ChargeSessionFeature {
     }
 
     @ViewBuilder private var footer: some View {
+      let supportBox = ChargeSessionSupportActionsBox(
+        onContactSupport: {
+          router.showSupport = true
+        },
+        onStopCharging: {
+          onAction(.stop)
+          navigationRoot.dismiss()
+          chargeSessionContext = nil
+        }
+      )
+
       VStack(spacing: .size(.M)) {
+        if [.startRequested, .stopRequested, .started].contains(status), showHelpBox {
+          supportBox
+        }
+
+        if case .charging = status, let chargeSessionContext, chargeSessionContext.signedOffer.price.hasAdditionalCost {
+          ChargeSessionAdditionalCostsDisclaimerBox(
+            offer: chargeSessionContext.signedOffer.offer,
+            onLearnMore: { offer in
+              router.additionalCostsInfo = offer
+            }
+          )
+        }
+
         ButtonStack {
           switch status {
           case .sessionLoading:
@@ -149,9 +188,6 @@ extension ChargeSessionFeature {
           case .started:
             EmptyView()
           case .charging:
-            if let chargeSessionContext, chargeSessionContext.signedOffer.price.hasAdditionalCost {
-              additionalCostsDisclaimerBox(offer: chargeSessionContext.signedOffer.offer)
-            }
             Button("Stop charging", bundle: .elvahCharge) {
               onAction(.stop)
             }
@@ -175,35 +211,6 @@ extension ChargeSessionFeature {
         }
       }
       .padding(.horizontal, .M)
-    }
-
-    @ViewBuilder private func additionalCostsDisclaimerBox(offer: ChargeOffer) -> some View {
-      Button {
-        router.additionalCostsInfo = offer
-      } label: {
-        CustomBox {
-          HStack(alignment: .top, spacing: .size(.XS)) {
-            Image(.monetizationOn)
-              .foregroundStyle(.primaryContent)
-              .offset(y: -4)
-              .hiddenForLargeDynamicTypeSize()
-            VStack(alignment: .leading, spacing: .size(.XXS)) {
-              Text("Additional costs apply at this charge point.")
-                .typography(.copy(size: .medium))
-                .foregroundStyle(.secondaryContent)
-                .fixedSize(horizontal: false, vertical: true)
-                .dynamicTypeSize(...(.xxxLarge))
-              Text("Learn more")
-                .typography(.copy(size: .medium), weight: .bold)
-                .underline()
-                .fixedSize(horizontal: false, vertical: true)
-                .dynamicTypeSize(...(.xxLarge))
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-          }
-        }
-      }
-      .buttonStyle(.plain)
     }
 
     @ViewBuilder private var tryAgainButton: some View {
@@ -250,7 +257,7 @@ extension ChargeSessionFeature.Content {
         status: status,
         progress: 0.5,
         attempts: 1,
-        router: .init(),
+        router: .init()
       ) { _ in }
         .frame(maxHeight: .infinity, alignment: .bottom)
       Picker(selection: $status) {
@@ -273,7 +280,7 @@ extension ChargeSessionFeature.Content {
       organisationDetails: .mock,
       authentication: .mock,
       paymentId: "",
-      startedAt: Date(),
+      startedAt: Date()
     )
   }
   .preferredColorScheme(.dark)

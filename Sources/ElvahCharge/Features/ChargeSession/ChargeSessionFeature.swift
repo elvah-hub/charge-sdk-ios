@@ -37,7 +37,7 @@ struct ChargeSessionFeature: View {
           }
         }
         ToolbarItem(placement: .principal) {
-          StyledNavigationTitle("Charge Session", bundle: .elvahCharge)
+          StyledNavigationTitle("Charge now", bundle: .elvahCharge)
         }
         ToolbarItem(placement: .topBarTrailing) {
           Menu {

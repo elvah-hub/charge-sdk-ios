@@ -25,9 +25,9 @@ struct ChargePaymentFeature: View {
     ScrollView {
       VStack(spacing: .size(.S)) {
         EvseIdBox(for: request.signedOffer)
-          .padding(.vertical, .L)
         costInformation
       }
+      .padding(.vertical, .M)
     }
     .background(.canvas)
     .scrollContentBackground(.hidden)
