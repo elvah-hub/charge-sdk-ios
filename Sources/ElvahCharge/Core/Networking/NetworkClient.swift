@@ -9,7 +9,7 @@ import Foundation
 /// A small wrapper around Get's `APIClient` that adds custom error handling and some other
 /// configuration options.
 package final class NetworkClient: Sendable {
-  private static let userAgentHeaderValue = "ios/0.4.0"
+  private static let userAgentHeaderValue = "ios/\(Version.sdk)"
   private let name: String
   private let client: APIClient
   private let delegate: Delegate
@@ -27,7 +27,7 @@ package final class NetworkClient: Sendable {
 
   @discardableResult package func send<T>(
     _ request: Request<T>,
-    configure: (@Sendable (inout URLRequest) throws -> Void)? = nil,
+    configure: (@Sendable (inout URLRequest) throws -> Void)? = nil
   ) async throws(NetworkError.Client) -> Response<T> where T: Decodable, T: Sendable {
     do {
       return try await withErrorHandling {
@@ -41,7 +41,7 @@ package final class NetworkClient: Sendable {
 
   @discardableResult package func send(
     _ request: Request<Void>,
-    configure: (@Sendable (inout URLRequest) throws -> Void)? = nil,
+    configure: (@Sendable (inout URLRequest) throws -> Void)? = nil
   ) async throws(NetworkError.Client) -> Response<Void> {
     do {
       return try await withErrorHandling {
@@ -54,7 +54,7 @@ package final class NetworkClient: Sendable {
   }
 
   private func withErrorHandling<T>(
-    in block: () async throws -> Response<T>,
+    in block: () async throws -> Response<T>
   ) async throws(NetworkError.Client) -> Response<T> {
     do {
       return try await block()
@@ -98,13 +98,14 @@ private final class Delegate: APIClientDelegate, Sendable {
   func client(_ client: APIClient, willSendRequest request: inout URLRequest) async throws {
     request.url = request.url?.properlyEncoded()
     request.setValue(userAgentHeaderValue, forHTTPHeaderField: "User-Agent")
+    request.setValue("\(Version.backend).\(Version.codename)", forHTTPHeaderField: "X-Integrate-Version")
   }
 
   func client(
     _ client: APIClient,
     shouldRetry task: URLSessionTask,
     error: any Error,
-    attempts: Int,
+    attempts: Int
   ) async throws -> Bool {
     guard case let .unacceptableStatusCode(statusCode) = error as? APIError, statusCode == 401 else {
       return false
@@ -122,7 +123,7 @@ private final class Delegate: APIClientDelegate, Sendable {
     _ client: APIClient,
     validateResponse response: HTTPURLResponse,
     data: Data,
-    task: URLSessionTask,
+    task: URLSessionTask
   ) throws {
     guard (200 ..< 400).contains(response.statusCode) else {
       do {
