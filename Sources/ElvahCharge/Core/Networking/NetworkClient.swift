@@ -97,7 +97,7 @@ private final class Delegate: APIClientDelegate, Sendable {
 
   func client(_ client: APIClient, willSendRequest request: inout URLRequest) async throws {
     request.url = request.url?.properlyEncoded()
-    request.setValue(userAgentHeaderValue, forHTTPHeaderField: "User-Agent")
+    request.setValue(userAgentHeaderValue, forHTTPHeaderField: "X-Integrate-Client")
     request.setValue("\(Version.backend).\(Version.codename)", forHTTPHeaderField: "X-Integrate-Version")
   }
 

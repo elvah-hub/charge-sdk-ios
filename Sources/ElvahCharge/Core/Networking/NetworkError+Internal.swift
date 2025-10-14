@@ -48,14 +48,15 @@ package extension NetworkError {
         return NetworkError.cannotParseServerResponse
       case let .serverErrorResponse(serverErrorResponse):
         switch serverErrorResponse.httpStatusCode {
+        case 400:
+          if let code = serverErrorResponse.code, Self.unsupportedAPIVersionErrorCodes.contains(code) {
+            Self.logUnsupportedAPIVersionResponse(serverErrorResponse, code: code)
+            return NetworkError.unsupportedAPIVersion
+          }
+          return NetworkError.unknown
         case 401,
              403:
           return NetworkError.unauthorized
-        case 410:
-          Elvah.logger.critical(
-            "Received HTTP 410 response. The Elvah Charge SDK needs an update because this API version is unsupported.",
-          )
-          return NetworkError.unsupportedAPIVersion
         default:
           return NetworkError.unexpectedServerResponse
         }
@@ -64,16 +65,28 @@ package extension NetworkError {
         case 401,
              403:
           return NetworkError.unauthorized
-        case 410:
-          Elvah.logger.critical(
-            "Received HTTP 410 response. The Elvah Charge SDK needs an update because this API version is unsupported.",
-          )
-          return NetworkError.unsupportedAPIVersion
         default:
           return NetworkError.unexpectedServerResponse
         }
       case .unknown:
         return NetworkError.unknown
+      }
+    }
+
+    private static let unsupportedAPIVersionErrorCodes: Set<String> = [
+      "api.version.invalid",
+      "api.version.too_old",
+      "api.version.too_new",
+    ]
+
+    private static func logUnsupportedAPIVersionResponse(
+      _ response: ServerErrorResponse,
+      code: String
+    ) {
+      if let message = response.message {
+        Elvah.logger.critical("Unsupported API version response (\(code)): \(message)")
+      } else {
+        Elvah.logger.critical("Unsupported API version response (\(code)) without detail message.")
       }
     }
 
@@ -134,7 +147,7 @@ package extension NetworkError {
         fieldName: String,
         value: String? = nil,
         expectedType: String? = nil,
-        context: String? = nil,
+        context: String? = nil
       ) {
         self.fieldName = fieldName
         self.value = value

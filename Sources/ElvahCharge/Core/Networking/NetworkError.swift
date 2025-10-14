@@ -39,7 +39,7 @@ public extension Elvah {
     /// Represents server-side errors (typically HTTP 5xx, such as 500 Internal Server Error).
     case server
 
-    /// Indicates that the requested API version is no longer supported (typically HTTP 410).
+    /// Indicates that the requested API version is not supported for the requested endpoint.
     case unsupportedAPIVersion
 
     // MARK: - Other
@@ -94,7 +94,7 @@ extension Elvah.NetworkError: CustomStringConvertible, LocalizedError {
     case .server:
       "Server error: a problem occurred on the server (HTTP 5xx)."
     case .unsupportedAPIVersion:
-      "Unsupported API version: the requested endpoint version is no longer available (HTTP 410)."
+      "Unsupported API version: the requested endpoint version is not supported."
     case .unknown:
       "An unknown error occurred."
     }
@@ -122,7 +122,7 @@ extension Elvah.NetworkError: CustomStringConvertible, LocalizedError {
     case .server:
       500
     case .unsupportedAPIVersion:
-      410
+      400
     default:
       nil
     }
