@@ -15,10 +15,6 @@ struct CPOLogo: View {
 
   var body: some View {
     VStack {
-      Text("Charging is provided in partnership with")
-        .typography(.copy(size: .small))
-        .foregroundStyle(.secondaryContent)
-        .dynamicTypeSize(...(.xLarge))
       if let image {
         Image(uiImage: image)
           .resizable()

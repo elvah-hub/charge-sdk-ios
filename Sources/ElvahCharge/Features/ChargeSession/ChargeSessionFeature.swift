@@ -31,32 +31,42 @@ struct ChargeSessionFeature: View {
       .navigationBarTitleDisplayMode(.inline)
       .toolbarBackground(.canvas, for: .navigationBar)
       .toolbar {
-        ToolbarItem(placement: .topBarLeading) {
-          MinimizeButton {
-            navigationRoot.dismiss()
+        if status.isStopped == false {
+          ToolbarItem(placement: .topBarLeading) {
+            MinimizeButton {
+              navigationRoot.dismiss()
+            }
           }
         }
         ToolbarItem(placement: .principal) {
           StyledNavigationTitle("Charge now", bundle: .elvahCharge)
         }
         ToolbarItem(placement: .topBarTrailing) {
-          Menu {
+          if status.isStopped {
             Button {
               router.showSupport = true
             } label: {
-              Label {
-                Text("Contact support", bundle: .elvahCharge)
-              } icon: {
-                Image(.agent)
+              Image(.agent)
+            }
+          } else {
+            Menu {
+              Button {
+                router.showSupport = true
+              } label: {
+                Label {
+                  Text("Contact support", bundle: .elvahCharge)
+                } icon: {
+                  Image(.agent)
+                }
               }
+              Button("Stop charging", systemImage: "xmark", role: .destructive) {
+                navigationRoot.dismiss()
+                chargeSessionContext = nil
+              }
+            } label: {
+              Image(systemName: "ellipsis")
+                .foregroundStyle(.primaryContent)
             }
-            Button("Stop charging", systemImage: "xmark", role: .destructive) {
-              navigationRoot.dismiss()
-              chargeSessionContext = nil
-            }
-          } label: {
-            Image(systemName: "ellipsis")
-              .foregroundStyle(.primaryContent)
           }
         }
       }
@@ -64,7 +74,7 @@ struct ChargeSessionFeature: View {
         if let organisationDetails = chargeSessionContext?.organisationDetails {
           SupportFeature(
             router: router.supportRouter,
-            organisationDetails: organisationDetails,
+            organisationDetails: organisationDetails
           )
         }
       }
@@ -101,7 +111,7 @@ struct ChargeSessionFeature: View {
       status: status,
       progress: progress,
       attempts: attempts,
-      router: router,
+      router: router
     ) { action in
       switch action {
       case .abort:
@@ -221,6 +231,15 @@ extension ChargeSessionFeature {
       }
     }
 
+    var isStopped: Bool {
+      switch self {
+      case .stopped:
+        true
+      default:
+        false
+      }
+    }
+
     var isError: Bool {
       switch self {
       case .startRejected,
@@ -251,7 +270,7 @@ extension ChargeSessionFeature {
     init(
       progressRingMode: ProgressRing.Mode,
       title: LocalizedStringKey? = nil,
-      message: LocalizedStringKey? = nil,
+      message: LocalizedStringKey? = nil
     ) {
       self.progressRingMode = progressRingMode
 
@@ -304,7 +323,7 @@ extension ChargeSessionFeature {
       organisationDetails: .mock,
       authentication: .mock,
       paymentId: "",
-      startedAt: Date(),
+      startedAt: Date()
     )
   }
   .withMockEnvironmentObjects()

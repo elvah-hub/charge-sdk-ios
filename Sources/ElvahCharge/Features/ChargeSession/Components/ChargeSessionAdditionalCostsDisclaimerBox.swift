@@ -15,7 +15,6 @@ struct ChargeSessionAdditionalCostsDisclaimerBox: View {
         HStack(alignment: .top, spacing: .size(.XS)) {
           Image(.monetizationOn)
             .foregroundStyle(.primaryContent)
-            .offset(y: -4)
             .hiddenForLargeDynamicTypeSize()
 
           VStack(alignment: .leading, spacing: .size(.XXS)) {

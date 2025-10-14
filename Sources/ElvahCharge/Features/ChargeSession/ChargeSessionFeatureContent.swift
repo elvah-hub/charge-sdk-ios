@@ -47,7 +47,7 @@ extension ChargeSessionFeature {
         }
 
         $helpBoxDelayProcess.run {
-          try await Task.sleep(for: .seconds(5))
+          try await Task.sleep(for: .seconds(30))
           showHelpBox = true
         }
       }

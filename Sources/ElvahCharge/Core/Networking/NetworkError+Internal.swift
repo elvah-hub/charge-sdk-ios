@@ -50,7 +50,6 @@ package extension NetworkError {
         switch serverErrorResponse.httpStatusCode {
         case 400:
           if let code = serverErrorResponse.code, Self.unsupportedAPIVersionErrorCodes.contains(code) {
-            Self.logUnsupportedAPIVersionResponse(serverErrorResponse, code: code)
             return NetworkError.unsupportedAPIVersion
           }
           return NetworkError.unknown
@@ -78,17 +77,6 @@ package extension NetworkError {
       "api.version.too_old",
       "api.version.too_new",
     ]
-
-    private static func logUnsupportedAPIVersionResponse(
-      _ response: ServerErrorResponse,
-      code: String
-    ) {
-      if let message = response.message {
-        Elvah.logger.critical("Unsupported API version response (\(code)): \(message)")
-      } else {
-        Elvah.logger.critical("Unsupported API version response (\(code)) without detail message.")
-      }
-    }
 
     // MARK: - Connection Error
 
