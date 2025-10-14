@@ -33,8 +33,10 @@ extension ServerErrorResponse {
       throw UnexpectedError()
     }
 
+    let httpStatusCode = Int(data.status) ?? Int(data.code ?? "") ?? -1
+
     return ServerErrorResponse(
-      httpStatusCode: Int(data.status) ?? -1,
+      httpStatusCode: httpStatusCode,
       title: data.title,
       message: data.detail,
       code: data.code,

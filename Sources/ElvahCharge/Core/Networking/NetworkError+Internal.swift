@@ -51,6 +51,8 @@ package extension NetworkError {
         case 401,
              403:
           NetworkError.unauthorized
+        case 410:
+          NetworkError.unsupportedAPIVersion
         default:
           NetworkError.unexpectedServerResponse
         }
@@ -59,6 +61,8 @@ package extension NetworkError {
         case 401,
              403:
           NetworkError.unauthorized
+        case 410:
+          NetworkError.unsupportedAPIVersion
         default:
           NetworkError.unexpectedServerResponse
         }
