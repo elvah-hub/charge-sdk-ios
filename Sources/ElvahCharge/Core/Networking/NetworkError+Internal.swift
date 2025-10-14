@@ -39,35 +39,41 @@ package extension NetworkError {
     package var externalError: NetworkError {
       switch self {
       case .connection:
-        NetworkError.connection
+        return NetworkError.connection
       case .encoding:
-        NetworkError.cannotParseClientRequest
+        return NetworkError.cannotParseClientRequest
       case .decoding:
-        NetworkError.cannotParseServerResponse
+        return NetworkError.cannotParseServerResponse
       case .parsing:
-        NetworkError.cannotParseServerResponse
+        return NetworkError.cannotParseServerResponse
       case let .serverErrorResponse(serverErrorResponse):
         switch serverErrorResponse.httpStatusCode {
         case 401,
              403:
-          NetworkError.unauthorized
+          return NetworkError.unauthorized
         case 410:
-          NetworkError.unsupportedAPIVersion
+          Elvah.logger.critical(
+            "Received HTTP 410 response. The Elvah Charge SDK needs an update because this API version is unsupported.",
+          )
+          return NetworkError.unsupportedAPIVersion
         default:
-          NetworkError.unexpectedServerResponse
+          return NetworkError.unexpectedServerResponse
         }
       case let .unacceptableStatusCode(httpStatusCode):
         switch httpStatusCode {
         case 401,
              403:
-          NetworkError.unauthorized
+          return NetworkError.unauthorized
         case 410:
-          NetworkError.unsupportedAPIVersion
+          Elvah.logger.critical(
+            "Received HTTP 410 response. The Elvah Charge SDK needs an update because this API version is unsupported.",
+          )
+          return NetworkError.unsupportedAPIVersion
         default:
-          NetworkError.unexpectedServerResponse
+          return NetworkError.unexpectedServerResponse
         }
       case .unknown:
-        NetworkError.unknown
+        return NetworkError.unknown
       }
     }
 
