@@ -42,31 +42,24 @@ struct ChargeSessionFeature: View {
           StyledNavigationTitle("Charge now", bundle: .elvahCharge)
         }
         ToolbarItem(placement: .topBarTrailing) {
-          if status.isStopped {
+          Menu {
             Button {
               router.showSupport = true
             } label: {
-              Image(.agent)
-            }
-          } else {
-            Menu {
-              Button {
-                router.showSupport = true
-              } label: {
-                Label {
-                  Text("Contact support", bundle: .elvahCharge)
-                } icon: {
-                  Image(.agent)
-                }
+              Label {
+                Text("Contact support", bundle: .elvahCharge)
+              } icon: {
+                Image(.agent)
               }
-              Button("Stop charging", systemImage: "xmark", role: .destructive) {
-                navigationRoot.dismiss()
-                chargeSessionContext = nil
-              }
-            } label: {
-              Image(systemName: "ellipsis")
-                .foregroundStyle(.primaryContent)
             }
+            // TODO: Re-enable once behavior is properly specified
+//            Button("Stop charging", systemImage: "xmark", role: .destructive) {
+//              navigationRoot.dismiss()
+//              chargeSessionContext = nil
+//            }
+          } label: {
+            Image(systemName: "ellipsis")
+              .foregroundStyle(.primaryContent)
           }
         }
       }

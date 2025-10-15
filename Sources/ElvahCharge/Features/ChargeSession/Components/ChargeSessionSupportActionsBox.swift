@@ -44,13 +44,13 @@ struct ChargeSessionSupportActionsBox: View {
           .underline()
       }
       .buttonStyle(.plain)
-
-      Button(action: onStopCharging) {
-        Text("Stop charging", bundle: .elvahCharge)
-          .typography(.copy(size: .medium), weight: .bold)
-          .underline()
-      }
-      .buttonStyle(.plain)
+      // TODO: Re-enable once behavior is properly specified
+//      Button(action: onStopCharging) {
+//        Text("Stop charging", bundle: .elvahCharge)
+//          .typography(.copy(size: .medium), weight: .bold)
+//          .underline()
+//      }
+//      .buttonStyle(.plain)
     }
     .foregroundStyle(.primaryContent)
     .dynamicTypeSize(...(.xxLarge))
