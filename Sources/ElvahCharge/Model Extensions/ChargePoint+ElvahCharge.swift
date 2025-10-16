@@ -8,13 +8,13 @@ package extension ChargePoint.Availability {
   var localizedTitle: String {
     switch self {
     case .available:
-      String("Available")
+      String(localized: "Available", bundle: .elvahCharge)
     case .unavailable:
-      String("Unavailable")
+      String(localized: "Occupied", bundle: .elvahCharge)
     case .outOfService:
-      String("Out of Service")
+      String(localized: "Out of service", bundle: .elvahCharge)
     case .unknown:
-      String("Unknown")
+      String(localized: "Unknown", bundle: .elvahCharge)
     }
   }
 

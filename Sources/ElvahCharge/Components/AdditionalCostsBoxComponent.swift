@@ -78,14 +78,17 @@ struct AdditionalCostsBoxComponent: View {
   @ViewBuilder private func blockingFeeConditions(for blockingFee: ChargePrice.BlockingFee) -> some View {
     VStack(alignment: .leading, spacing: .size(.S)) {
       if let startsAfterMinute = blockingFee.startsAfterMinute {
-        Text("Blocking fees starts after \(startsAfterMinute) min of connection", bundle: .elvahCharge)
+        Text("Starts after \(String(startsAfterMinute)) of connection.", bundle: .elvahCharge)
       }
       if let timeSlots = blockingFee.timeSlots {
         ForEach(timeSlots) { timeSlot in
-          Text(
-            "• between \(timeSlot.startsAt.localizedTimeString) and \(timeSlot.endsAt.localizedTimeString)",
-            bundle: .elvahCharge,
-          )
+          HStack(spacing: 0) {
+            Text(verbatim: "• ")
+            Text(
+              "between \(timeSlot.startsAt.localizedTimeString) and \(timeSlot.endsAt.localizedTimeString)",
+              bundle: .elvahCharge,
+            )
+          }
         }
       }
     }

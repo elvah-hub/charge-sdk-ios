@@ -179,20 +179,6 @@ package struct ChargeOfferDetailFeature: View {
     .animation(.default, value: paymentInitiation)
   }
 
-  private func formatRemainingTime(_ seconds: TimeInterval) -> String {
-    let hours = Int(seconds) / 3600
-    let minutes = (Int(seconds) % 3600) / 60
-    let secs = Int(seconds) % 60
-
-    if hours > 0 {
-      return String(localized: "\(hours)h \(minutes)m", bundle: .elvahCharge)
-    } else if minutes > 0 {
-      return String(localized: "\(minutes)m \(secs)s", bundle: .elvahCharge)
-    } else {
-      return String(localized: "\(secs)s", bundle: .elvahCharge)
-    }
-  }
-
   // MARK: - Actions
 
   /// Returns a copy of the view with the given site associated for displaying site-specific

@@ -9,7 +9,7 @@ struct AdditionalCostsBottomSheet: View {
   var offer: ChargeOffer
 
   var body: some View {
-    BottomSheetComponent(title: "Additional Costs") {
+    BottomSheetComponent(title: "Additional costs") {
       AdditionalCostsBoxComponent(offer: offer)
     } footer: {
       Button("Understood", bundle: .elvahCharge) {
