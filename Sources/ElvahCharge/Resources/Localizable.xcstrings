@@ -1228,9 +1228,6 @@
         }
       }
     },
-    "End" : {
-
-    },
     "End charge session" : {
       "comment" : "charge_session__error__end_session",
       "extractionState" : "stale",
