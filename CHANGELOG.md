@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Upcoming]
+## 0.4.0
 
 ### Additions
 - Added `LivePricingView` to present live charging prices for a specific site, including current price per kWh, power details, and a time‑based price chart. An optional primary action lets users start a charge directly from the component. Requires iOS 16 or later.
