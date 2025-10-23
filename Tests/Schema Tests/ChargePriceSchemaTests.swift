@@ -7,7 +7,7 @@ import Testing
 /// Tests for ChargePrice schema parsing functionality.
 @Suite("ChargePrice Schema Parsing Tests", .tags(.parsing))
 struct ChargePriceSchemaTests {
-  @Test("ChargePrice schema parses valid JSON correctly") 
+  @Test("ChargePrice schema parses valid JSON correctly")
   func chargePriceSchemaParses() throws {
     let json = """
     {

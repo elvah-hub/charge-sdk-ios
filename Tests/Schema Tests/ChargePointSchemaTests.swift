@@ -9,15 +9,16 @@ import Testing
 struct ChargePointSchemaTests {
   @Test(
     "ChargePoint schema parses valid power specification correctly",
-    arguments: [("AC", PowerType.ac), ("DC", PowerType.dc)]
+    arguments: [("AC", PowerType.ac), ("DC", PowerType.dc)],
   ) func chargePointValidPowerSpecification(
     powerTypeString: String,
-    powerType: PowerType
+    powerType: PowerType,
   ) throws {
     // Given: Valid charge offer schema with power specification
     let validJSON = """
     {
       "evseId": "EVB*P001*E001",
+      "availability": "AVAILABLE",
       "powerSpecification": {
         "type": "\(powerTypeString)",
         "maxPowerInKW": 150.0
@@ -53,6 +54,7 @@ struct ChargePointSchemaTests {
     let minimalJSON = """
     {
       "evseId": "EVB*P003*E001",
+      "availability": "UNAVAILABLE",
       "offer": {
         "type": "STANDARD",
         "price": {
@@ -80,6 +82,7 @@ struct ChargePointSchemaTests {
     let invalidPowerTypeJSON = """
     {
       "evseId": "EVB*P004*E001",
+      "availability": "OUT_OF_SERVICE",
       "powerSpecification": {
         "type": "INVALID_TYPE",
         "maxPowerInKW": 50.0

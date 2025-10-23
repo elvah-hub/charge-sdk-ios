@@ -1,7 +1,7 @@
 // Copyright © elvah. All rights reserved.
 
-@testable import ElvahCharge
 import CoreLocation
+@testable import ElvahCharge
 import Foundation
 import Testing
 
@@ -113,7 +113,7 @@ struct SiteSchemaTests {
   func siteValidPowerTypes() throws {
     let powerTypes = [
       ("AC", PowerType.ac),
-      ("DC", PowerType.dc)
+      ("DC", PowerType.dc),
     ]
 
     for (rawValue, expectedType) in powerTypes {
@@ -147,7 +147,7 @@ struct SiteSchemaTests {
       ([0.0, 0.0], CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)),
       ([-122.4194, 37.7749], CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)),
       ([180.0, 90.0], CLLocationCoordinate2D(latitude: 90.0, longitude: 180.0)),
-      ([-180.0, -90.0], CLLocationCoordinate2D(latitude: -90.0, longitude: -180.0))
+      ([-180.0, -90.0], CLLocationCoordinate2D(latitude: -90.0, longitude: -180.0)),
     ]
 
     for (index, (coordinates, expected)) in testCases.enumerated() {
@@ -183,14 +183,14 @@ struct SiteSchemaTests {
       // Multiple street address lines
       (["Building A", "Floor 2", "Suite 301"], ["Building A", "Floor 2", "Suite 301"]),
       // Empty array
-      ([] as [String], [] as [String])
+      ([] as [String], [] as [String]),
     ]
 
     for (index, (streetAddressInput, expected)) in testCases.enumerated() {
       // Given: Schema with specific street address format
-      let streetAddressJSON = streetAddressInput.isEmpty ? "[]" : 
+      let streetAddressJSON = streetAddressInput.isEmpty ? "[]" :
         "[\"\(streetAddressInput.joined(separator: "\", \""))\"]"
-      
+
       let jsonString = """
       {
         "id": "SITE_ADDR_\(index)",

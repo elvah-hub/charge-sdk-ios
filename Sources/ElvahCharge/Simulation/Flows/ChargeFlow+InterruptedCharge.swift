@@ -1,4 +1,4 @@
-// Copyright elvah. All rights reserved.
+// Copyright © elvah. All rights reserved.
 
 import Foundation
 
@@ -30,8 +30,8 @@ public extension ChargeSimulator.RequestHandlers {
           }
         case .charging:
           // Simulate unexpected interruption after 8 seconds of charging
-          if context.secondsSinceLastStatusChange > 8
-							&& context.currentRequest != .stopRequested {
+          if context.secondsSinceLastStatusChange > 8,
+             context.currentRequest != .stopRequested {
             return .stopped
           }
           if context.currentRequest == .stopRequested {
@@ -52,7 +52,7 @@ public extension ChargeSimulator.RequestHandlers {
         }
 
         return nil
-      }
+      },
     )
   }
 }

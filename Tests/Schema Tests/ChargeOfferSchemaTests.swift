@@ -13,6 +13,7 @@ struct ChargeOfferSchemaTests {
     let validJSON = """
     {
       "evseId": "EVB*P001*E001",
+      "availability": "AVAILABLE",
       "powerSpecification": {
         "type": "DC",
         "maxPowerInKW": 150.0
@@ -41,6 +42,7 @@ struct ChargeOfferSchemaTests {
 
     // Then: Values are correctly parsed
     #expect(chargeOffer.evseId == "EVB*P001*E001")
+    #expect(chargeOffer.chargePoint.availability == .available)
     #expect(chargeOffer.chargePoint.evseId == "EVB*P001*E001")
     #expect(chargeOffer.price.pricePerKWh.amount == 0.35)
     #expect(chargeOffer.price.pricePerKWh.identifier == "EUR")
@@ -59,6 +61,7 @@ struct ChargeOfferSchemaTests {
     let validJSON = """
     {
       "evseId": "EVB*P002*E001",
+      "availability": "AVAILABLE",
       "powerSpecification": {
         "type": "AC",
         "maxPowerInKW": 22.0
@@ -106,6 +109,7 @@ struct ChargeOfferSchemaTests {
     let minimalJSON = """
     {
       "evseId": "EVB*P003*E001",
+      "availability": "AVAILABLE",
       "offer": {
         "type": "STANDARD",
         "price": {
@@ -141,6 +145,7 @@ struct ChargeOfferSchemaTests {
     let invalidTypeJSON = """
     {
       "evseId": "EVB*P004*E001",
+      "availability": "AVAILABLE",
       "offer": {
         "type": "INVALID_TYPE",
         "price": {
@@ -159,7 +164,7 @@ struct ChargeOfferSchemaTests {
     try SchemaTestHelpers.expectParsingError(
       ChargeOffer.parse(schema, in: mockSite),
       expectedKeyPath: \ChargeOfferSchema.offer.type,
-      in: schema
+      in: schema,
     )
   }
 
@@ -169,6 +174,7 @@ struct ChargeOfferSchemaTests {
     let complexPricingJSON = """
     {
       "evseId": "EVB*P009*E001",
+      "availability": "AVAILABLE",
       "powerSpecification": {
         "type": "DC",
         "maxPowerInKW": 350.0

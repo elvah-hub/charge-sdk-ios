@@ -114,88 +114,87 @@ import SwiftUI
 /// }
 /// ```
 public struct ChargeBanner: View {
-	@StateObject private var router = ChargeBanner.Router()
-	private var variant = ChargeBannerVariant.large
-	private var source: ChargeBannerSource.Binding
-	private var action: ChargeBannerActionResolution
+  @StateObject private var router = ChargeBanner.Router()
+  private var variant = ChargeBannerVariant.large
+  private var source: ChargeBannerSource.Binding
+  private var action: ChargeBannerActionResolution
 
-	/// Initializes the ``ChargeBanner`` view.
-	/// - Parameter source: The source that drives the charge offer loading for the view.
-	public init(source: ChargeBannerSource.Binding) {
-		self.source = source
-		action = .automatic
-	}
+  /// Initializes the ``ChargeBanner`` view.
+  /// - Parameter source: The source that drives the charge offer loading for the view.
+  public init(source: ChargeBannerSource.Binding) {
+    self.source = source
+    action = .automatic
+  }
 
-	/// Initializes the ``ChargeBanner`` view.
-	/// - Parameter source: The source that drives the charge offer loading for the view.
-	/// - Parameter action: A closure that is called when the primary action of the view is tapped.
-	/// You can use this to perform your own logic before triggering a presentation.
-	public init(
-		source: ChargeBannerSource.Binding,
-		action: @MainActor @escaping (_ destination: ChargeBannerActionDestination) -> Void
-	) {
-		self.source = source
-		self.action = .custom(action)
-	}
+  /// Initializes the ``ChargeBanner`` view.
+  /// - Parameter source: The source that drives the charge offer loading for the view.
+  /// - Parameter action: A closure that is called when the primary action of the view is tapped.
+  /// You can use this to perform your own logic before triggering a presentation.
+  public init(
+    source: ChargeBannerSource.Binding,
+    action: @MainActor @escaping (_ destination: ChargeBannerActionDestination) -> Void,
+  ) {
+    self.source = source
+    self.action = .custom(action)
+  }
 
-	public var body: some View {
-		if #available(iOS 16.0, *) {
-			ChargeBannerComponent(source: source, variant: variant) { destination in
-				switch (action, destination) {
-				case let (.automatic, .chargeSitePresentation(chargeSite)):
-					router.chargeSiteDetail = chargeSite
-				case (.automatic, .chargeSessionPresentation):
-					router.showChargeSession = true
-				case let (.custom(handler), _):
-					handler(destination)
-				}
-			}
-			.fullScreenCover(item: $router.chargeSiteDetail) { chargeSite in
-				ChargeOfferDetailRootFeature(site: chargeSite.site, offers: chargeSite.offers)
-			}
-			.fullScreenCover(isPresented: $router.showChargeSession) {
-				ChargeEntryFeature()
-			}
-			.withEnvironmentObjects()
-		} else {
-			EmptyView()
-		}
-	}
+  public var body: some View {
+    if #available(iOS 16.0, *) {
+      ChargeBannerComponent(source: source, variant: variant) { destination in
+        switch (action, destination) {
+        case let (.automatic, .chargeSitePresentation(chargeSite)):
+          router.chargeSiteDetail = chargeSite
+        case (.automatic, .chargeSessionPresentation):
+          router.showChargeSession = true
+        case let (.custom(handler), _):
+          handler(destination)
+        }
+      }
+      .fullScreenCover(item: $router.chargeSiteDetail) { chargeSite in
+        ChargeOfferDetailRootFeature(site: chargeSite.site, offers: chargeSite.offers)
+      }
+      .fullScreenCover(isPresented: $router.showChargeSession) {
+        ChargeEntryFeature()
+      }
+      .withEnvironmentObjects()
+    } else {
+      EmptyView()
+    }
+  }
 
-	// MARK: - View Modifier
+  // MARK: - View Modifier
 
-	/// Returns a ``ChargeBanner`` with the configured variant.
-	/// - Parameter variant: The variant to use.
-	/// - Returns: A ``ChargeBanner`` with the configured variant.
-	public func variant(_ variant: ChargeBannerVariant) -> ChargeBanner {
-		var copy = self
-		copy.variant = variant
-		return copy
-	}
+  /// Returns a ``ChargeBanner`` with the configured variant.
+  /// - Parameter variant: The variant to use.
+  /// - Returns: A ``ChargeBanner`` with the configured variant.
+  public func variant(_ variant: ChargeBannerVariant) -> ChargeBanner {
+    var copy = self
+    copy.variant = variant
+    return copy
+  }
 }
 
 package extension ChargeBanner {
-	@MainActor
-	final class Router: BaseRouter {
-		@Published var chargeSiteDetail: ChargeSite?
-		@Published var showChargeSession = false
+  final class Router: BaseRouter {
+    @Published var chargeSiteDetail: ChargeSite?
+    @Published var showChargeSession = false
 
-		package func reset() {
-			chargeSiteDetail = nil
-			showChargeSession = false
-		}
-	}
+    package func reset() {
+      chargeSiteDetail = nil
+      showChargeSession = false
+    }
+  }
 }
 
 @available(iOS 17.0, *)
 #Preview {
-	@Previewable @ChargeBannerSource var chargeBannerSource = .direct(.mock)
-	ZStack {
-		if let $chargeBannerSource {
-			ChargeBanner(source: $chargeBannerSource)
-				.padding()
-		}
-	}
-	.withFontRegistration()
-	.preferredColorScheme(.dark)
+  @Previewable @ChargeBannerSource var chargeBannerSource = .direct(.mock)
+  ZStack {
+    if let $chargeBannerSource {
+      ChargeBanner(source: $chargeBannerSource)
+        .padding()
+    }
+  }
+  .withFontRegistration()
+  .preferredColorScheme(.dark)
 }

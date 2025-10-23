@@ -24,6 +24,7 @@ struct ChargeSiteSchemaTests {
       "evses": [
         {
           "evseId": "EVB*P001*E001",
+          "availability": "AVAILABLE",
           "powerSpecification": {
             "type": "DC",
             "maxPowerInKW": 150.0
@@ -65,6 +66,7 @@ struct ChargeSiteSchemaTests {
     let offer = try #require(chargeSite.offers.first)
     #expect(offer.evseId == "EVB*P001*E001")
     #expect(offer.price.pricePerKWh.amount == 0.35)
+    #expect(offer.chargePoint.physicalReference == nil)
   }
 
   @Test("ChargeSite schema handles empty charge offers correctly")
@@ -111,6 +113,7 @@ struct ChargeSiteSchemaTests {
       "evses": [
         {
           "evseId": "EVB*P003*E001",
+          "availability": "AVAILABLE",
           "powerSpecification": {
             "type": "DC",
             "maxPowerInKW": 50.0
@@ -127,6 +130,7 @@ struct ChargeSiteSchemaTests {
         },
         {
           "evseId": "EVB*P003*E002",
+          "availability": "UNAVAILABLE",
           "powerSpecification": {
             "type": "DC",
             "maxPowerInKW": 150.0
@@ -158,8 +162,10 @@ struct ChargeSiteSchemaTests {
 
     #expect(firstOffer.evseId == "EVB*P003*E001")
     #expect(firstOffer.price.pricePerKWh.amount == 0.40)
+    #expect(firstOffer.chargePoint.physicalReference == "1")
     #expect(secondOffer.evseId == "EVB*P003*E002")
     #expect(secondOffer.price.pricePerKWh.amount == 0.45)
+    #expect(secondOffer.chargePoint.physicalReference == "2")
   }
 
   @Test("ChargeSite schema throws parsing error for invalid site data")
@@ -180,7 +186,7 @@ struct ChargeSiteSchemaTests {
 
     // When: Parsing the schema should fail due to location array having only one element
     let schema = try SchemaTestHelpers.decodeSchema(invalidLocationJSON, as: SiteOfferSchema.self)
-    
+
     // Then: Should throw parsing error (ChargeSite wraps all parsing errors as "site" field)
     #expect(throws: NetworkError.Client.self) {
       try ChargeSite.parse(schema)
@@ -202,6 +208,7 @@ struct ChargeSiteSchemaTests {
       "evses": [
         {
           "evseId": "",
+          "availability": "OUT_OF_SERVICE",
           "powerSpecification": {
             "type": "INVALID_TYPE",
             "maxPowerInKW": -50.0

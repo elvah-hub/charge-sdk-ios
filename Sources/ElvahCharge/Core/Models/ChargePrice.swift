@@ -4,104 +4,172 @@ import SwiftUI
 
 /// The pricing information associated with a ``ChargeOffer``.
 public struct ChargePrice: Hashable, Sendable, Codable {
-	/// The cost per kilowatt-hour of energy consumed.
-	public var pricePerKWh: Currency
+  /// The cost per kilowatt-hour of energy consumed.
+  public var pricePerKWh: Currency
 
-	/// An optional base fee charged at the start of the charging session.
-	public var baseFee: Currency?
+  /// An optional base fee charged at the start of the charging session.
+  public var baseFee: Currency?
 
-	/// An optional fee structure for occupying the charging point beyond the charging period.
-	public var blockingFee: BlockingFee?
+  /// An optional fee structure for occupying the charging point beyond the charging period.
+  public var blockingFee: BlockingFee?
 
-	package init(
-		pricePerKWh: Currency,
-		baseFee: Currency? = nil,
-		blockingFee: BlockingFee? = nil
-	) {
-		self.pricePerKWh = pricePerKWh
-		self.baseFee = baseFee
-		self.blockingFee = blockingFee
-	}
+  package init(
+    pricePerKWh: Currency,
+    baseFee: Currency? = nil,
+    blockingFee: BlockingFee? = nil,
+  ) {
+    self.pricePerKWh = pricePerKWh
+    self.baseFee = baseFee
+    self.blockingFee = blockingFee
+  }
+
+  public var hasAdditionalCost: Bool {
+    baseFee != nil || blockingFee != nil
+  }
 }
 
 public extension ChargePrice {
-	/// The fee structure for blocking a charging point after charging is complete.
-	struct BlockingFee: Hashable, Sendable, Codable {
-		/// The cost per minute for blocking the charging point.
-		public var pricePerMinute: Currency
+  /// The fee structure for blocking a charging point after charging is complete.
+  struct BlockingFee: Hashable, Sendable, Codable {
+    /// The cost per minute for blocking the charging point.
+    public var pricePerMinute: Currency
 
-		/// The grace period in minutes before blocking fees begin to apply.
-		public var startsAfterMinute: Int?
+    /// The grace period in minutes before blocking fees begin to apply.
+    public var startsAfterMinute: Int?
 
-		package init(of pricePerMinute: Currency, startingAfter startsAfterMinute: Int? = nil) {
-			self.pricePerMinute = pricePerMinute
-			self.startsAfterMinute = startsAfterMinute
-		}
-	}
+    /// The maximum blocking fee amount that can be charged.
+    public var maxAmount: Currency?
+
+    /// Specific time periods when blocking fees apply.
+    public var timeSlots: [TimeSlot]?
+
+    package init(
+      of pricePerMinute: Currency,
+      startingAfter startsAfterMinute: Int? = nil,
+      maxAmount: Currency? = nil,
+      timeSlots: [TimeSlot]? = nil,
+    ) {
+      self.pricePerMinute = pricePerMinute
+      self.startsAfterMinute = startsAfterMinute
+      self.maxAmount = maxAmount
+      self.timeSlots = timeSlots
+    }
+
+    /// A time period during which blocking fees are active.
+    ///
+    /// - Note: The times are in the timezone of the site.
+    public struct TimeSlot: Identifiable, Hashable, Codable, Sendable {
+      public var id: String {
+        startsAt.localizedTimeString + "-" + endsAt.localizedTimeString
+      }
+
+      /// The start time of the blocking fee period.
+      public var startsAt: Time
+      /// The end time of the blocking fee period.
+      public var endsAt: Time
+
+      package init(startsAt: Time, endsAt: Time) {
+        self.startsAt = startsAt
+        self.endsAt = endsAt
+      }
+
+      /// Creates a time slot from string representations of start and end times.
+      package init?(startsAt: String?, endsAt: String?) {
+        guard let startsAt, let startTime = Time(timeString: startsAt),
+              let endsAt, let endTime = Time(timeString: endsAt) else {
+          return nil
+        }
+
+        self.startsAt = startTime
+        self.endsAt = endTime
+      }
+    }
+  }
 }
 
 package extension ChargePrice {
-	static var mock: ChargePrice {
-		ChargePrice(
-			pricePerKWh: Currency(0.42),
-			baseFee: Currency(1.42),
-			blockingFee: ChargePrice.BlockingFee(of: Currency(0.42), startingAfter: 10)
-		)
-	}
+  static var mock: ChargePrice {
+    ChargePrice(
+      pricePerKWh: Currency(0.42),
+      baseFee: Currency(1.42),
+      blockingFee: ChargePrice.BlockingFee(
+        of: Currency(0.42),
+        startingAfter: 10,
+        maxAmount: 12.0,
+        timeSlots: [
+          .init(startsAt: Time(hour: 8, minute: 0)!, endsAt: Time(hour: 12, minute: 0)!),
+        ],
+      ),
+    )
+  }
 
-	static var mock2: ChargePrice {
-		ChargePrice(
-			pricePerKWh: Currency(0.53),
-			baseFee: Currency(1.12),
-			blockingFee: ChargePrice.BlockingFee(of: Currency(0.62), startingAfter: 0)
-		)
-	}
+  static var mock2: ChargePrice {
+    ChargePrice(
+      pricePerKWh: Currency(0.53),
+      baseFee: Currency(1.12),
+      blockingFee: ChargePrice.BlockingFee(
+        of: Currency(0.62),
+        startingAfter: 0,
+        maxAmount: 6.0,
+        timeSlots: [
+          .init(startsAt: Time(hour: 18, minute: 0)!, endsAt: Time(hour: 21, minute: 0)!),
+        ],
+      ),
+    )
+  }
 
-	static var mock3: ChargePrice {
-		ChargePrice(
-			pricePerKWh: Currency(0.71),
-			baseFee: Currency(1.62),
-			blockingFee: ChargePrice.BlockingFee(of: Currency(0.12), startingAfter: 20)
-		)
-	}
+  static var mock3: ChargePrice {
+    ChargePrice(
+      pricePerKWh: Currency(0.71),
+      baseFee: Currency(1.62),
+      blockingFee: ChargePrice.BlockingFee(
+        of: Currency(0.12),
+        startingAfter: 20,
+        maxAmount: 42.0,
+        timeSlots: [
+          .init(startsAt: Time(hour: 14, minute: 30)!, endsAt: Time(hour: 18, minute: 30)!),
+        ],
+      ),
+    )
+  }
 
-	/// Creates a randomized charge price around a base price with optional variation.
-	/// - Parameters:
-	///   - basePrice: The base price per kWh in EUR
-	///   - variation: The maximum variation from the base price (default: 0.10)
-	/// - Returns: A charge price with randomized values
-	static func randomizedPrice(
-		around basePrice: Double = 0.59,
-		variation: Double = 0.10
-	) -> ChargePrice {
-		let priceVariation = Double.random(in: -variation ... variation)
-		let finalPrice = max(0.20, basePrice + priceVariation) // Ensure minimum reasonable price
+  /// Creates a randomized charge price around a base price with optional variation.
+  /// - Parameters:
+  ///   - basePrice: The base price per kWh in EUR
+  ///   - variation: The maximum variation from the base price (default: 0.10)
+  /// - Returns: A charge price with randomized values
+  static func randomizedPrice(
+    around basePrice: Double = 0.59,
+    variation: Double = 0.10,
+  ) -> ChargePrice {
+    let priceVariation = Double.random(in: -variation ... variation)
+    let finalPrice = max(0.20, basePrice + priceVariation) // Ensure minimum reasonable price
 
-		let baseFees = [nil, Currency(0.50), Currency(1.00), Currency(1.50), Currency(2.00)]
-		let randomBaseFee = baseFees.randomElement()!
+    let baseFees = [nil, Currency(0.50), Currency(1.00), Currency(1.50), Currency(2.00)]
+    let randomBaseFee = baseFees.randomElement()!
 
-		let blockingFeePrice = Currency(Double.random(in: 0.10 ... 0.80))
-		let gracePeriod = [0, 5, 10, 15, 30].randomElement()!
-		let blockingFee = ChargePrice.BlockingFee(of: blockingFeePrice, startingAfter: gracePeriod)
+    let blockingFeePrice = Currency(Double.random(in: 0.10 ... 0.80))
+    let gracePeriod = [0, 5, 10, 15, 30].randomElement()!
+    let blockingFee = ChargePrice.BlockingFee(of: blockingFeePrice, startingAfter: gracePeriod)
 
-		return ChargePrice(
-			pricePerKWh: Currency(finalPrice),
-			baseFee: randomBaseFee,
-			blockingFee: Bool.random() ? blockingFee : nil
-		)
-	}
+    return ChargePrice(
+      pricePerKWh: Currency(finalPrice),
+      baseFee: randomBaseFee,
+      blockingFee: Bool.random() ? blockingFee : nil,
+    )
+  }
 
-	/// Creates a campaign price that's discounted from a base price.
-	/// - Parameter basePrice: The original base price to discount from
-	/// - Returns: A discounted ChargePrice for campaign offers
-	static func campaignPrice(from basePrice: ChargePrice) -> ChargePrice {
-		let discountPercentage = Double.random(in: 0.10 ... 0.30) // 10-30% discount
-		let discountedPrice = basePrice.pricePerKWh.amount * (1 - discountPercentage)
+  /// Creates a campaign price that's discounted from a base price.
+  /// - Parameter basePrice: The original base price to discount from
+  /// - Returns: A discounted ChargePrice for campaign offers
+  static func campaignPrice(from basePrice: ChargePrice) -> ChargePrice {
+    let discountPercentage = Double.random(in: 0.10 ... 0.30) // 10-30% discount
+    let discountedPrice = basePrice.pricePerKWh.amount * (1 - discountPercentage)
 
-		return ChargePrice(
-			pricePerKWh: Currency(discountedPrice),
-			baseFee: basePrice.baseFee,
-			blockingFee: basePrice.blockingFee
-		)
-	}
+    return ChargePrice(
+      pricePerKWh: Currency(discountedPrice),
+      baseFee: basePrice.baseFee,
+      blockingFee: basePrice.blockingFee,
+    )
+  }
 }

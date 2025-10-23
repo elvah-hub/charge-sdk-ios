@@ -13,6 +13,7 @@ struct SignedChargeOfferSchemaTests {
     let validJSON = """
     {
       "evseId": "EVB*P001*E001",
+      "availability": "AVAILABLE",
       "powerSpecification": {
         "type": "DC",
         "maxPowerInKW": 150.0
@@ -56,6 +57,7 @@ struct SignedChargeOfferSchemaTests {
     let validJSON = """
     {
       "evseId": "EVB*P002*E001",
+      "availability": "AVAILABLE",
       "powerSpecification": {
         "type": "AC",
         "maxPowerInKW": 22.0
@@ -101,6 +103,7 @@ struct SignedChargeOfferSchemaTests {
     let invalidJSON = """
     {
       "evseId": "EVB*P003*E001",
+      "availability": "AVAILABLE",
       "offer": {
         "type": "STANDARD",
         "price": {
@@ -119,7 +122,7 @@ struct SignedChargeOfferSchemaTests {
     try SchemaTestHelpers.expectParsingError(
       SignedChargeOffer.parse(schema, in: mockSite),
       expectedKeyPath: \ChargeOfferSchema.offer.signedOffer,
-      in: schema
+      in: schema,
     )
   }
 
@@ -140,6 +143,7 @@ struct SignedChargeOfferSchemaTests {
       "evses": [
         {
           "evseId": "EVB*P006*E001",
+          "availability": "AVAILABLE",
           "powerSpecification": {
             "type": "DC",
             "maxPowerInKW": 350.0
@@ -157,6 +161,7 @@ struct SignedChargeOfferSchemaTests {
         },
         {
           "evseId": "EVB*P006*E002",
+          "availability": "UNAVAILABLE",
           "offer": {
             "type": "STANDARD",
             "price": {

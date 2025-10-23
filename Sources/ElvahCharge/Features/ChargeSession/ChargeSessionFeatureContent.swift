@@ -3,196 +3,287 @@
 import SwiftUI
 
 #if canImport(Defaults)
-	import Defaults
+  import Defaults
 #endif
 
 @available(iOS 16.0, *)
 extension ChargeSessionFeature {
-	struct Content: View {
-		@Default(.chargeSessionContext) private var chargeSessionContext
-		@Environment(\.navigationRoot) private var navigationRoot
-		@Namespace private var namespace
+  struct Content: View {
+    @Default(.chargeSessionContext) private var chargeSessionContext
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.navigationRoot) private var navigationRoot
+    @Namespace private var namespace
 
-		let status: Status
-		let progress: Double
-		let attempts: Int
-		@ObservedObject var router: Router
-		let onAction: (_ action: Action) -> Void
+    @Loadable<PaymentSummary> private var paymentSummary
+    @Process private var helpBoxDelayProcess
+    @State private var showHelpBox = false
 
-		var body: some View {
-			VStack {
-				if case let .stopped(session) = status, let chargeSessionContext {
-					ChargeSessionStoppedComponent(
-						session: session,
-						site: chargeSessionContext.site,
-						offer: chargeSessionContext.signedOffer.offer
-					)
-				} else {
-					VStack(spacing: Size.XL.size) {
-						header
-						page
-					}
-					.frame(maxHeight: .infinity)
-				}
-				footer
-			}
-		}
+    let status: SessionStatus
+    let progress: Double
+    let attempts: Int
+    @ObservedObject var router: Router
+    let onAction: (_ action: Action) -> Void
 
-		@ViewBuilder private var header: some View {
-			CPOLogo(url: chargeSessionContext?.organisationDetails.logoUrl)
-		}
+    var body: some View {
+      VStack(spacing: .size(.M)) {
+        if dynamicTypeSize.isAccessibilitySize {
+          ScrollView {
+            content
+          }
+        } else {
+          content
+        }
+        footer
+      }
+      .animation(.snappy, value: status)
+      .animation(.snappy, value: paymentSummary)
+      .animation(.snappy, value: showHelpBox)
+      .frame(maxWidth: .infinity)
+      .onChange(of: status) { status in
+        guard [.startRequested, .stopRequested].contains(status) else {
+          showHelpBox = false
+          $helpBoxDelayProcess.reset()
+          return
+        }
 
-		@ViewBuilder private var page: some View {
-			if case .stopped = status {} else {
-				activityIndicator
-			}
+        $helpBoxDelayProcess.run {
+          try await Task.sleep(for: .seconds(30))
+          showHelpBox = true
+        }
+      }
+    }
 
-			Group {
-				switch status {
-				case let .charging(session: session):
-					ChargeSessionMetricsComponent(status: status, session: session)
-				default:
-					EmptyView()
-				}
-			}
-			.foregroundStyle(.primaryContent)
-			.transition(.opacity)
-		}
+    @ViewBuilder private var content: some View {
+      VStack(spacing: .size(.M)) {
+        activityIndicator
+          .frame(maxHeight: .infinity)
+        if case let .stopped(session) = status, let chargeSessionContext {
+          ChargeSessionStoppedComponent(
+            session: session,
+            site: chargeSessionContext.site,
+            offer: chargeSessionContext.signedOffer.offer,
+            paymentSummary: $paymentSummary
+          )
+        }
+      }
+    }
 
-		@ViewBuilder private var footer: some View {
-			VStack(spacing: Size.L.size) {
-				if showProgressBar {
-					progressBar
-				}
+    @ViewBuilder private var activityIndicator: some View {
+      if let contentState = status.contentState {
+        VStack(spacing: .size(.L)) {
+          VStack(spacing: .size(.XS)) {
+            let iconSize = status.isCharging && status.hasConsumption ? 20.0 : 35
 
-				ButtonStack {
-					switch status {
-					case .sessionLoading:
-						EmptyView()
-					case .unauthorized:
-						tryAgainButton
-						EmptyView()
-					case .unknownError:
-						tryAgainButton
-						EmptyView()
-					case .startRequested:
-						EmptyView()
-					case .startRejected:
-						tryAgainButton
-						EmptyView()
-					case .started:
-						EmptyView()
-					case .charging:
-						Button("Stop charging", bundle: .elvahCharge) {
-							onAction(.stop)
-						}
-						.buttonStyle(.primary)
-					case .stopRequested:
-						EmptyView()
-					case .stopRejected:
-						tryAgainButton
-						EmptyView()
-					case .stopped:
-						Button("Done", bundle: .elvahCharge) {
-							navigationRoot.dismiss()
-							chargeSessionContext = nil
-						}
-						.buttonStyle(.primary)
-					}
+            icon(for: status)
+              .frame(width: iconSize, height: iconSize)
+              .transition(.opacity.combined(with: .scale))
+              .foregroundStyle(status.isError ? .red : .brand)
 
-					if case .stopped = status {} else {
-						supportButton
-					}
-				}
-			}
-			.padding(.M)
-			.animation(.default, value: status)
-		}
+            if case let .charging(session) = status {
+              ChargeSessionMetricsComponent(status: status, session: session)
+                .transition(.opacity.combined(with: .scale))
+            }
+          }
+          .progressRing(contentState.progressRingMode)
 
-		@ViewBuilder private var tryAgainButton: some View {
-			Button("Try again", bundle: .elvahCharge) {
-				onAction(.resetSessionObservation)
-			}
-			.buttonStyle(.primary)
-		}
+          VStack(spacing: .size(.S)) {
+            if let title = contentState.title {
+              ViewThatFits(in: .vertical) {
+                title.typography(.title(size: .medium), weight: .bold)
+                title.typography(.copy(size: .medium), weight: .bold)
+              }
+              .foregroundStyle(.primaryContent)
+              .frame(maxWidth: .infinity)
+              .contentTransition(.interpolate)
+              .transition(.opacity.combined(with: .offset(y: 40)).combined(with: .scale(scale: 1.2)))
+            }
 
-		@ViewBuilder private var supportButton: some View {
-			Button("Support", bundle: .elvahCharge) {
-				router.showSupport = true
-			}
-			.buttonStyle(.textPrimary)
-			.matchedGeometryEffect(id: 0, in: namespace)
-			.transition(.scale(scale: 1)) // Prevents fade animation
-		}
+            if let message = contentState.message {
+              ViewThatFits(in: .vertical) {
+                message.typography(.copy(size: .medium))
+                message.typography(.copy(size: .small))
+              }
+              .foregroundStyle(.secondaryContent)
+              .frame(maxWidth: .infinity)
+              .contentTransition(.interpolate)
+              .transition(.opacity.combined(with: .offset(y: 40)).combined(with: .scale(scale: 1.2)))
+            }
+          }
+          .frame(maxWidth: 300)
+        }
+        .transformEffect(.identity)
+        .padding(.M)
+        .multilineTextAlignment(.center)
+      }
+    }
 
-		@ViewBuilder private var activityIndicator: some View {
-			switch status {
-			case .sessionLoading,
-			     .unauthorized,
-			     .unknownError,
-					 .startRequested,
-					 .startRejected,
-			     .started,
-			     .stopRequested,
-			     .stopRejected,
-			     .stopped:
-				if let data = status.activityInfoData {
-					ActivityInfoComponent(state: data.state, title: data.title, message: data.message)
-						.padding(.horizontal)
-						.animation(.bouncy(extraBounce: 0.2), value: status)
-						.alignmentGuide(VerticalAlignment.top) { dimension in
-							-50
-						}
-				}
-			case .charging:
-				EmptyView()
-			}
-		}
+    @ViewBuilder private func icon(for contentState: ChargeSessionFeature.SessionStatus) -> some View {
+      switch contentState {
+      case .started,
+           .stopped:
+        Image(.checkmark)
+          .resizable()
+          .aspectRatio(contentMode: .fit)
+      case .charging,
+           .sessionLoading,
+           .startRequested:
+        Image(.bolt)
+          .resizable()
+          .aspectRatio(contentMode: .fit)
+      case .stopRequested,
+           .startRejected,
+           .stopRejected,
+           .unknownError:
+        Image(.boltSlash)
+          .resizable()
+          .aspectRatio(contentMode: .fit)
+      case .unauthorized:
+        Image(systemName: "lock.fill")
+          .resizable()
+          .aspectRatio(contentMode: .fit)
+      }
+    }
 
-		@ViewBuilder private var progressBar: some View {
-			ProgressView(value: progress, total: 1)
-				.progressViewStyle(.charge)
-				.padding(.horizontal, .XL)
-		}
+    @ViewBuilder private var footer: some View {
+      let supportBox = ChargeSessionSupportActionsBox(
+        onContactSupport: {
+          router.showSupport = true
+        },
+        onStopCharging: {
+          onAction(.stop)
+          navigationRoot.dismiss()
+          chargeSessionContext = nil
+        }
+      )
 
-		// MARK: - Helpers
+      VStack(spacing: .size(.M)) {
+        if [.startRequested, .stopRequested, .started].contains(status), showHelpBox {
+          supportBox
+        }
 
-		private var showProgressBar: Bool {
-			switch status {
-			case .startRequested:
-				return true
-			case .started:
-				return true
-			case .charging:
-				return false
-			default:
-				return false
-			}
-		}
-	}
+        if case .charging = status, let chargeSessionContext, chargeSessionContext.signedOffer.price.hasAdditionalCost {
+          ChargeSessionAdditionalCostsDisclaimerBox(
+            offer: chargeSessionContext.signedOffer.offer,
+            onLearnMore: { offer in
+              router.additionalCostsInfo = offer
+            }
+          )
+        }
+
+        ButtonStack {
+          switch status {
+          case .sessionLoading:
+            EmptyView()
+          case .unauthorized:
+            tryAgainButton
+            EmptyView()
+          case .unknownError:
+            tryAgainButton
+            EmptyView()
+          case .startRequested:
+            EmptyView()
+          case .startRejected:
+            tryAgainButton
+            EmptyView()
+          case .started:
+            EmptyView()
+          case .charging:
+            Button("Stop charging", bundle: .elvahCharge) {
+              onAction(.stop)
+            }
+            .buttonStyle(.primary)
+          case .stopRequested:
+            EmptyView()
+          case .stopRejected:
+            tryAgainButton
+            EmptyView()
+          case .stopped:
+            Button("Done", bundle: .elvahCharge) {
+              navigationRoot.dismiss()
+              chargeSessionContext = nil
+            }
+            .buttonStyle(.primary)
+          }
+
+          VStack(spacing: .size(.XXS)) {
+            CPOLogo(url: chargeSessionContext?.organisationDetails.logoUrl)
+          }
+        }
+      }
+      .padding(.horizontal, .M)
+    }
+
+    @ViewBuilder private var tryAgainButton: some View {
+      Button("Try again", bundle: .elvahCharge) {
+        onAction(.resetSessionObservation)
+      }
+      .buttonStyle(.primary)
+    }
+
+    // MARK: - Helpers
+
+    private var showProgressBar: Bool {
+      switch status {
+      case .startRequested:
+        true
+      case .started:
+        true
+      case .charging:
+        false
+      default:
+        false
+      }
+    }
+  }
 }
 
 @available(iOS 16.0, *)
 extension ChargeSessionFeature.Content {
-	enum Action {
-		case abort
-		case restart
-		case stop
-		case resetSessionObservation
-	}
+  enum Action {
+    case abort
+    case restart
+    case stop
+    case resetSessionObservation
+  }
 }
 
-@available(iOS 16.0, *)
+@available(iOS 26.0, *)
 #Preview {
-	NavigationStack {
-		ChargeSessionFeature.Content(
-			status: .unauthorized,
-			progress: 0.5,
-			attempts: 1,
-			router: .init()
-		) { _ in }
-			.frame(maxHeight: .infinity, alignment: .bottom)
-	}
-	.preferredColorScheme(.dark)
-	.withFontRegistration()
+  @Previewable @State var status: ChargeSessionFeature.SessionStatus = .charging(session: .mock(status: .started, consumption: 10))
+
+  NavigationStack {
+    VStack {
+      ChargeSessionFeature.Content(
+        status: status,
+        progress: 0.5,
+        attempts: 1,
+        router: .init()
+      ) { _ in }
+        .frame(maxHeight: .infinity, alignment: .bottom)
+      Picker(selection: $status) {
+        Text(verbatim: "Started").tag(ChargeSessionFeature.SessionStatus.started)
+        Text(verbatim: "Charging 0 kWh")
+          .tag(ChargeSessionFeature.SessionStatus.charging(session: .mock(status: .started, consumption: 0)))
+        Text(verbatim: "Charging, 10 kWh")
+          .tag(ChargeSessionFeature.SessionStatus.charging(session: .mock(status: .started, consumption: 10)))
+        Text(verbatim: "Stopped").tag(ChargeSessionFeature.SessionStatus.stopped(session: .mock(status: .stopped)))
+        Text(verbatim: "Stop Failed").tag(ChargeSessionFeature.SessionStatus.stopRejected)
+      } label: {
+        Text(verbatim: "")
+      }
+    }
+  }
+  .onAppear {
+    Defaults[.chargeSessionContext] = ChargeSessionContext(
+      site: .mock,
+      signedOffer: .mockAvailable,
+      organisationDetails: .mock,
+      authentication: .mock,
+      paymentId: "",
+      startedAt: Date()
+    )
+  }
+  .preferredColorScheme(.dark)
+  .withFontRegistration()
+  .withMockEnvironmentObjects()
 }

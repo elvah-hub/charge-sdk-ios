@@ -4,57 +4,111 @@ import SwiftUI
 
 @available(iOS 16.0, *)
 struct ChargeEntryActivityView: View {
-	@Environment(\.navigationRoot) private var navigationRoot
+  @Environment(\.navigationRoot) private var navigationRoot
 
-	var state: ChargeEntryFeature.ViewState
+  var state: ChargeEntryFeature.ViewState
 
-	var body: some View {
-		let data = activityInfoData
-		ActivityInfoComponent(state: data.state, title: data.title, message: data.message)
-			.frame(maxWidth: .infinity, maxHeight: .infinity)
-			.toolbar {
-				ToolbarItem(placement: .topBarLeading) {
-					CloseButton {
-						navigationRoot.dismiss()
-					}
-				}
-			}
-	}
+  var body: some View {
+    VStack(spacing: .size(.M)) {
+      iconView
+        .font(.themed(size: 40))
+        .progressRing(progressMode)
+        .progressRingTint(progressTint)
+      messageView
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(.canvas)
+    .scrollContentBackground(.hidden)
+    .toolbar {
+      ToolbarItem(placement: .topBarLeading) {
+        CloseButton {
+          navigationRoot.dismiss()
+        }
+      }
+    }
+  }
 
-	// MARK: - Helpers
+  @ViewBuilder private var iconView: some View {
+    if #available(iOS 17.0, *) {
+      Image(iconResource)
+        .contentTransition(.symbolEffect)
+        .geometryGroup()
+    } else {
+      Image(iconResource)
+    }
+  }
 
-	private var activityInfoData: ActivityInfoData {
-		switch state {
-		case .loading:
-			ActivityInfoData(
-				state: .animating,
-				title: nil,
-				message: nil
-			)
-		case .missingChargeContext:
-			ActivityInfoData(
-				state: .outlined(iconSystemName: "xmark"),
-				title: nil,
-				message: nil
-			)
-		}
-	}
-}
+  @ViewBuilder private var messageView: some View {
+    switch state {
+    case .loading:
+      EmptyView()
+    case .missingChargeContext:
+      Text("No Charge Session", bundle: .elvahCharge)
+        .typography(.copy(size: .large), weight: .bold)
+        .fixedSize(horizontal: false, vertical: true)
+        .transition(.opacity.combined(with: .offset(y: 25)))
+    case .error:
+      VStack(spacing: .size(.S)) {
+        Text("An error occurred", bundle: .elvahCharge)
+          .typography(.copy(size: .large), weight: .bold)
+          .fixedSize(horizontal: false, vertical: true)
+      }
+      .multilineTextAlignment(.center)
+      .transition(.opacity.combined(with: .offset(y: 25)))
+    }
+  }
 
-// MARK: - Helpers
+  private var iconResource: ImageResource {
+    switch state {
+    case .loading:
+      .bolt
+    case .missingChargeContext,
+         .error:
+      .boltSlash
+    }
+  }
 
-@available(iOS 16.0, *)
-private extension ChargeEntryActivityView {
-	struct ActivityInfoData {
-		var state: ActivityInfoComponent.ActivityState
-		var title: LocalizedStringKey?
-		var message: LocalizedStringKey?
-	}
+  private var progressMode: ProgressRing.Mode {
+    switch state {
+    case .loading:
+      .indeterminate
+    case .missingChargeContext:
+      .completed
+    case .error:
+      .failed
+    }
+  }
+
+  private var progressTint: Color? {
+    switch state {
+    case .loading:
+      .secondary
+    case .missingChargeContext:
+      .primary
+    case .error:
+      .error
+    }
+  }
 }
 
 @available(iOS 17.0, *)
 #Preview {
-	ChargeEntryActivityView(state: .loading)
-		.preferredColorScheme(.dark)
-		.withFontRegistration()
+  @Previewable @State var previewState: ChargeEntryFeature.ViewState = .loading
+
+  VStack(spacing: 24) {
+    ChargeEntryActivityView(state: previewState)
+      .frame(height: 320)
+    Picker(selection: $previewState) {
+      Text(verbatim: "Loading").tag(ChargeEntryFeature.ViewState.loading)
+      Text(verbatim: "Missing Charge Context").tag(ChargeEntryFeature.ViewState.missingChargeContext)
+      Text(verbatim: "Error").tag(ChargeEntryFeature.ViewState.error)
+    } label: {
+      Text(verbatim: "Charge Entry View State")
+    }
+    .pickerStyle(.segmented)
+  }
+  .padding()
+  .preferredColorScheme(.dark)
+  .withFontRegistration()
+  .animation(.default, value: previewState)
 }

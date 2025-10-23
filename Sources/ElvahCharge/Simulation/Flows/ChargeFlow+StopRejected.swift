@@ -1,4 +1,4 @@
-// Copyright elvah. All rights reserved.
+// Copyright © elvah. All rights reserved.
 
 import Foundation
 
@@ -37,8 +37,8 @@ public extension ChargeSimulator.RequestHandlers {
             return .stopRejected
           }
         case .stopRejected:
-					break
-				case .stopped:
+          break
+        case .stopped:
           break
         case nil:
           if context.currentRequest == .startRequested {
@@ -47,7 +47,7 @@ public extension ChargeSimulator.RequestHandlers {
         }
 
         return nil
-      }
+      },
     )
   }
 }

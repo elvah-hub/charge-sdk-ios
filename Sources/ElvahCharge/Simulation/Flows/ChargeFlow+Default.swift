@@ -1,4 +1,4 @@
-// Copyright elvah. All rights reserved.
+// Copyright © elvah. All rights reserved.
 
 import Foundation
 
@@ -12,7 +12,7 @@ public extension ChargeSimulator.RequestHandlers {
   /// A standard charge flow that completes successfully with typical timing.
   /// - Parameter siteProvider: The site provider to use for charge sites (live, demo, or custom).
   static func `default`(siteProvider: SiteProvider) -> Self {
-		Self(
+    Self(
       siteProvider: siteProvider,
       onStartRequest: {},
       onStopRequest: { _ in },
@@ -47,7 +47,7 @@ public extension ChargeSimulator.RequestHandlers {
         }
 
         return nil
-      }
+      },
     )
   }
 }

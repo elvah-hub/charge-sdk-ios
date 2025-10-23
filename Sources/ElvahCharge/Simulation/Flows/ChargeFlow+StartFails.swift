@@ -1,3 +1,5 @@
+// Copyright © elvah. All rights reserved.
+
 // Copyright elvah. All rights reserved.
 import Foundation
 
@@ -19,7 +21,7 @@ public extension ChargeSimulator.RequestHandlers {
       onStopRequest: { _ in },
       onSessionPolling: { _ in
         nil
-      }
+      },
     )
   }
 }

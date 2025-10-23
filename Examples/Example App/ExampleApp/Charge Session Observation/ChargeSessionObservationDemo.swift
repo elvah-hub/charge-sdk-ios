@@ -1,4 +1,4 @@
-// Copyright elvah. All rights reserved.
+// Copyright © elvah. All rights reserved.
 
 import ElvahCharge
 import SwiftUI
@@ -16,7 +16,7 @@ struct ChargeSessionObservationDemo: View {
         Button("Show Charge Session") {
           showChargeSession = true
         }
-        .disabled(isChargeSessionActive == false)
+//        .disabled(isChargeSessionActive == false)
       }
     }
     .navigationTitle("Session Observation")

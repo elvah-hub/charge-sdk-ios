@@ -4,13 +4,13 @@ import SwiftUI
 
 @available(iOS 16.0, *)
 package extension PowerType {
-	var localizedTitle: String {
-		switch self {
-		case .ac:
-			return String(localized: "AC", bundle: .elvahCharge)
+  var localizedTitle: String {
+    switch self {
+    case .ac:
+      String(localized: "AC", bundle: .elvahCharge)
 
-		case .dc:
-			return String(localized: "DC", bundle: .elvahCharge)
-		}
-	}
+    case .dc:
+      String(localized: "DC", bundle: .elvahCharge)
+    }
+  }
 }

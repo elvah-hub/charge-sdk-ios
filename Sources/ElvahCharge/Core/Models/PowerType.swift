@@ -4,27 +4,27 @@ import Foundation
 
 /// A charge point's connector.
 public enum PowerType: String, Hashable, Codable, Identifiable, Sendable, Comparable {
-	/// The AC power type.
-	case ac = "AC"
-	
-	/// The DC power type.
-	case dc = "DC"
+  /// The AC power type.
+  case ac = "AC"
 
-	public var id: String {
-		rawValue
-	}
+  /// The DC power type.
+  case dc = "DC"
 
-	package var sortPriority: Int {
-		switch self {
-		case .ac:
-			return 1
+  public var id: String {
+    rawValue
+  }
 
-		case .dc:
-			return 2
-		}
-	}
+  package var sortPriority: Int {
+    switch self {
+    case .ac:
+      1
 
-	public static func < (lhs: PowerType, rhs: PowerType) -> Bool {
-		return lhs.sortPriority < rhs.sortPriority
-	}
+    case .dc:
+      2
+    }
+  }
+
+  public static func < (lhs: PowerType, rhs: PowerType) -> Bool {
+    lhs.sortPriority < rhs.sortPriority
+  }
 }

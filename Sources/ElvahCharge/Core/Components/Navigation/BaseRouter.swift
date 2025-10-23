@@ -4,6 +4,7 @@ import SwiftUI
 
 // MARK: - Router
 
+@MainActor
 package protocol BaseRouter: ObservableObject {
-	@MainActor func reset()
+  func reset()
 }

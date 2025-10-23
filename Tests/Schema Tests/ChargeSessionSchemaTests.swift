@@ -7,7 +7,7 @@ import Testing
 /// Tests for ChargeSession schema parsing functionality.
 @Suite("ChargeSession Schema Parsing Tests", .tags(.parsing))
 struct ChargeSessionSchemaTests {
-  @Test("ChargeSession schema parses valid JSON correctly") 
+  @Test("ChargeSession schema parses valid JSON correctly")
   func chargeSessionValidParsing() throws {
     // Given: Valid charge session schema JSON
     let validJSON = """
@@ -68,7 +68,7 @@ struct ChargeSessionSchemaTests {
     try SchemaTestHelpers.expectParsingError(
       ChargeSession.parse(schema),
       expectedKeyPath: \ChargeSessionSchema.status,
-      in: schema
+      in: schema,
     )
   }
 
@@ -82,10 +82,10 @@ struct ChargeSessionSchemaTests {
       ("STOP_REQUESTED", .stopRequested),
       ("STOP_REJECTED", .stopRejected),
       ("STOPPED", .stopped),
-    ]
+    ],
   ) func chargeSessionAllValidStatuses(
     statusString: String,
-    expectedStatus: ChargeSession.Status
+    expectedStatus: ChargeSession.Status,
   ) throws {
     // Given: Schema with each valid status
     let json = """
