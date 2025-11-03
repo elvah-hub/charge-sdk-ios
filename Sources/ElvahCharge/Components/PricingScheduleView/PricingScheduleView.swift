@@ -28,6 +28,9 @@ package struct PricingScheduleView: View {
   /// Whether to hide the charge now button.
   private var isChargeButtonHidden: Bool
 
+  /// Determines how the pricing chart should be presented.
+  private var chartHidingBehavior: LivePricingView.ChartVisibilityBehavior
+
   /// Optional horizontal inset for the summary and primary action button.
   private var horizontalAreaPaddings: [LivePricingView.ComponentArea: CGFloat]
 
@@ -40,6 +43,7 @@ package struct PricingScheduleView: View {
     router: LivePricingView.Router,
     isOperatorDetailsHidden: Bool = false,
     isChargeButtonHidden: Bool = false,
+    chartHidingBehavior: LivePricingView.ChartVisibilityBehavior = .never,
     horizontalAreaPaddings: [LivePricingView.ComponentArea: CGFloat] = [:],
     discountHighlightColor: Color,
   ) {
@@ -47,6 +51,7 @@ package struct PricingScheduleView: View {
     self.router = router
     self.isOperatorDetailsHidden = isOperatorDetailsHidden
     self.isChargeButtonHidden = isChargeButtonHidden
+    self.chartHidingBehavior = chartHidingBehavior
     self.horizontalAreaPaddings = horizontalAreaPaddings
     self.discountHighlightColor = discountHighlightColor
   }
@@ -74,27 +79,29 @@ package struct PricingScheduleView: View {
         .animation(.default, value: selectedMoment)
       }
 
-      VStack(spacing: .size(.M)) {
-        TabView(selection: $selectedDay) {
-          ForEach(chartEntries) { entry in
-            PriceChart(
-              dataset: entry.dataset,
-              selectedMoment: $selectedMoment,
-              discountHighlightColor: discountHighlightColor,
-            )
-            .padding(.vertical, 4)
-            .frame(maxWidth: .infinity)
-            .tag(entry.day)
+      if shouldHideChart == false {
+        VStack(spacing: .size(.M)) {
+          TabView(selection: $selectedDay) {
+            ForEach(chartEntries) { entry in
+              PriceChart(
+                dataset: entry.dataset,
+                selectedMoment: $selectedMoment,
+                discountHighlightColor: discountHighlightColor,
+              )
+              .padding(.vertical, 4)
+              .frame(maxWidth: .infinity)
+              .tag(entry.day)
+            }
           }
-        }
-        .frame(height: dynamicTypeSize.isAccessibilitySize ? 200 : 140)
-        .tabViewStyle(.page(indexDisplayMode: .never))
-        .animation(.default, value: selectedDay)
-        .animation(.default, value: selectedMoment)
+          .frame(height: dynamicTypeSize.isAccessibilitySize ? 200 : 140)
+          .tabViewStyle(.page(indexDisplayMode: .never))
+          .animation(.default, value: selectedDay)
+          .animation(.default, value: selectedMoment)
 
-        if chartEntries.count >= 2 {
-          dayPicker(chartEntries: chartEntries, selection: $selectedDay)
-            .padding(.horizontal, horizontalAreaPaddings[.footer])
+          if chartEntries.count >= 2 {
+            dayPicker(chartEntries: chartEntries, selection: $selectedDay)
+              .padding(.horizontal, horizontalAreaPaddings[.footer])
+          }
         }
       }
 
@@ -147,6 +154,17 @@ package struct PricingScheduleView: View {
       "Today"
     case .tomorrow:
       "Tomorrow"
+    }
+  }
+
+  private var shouldHideChart: Bool {
+    switch chartHidingBehavior {
+    case .never:
+      false
+    case .always:
+      true
+    case .whenNoDiscounts:
+      schedule.hasDiscounts == false
     }
   }
 }

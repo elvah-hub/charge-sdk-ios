@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - **Configurable Discount Highlight**: Added `discountHighlightColor(_:)` to `LivePricingView` that enables configuration of the component's primary accent color.
+- **Chart Visibility Controls**: Added `chartHidden(_:)` and `ChartVisibilityBehavior` to `LivePricingView` so apps can hide the pricing chart unconditionally or only when no discounts are available.
 
 ## 0.4.0
 

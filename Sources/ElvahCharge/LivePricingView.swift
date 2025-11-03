@@ -56,6 +56,9 @@ public struct LivePricingView: View {
   /// Whether to hide the charge button.
   private var isChargeButtonHidden = false
 
+  /// Determines how the pricing chart should be presented.
+  private var chartHidingBehavior: ChartVisibilityBehavior = .never
+
   /// Optional horizontal inset to apply to certain subcomponents.
   ///
   /// When set, this value is passed down to internal components and used as
@@ -82,6 +85,7 @@ public struct LivePricingView: View {
         router: router,
         isOperatorDetailsHidden: isOperatorDetailsHidden,
         isChargeButtonHidden: isChargeButtonHidden,
+        chartHidingBehavior: chartHidingBehavior,
         horizontalAreaPaddings: horizontalAreaPaddings,
         discountHighlightColor: discountHighlightColor,
       )
@@ -113,6 +117,18 @@ public extension LivePricingView {
     public init(rawValue: Int) {
       self.rawValue = rawValue
     }
+  }
+
+  /// Describes how the pricing chart should behave.
+  enum ChartVisibilityBehavior: Sendable {
+    /// Always show the chart, regardless of the schedule content.
+    case never
+
+    /// Hide the chart unconditionally.
+    case always
+
+    /// Hide the chart when there are no future discounts available.
+    case whenNoDiscounts
   }
 }
 
@@ -150,6 +166,22 @@ public extension LivePricingView {
   func chargeButtonHidden(_ hide: Bool = true) -> LivePricingView {
     var copy = self
     copy.isChargeButtonHidden = hide
+    return copy
+  }
+
+  /// Controls the visibility of the pricing chart within the component.
+  ///
+  /// - Parameter behavior: The visibility behavior to apply. Defaults to `.always`.
+  /// - Returns: A copy of the view with the provided chart visibility behavior.
+  ///
+  /// Example
+  /// ```swift
+  /// LivePricingView(schedule: schedule)
+  ///   .chartHidden(.whenNoDiscounts)
+  /// ```
+  func chartHidden(_ behavior: ChartVisibilityBehavior = .always) -> LivePricingView {
+    var copy = self
+    copy.chartHidingBehavior = behavior
     return copy
   }
 
