@@ -31,6 +31,9 @@ package struct PricingScheduleView: View {
   /// Optional horizontal inset for the summary and primary action button.
   private var horizontalAreaPaddings: [LivePricingView.ComponentArea: CGFloat]
 
+  /// Accent color for discount highlights throughout the schedule.
+  private var discountHighlightColor: Color
+
   /// Create the component with precomputed chart entries.
   package init(
     schedule: ChargeSiteSchedule,
@@ -38,12 +41,14 @@ package struct PricingScheduleView: View {
     isOperatorDetailsHidden: Bool = false,
     isChargeButtonHidden: Bool = false,
     horizontalAreaPaddings: [LivePricingView.ComponentArea: CGFloat] = [:],
+    discountHighlightColor: Color,
   ) {
     self.schedule = schedule
     self.router = router
     self.isOperatorDetailsHidden = isOperatorDetailsHidden
     self.isChargeButtonHidden = isChargeButtonHidden
     self.horizontalAreaPaddings = horizontalAreaPaddings
+    self.discountHighlightColor = discountHighlightColor
   }
 
   package var body: some View {
@@ -62,6 +67,7 @@ package struct PricingScheduleView: View {
           schedule: schedule,
           router: router,
           selectedMoment: $selectedMoment,
+          discountHighlightColor: discountHighlightColor,
         )
         .padding(.horizontal, horizontalAreaPaddings[.header])
         .animation(.default, value: selectedDay)
@@ -71,10 +77,14 @@ package struct PricingScheduleView: View {
       VStack(spacing: .size(.M)) {
         TabView(selection: $selectedDay) {
           ForEach(chartEntries) { entry in
-            PriceChart(dataset: entry.dataset, selectedMoment: $selectedMoment)
-              .padding(.vertical, 4)
-              .frame(maxWidth: .infinity)
-              .tag(entry.day)
+            PriceChart(
+              dataset: entry.dataset,
+              selectedMoment: $selectedMoment,
+              discountHighlightColor: discountHighlightColor,
+            )
+            .padding(.vertical, 4)
+            .frame(maxWidth: .infinity)
+            .tag(entry.day)
           }
         }
         .frame(height: dynamicTypeSize.isAccessibilitySize ? 200 : 140)

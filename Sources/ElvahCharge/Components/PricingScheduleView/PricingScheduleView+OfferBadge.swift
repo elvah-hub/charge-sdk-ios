@@ -17,10 +17,16 @@ package extension PricingScheduleView {
 
     private var state: State
     private var showsTimeRange: Bool
+    private var highlightColor: Color
 
-    package init(state: State, showsTimeRange: Bool = true) {
+    package init(
+      state: State,
+      showsTimeRange: Bool = true,
+      highlightColor: Color = Color("fixed_green", bundle: .core),
+    ) {
       self.state = state
       self.showsTimeRange = showsTimeRange
+      self.highlightColor = highlightColor
     }
 
     package var body: some View {
@@ -93,7 +99,7 @@ package extension PricingScheduleView {
       switch state {
       case .active,
            .upcoming:
-        .fixedGreen
+        highlightColor
       case .none:
         .secondaryContent
       }
@@ -104,7 +110,7 @@ package extension PricingScheduleView {
       switch state {
       case .active,
            .upcoming:
-        Color.fixedGreen.opacity(0.1)
+        highlightColor.opacity(0.1)
       case .none:
         Color.secondaryContent.opacity(0.15)
       }

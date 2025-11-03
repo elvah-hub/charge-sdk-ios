@@ -29,13 +29,13 @@ public struct Theme: Hashable, Sendable {
     color: Color = .default,
     font: CoreFont = .default,
     regularWeight: Font.Weight = .regular,
-    boldWeight: Font.Weight = .bold
+    boldWeight: Font.Weight = .bold,
   ) {
     self.color = color
     typography = Typography(
       font: font,
       regularWeight: regularWeight,
-      boldWeight: boldWeight
+      boldWeight: boldWeight,
     )
   }
 
@@ -55,7 +55,7 @@ public extension Theme {
     public init(
       font: CoreFont = .default,
       regularWeight: Font.Weight = .regular,
-      boldWeight: Font.Weight = .bold
+      boldWeight: Font.Weight = .bold,
     ) {
       self.regularWeight = regularWeight
       self.boldWeight = boldWeight
@@ -67,13 +67,13 @@ public extension Theme {
     public static let elvah: Typography = .init(
       font: .default,
       regularWeight: .medium,
-      boldWeight: .semibold
+      boldWeight: .semibold,
     )
 
     public static let neutral: Typography = .init(
       font: .default,
       regularWeight: .regular,
-      boldWeight: .bold
+      boldWeight: .bold,
     )
   }
 
@@ -115,7 +115,7 @@ public extension Theme {
       secondaryContent: SwiftUI.Color,
       decorativeStroke: SwiftUI.Color,
       container: SwiftUI.Color,
-      label: SwiftUI.Color
+      label: SwiftUI.Color,
     ) {
       self.brand = brand
       self.brandLight = brandLight
@@ -149,7 +149,7 @@ public extension Theme {
       secondaryContent: SwiftUI.Color("elvah_secondaryContent", bundle: .core),
       decorativeStroke: SwiftUI.Color("elvah_decorativeStroke", bundle: .core),
       container: SwiftUI.Color("elvah_container", bundle: .core),
-      label: SwiftUI.Color("elvah_label", bundle: .core)
+      label: SwiftUI.Color("elvah_label", bundle: .core),
     )
 
     public static let neutral: Color = .init(
@@ -166,7 +166,7 @@ public extension Theme {
       secondaryContent: SwiftUI.Color("neutral_secondaryContent", bundle: .core),
       decorativeStroke: SwiftUI.Color("neutral_decorativeStroke", bundle: .core),
       container: SwiftUI.Color("neutral_container", bundle: .core),
-      label: SwiftUI.Color("neutral_label", bundle: .core)
+      label: SwiftUI.Color("neutral_label", bundle: .core),
     )
   }
 }
@@ -174,10 +174,6 @@ public extension Theme {
 // MARK: - ShapeStyle Color Extensions
 
 package extension ShapeStyle where Self == Color {
-  static var fixedGreen: Color {
-    Color("fixed_green", bundle: .core)
-  }
-
   static var brand: Color {
     Elvah.configuration.theme.color.brand
   }

@@ -63,6 +63,9 @@ public struct LivePricingView: View {
   /// The chart remains edge‑to‑edge. If `nil`, the system default padding is used.
   private var horizontalAreaPaddings: [ComponentArea: CGFloat] = [:]
 
+  /// Accent color applied to discount highlights within the pricing schedule.
+  private var discountHighlightColor: Color = .init("fixed_green", bundle: .core)
+
   /// Creates a live pricing view for a given pricing schedule.
   /// - Note: On iOS versions earlier than 16, the view renders as an empty placeholder.
   ///
@@ -80,6 +83,7 @@ public struct LivePricingView: View {
         isOperatorDetailsHidden: isOperatorDetailsHidden,
         isChargeButtonHidden: isChargeButtonHidden,
         horizontalAreaPaddings: horizontalAreaPaddings,
+        discountHighlightColor: discountHighlightColor,
       )
       .accessibilityElement(children: .contain)
       .fullScreenCover(item: $router.chargeOfferDetail) { siteSchedule in
@@ -185,6 +189,23 @@ public extension LivePricingView {
       copy.horizontalAreaPaddings[.footer] = value
     }
 
+    return copy
+  }
+
+  /// Overrides the accent color used to emphasize discount offers in the schedule.
+  ///
+  /// Pass a custom color to align the component with the surrounding interface.
+  /// - Parameter color: The color to apply to discount highlights.
+  /// - Returns: A copy of the view with the provided accent color.
+  ///
+  /// Example
+  /// ```swift
+  /// LivePricingView(schedule: schedule)
+  ///     .discountHighlightColor(.mint)
+  /// ```
+  func discountHighlightColor(_ color: Color) -> LivePricingView {
+    var copy = self
+    copy.discountHighlightColor = color
     return copy
   }
 }

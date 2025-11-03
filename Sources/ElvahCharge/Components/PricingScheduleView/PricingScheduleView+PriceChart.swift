@@ -16,8 +16,16 @@ package extension PricingScheduleView {
     /// Routed from the parent so summary and chart stay in sync.
     @Binding package var selectedMoment: Date?
 
-    package init(dataset: DailyPriceChartData, selectedMoment: Binding<Date?>) {
+    /// Accent color for discount highlights.
+    private var discountHighlightColor: Color
+
+    package init(
+      dataset: DailyPriceChartData,
+      selectedMoment: Binding<Date?>,
+      discountHighlightColor: Color,
+    ) {
       self.dataset = dataset
+      self.discountHighlightColor = discountHighlightColor
       _selectedMoment = selectedMoment
     }
 
@@ -120,7 +128,7 @@ package extension PricingScheduleView {
           yStart: .value(Text(verbatim: "Zero"), 0.0),
           yEnd: .value(Text(verbatim: "Price"), segment.price.amount),
         )
-        .foregroundStyle(.green.opacity(0.25))
+        .foregroundStyle(discountHighlightColor.opacity(0.25))
         .lineStyle(StrokeStyle(lineWidth: 1))
         .opacity(opacityForMark(in: segment.startTime, to: segment.endTime))
         .annotation(position: .overlay) {
@@ -135,7 +143,7 @@ package extension PricingScheduleView {
           xEnd: .value(Text(verbatim: "End"), segment.endTime),
           y: .value(Text(verbatim: "Price Line"), segment.price.amount),
         )
-        .foregroundStyle(.fixedGreen)
+        .foregroundStyle(discountHighlightColor)
         .lineStyle(StrokeStyle(lineWidth: 1))
         .opacity(opacityForMark(in: segment.startTime, to: segment.endTime))
       }
@@ -168,7 +176,7 @@ package extension PricingScheduleView {
     private func currentTimeMarker(reference: Date) -> some ChartContent {
       let price = dataset.price(at: reference)
       let isDiscount = dataset.hasDiscount(at: reference)
-      let markerColor: Color = isDiscount ? .fixedGreen : .gray
+      let markerColor: Color = isDiscount ? discountHighlightColor : .gray
 
       RuleMark(
         x: .value(Text(verbatim: "Now"), reference),
@@ -325,7 +333,11 @@ package extension PricingScheduleView {
 
 @available(iOS 17.0, *)
 #Preview("PriceChart (Today)") {
-  PricingScheduleView.PriceChart(dataset: PricingSchedule.mock.chartData()[1], selectedMoment: .constant(nil))
-    .frame(height: 140)
-    .withFontRegistration()
+  PricingScheduleView.PriceChart(
+    dataset: PricingSchedule.mock.chartData()[1],
+    selectedMoment: .constant(nil),
+    discountHighlightColor: Color("fixed_green", bundle: .core),
+  )
+  .frame(height: 140)
+  .withFontRegistration()
 }

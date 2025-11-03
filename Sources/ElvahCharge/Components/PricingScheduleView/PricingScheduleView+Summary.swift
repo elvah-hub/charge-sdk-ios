@@ -20,14 +20,19 @@ package extension PricingScheduleView {
     /// Selected moment binding to drive the summary instead of the current time.
     @Binding private var selectedMoment: Date?
 
+    /// Accent color for discount highlights.
+    private var discountHighlightColor: Color
+
     package init(
       dataset: DailyPriceChartData,
       schedule: ChargeSiteSchedule,
       router: LivePricingView.Router,
-      selectedMoment: Binding<Date?>
+      selectedMoment: Binding<Date?>,
+      discountHighlightColor: Color,
     ) {
       self.schedule = schedule
       self.dataset = dataset
+      self.discountHighlightColor = discountHighlightColor
       _router = ObservedObject(wrappedValue: router)
       _selectedMoment = selectedMoment
     }
@@ -36,6 +41,7 @@ package extension PricingScheduleView {
     package init(dataset: DailyPriceChartData) {
       schedule = .mock
       self.dataset = dataset
+      discountHighlightColor = Color("fixed_green", bundle: .core)
       _router = ObservedObject(wrappedValue: LivePricingView.Router())
       _selectedMoment = .constant(nil)
     }
@@ -111,7 +117,7 @@ package extension PricingScheduleView {
             Text("\(price.formatted())/kWh", bundle: .elvahCharge)
               .typography(.copy(size: .xLarge), weight: .bold)
               .monospacedDigit()
-              .foregroundStyle(discounted ? .fixedGreen : .primaryContent)
+              .foregroundStyle(discounted ? discountHighlightColor : .primaryContent)
               .contentTransition(.numericText())
           }
 
@@ -136,7 +142,7 @@ package extension PricingScheduleView {
         horizontalAlignment: .leading,
         verticalAlignment: .center,
         spacing: .size(.S),
-        breakPoint: .xxLarge
+        breakPoint: .xxLarge,
       ) {
         if let moment = selectedMoment, let range = dataset.dateRangeOfSegment(containing: moment) {
           Text("\(dayText) \(range.textRepresentation)")
@@ -154,9 +160,13 @@ package extension PricingScheduleView {
             .layoutPriority(1)
         }
 
-        OfferBadge(state: currentBadgeState(reference: reference), showsTimeRange: selectedMoment == nil)
-          .lineLimit(1)
-          .opacity(isYesterday && selectedMoment == nil ? 0 : 1)
+        OfferBadge(
+          state: currentBadgeState(reference: reference),
+          showsTimeRange: selectedMoment == nil,
+          highlightColor: discountHighlightColor,
+        )
+        .lineLimit(1)
+        .opacity(isYesterday && selectedMoment == nil ? 0 : 1)
       }
     }
 
@@ -214,7 +224,7 @@ package extension PricingScheduleView {
           """
           \(priceText), discounted \(segmentRange.accessibilityTextRepresentation). Original Price: \(basePriceText)
           """,
-          bundle: .elvahCharge
+          bundle: .elvahCharge,
         )
       }
       return priceText
@@ -279,7 +289,8 @@ package extension PricingScheduleView {
     dataset: data,
     schedule: .mock,
     router: LivePricingView.Router(),
-    selectedMoment: .constant(Date())
+    selectedMoment: .constant(Date()),
+    discountHighlightColor: Color("fixed_green", bundle: .core),
   )
   .padding()
   .withFontRegistration()
