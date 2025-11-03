@@ -41,6 +41,27 @@ public struct PricingSchedule: Codable, Hashable, Sendable {
     }
   }
 
+  /// Indicates whether there are discounted price slots remaining for today or scheduled for tomorrow.
+  public var hasDiscounts: Bool {
+    hasDiscounts(after: Date())
+  }
+
+  /// Indicates whether there are discounted price slots remaining for today or scheduled for tomorrow.
+  /// - Parameter referenceDate: The point in time used to determine the remainder of today. Defaults to the current time.
+  public func hasDiscounts(after referenceDate: Date) -> Bool {
+    if let todayDataset = chartData(for: .today),
+       todayDataset.discounts.contains(where: { $0.endTime > referenceDate }) {
+      return true
+    }
+
+    if let tomorrowDataset = chartData(for: .tomorrow),
+       tomorrowDataset.discounts.isEmpty == false {
+      return true
+    }
+
+    return false
+  }
+
   /// Price trend direction compared to the previous day.
   package enum PriceTrend: String, Codable, Hashable, Sendable {
     case up = "UP"

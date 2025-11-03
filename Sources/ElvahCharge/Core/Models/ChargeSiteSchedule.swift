@@ -1,6 +1,7 @@
 // Copyright © elvah. All rights reserved.
 
 import CoreLocation
+import Foundation
 import SwiftUI
 
 /// A pricing schedule for a single charge site.
