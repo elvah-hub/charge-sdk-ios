@@ -620,10 +620,22 @@ public extension ChargeSimulator {
                 largestCommonPrefix: evseIds.count > 1 ? largestCommonPrefix : nil,
               )
             }
-            return [ChargeSite(site: .simulation, offers: offers)]
+            return [
+              ChargeSite(
+                site: .simulation,
+                offers: offers,
+                hasFuturePromotion: false,
+              ),
+            ]
           } else {
             // Fallback to single offer for backward compatibility
-            return [ChargeSite(site: .simulation, offers: [.simulation])]
+            return [
+              ChargeSite(
+                site: .simulation,
+                offers: [.simulation],
+                hasFuturePromotion: false,
+              ),
+            ]
           }
         }
       }

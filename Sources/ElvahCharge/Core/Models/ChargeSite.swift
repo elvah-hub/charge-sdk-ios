@@ -18,9 +18,14 @@ public struct ChargeSite: Codable, Hashable, Identifiable, Sendable {
   /// The underlying site's charge offers.
   public var offers: [ChargeOffer]
 
-  package init(site: Site, offers: [ChargeOffer]) {
+  // TODO: Determine final naming before public release so the property matches backend terminology.
+  /// Indicates whether any charge offer on the site has a current or upcoming discount.
+  public var hasFuturePromotion: Bool
+
+  package init(site: Site, offers: [ChargeOffer], hasFuturePromotion: Bool) {
     self.site = site
     self.offers = offers
+    self.hasFuturePromotion = hasFuturePromotion
   }
 
   /// The distinct maximum power levels (in kW) that the site's charge points can deliver.
@@ -54,6 +59,10 @@ public struct ChargeSite: Codable, Hashable, Identifiable, Sendable {
 
 package extension ChargeSite {
   static var mock: ChargeSite {
-    ChargeSite(site: .mock, offers: [.mockAvailable, .mockUnavailable, .mockOutOfService])
+    ChargeSite(
+      site: .mock,
+      offers: [.mockAvailable, .mockUnavailable, .mockOutOfService],
+      hasFuturePromotion: false,
+    )
   }
 }
