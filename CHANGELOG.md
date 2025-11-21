@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - **Configurable Discount Highlight**: Added `discountHighlightColor(_:)` to `LivePricingView` that enables configuration of the component's primary accent color.
 - **Chart Visibility Controls**: Added `chartHidden(_:)` and `ChartVisibilityBehavior` to `LivePricingView` so apps can hide the pricing chart unconditionally or only when no discounts are available.
-- **ChargeSite Discount Flag**: Added the `hasFuturePromotion` property to `ChargeSite` so hosts can detect when any of the site's offers currently has or will soon have a discount.
+- **ChargeSite Discount Flag**: Added the `dynamicPricingAvailable` property to `ChargeSite` so hosts can detect when any of the site's offers currently has or will soon have a discount.
 
 ## 0.4.0
 

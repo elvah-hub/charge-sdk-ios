@@ -25,7 +25,7 @@ extension ChargeSite {
       return ChargeSite(
         site: site,
         offers: offers,
-        hasFuturePromotion: response.hasFuturePromotion,
+        dynamicPricingAvailable: response.dynamicPricingAvailable,
       )
     } catch {
       throw .parsing(.field("site"))
@@ -40,7 +40,7 @@ struct SiteOfferSchema: Decodable {
   var prevalentPowerType: String
   var address: AddressSchema
   var evses: [ChargeOfferSchema]
-  var hasFuturePromotion: Bool
+  var dynamicPricingAvailable: Bool
 
   struct AddressSchema: Decodable {
     var locality: String?

@@ -624,7 +624,7 @@ public extension ChargeSimulator {
               ChargeSite(
                 site: .simulation,
                 offers: offers,
-                hasFuturePromotion: false,
+                dynamicPricingAvailable: false,
               ),
             ]
           } else {
@@ -633,7 +633,7 @@ public extension ChargeSimulator {
               ChargeSite(
                 site: .simulation,
                 offers: [.simulation],
-                hasFuturePromotion: false,
+                dynamicPricingAvailable: false,
               ),
             ]
           }
