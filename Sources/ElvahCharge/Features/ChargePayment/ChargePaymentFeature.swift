@@ -90,9 +90,9 @@ struct ChargePaymentFeature: View {
       )
     }
     .sheet(isPresented: $router.showApplePayPaymentSheet) {
-      PaymentWebView(
+      PaymentWebViewFeature(
         paymentURL: applePayPaymentURL,
-        onPaymentCompleted: handleApplePayPaymentCompletion,
+        completion: handleApplePayPaymentCompletion,
       )
     }
   }
@@ -176,18 +176,25 @@ struct ChargePaymentFeature: View {
   }
 
   @MainActor
-  private func handleApplePayPaymentCompletion(_: String?) {
+  private func handleApplePayPaymentCompletion(_ completion: PaymentWebViewFeature.Completion) {
     guard Elvah.configuration.environment == .simulation else {
       return
     }
 
-    Task { @MainActor in
-      do {
-        try await navigateToChargeStartAfterSuccessfulPayment()
-      } catch {
-        Elvah.logger.error("Failed to pay: \(error.localizedDescription)")
-        router.showGenericError = true
+    switch completion {
+    case .completed:
+      Task {
+        do {
+          try await navigateToChargeStartAfterSuccessfulPayment()
+        } catch {
+          Elvah.logger.error("Failed to pay: \(error.localizedDescription)")
+          router.showGenericError = true
+        }
       }
+    case .failed:
+      router.showGenericError = true
+    case .cancelled:
+      break
     }
   }
 
