@@ -16,12 +16,22 @@ struct PaymentWebViewFeature: View {
   static let successRedirectPath = "/success"
   static let errorRedirectPath = "/error"
 
+  /// Base URL that renders the hosted Apple Pay experience.
   var paymentBaseURL: URL
+
+  /// Parameters passed as query items to the hosted experience.
   var parameters: Parameters
+
+  /// Path indicating a successful checkout redirect.
   var successRedirectPath: String
+
+  /// Path indicating an error redirect.
   var errorRedirectPath: String
+
+  /// Callback invoked once the web view completes or is dismissed.
   var completion: (Completion) -> Void
 
+  /// Builds the final payment URL by merging the base query items with provided parameters.
   private var paymentURL: URL {
     guard var components = URLComponents(url: paymentBaseURL, resolvingAgainstBaseURL: false) else {
       return paymentBaseURL
@@ -61,10 +71,12 @@ struct PaymentWebViewFeature: View {
     )
     .ignoresSafeArea()
     .onDisappear {
+      // If the user dismisses the sheet without a redirect, treat it as a cancellation.
       reportCompletionIfNeeded(.cancelled)
     }
   }
 
+  /// Ensures completion is reported a single time, then dismisses on success or failure.
   private func reportCompletionIfNeeded(_ completionResult: Completion) {
     guard hasReportedCompletion == false else {
       return
@@ -82,6 +94,7 @@ struct PaymentWebViewFeature: View {
     }
   }
 
+  /// Outcome emitted by the hosted Apple Pay experience.
   enum Completion {
     /// JavaScript or redirect reported a successful payment; a payment intent ID might be present.
     case completed(paymentIntentId: String?)
@@ -95,12 +108,21 @@ struct PaymentWebViewFeature: View {
 @available(iOS 16.0, *)
 extension PaymentWebViewFeature {
   // TODO: Finalize the parameters for the web view
+  // Query parameters forwarded to the hosted Apple Pay experience.
   struct Parameters {
+    /// Brand-specific color string understood by the host.
     var brandColor: String
+
+    /// Stripe client secret used to complete the payment.
     var clientSecret: String
+
+    /// Stripe payment intent identifier.
     var paymentIntentId: String
+
+    /// Additional items to merge after the required values.
     var customItems: [URLQueryItem] = []
 
+    /// Produces a de-duplicated list of query items honoring any custom overrides.
     var queryItems: [URLQueryItem] {
       var items: [URLQueryItem] = []
       items.append(URLQueryItem(name: "brandColor", value: brandColor))
@@ -111,6 +133,7 @@ extension PaymentWebViewFeature {
   }
 }
 
+/// Merges two collections of query items, letting later items override earlier duplicates.
 private func mergeQueryItems(existing: [URLQueryItem], newItems: [URLQueryItem]) -> [URLQueryItem] {
   newItems.reduce(into: existing) { combined, newItem in
     combined.removeAll { $0.name == newItem.name }
@@ -118,6 +141,7 @@ private func mergeQueryItems(existing: [URLQueryItem], newItems: [URLQueryItem])
   }
 }
 
+/// Wraps a WKWebView to load the hosted Apple Pay flow and forward navigation events.
 @available(iOS 16.0, *)
 private struct ApplePayWebView: UIViewRepresentable {
   var paymentURL: URL
