@@ -89,6 +89,12 @@ struct ChargePaymentFeature: View {
         organisationDetails: request.paymentContext.organisationDetails,
       )
     }
+    .sheet(isPresented: $router.showApplePayPaymentSheet) {
+      PaymentWebView(
+        paymentURL: applePayPaymentURL,
+        onPaymentCompleted: handleApplePayPaymentCompletion,
+      )
+    }
   }
 
   @ViewBuilder private var costInformation: some View {
@@ -118,6 +124,12 @@ struct ChargePaymentFeature: View {
         }
         .buttonStyle(.primary)
         .disabled(payment.isRunning)
+        Button {
+          router.showApplePayPaymentSheet = true
+        } label: {
+          Text("Pay with Apple Pay", bundle: .elvahCharge)
+        }
+        .buttonStyle(.secondary)
         Button {
           router.showLegalLinkOptions = true
         } label: {
@@ -158,6 +170,43 @@ struct ChargePaymentFeature: View {
     }
   }
 
+  /// The provided URL renders the Apple Pay button inside a web experience.
+  private var applePayPaymentURL: URL {
+    URL(string: "https://parabolically-minimus-guy.ngrok-free.dev/donate-with-elements")!
+  }
+
+  @MainActor
+  private func handleApplePayPaymentCompletion(_: String?) {
+    guard Elvah.configuration.environment == .simulation else {
+      return
+    }
+
+    Task { @MainActor in
+      do {
+        try await navigateToChargeStartAfterSuccessfulPayment()
+      } catch {
+        Elvah.logger.error("Failed to pay: \(error.localizedDescription)")
+        router.showGenericError = true
+      }
+    }
+  }
+
+  @MainActor
+  private func navigateToChargeStartAfterSuccessfulPayment() async throws {
+    let authentication = try await chargeSettlementProvider.authorize(
+      paymentId: request.paymentContext.paymentId,
+    )
+
+    let authenticatedRequest = AuthenticatedChargeRequest(
+      request,
+      authentication: authentication,
+    )
+
+    router.chargeStartRouter.reset()
+    navigationRoot.path.append(Router.Destination.chargeStart(request: authenticatedRequest))
+  }
+
+  @MainActor
   private func pay() async {
     do {
       let paymentContext = request.paymentContext
@@ -180,18 +229,7 @@ struct ChargePaymentFeature: View {
 
       switch stripePaymentResult {
       case .completed:
-        let authentication = try await chargeSettlementProvider.authorize(
-          paymentId: paymentContext.paymentId,
-        )
-
-        // Navigate to the charge start screen with the updated charge request and authentication
-        let authenticatedRequest = AuthenticatedChargeRequest(
-          request,
-          authentication: authentication,
-        )
-
-        router.chargeStartRouter.reset()
-        navigationRoot.path.append(Router.Destination.chargeStart(request: authenticatedRequest))
+        try await navigateToChargeStartAfterSuccessfulPayment()
       case .canceled:
         break
       case let .failed(error):
@@ -230,6 +268,7 @@ extension ChargePaymentFeature {
     @Published var showGenericError = false
     @Published var showOfferUnavailableSheet = false
     @Published var showSupport = false
+    @Published var showApplePayPaymentSheet = false
 
     let supportRouter: SupportFeature.Router = .init()
     let chargeStartRouter = ChargeStartFeature.Router()
@@ -240,6 +279,7 @@ extension ChargePaymentFeature {
       showGenericError = false
       showOfferUnavailableSheet = false
       showSupport = false
+      showApplePayPaymentSheet = false
     }
 
     func reset() {
