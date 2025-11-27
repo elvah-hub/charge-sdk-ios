@@ -6,7 +6,7 @@ import WebKit
   import Core
 #endif
 
-/// Hosts the Apple Pay web checkout and reports when the flow completes, fails, or is dismissed.
+/// Hosts the Apple Pay web checkout built from a base URL and optional query parameters, then reports when the flow completes, fails, or is dismissed.
 @available(iOS 16.0, *)
 struct PaymentWebViewFeature: View {
   @Environment(\.dismiss) private var dismiss
@@ -16,18 +16,35 @@ struct PaymentWebViewFeature: View {
   static let successRedirectPath = "/success"
   static let errorRedirectPath = "/error"
 
-  var paymentURL: URL
+  var paymentBaseURL: URL
+  var parameters: Parameters
   var successRedirectPath: String
   var errorRedirectPath: String
   var completion: (Completion) -> Void
 
+  private var paymentURL: URL {
+    guard var components = URLComponents(url: paymentBaseURL, resolvingAgainstBaseURL: false) else {
+      return paymentBaseURL
+    }
+
+    let updatedQueryItems = mergeQueryItems(
+      existing: components.queryItems ?? [],
+      newItems: parameters.queryItems,
+    )
+
+    components.queryItems = updatedQueryItems.isEmpty ? nil : updatedQueryItems
+    return components.url ?? paymentBaseURL
+  }
+
   init(
-    paymentURL: URL,
+    paymentBaseURL: URL,
+    parameters: Parameters,
     successRedirectPath: String = PaymentWebViewFeature.successRedirectPath,
     errorRedirectPath: String = PaymentWebViewFeature.errorRedirectPath,
-    completion: @escaping (Completion) -> Void = { _ in },
+    completion: @escaping (Completion) -> Void,
   ) {
-    self.paymentURL = paymentURL
+    self.paymentBaseURL = paymentBaseURL
+    self.parameters = parameters
     self.successRedirectPath = successRedirectPath
     self.errorRedirectPath = errorRedirectPath
     self.completion = completion
@@ -72,6 +89,32 @@ struct PaymentWebViewFeature: View {
     case failed
     /// The user dismissed the sheet without reaching success or failure.
     case cancelled
+  }
+}
+
+@available(iOS 16.0, *)
+extension PaymentWebViewFeature {
+  // TODO: Finalize the parameters for the web view
+  struct Parameters {
+    var brandColor: String
+    var clientSecret: String
+    var paymentIntentId: String
+    var customItems: [URLQueryItem] = []
+
+    var queryItems: [URLQueryItem] {
+      var items: [URLQueryItem] = []
+      items.append(URLQueryItem(name: "brandColor", value: brandColor))
+      items.append(URLQueryItem(name: "clientSecret", value: clientSecret))
+      items.append(URLQueryItem(name: "paymentIntentId", value: paymentIntentId))
+      return mergeQueryItems(existing: items, newItems: customItems)
+    }
+  }
+}
+
+private func mergeQueryItems(existing: [URLQueryItem], newItems: [URLQueryItem]) -> [URLQueryItem] {
+  newItems.reduce(into: existing) { combined, newItem in
+    combined.removeAll { $0.name == newItem.name }
+    combined.append(newItem)
   }
 }
 

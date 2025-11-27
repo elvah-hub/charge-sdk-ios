@@ -91,7 +91,12 @@ struct ChargePaymentFeature: View {
     }
     .sheet(isPresented: $router.showApplePayPaymentSheet) {
       PaymentWebViewFeature(
-        paymentURL: applePayPaymentURL,
+        paymentBaseURL: applePayPaymentBaseURL,
+        parameters: .init(
+          brandColor: "TODO",
+          clientSecret: "TODO",
+          paymentIntentId: "TODO",
+        ),
         completion: handleApplePayPaymentCompletion,
       )
     }
@@ -170,8 +175,8 @@ struct ChargePaymentFeature: View {
     }
   }
 
-  /// The provided URL renders the Apple Pay button inside a web experience.
-  private var applePayPaymentURL: URL {
+  /// Base URL rendering the Apple Pay button inside a web experience.
+  private var applePayPaymentBaseURL: URL {
     URL(string: "https://parabolically-minimus-guy.ngrok-free.dev/donate-with-elements")!
   }
 
