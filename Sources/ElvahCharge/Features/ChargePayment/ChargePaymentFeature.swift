@@ -113,28 +113,20 @@ struct ChargePaymentFeature: View {
   @ViewBuilder private var footer: some View {
     FooterView {
       VStack(spacing: .size(.M)) {
+        Text("We pre-authorize 2.50 euro security deposit. You will be billed for the final amount after charging.", bundle: .elvahCharge)
+          .typography(.copy(size: .small))
+          .foregroundStyle(.secondaryContent)
+          .multilineTextAlignment(.center)
         Button {
           if request.signedOffer.isAvailable {
-            $payment.run {
-              await pay()
-            }
+            router.showApplePayPaymentSheet = true
           } else {
             router.showOfferUnavailableSheet = true
           }
         } label: {
-          ViewThatFits(in: .horizontal) {
-            Text("Pay with Credit Card", bundle: .elvahCharge)
-            Text("Pay Now", bundle: .elvahCharge)
-          }
+          Text("Choose payment method", bundle: .elvahCharge)
         }
         .buttonStyle(.primary)
-        .disabled(payment.isRunning)
-        Button {
-          router.showApplePayPaymentSheet = true
-        } label: {
-          Text("Pay with Apple Pay", bundle: .elvahCharge)
-        }
-        .buttonStyle(.secondary)
         Button {
           router.showLegalLinkOptions = true
         } label: {
