@@ -78,7 +78,7 @@ struct AdditionalCostsBoxComponent: View {
   @ViewBuilder private func blockingFeeConditions(for blockingFee: ChargePrice.BlockingFee) -> some View {
     VStack(alignment: .leading, spacing: .size(.S)) {
       if let startsAfterMinute = blockingFee.startsAfterMinute {
-        Text("Starts after \(String(startsAfterMinute)) of connection.", bundle: .elvahCharge)
+        Text("Starts after \(String(startsAfterMinute)) min of connection.", bundle: .elvahCharge)
       }
       if let timeSlots = blockingFee.timeSlots {
         ForEach(timeSlots) { timeSlot in
