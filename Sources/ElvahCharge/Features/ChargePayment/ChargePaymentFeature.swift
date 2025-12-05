@@ -91,7 +91,7 @@ struct ChargePaymentFeature: View {
     }
     .sheet(isPresented: $router.showApplePayPaymentSheet) {
       PaymentWebViewFeature(
-        paymentBaseURL: applePayPaymentBaseURL,
+        paymentBaseURL: Elvah.Constant.paymentWebViewBaseURL,
         parameters: .init(
           brandColor: "TODO",
           clientSecret: "TODO",
@@ -167,14 +167,9 @@ struct ChargePaymentFeature: View {
     }
   }
 
-  /// Base URL rendering the Apple Pay button inside a web experience.
-  private var applePayPaymentBaseURL: URL {
-    URL(string: "https://parabolically-minimus-guy.ngrok-free.dev/donate-with-elements")!
-  }
-
   @MainActor
   private func handleApplePayPaymentCompletion(_ completion: PaymentWebViewFeature.Completion) {
-    guard Elvah.configuration.environment == .simulation else {
+    if Elvah.configuration.environment == .simulation {
       return
     }
 

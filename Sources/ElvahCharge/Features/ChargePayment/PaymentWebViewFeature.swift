@@ -6,7 +6,7 @@ import WebKit
   import Core
 #endif
 
-/// Hosts the Apple Pay web checkout built from a base URL and optional query parameters, then reports when the flow completes, fails, or is dismissed.
+/// Hosts the payment web checkout built from a base URL and optional query parameters, then reports when the flow completes, fails, or is dismissed.
 @available(iOS 16.0, *)
 struct PaymentWebViewFeature: View {
   @Environment(\.dismiss) private var dismiss
@@ -94,7 +94,7 @@ struct PaymentWebViewFeature: View {
     }
   }
 
-  /// Outcome emitted by the hosted Apple Pay experience.
+  /// Outcome emitted by the hosted payment experience.
   enum Completion {
     /// JavaScript or redirect reported a successful payment; a payment intent ID might be present.
     case completed(paymentIntentId: String?)
@@ -108,7 +108,7 @@ struct PaymentWebViewFeature: View {
 @available(iOS 16.0, *)
 extension PaymentWebViewFeature {
   // TODO: Finalize the parameters for the web view
-  // Query parameters forwarded to the hosted Apple Pay experience.
+  // Query parameters forwarded to the hosted payment experience.
   struct Parameters {
     /// Brand-specific color string understood by the host.
     var brandColor: String
@@ -177,7 +177,7 @@ private struct ApplePayWebView: UIViewRepresentable {
     coordinator.invalidate()
   }
 
-  /// Presents Stripe's hosted Apple Pay experience inside a WKWebView and forwards progress through the coordinator.
+  /// Presents Stripe's hosted payment experience inside a WKWebView and forwards progress through the coordinator.
   @MainActor
   final class Coordinator: NSObject, WKNavigationDelegate {
     private let successRedirectPath: String
@@ -282,21 +282,12 @@ private struct ApplePayWebView: UIViewRepresentable {
       return nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorCancelled
     }
 
+    // TODO: If needed, we can extract data from the redirect url. Remove if not needed
     private func extractPaymentIntentId(from url: URL) -> String? {
       guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
         return nil
       }
       return components.queryItems?.first { $0.name == "paymentIntentId" }?.value
-    }
-
-    private func extractPaymentIntentId(from payload: [String: Any]) -> String? {
-      if let rawPaymentIntentId = payload["paymentIntentId"] as? String {
-        return rawPaymentIntentId
-      }
-      if let data = payload["data"] as? [String: Any], let rawPaymentIntentId = data["paymentIntentId"] as? String {
-        return rawPaymentIntentId
-      }
-      return nil
     }
 
     private func matches(path: String, targetRedirectPath: String) -> Bool {
@@ -308,7 +299,7 @@ private struct ApplePayWebView: UIViewRepresentable {
       case redirectedToErrorPath
 
       var errorDescription: String? {
-        "Apple Pay web view reached the error redirect path."
+        "Payment web view reached the error redirect path."
       }
     }
   }

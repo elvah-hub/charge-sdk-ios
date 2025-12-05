@@ -99,6 +99,11 @@ package extension Elvah {
   enum Constant {
     /// The default radius in meters.
     static let defaultRadius: Double = 20000
+
+    /// Base URL for rendering the payment flow inside a web experience.
+    static var paymentWebViewBaseURL: URL {
+      URL(string: "https://www.google.com")!
+    }
   }
 }
 
