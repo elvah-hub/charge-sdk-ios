@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.4.1
+
+### Changes
+
+- Re-rexported an SF Symbol with support for older Xcode versions
+
 ## 0.4.0
 
 ### Additions
