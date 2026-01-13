@@ -205,8 +205,8 @@ package extension ChargeBannerComponent {
 
     var needsHeader: Bool {
       switch self {
-      case let .chargeOffer(chargeOffer, _):
-        chargeOffer.hasCampaign
+      case .chargeOffer:
+        false
       case .chargeSession:
         true
       }
