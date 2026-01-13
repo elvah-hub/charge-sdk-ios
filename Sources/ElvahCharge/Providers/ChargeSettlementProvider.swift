@@ -9,6 +9,7 @@ final class ChargeSettlementProvider: ObservableObject {
     var initiate: @Sendable (_ signedOffer: String) async throws -> PaymentContext
     var authorize: @Sendable (_ paymentId: String) async throws -> ChargeAuthentication
     var summary: @Sendable (_ paymentId: String) async throws -> PaymentSummary?
+    var paymentWebViewToken: @Sendable (_ request: ChargeRequest) async throws -> String
   }
 
   private let dependencies: Dependencies
@@ -33,6 +34,10 @@ final class ChargeSettlementProvider: ObservableObject {
   func summary(paymentId: String) async throws -> PaymentSummary? {
     try await dependencies.summary(paymentId)
   }
+
+  func paymentWebViewToken(for request: ChargeRequest) async throws -> String {
+    try await dependencies.paymentWebViewToken(request)
+  }
 }
 
 @available(iOS 16.0, *)
@@ -42,6 +47,7 @@ extension ChargeSettlementProvider {
       apiKey: Elvah.configuration.apiKey,
       environment: Elvah.configuration.environment,
     )
+    let paymentWebViewService = PaymentWebViewService(environment: Elvah.configuration.environment)
     return ChargeSettlementProvider(
       dependencies: .init(
         stripeConfiguration: {
@@ -55,6 +61,13 @@ extension ChargeSettlementProvider {
         },
         summary: { paymentId in
           try await service.summary(paymentId: paymentId)
+        },
+        paymentWebViewToken: { request in
+          let configuration = try await service.stripeConfiguration()
+          return try await paymentWebViewService.createPaymentConfigToken(
+            for: request,
+            publishableKey: configuration.publishableKey,
+          )
         },
       ),
     )
@@ -73,6 +86,9 @@ extension ChargeSettlementProvider {
       },
       summary: { paymentId in
         try await ChargeSimulator.shared.summary(paymentId: paymentId)
+      },
+      paymentWebViewToken: { _ in
+        "simulated-payment-config-token"
       },
     ),
   )
@@ -101,6 +117,9 @@ extension ChargeSettlementProvider {
       summary: { paymentId in
         try await Task.sleep(for: .milliseconds(200))
         return PaymentSummary.mock
+      },
+      paymentWebViewToken: { _ in
+        "mock-payment-config-token"
       },
     ),
   )

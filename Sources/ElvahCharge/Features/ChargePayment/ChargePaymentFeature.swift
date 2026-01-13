@@ -89,16 +89,17 @@ struct ChargePaymentFeature: View {
         organisationDetails: request.paymentContext.organisationDetails,
       )
     }
-    .sheet(isPresented: $router.showApplePayPaymentSheet) {
+    .sheet(item: $router.paymentWebViewSheetItem) { item in
       PaymentWebViewFeature(
         paymentBaseURL: Elvah.Constant.paymentWebViewBaseURL,
-        parameters: .init(
-          brandColor: "TODO",
-          clientSecret: "TODO",
-          paymentIntentId: "TODO",
-        ),
+        token: item.token,
         completion: handleApplePayPaymentCompletion,
       )
+    }
+    .onChange(of: payment) { payment in
+      if payment.hasFailed {
+        router.showGenericError = true
+      }
     }
   }
 
@@ -118,15 +119,20 @@ struct ChargePaymentFeature: View {
           .foregroundStyle(.secondaryContent)
           .multilineTextAlignment(.center)
         Button {
-          if request.signedOffer.isAvailable {
-            router.showApplePayPaymentSheet = true
-          } else {
+          guard request.signedOffer.isAvailable else {
             router.showOfferUnavailableSheet = true
+            return
+          }
+
+          $payment.run {
+            let token = try await chargeSettlementProvider.paymentWebViewToken(for: request)
+            router.paymentWebViewSheetItem = .init(token: token)
           }
         } label: {
           Text("Choose payment method", bundle: .elvahCharge)
         }
         .buttonStyle(.primary)
+        .loading(payment.isRunning)
         Button {
           router.showLegalLinkOptions = true
         } label: {
@@ -262,23 +268,28 @@ extension ChargePaymentFeature {
       case chargeStart(request: AuthenticatedChargeRequest)
     }
 
+    struct PaymentWebViewSheetItem: Identifiable, Hashable {
+      let token: String
+      var id: String { token }
+    }
+
+    @Published var paymentWebViewSheetItem: PaymentWebViewSheetItem?
     @Published var showLegalLinkOptions = false
     @Published var showPaymentSheet = false
     @Published var showGenericError = false
     @Published var showOfferUnavailableSheet = false
     @Published var showSupport = false
-    @Published var showApplePayPaymentSheet = false
 
     let supportRouter: SupportFeature.Router = .init()
     let chargeStartRouter = ChargeStartFeature.Router()
 
     func dismissPresentation() {
+      paymentWebViewSheetItem = nil
       showLegalLinkOptions = false
       showPaymentSheet = false
       showGenericError = false
       showOfferUnavailableSheet = false
       showSupport = false
-      showApplePayPaymentSheet = false
     }
 
     func reset() {

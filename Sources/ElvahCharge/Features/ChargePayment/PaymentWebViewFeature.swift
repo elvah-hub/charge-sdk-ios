@@ -1,12 +1,13 @@
 // Copyright © elvah. All rights reserved.
 
+import Foundation
 import SwiftUI
 import WebKit
 #if canImport(Core)
   import Core
 #endif
 
-/// Hosts the payment web checkout built from a base URL and optional query parameters, then reports when the flow completes, fails, or is dismissed.
+/// Hosts the payment web checkout built from a base URL and token, then reports when the flow completes, fails, or is dismissed.
 @available(iOS 16.0, *)
 struct PaymentWebViewFeature: View {
   @Environment(\.dismiss) private var dismiss
@@ -19,8 +20,8 @@ struct PaymentWebViewFeature: View {
   /// Base URL that renders the hosted Apple Pay experience.
   var paymentBaseURL: URL
 
-  /// Parameters passed as query items to the hosted experience.
-  var parameters: Parameters
+  /// Token returned by the backend `/api/payment-config` endpoint.
+  var token: String
 
   /// Path indicating a successful checkout redirect.
   var successRedirectPath: String
@@ -39,7 +40,7 @@ struct PaymentWebViewFeature: View {
 
     let updatedQueryItems = mergeQueryItems(
       existing: components.queryItems ?? [],
-      newItems: parameters.queryItems,
+      newItems: [URLQueryItem(name: "token", value: token)],
     )
 
     components.queryItems = updatedQueryItems.isEmpty ? nil : updatedQueryItems
@@ -48,20 +49,20 @@ struct PaymentWebViewFeature: View {
 
   init(
     paymentBaseURL: URL,
-    parameters: Parameters,
+    token: String,
     successRedirectPath: String = PaymentWebViewFeature.successRedirectPath,
     errorRedirectPath: String = PaymentWebViewFeature.errorRedirectPath,
     completion: @escaping (Completion) -> Void,
   ) {
     self.paymentBaseURL = paymentBaseURL
-    self.parameters = parameters
+    self.token = token
     self.successRedirectPath = successRedirectPath
     self.errorRedirectPath = errorRedirectPath
     self.completion = completion
   }
 
   var body: some View {
-    ApplePayWebView(
+    PaymentWebView(
       paymentURL: paymentURL,
       successRedirectPath: successRedirectPath,
       errorRedirectPath: errorRedirectPath,
@@ -105,34 +106,6 @@ struct PaymentWebViewFeature: View {
   }
 }
 
-@available(iOS 16.0, *)
-extension PaymentWebViewFeature {
-  // TODO: Finalize the parameters for the web view
-  // Query parameters forwarded to the hosted payment experience.
-  struct Parameters {
-    /// Brand-specific color string understood by the host.
-    var brandColor: String
-
-    /// Stripe client secret used to complete the payment.
-    var clientSecret: String
-
-    /// Stripe payment intent identifier.
-    var paymentIntentId: String
-
-    /// Additional items to merge after the required values.
-    var customItems: [URLQueryItem] = []
-
-    /// Produces a de-duplicated list of query items honoring any custom overrides.
-    var queryItems: [URLQueryItem] {
-      var items: [URLQueryItem] = []
-      items.append(URLQueryItem(name: "brandColor", value: brandColor))
-      items.append(URLQueryItem(name: "clientSecret", value: clientSecret))
-      items.append(URLQueryItem(name: "paymentIntentId", value: paymentIntentId))
-      return mergeQueryItems(existing: items, newItems: customItems)
-    }
-  }
-}
-
 /// Merges two collections of query items, letting later items override earlier duplicates.
 private func mergeQueryItems(existing: [URLQueryItem], newItems: [URLQueryItem]) -> [URLQueryItem] {
   newItems.reduce(into: existing) { combined, newItem in
@@ -143,7 +116,7 @@ private func mergeQueryItems(existing: [URLQueryItem], newItems: [URLQueryItem])
 
 /// Wraps a WKWebView to load the hosted Apple Pay flow and forward navigation events.
 @available(iOS 16.0, *)
-private struct ApplePayWebView: UIViewRepresentable {
+private struct PaymentWebView: UIViewRepresentable {
   var paymentURL: URL
   var successRedirectPath: String
   var errorRedirectPath: String
@@ -184,6 +157,7 @@ private struct ApplePayWebView: UIViewRepresentable {
     private let errorRedirectPath: String
     private let completion: (PaymentWebViewFeature.Completion) -> Void
     private weak var webView: WKWebView?
+    private var urlObservation: NSKeyValueObservation?
     private var hasProvidedCompletion = false
 
     init(
@@ -198,6 +172,15 @@ private struct ApplePayWebView: UIViewRepresentable {
 
     func observe(webView: WKWebView) {
       self.webView = webView
+      urlObservation = webView.observe(\.url, options: [.new]) { [weak self] _, change in
+        guard let url = change.newValue ?? nil else {
+          return
+        }
+
+        Task { @MainActor in
+          self?.handlePotentialCompletion(with: url)
+        }
+      }
     }
 
     func webView(
@@ -205,7 +188,10 @@ private struct ApplePayWebView: UIViewRepresentable {
       decidePolicyFor navigationAction: WKNavigationAction,
       decisionHandler: @escaping @MainActor @Sendable (WKNavigationActionPolicy) -> Void,
     ) {
-      if navigationAction.targetFrame?.isMainFrame == true, let url = navigationAction.request.url {
+      if let url = navigationAction.request.url {
+        handlePotentialCompletion(with: url)
+      }
+      if let url = navigationAction.sourceFrame.request.url {
         handlePotentialCompletion(with: url)
       }
       decisionHandler(.allow)
@@ -213,6 +199,19 @@ private struct ApplePayWebView: UIViewRepresentable {
 
     func invalidate() {
       webView = nil
+      urlObservation = nil
+    }
+
+    func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
+      if let url = webView.url {
+        handlePotentialCompletion(with: url)
+      }
+    }
+
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+      if let url = webView.url {
+        handlePotentialCompletion(with: url)
+      }
     }
 
     func webView(

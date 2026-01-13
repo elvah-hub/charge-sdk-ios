@@ -48,4 +48,24 @@ public enum BackendEnvironment: Sendable, Hashable {
   package func urlForService() -> URL {
     URL(string: "https://\(baseDomain)")!
   }
+
+  package var paymentWebViewBaseURL: URL {
+    switch self {
+    case .integration,
+         .simulation:
+      URL(string: "https://pay.int.recharge.direct/")!
+    case .production:
+      URL(string: "https://pay.recharge.direct/")!
+    }
+  }
+
+  package var paymentWebViewAPIBaseURL: URL {
+    switch self {
+    case .integration,
+         .simulation:
+      URL(string: "https://pay.int.recharge.direct")!
+    case .production:
+      URL(string: "https://pay.recharge.direct")!
+    }
+  }
 }

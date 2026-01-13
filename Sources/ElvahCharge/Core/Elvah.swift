@@ -102,8 +102,10 @@ package extension Elvah {
 
     /// Base URL for rendering the payment flow inside a web experience.
     static var paymentWebViewBaseURL: URL {
-      URL(string: "https://www.google.com")!
+      Elvah.configuration.environment.paymentWebViewBaseURL
     }
+
+    static let paymentWebViewBrandColorHex = "#4F46E5"
   }
 }
 
