@@ -8,8 +8,13 @@ import Foundation
 
 final class PaymentWebViewService: Sendable {
   private let client: NetworkClient
+  private let apiKey: String
+  private let environment: BackendEnvironment
 
-  init(environment: BackendEnvironment) {
+  init(apiKey: String, environment: BackendEnvironment) {
+    self.apiKey = apiKey
+    self.environment = environment
+    
     client = .init(
       name: "PaymentWebView",
       baseURL: environment.paymentWebViewAPIBaseURL,
@@ -32,7 +37,11 @@ final class PaymentWebViewService: Sendable {
         ),
       )
 
-      let response = try await client.send(request)
+      let response = try await client.send(request) { [apiKey] request in
+        request.setDistinctId(Elvah.distinctId.rawValue)
+        request.setAPIKey(apiKey)
+      }
+
       return response.value.token
     } catch {
       throw error.externalError

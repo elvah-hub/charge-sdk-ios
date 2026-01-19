@@ -134,6 +134,7 @@ private struct PaymentWebView: UIViewRepresentable {
     let configuration = WKWebViewConfiguration()
 
     let webView = WKWebView(frame: .zero, configuration: configuration)
+    disableZooming(in: webView)
     webView.navigationDelegate = context.coordinator
     context.coordinator.observe(webView: webView)
     webView.load(URLRequest(url: paymentURL))
@@ -148,6 +149,21 @@ private struct PaymentWebView: UIViewRepresentable {
 
   static func dismantleUIView(_ uiView: WKWebView, coordinator: Coordinator) {
     coordinator.invalidate()
+  }
+
+  private func disableZooming(in webView: WKWebView) {
+    let scrollView = webView.scrollView
+    scrollView.minimumZoomScale = 1
+    scrollView.maximumZoomScale = 1
+    scrollView.bouncesZoom = false
+    scrollView.pinchGestureRecognizer?.isEnabled = false
+
+    [webView.gestureRecognizers, scrollView.gestureRecognizers]
+      .compactMap(\.self)
+      .flatMap(\.self)
+      .compactMap { $0 as? UITapGestureRecognizer }
+      .filter { $0.numberOfTapsRequired == 2 }
+      .forEach { $0.isEnabled = false }
   }
 
   /// Presents Stripe's hosted payment experience inside a WKWebView and forwards progress through the coordinator.

@@ -47,7 +47,10 @@ extension ChargeSettlementProvider {
       apiKey: Elvah.configuration.apiKey,
       environment: Elvah.configuration.environment,
     )
-    let paymentWebViewService = PaymentWebViewService(environment: Elvah.configuration.environment)
+    let paymentWebViewService = PaymentWebViewService(
+      apiKey: Elvah.configuration.apiKey,
+      environment: Elvah.configuration.environment
+    )
     return ChargeSettlementProvider(
       dependencies: .init(
         stripeConfiguration: {
